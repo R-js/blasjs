@@ -3,12 +3,12 @@
     "browser:disabled": "./dist/client/bundle.js",
     "browser:doc": "https://github.com/defunctzombie/package-browser-field-spec",
     "bugs": {
-        "url": "https://github.com/jacobbogers/libRmath.js/issues"
+        "url": "https://github.com/jacobbogers/blasjs/issues"
     },
     "dependencies": {
         "debug": "^3.1.0"
     },
-    "description": "Javascript Pure Implementation of Statistical R \"core\" numerical libRmath.so",
+    "description": "Javascript Pure Implementation of BLAS Level 1, level 2, level 3 functions",
     "devDependencies": {
         "@types/chai": "^3.5.2",
         "@types/clone": "^0.1.30",
@@ -18,7 +18,6 @@
         "@types/lodash.xor": "^4.5.3",
         "@types/mocha": "^2.2.48",
         "@types/node": "^6.0.96",
-        "ajv": "^6.1.1",
         "awesome-typescript-loader": "^3.4.1",
         "babel-core": "^6.24.1",
         "babel-preset-env": "^1.6.1",
@@ -54,51 +53,24 @@
         "webpack": "^2.7.0",
         "webpack-node-externals": "^1.6.0"
     },
-    "homepage": "https://github.com/jacobbogers/libRmath.js#readme",
+    "homepage": "https://github.com/jacobbogers/blasjs.js#readme",
     "keywords": [
-        "statistics",
-        "r statistics",
-        "rstudio",
-        "r studio",
-        "r-studio",
-        "special functions",
-        "bessel",
-        "gamma",
-        "psigamma",
-        "digamma",
-        "trigamma",
-        "polygamma",
-        "beta",
-        "probability functions",
-        "densitity functions",
-        "quantile functions",
-        "beta distribution",
-        "binomial distribution",
-        "negative binomial distribution",
-        "cauchy distribution",
-        "cauchy",
-        "chi square sistribution",
-        "chi-square chisquare",
-        "exponential distribution",
-        "f distribution",
-        "snedecor's f distribution",
-        "fisher–snedecor distribution",
-        "gamma distribution",
-        "geometric distribution",
-        "hypergeometric distribution",
-        "hyper geometric distribution",
-        "logistic distribution",
-        "lognormal distribution",
-        "multinomial distribution",
-        "normal distribution",
-        "poisson distribution",
-        "wilcoxon signed rank statistic distribution",
-        "student t distribution",
-        "studentized range distribution",
-        "tukey",
-        "uniform distribution",
-        "weibull distribution",
-        "wilcoxon rank sum statistic distribution"
+        "blas",
+        "linear algebra",
+        "lapack",
+        "octave",
+        "linear regression",
+        "vector algebra",
+        "generalized linear model",
+        "matrix",
+        "vector",
+        "complex matrix",
+        "conjugate matrix",
+        "transpose matrix",
+        "matrix inverse",
+        "determinant",
+        "jacobian",
+        "hermetian",
     ],
     "license": "GPL-3.0",
     "main": "dist/lib/libR.js",
@@ -107,7 +79,7 @@
     "name": "lib-r-math.js",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/jacobbogers/libRmath.js.git"
+        "url": "git+https://github.com/jacobbogers/blasjs.git"
     },
     "scripts": {
         "build": "webpack --progress --color --display-error-details --config config/webpack/config",
@@ -147,5 +119,5 @@
         "version": "echo version"
     },
     "types": "./dist/src/lib/index.d.ts",
-    "version": "1.0.72"
+    "version": "1.0.0"
 }
