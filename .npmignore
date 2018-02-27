@@ -1,0 +1,14 @@
+src
+!dist/src
+docs
+config
+coverage
+nyc.md
+.*
+spell.json
+tsconfig.json
+tslint.json
+yarn.lock
+package-lock.json
+test
+node_modules

@@ -1,0 +1,1903 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!-- saved from url=(0036)http://www.netlib.org/blas/#_level_1 -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="AsciiDoc 8.6.9">
+<title> BLAS (Basic Linear Algebra Subprograms)</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+pre {
+  white-space: pre-wrap;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; vertical-align: text-bottom; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install(2);
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1> BLAS (Basic Linear Algebra Subprograms)</h1>
+<div id="toc">
+  <div id="toctitle">Menu</div>
+  <noscript>&lt;p&gt;&lt;b&gt;JavaScript must be enabled in your browser to display the table of contents.&lt;/b&gt;&lt;/p&gt;</noscript>
+<div class="toclevel1"><a href="http://www.netlib.org/blas/#_presentation">Presentation:</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_acknowledgments">Acknowledgments:</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_history">History</a></div><div class="toclevel1"><a href="http://www.netlib.org/blas/#_software">Software:</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_licensing">Licensing:</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_reference_blas_version_3_8_0">REFERENCE BLAS Version 3.8.0</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_cblas">CBLAS</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_level_3_blas_tuned_for_single_processors_with_caches">Level 3 BLAS tuned for single processors with caches</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_extended_precision_level_2_blas_routines">Extended precision Level 2 BLAS routines</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_blas_for_windows">BLAS for windows</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_git_access">GIT Access</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_the_netlib_family_and_its_cousins">The netlib family and its cousins</a></div><div class="toclevel1"><a href="http://www.netlib.org/blas/#_support">Support</a></div><div class="toclevel1"><a href="http://www.netlib.org/blas/#_documentation">Documentation</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_blas_technical_forum">BLAS Technical Forum</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_optimized_blas_library">Optimized BLAS Library</a></div><div class="toclevel1"><a href="http://www.netlib.org/blas/#_blas_routines">BLAS Routines</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_level_1">LEVEL 1</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_level_2">LEVEL 2</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_level_3">LEVEL 3</a></div><div class="toclevel2"><a href="http://www.netlib.org/blas/#_extended_precision_level_2_blas_routines_2">Extended precision Level 2 BLAS routines</a></div></div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>Questions/comments? <a href="mailto:lapack@icl.utk.edu">lapack@icl.utk.edu</a></p></div>
+<div class="paragraph"><p>Contact us get the lastest news</p></div>
+<div class="paragraph"><p><a href="http://www.netlib.org/blas/old-index.html">BLAS(Legacy Website)</a>
+<a href="http://www.netlib.org/blas/faq.html">FAQ</a></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_presentation">Presentation:</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The BLAS (Basic Linear Algebra Subprograms) are routines that provide standard building blocks for performing basic vector and matrix operations. The Level 1 BLAS perform scalar, vector and vector-vector operations, the Level 2 BLAS perform matrix-vector operations, and the Level 3 BLAS perform matrix-matrix operations. Because the BLAS are efficient, portable, and widely available, they are commonly used in the development of high quality linear algebra software, <a href="http://www.netlib.org/lapack/">LAPACK</a> for example.</p></div>
+<div class="sect2">
+<h3 id="_acknowledgments">Acknowledgments:</h3>
+<div class="paragraph"><p>This material is based upon work supported by the National Science Foundation under Grant No. ASC-9313958 and DOE Grant No. DE-FG03-94ER25219. Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation (NSF) or the Department of Energy (DOE).</p></div>
+</div>
+<div class="sect2">
+<h3 id="_history">History</h3>
+<div class="tableblock">
+<table rules="none" width="100%" frame="void" cellspacing="0" cellpadding="4">
+<colgroup><col width="80%">
+<col width="20%">
+</colgroup><tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Discover the great history behind BLAS. On April 2004 an oral history interview was conducted as part of the <a href="http://history.siam.org/oralhistories.htm">SIAM project on the history of software for scientific computing and numerical analysis</a>. This interview is being conducted with Professor Jack Dongarra in his office at the University of Tennessee. The interviewer is Thomas Haigh.<br>
+<a href="http://history.siam.org/pdfs2/Dongarra_%20returned_SIAM_copy.pdf">Download Interview</a><br>
+Enjoy!</p></td>
+<td align="left" valign="top"><p class="table"><span class="image">
+<a class="image" href="http://history.siam.org/pdfs2/Dongarra_%20returned_SIAM_copy.pdf">
+<img src="./BLAS (Basic Linear Algebra Subprograms)_files/Jack-SIAM-Interview.jpg" alt="Jack Dongarra - SIAM Interview" width="300">
+</a>
+</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_software">Software:</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_licensing">Licensing:</h3>
+<div class="paragraph"><p>The reference BLAS is a freely-available software package. It is available from netlib via anonymous ftp and the World Wide Web. Thus, it can be included in commercial software packages (and has been). We only ask that proper credit be given to the authors.</p></div>
+<div class="paragraph"><p>Like all software, it is copyrighted. It is not trademarked, but we do ask the following:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+If you modify the source for these routines we ask that you change the name of the routine and comment the changes made to the original.
+</p>
+</li>
+<li>
+<p>
+We will gladly answer any questions regarding the software. If a modification is done, however, it is the responsibility of the person who modified the routine to provide support.
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_reference_blas_version_3_8_0">REFERENCE BLAS Version 3.8.0</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Download <a href="http://www.netlib.org/blas/blas-3.8.0.tgz">blas-3.8.0.tgz</a>
+</p>
+</li>
+<li>
+<p>
+Updated November 2017
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/blas/blasqr.pdf">Quick Reference Guide</a>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><span class="image">
+<a class="image" href="http://www.netlib.org/blas/blasqr.pdf">
+<img src="./BLAS (Basic Linear Algebra Subprograms)_files/BLAS-snapshot.jpg" alt="BLAS Quick Reference Guide" width="1000">
+</a>
+</span></p></div>
+</div>
+<div class="sect2">
+<h3 id="_cblas">CBLAS</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Download <a href="http://www.netlib.org/blas/blast-forum/cblas.tgz">cblas.tgz</a>
+</p>
+</li>
+<li>
+<p>
+Header file: <a href="http://www.netlib.org/blas/cblas.h">cblas.h</a>
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_level_3_blas_tuned_for_single_processors_with_caches">Level 3 BLAS tuned for single processors with caches</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Downlaod <a href="http://www.netlib.org/blas/gemm_based/ssgemmbased.tgz">ssgemmbased.tgz</a>
+</p>
+</li>
+<li>
+<p>
+Written by Kagstrom B., Ling P., and Van Loan C.
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/blas/gemm_based/">High Performance GEMM-Based Level-3 BLAS Webpage</a> - Fortran (High Performance Computing II, 1991, North-Holland)
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_extended_precision_level_2_blas_routines">Extended precision Level 2 BLAS routines</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Download <a href="http://www.netlib.org/blas/ecblas2.f">ecblas2.f</a>
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_blas_for_windows">BLAS for windows</h3>
+<div class="paragraph"><p>The reference BLAS is included inside the LAPACK package. Please refer tools built under Windows using <a href="http://www.cmake.org/">Cmake</a> the cross-platform, open-source build system. The new build system was developed in collaboration with Kitware Inc.</p></div>
+<div class="paragraph"><p>A dedicated website (<a href="http://icl.cs.utk.edu/lapack-for-windows/lapack/">http://icl.cs.utk.edu/lapack-for-windows/lapack/</a>) is available for Windows users.</p></div>
+<div class="paragraph"><p><span class="image">
+<a class="image" href="http://icl.cs.utk.edu/lapack-for-windows/lapack">
+<img src="./BLAS (Basic Linear Algebra Subprograms)_files/LAPACK_for_Windows.jpg" alt="BLAS Quick Reference Guide" width="250">
+</a>
+</span></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+You will find information about your configuration need.
+</p>
+</li>
+<li>
+<p>
+You will be able to download BLAS pre-built libraries.
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_git_access">GIT Access</h3>
+<div class="paragraph"><p>The LAPACK GIT (<a href="http://github.com/Reference-LAPACK">http://github.com/Reference-LAPACK</a>) repositories are to open for read-only for our users. The latest version of BLAS is included in LAPACK package.</p></div>
+<div class="paragraph"><p>We currently have three GIT respositories:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://github.com/Reference-LAPACK/lapack"><strong>lapack</strong></a> - LAPACK development repository : <a href="http://github.com/Reference-LAPACK/lapack">http://github.com/Reference-LAPACK/lapack</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://github.com/Reference-LAPACK/lapack-release"><strong>lapack-release</strong></a> - LAPACK official release branches : <a href="http://github.com/Reference-LAPACK/lapack-release">http://github.com/Reference-LAPACK/lapack-release</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://github.com/Reference-LAPACK/lapack-www"><strong>lapack-www</strong></a> - LAPACK website : <a href="http://github.com/Reference-LAPACK/lapack-www">http://github.com/Reference-LAPACK/lapack-www</a>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Please use our LAPACK development repository to get the latest bug fixed, submit issues or pull requests.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_the_netlib_family_and_its_cousins">The netlib family and its cousins</h3>
+<div class="tableblock">
+<table rules="none" width="100%" frame="void" cellspacing="0" cellpadding="4">
+<colgroup><col width="33%">
+<col width="66%">
+</colgroup><tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="http://www.netlib.org/blas/">Basic Linear Algebra Subprograms</a> (BLAS)</p></td>
+<td align="left" valign="top"><p class="table"><a href="http://www.netlib.org/lapack">LAPACK</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="https://bitbucket.org/icl/blaspp">BLAS++</a></p></td>
+<td align="left" valign="top"><p class="table"><a href="https://bitbucket.org/icl/lapackpp">LAPACK++</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="http://icl.cs.utk.edu/plasma/">PLASMA</a></p></td>
+<td align="left" valign="top"><p class="table"><a href="http://icl.cs.utk.edu/magma/">MAGMA</a></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><a href="http://www.netlib.org/clapack/">CLAPACK</a> (no longer maintained)</p></td>
+<td align="left" valign="top"><p class="table"><a href="http://www.netlib.org/eispack/">EISPACK</a> (no longer maintained)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_support">Support</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>If you have any issue (install, performance), just post your questions on the <a href="http://icl.cs.utk.edu/lapack-forum/">the LAPACK User Forum</a>.
+You can also send us an email at <a href="mailto:lapack@icl.utk.edu">lapack@icl.utk.edu</a></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_documentation">Documentation</h2>
+<div class="sectionbody">
+<div class="paragraph"><p><a href="http://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms">Checkout the BLAS Wikipedia page</a></p></div>
+<div class="sect2">
+<h3 id="_blas_technical_forum">BLAS Technical Forum</h3>
+<div class="paragraph"><p>The BLAS Technical Forum standard is a specification of a set of kernel routines for linear algebra, historically called the Basic Linear Algebra Subprograms.
+<a href="http://www.netlib.org/blas/blast-forum/">http://www.netlib.org/blas/blast-forum/</a></p></div>
+</div>
+<div class="sect2">
+<h3 id="_optimized_blas_library">Optimized BLAS Library</h3>
+<div class="paragraph"><p>Machine-specific optimized BLAS libraries are available for a variety of computer architectures. These optimized BLAS libraries are provided by the computer vendor or by an independent software vendor (ISV) . For further details, please see our <a href="http://www.netlib.org/blas/faq.html">FAQs</a>.</p></div>
+<div class="paragraph"><p>Alternatively, the user can download <a href="http://math-atlas.sourceforge.net/">ATLAS</a> to automatically generate an optimized BLAS library for his architecture. Some prebuilt optimized BLAS libraries are also available from the ATLAS site.</p></div>
+<div class="paragraph"><p>If all else fails, the user can download a <a href="http://www.netlib.org/blas/blas.tgz">Fortran77 reference implementation of the BLAS</a> from netlib. However, keep in mind that this is a reference implementation and is not optimized.</p></div>
+<div class="paragraph"><p>BLAS vendor library List Last updated: July 20, 2005</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_blas_routines">BLAS Routines</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_level_1">LEVEL 1</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+SINGLE
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d7/d26/srotg_8f.html">SROTG</a> - setup Givens rotation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dd/d48/srotmg_8f.html">SROTMG</a> - setup modified Givens rotation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/d6c/srot_8f.html">SROT</a> - apply Givens rotation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d6/d0f/srotm_8f.html">SROTM</a> - apply modified Givens rotation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d9/da9/sswap_8f.html">SSWAP</a> - swap x and y
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d9/d04/sscal_8f.html">SSCAL</a> - x = a*x
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/dc0/scopy_8f.html">SCOPY</a> - copy x into y
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d8/daf/saxpy_8f.html">SAXPY</a> - y = a*x + y
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d0/d16/sdot_8f.html">SDOT</a> - dot product
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d9/d47/sdsdot_8f.html">SDSDOT</a> - dot product with extended precision accumulation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html">SNRM2</a> - Euclidean norm
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/d66/scnrm2_8f.html">SCNRM2</a>- Euclidean norm
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/df/d1f/sasum_8f.html">SASUM</a> - sum of absolute values
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d6/d44/isamax_8f.html">ISAMAX</a> - index of max abs value
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+DOUBLE
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/d13/drotg_8f.html">DROTG</a> - setup Givens rotation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/df/deb/drotmg_8f.html">DROTMG</a> - setup modified Givens rotation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dc/d23/drot_8f.html">DROT</a> - apply Givens rotation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d8/d7b/drotm_8f.html">DROTM</a> - apply modified Givens rotation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/dd4/dswap_8f.html">DSWAP</a> - swap x and y
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d4/dd0/dscal_8f.html">DSCAL</a> - x = a*x
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/da/d6c/dcopy_8f.html">DCOPY</a> - copy x into y
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d9/dcd/daxpy_8f.html">DAXPY</a> - y = a*x + y
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d5/df6/ddot_8f.html">DDOT</a> - dot product
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dc/d01/dsdot_8f.html">DSDOT</a> - dot product with extended precision accumulation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/da/d7f/dnrm2_8f.html">DNRM2</a> - Euclidean norm
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d9/d19/dznrm2_8f.html">DZNRM2</a> - Euclidean norm
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/d05/dasum_8f.html">DASUM</a> - sum of absolute values
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dd/de0/idamax_8f.html">IDAMAX</a> - index of max abs value
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+COMPLEX
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dc/de6/crotg_8f.html">CROTG</a> - setup Givens rotation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d1/dbb/csrot_8f.html">CSROT</a> - apply Givens rotation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d1/d44/cswap_8f.html">CSWAP</a> - swap x and y
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dc/d81/cscal_8f.html">CSCAL</a> - x = a*x
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/d5e/csscal_8f.html">CSSCAL</a> - x = a*x
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d9/dfb/ccopy_8f.html">CCOPY</a> - copy x into y
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/da2/caxpy_8f.html">CAXPY</a> - y = a*x + y
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d7/d7b/cdotu_8f.html">CDOTU</a> - dot product
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dd/db2/cdotc_8f.html">CDOTC</a> - dot product, conjugating the first vector
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/d53/scasum_8f.html">SCASUM</a> - sum of absolute values
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dd/d51/icamax_8f.html">ICAMAX</a> - index of max abs value
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+DOUBLE COMLPEX
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dc/dfe/zrotg_8f.html">ZROTG</a> - setup Givens rotation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d4/de9/zdrot_8f.html">ZDROTF</a> - apply Givens rotation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d3/dc0/zswap_8f.html">ZSWAP</a> - swap x and y
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d2/d74/zscal_8f.html">ZSCAL</a> - x = a*x
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dd/d76/zdscal_8f.html">ZDSCAL</a> - x = a*x
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d6/d53/zcopy_8f.html">ZCOPY</a> - copy x into y
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d7/db2/zaxpy_8f.html">ZAXPY</a> - y = a*x + y
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/d2d/zdotu_8f.html">ZDOTU</a> - dot product
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d6/db8/zdotc_8f.html">ZDOTC</a> - dot product, conjugating the first vector
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/df/d0f/dzasum_8f.html">DZASUM</a> - sum of absolute values
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d0/da5/izamax_8f.html">IZAMAX</a> - index of max abs value
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_level_2">LEVEL 2</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Single
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/d58/sgemv_8f.html">SGEMV</a> - matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d6/d46/sgbmv_8f.html">SGBMV</a> - banded matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d2/d94/ssymv_8f.html">SSYMV</a> - symmetric matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d3/da1/ssbmv_8f.html">SSBMV</a> - symmetric banded matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d8/d68/sspmv_8f.html">SSPMV</a> - symmetric packed matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/d45/strmv_8f.html">STRMV</a> - triangular matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d6/d7d/stbmv_8f.html">STBMV</a> - triangular banded matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/db1/stpmv_8f.html">STPMV</a> - triangular packed matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d0/d2a/strsv_8f.html">STRSV</a> - solving triangular matrix problems
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d0/d1f/stbsv_8f.html">STBSV</a> - solving triangular banded matrix problems
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d0/d7c/stpsv_8f.html">STPSV</a> - solving triangular packed matrix problems
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/d5c/sger_8f.html">SGER</a> - performs the rank 1 operation A := alpha*x*y' + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d6/dac/ssyr_8f.html">SSYR</a> - performs the symmetric rank 1 operation A := alpha*x*x' + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d2/d9b/sspr_8f.html">SSPR</a> - symmetric packed rank 1 operation  A := alpha*x*x' + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/d99/ssyr2_8f.html">SSYR2</a> - performs the symmetric rank 2 operation, A := alpha*x*y' + alpha*y*x' + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/d3e/sspr2_8f.html">SSPR2</a> - performs the symmetric packed rank 2 operation,     A := alpha*x*y' + alpha*y*x' + A
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Double
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dc/da8/dgemv_8f.html">DGEMV</a> - matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d2/d3f/dgbmv_8f.html">DGBMV</a> - banded matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d8/dbe/dsymv_8f.html">DSYMV</a> - symmetric matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d8/d1e/dsbmv_8f.html">DSBMV</a> - symmetric banded matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d4/d85/dspmv_8f.html">DSPMV</a> - symmetric packed matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dc/d7e/dtrmv_8f.html">DTRMV</a> - triangular matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/df/d29/dtbmv_8f.html">DTBMV</a> - triangular banded matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dc/dcd/dtpmv_8f.html">DTPMV</a> - triangular packed matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d6/d96/dtrsv_8f.html">DTRSV</a> - solving triangular matrix problems
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d4/dcf/dtbsv_8f.html">DTBSV</a> - solving triangular banded matrix problems
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d9/d84/dtpsv_8f.html">DTPSV</a> - solving triangular packed matrix problems
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dc/da8/dger_8f.html">DGER</a> - performs the rank 1 operation A := alpha*x*y' + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d3/d60/dsyr_8f.html">DSYR</a> - performs the symmetric rank 1 operation A := alpha*x*x' + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dd/dba/dspr_8f.html">DSPR</a> - symmetric packed rank 1 operation  A := alpha*x*x' + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/d41/dsyr2_8f.html">DSYR2</a> - performs the symmetric rank 2 operation,    A := alpha*x*y' + alpha*y*x' + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dd/d9e/dspr2_8f.html">DSPR2</a> - performs the symmetric packed rank 2 operation,     A := alpha*x*y' + alpha*y*x' + A
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Complex
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d4/d8a/cgemv_8f.html">CGEMV</a> - matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d0/d75/cgbmv_8f.html">CGBMV</a> - banded matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d7/d51/chemv_8f.html">CHEMV</a> - hermitian matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/dc2/chbmv_8f.html">CHBMV</a> - hermitian banded matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d2/d06/chpmv_8f.html">CHPMV</a> - hermitian packed matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/df/d78/ctrmv_8f.html">CTRMV</a> - triangular matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d3/dcd/ctbmv_8f.html">CTBMV</a> - triangular banded matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d4/dbb/ctpmv_8f.html">CTPMV</a> - triangular packed matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d4/dc8/ctrsv_8f.html">CTRSV</a> - solving triangular matrix problems
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d9/d5f/ctbsv_8f.html">CTBSV</a> - solving triangular banded matrix problems
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d8/d56/ctpsv_8f.html">CTPSV</a> - solving triangular packed matrix problems
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/d5f/cgeru_8f.html">CGERU</a> - performs the rank 1 operation A := alpha*x*y' + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dd/d84/cgerc_8f.html">CGERC</a> - performs the rank 1 operation A := alpha*x*conjg( y' ) + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d3/d6d/cher_8f.html">CHER</a> - hermitian rank 1 operation A := alpha*x*conjg(x') + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/dcd/chpr_8f.html">CHPR</a> - hermitian packed rank 1 operation A := alpha*x*conjg( x' ) + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/d87/cher2_8f.html">CHER2</a> - hermitian rank 2 operation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d6/d44/chpr2_8f.html">CHPR2</a> - hermitian packed rank 2 operation
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Double Complex
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/d40/zgemv_8f.html">ZGEMV</a> - matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d9/d46/zgbmv_8f.html">ZGBMV</a> - banded matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d0/ddd/zhemv_8f.html">ZHEMV</a> - hermitian matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d3/d1a/zhbmv_8f.html">ZHBMV</a> - hermitian banded matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d0/d60/zhpmv_8f.html">ZHPMV</a> - hermitian packed matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d0/dd1/ztrmv_8f.html">ZTRMV</a> - triangular matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d3/d39/ztbmv_8f.html">ZTBMV</a> - triangular banded matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d2/d9e/ztpmv_8f.html">ZTPMV</a> - triangular packed matrix vector multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d1/d2f/ztrsv_8f.html">ZTRSV</a> - solving triangular matrix problems
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d4/d5a/ztbsv_8f.html">ZTBSV</a> - solving triangular banded matrix problems
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/da/d57/ztpsv_8f.html">ZTPSV</a> - solving triangular packed matrix problems
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d7/d12/zgeru_8f.html">ZGERU</a> - performs the rank 1 operation A := alpha*x*y' + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d3/dad/zgerc_8f.html">ZGERC</a> - performs the rank 1 operation A := alpha*x*conjg( y' ) + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/d0e/zher_8f.html">ZHER</a> - hermitian rank 1 operation A := alpha*x*conjg(x') + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/de1/zhpr_8f.html">ZHPR</a> - hermitian packed rank 1 operation A := alpha*x*conjg( x' ) + A
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/da/d8a/zher2_8f.html">ZHER2</a> - hermitian rank 2 operation
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d5/d52/zhpr2_8f.html">ZHPR2</a> - hermitian packed rank 2 operation
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_level_3">LEVEL 3</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Single
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d4/de2/sgemm_8f.html">SGEMM</a> - matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d7/d42/ssymm_8f.html">SSYMM</a> - symmetric matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d0/d40/ssyrk_8f.html">SSYRK</a> - symmetric rank-k update to a matrix
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/df/d3d/ssyr2k_8f.html">SSYR2K</a> - symmetric rank-2k update to a matrix
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/df/d01/strmm_8f.html">STRMM</a> - triangular matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d2/d8b/strsm_8f.html">STRSM</a> - solving triangular matrix with multiple right hand sides
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Double
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f.html">DGEMM</a> - matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d8/db0/dsymm_8f.html">DSYMM</a> - symmetric matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dc/d05/dsyrk_8f.html">DSYRK</a> - symmetric rank-k update to a matrix
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d1/dec/dsyr2k_8f.html">DSYR2K</a> - symmetric rank-2k update to a matrix
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/dd/d19/dtrmm_8f.html">DTRMM</a> - triangular matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/da7/dtrsm_8f.html">DTRSM</a> - solving triangular matrix with multiple right hand sides
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Complex
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d6/d5b/cgemm_8f.html">CGEMM</a> - matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/db/d59/csymm_8f.html">CSYMM</a> - symmetric matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d3/d66/chemm_8f.html">CHEMM</a> - hermitian matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d3/d6a/csyrk_8f.html">CSYRK</a> - symmetric rank-k update to a matrix
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d8/d52/cherk_8f.html">CHERK</a> - hermitian rank-k update to a matrix
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/d7e/csyr2k_8f.html">CSYR2K</a> - symmetric rank-2k update to a matrix
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d1/d82/cher2k_8f.html">CHER2K</a> - hermitian rank-2k update to a matrix
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d4/d9b/ctrmm_8f.html">CTRMM</a> - triangular matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/d30/ctrsm_8f.html">CTRSM</a> - solving triangular matrix with multiple right hand sides
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Double Complex
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d7/d76/zgemm_8f.html">ZGEMM</a> - matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/df/d51/zsymm_8f.html">ZSYMM</a> - symmetric matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d6/d3e/zhemm_8f.html">ZHEMM</a> - hermitian matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/de/d54/zsyrk_8f.html">ZSYRK</a> - symmetric rank-k update to a matrix
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d1/db1/zherk_8f.html">ZHERK</a> - hermitian rank-k update to a matrix
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/df/d20/zsyr2k_8f.html">ZSYR2K</a> - symmetric rank-2k update to a matrix
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d7/dfa/zher2k_8f.html">ZHER2K</a> - hermitian rank-2k update to a matrix
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d8/de1/ztrmm_8f.html">ZTRMM</a> - triangular matrix matrix multiply
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.netlib.org/lapack/explore-html/d1/d39/ztrsm_8f.html">ZTRSM</a> - solving triangular matrix with multiple right hand sides
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_extended_precision_level_2_blas_routines_2">Extended precision Level 2 BLAS routines</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/ecgemv.f">ECGEMV</a> ( TRANS, M, N, ALPHA, A, LDA, X, INCX, BETA, Y, INCY )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/ecgbmv.f">ECGBMV</a> ( TRANS, M, N, KL, KU, ALPHA, A, LDA, X, INCX, BETA, Y, INCY )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/echemv.f">ECHEMV</a> ( UPLO, N, ALPHA, A, LDA, X, INCX,BETA, Y, INCY )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/echbmv.f">ECHBMV</a> ( UPLO, N, K, ALPHA, A, LDA, X, INCX,BETA, Y, INCY )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/echpmv.f">ECHPMV</a> ( UPLO, N, ALPHA, AP, X, INCX, BETA, Y, INCY )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/ectrmv.f">ECTRMV</a> ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/ectbmv.f">ECTBMV</a> ( UPLO, TRANS, DIAG, N, K, A, LDA, X, INCX )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/ectpmv.f">ECTPMV</a> ( UPLO, TRANS, DIAG, N, AP, X, INCX )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/ectrsv.f">ECTRSV</a> ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/ectbsv.f">ECTBSV</a> ( UPLO, TRANS, DIAG, N, K, A, LDA, X, INCX )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/ectpsv.f">ECTPSV</a> ( UPLO, TRANS, DIAG, N, AP, X, INCX )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/ecgeru.f">ECGERU</a> ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/ecgerc.f">ECGERC</a> ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/echer.f">ECHER</a> ( UPLO, N, ALPHA, X, INCX, A, LDA )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/echpr.f">ECHPR</a> ( UPLO, N, ALPHA, X, INCX, AP )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/echer2.f">ECHER2</a> ( UPLO, N, ALPHA, X, INCX, Y, INCY, A, LDA )
+</p>
+</li>
+<li>
+<p>
+SUBROUTINE <a href="http://www.netlib.org/blas/echpr2.f">ECHPR2</a> ( UPLO, N, ALPHA, X, INCX, Y, INCY, AP )
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="footer">
+<div id="footer-text">
+Last updated 2017-11-14 21:37:21 PST
+</div>
+</div>
+
+
+</body></html>
