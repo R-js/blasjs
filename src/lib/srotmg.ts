@@ -104,7 +104,7 @@ const CONSTANTS = Object.freeze({
 
 const { abs, abs: ABS, pow } = Math;
 
-function srotmg(
+export function srotmg(
     sd1: number,
     sd2: number,
     sx1: number,

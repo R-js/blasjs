@@ -22,8 +22,8 @@ Files created to mimic `intrinsic` fortran routines not existing in javascript.
 
 ### SINGLE
 
-| fortran file   | level    | ts file   | port date   | test-suite-date | base functions                                         |
-| -------------- | -------- | --------- | ----------- | --------------- | ------------------------------------------------------ |
+| fortran file   | level    | ts file   | port date   | test-suite-date | base functions                                  |
+| -------------- | -------- | --------- | ----------- | --------------- | ----------------------------------------------- |
 | caxpy.f        |
 | ccopy.f        |
 | cdotc.f        |
@@ -115,9 +115,9 @@ Files created to mimic `intrinsic` fortran routines not existing in javascript.
 | sger.f         |
 | snrm2.f        |
 | srot.f         |
-| srotg.f        | level:1  | srotg.ts  | 27 feb 2018 | N/A             | setup [given's rotation][srotg]                        |
+| srotg.f        | level:1  | srotg.ts  | 27 feb 2018 | N/A             | setup [given's rotation][srotg]                 |
 | srotm.f        |
-| srotmg.f       | level: 1 | srotlg.ts | 27 feb 2018 | N/A             | [Givens modified transformation matrix][givenmodified] |
+| srotmg.f       | level: 1 | srotlg.ts | 27 feb 2018 | N/A             | setup [modified Givens rotation][givenmodified] |
 |                |
 | ssbmv.f        |
 | sscal.f        |
