@@ -24,7 +24,7 @@ Files created to mimic `intrinsic` fortran routines not existing in javascript.
 
 | fortran file   | level    | ts file   | port date   | test-suite-date | base functions                                  |
 | -------------- | -------- | --------- | ----------- | --------------- | ----------------------------------------------- |
-| caxpy.f        |
+| caxpy.f        | level 1  | caxpy.ts  |             |                 | y = a*x + y                                     |
 | ccopy.f        |
 | cdotc.f        |
 | cdotu.f        |
