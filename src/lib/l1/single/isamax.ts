@@ -97,13 +97,16 @@ export function isamax(n: number, sx: FortranArr, incx: number): number {
 
       _isamax = 1;
 
-      smax = abs(sx(1)());
-      let ix = 1 + incx;
-      for (let i = 2; i < n; i++) {
-            let sg = sx(ix); //performance
-            if (abs(sg()) > smax) {
+      const a = sx.arr;
+      const b = sx.base;
+
+      smax = a[1 - b];
+      let ix = 1 + incx; // starts at '2' if incx=1
+      for (let i = 2; i <= n; i++) {
+            const v = a[ix - b];
+            if (abs(v) > smax) {
                   _isamax = i;
-                  smax = abs(sg());
+                  smax = abs(v);
             }
             ix = ix + incx;
       }
