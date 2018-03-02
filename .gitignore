@@ -1,7 +1,6 @@
 # Logs
 logs
 dist/
-r-source-trunk/
 *.log
 TODO
 npm-debug.log*
@@ -12,6 +11,7 @@ npm-debug.log*
 !/.nycrc
 !/.travis.yml
 !/.codecov.yml
+*.exe
 
 *.pdf
 *.PNG
