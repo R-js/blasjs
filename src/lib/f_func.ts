@@ -13,22 +13,39 @@ export function sign(a: number, b?: number): number {
 //2. export array wrapper factory
 
 //1
-export type FortranSetterGetter = (index: number) => (value?: number) => number;
-export type FortranArr = { base: number, arr: Float32Array | Float64Array, s: FortranSetterGetter };
+export type Complex = { re: number, im: number };
+export type fpArray = Float32Array | Float64Array;
+export type FortranSetterGetter = (index: number) => (value?: number) => number | Complex;
+export type FortranArr = {
+    base: number,
+    r: fpArray,
+    i?: fpArray,
+    s: FortranSetterGetter
+};
 //2
-export function mimicFArray(arr: Float32Array | Float64Array) {
+export function mimicFArray(r: fpArray, i?: fpArray) {
     //Lets make some curry
     let func = function n(startIndex: number = 0): FortranArr {
 
         return Object.freeze({
             base: startIndex,
-            arr,
-            s: (index: number) => (value?: number) => {
-                const prevV = arr[index - startIndex];
-                if (value !== undefined) {
-                    arr[index - startIndex] = value;
+            r,
+            i,
+            s: (index: number) => (re?: number, im?: number) => {
+                const pRe = r[index - startIndex];
+                const pIm = im && i ? i[index - startIndex] : undefined;
+                //check
+                if (re !== undefined) {
+                    r[index - startIndex] = re;
                 }
-                return prevV;
+                if (im !== undefined && i === undefined) {
+                    throw new Error('You specified a complex number for a real array');
+                }
+                if (i !== undefined) {
+                    r[index - startIndex] = im || 0;
+                    return { re: pRe || 0, im: pIm || 0 };
+                }
+                return pRe;
             }
         });
     }

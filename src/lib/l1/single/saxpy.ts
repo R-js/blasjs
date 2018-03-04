@@ -14,9 +14,9 @@ export function saxpy(
       incy: number): void {
 
       const kbx = sy.base;
-      const aY = sy.arr;
+      const aY = sy.r;
       const kby = sx.base;
-      const aX = sx.arr;
+      const aX = sx.r;
 
       if (n <= 0) return;
       if (sa === 0) return;

@@ -18,7 +18,7 @@ export function sasum(n: number, sx: FortranArr, incx: number) {
       let stemp = 0;
 
       if (n <= 0 || incx <= 0) return stemp;
-      const a = sx.arr;
+      const a = sx.r;
       const b = sx.base;
 
       if (incx === 1) {

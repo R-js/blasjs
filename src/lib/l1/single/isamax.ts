@@ -29,7 +29,7 @@ export function isamax(
 
       _isamax = 1;
 
-      const a = sx.arr;
+      const a = sx.r;
       const b = sx.base;
 
       smax = a[1 - b];
