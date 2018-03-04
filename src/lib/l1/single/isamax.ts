@@ -1,81 +1,10 @@
 /*
-   JS port by Jacob Bogers (jkfbogers@gmail.com)
+   jack dongarra, linpack, 3/11/78.
+   jacob bogers, javascript 03/2018 (jkfbogers@gmail.com)
 */
 
-/**
- * *> \brief \b ISAMAX
-*
-*  =========== DOCUMENTATION ===========
-*
-* Online html documentation available at
-*            http://www.netlib.org/lapack/explore-html/
-*
-*  Definition:
-*  ===========
-*
-*       INTEGER FUNCTION ISAMAX(N,SX,INCX)
-*
-*       .. Scalar Arguments ..
-*       INTEGER INCX,N
-*       ..
-*       .. Array Arguments ..
-*       REAL SX(*)
-*       ..
-*
-*
-*> \par Purpose:
-*  =============
-*>
-*> \verbatim
-*>
-*>    ISAMAX finds the index of the first element having maximum absolute value.
-*> \endverbatim
-*
-*  Arguments:
-*  ==========
-*
-*> \param[in] N
-*> \verbatim
-*>          N is INTEGER
-*>         number of elements in input vector(s)
-*> \endverbatim
-*>
-*> \param[in] SX
-*> \verbatim
-*>          SX is REAL array, dimension ( 1 + ( N - 1 )*abs( INCX ) )
-*> \endverbatim
-*>
-*> \param[in] INCX
-*> \verbatim
-*>          INCX is INTEGER
-*>         storage spacing between elements of SX
-*> \endverbatim
-*
-*  Authors:
-*  ========
-*
-*> \author Univ. of Tennessee
-*> \author Univ. of California Berkeley
-*> \author Univ. of Colorado Denver
-*> \author NAG Ltd.
-*
-*> \date November 2017
-*
-*> \ingroup aux_blas
-*
-*> \par Further Details:
-*  =====================
-*>
-*> \verbatim
-*>
-*>     jack dongarra, linpack, 3/11/78.
-*>     modified 3/93 to return if incx .le. 0.
-*>     modified 12/3/93, array(1) declarations changed to array(*)
-*> \endverbatim
-*>
- * 
- */
 import { FortranArr } from '../../f_func';
+const { abs } = Math;
 
 /**
  *
@@ -86,9 +15,12 @@ import { FortranArr } from '../../f_func';
  * @param incx storage spacing between elements of SX
  * 
  */
-const { abs } = Math;
 
-export function isamax(n: number, sx: FortranArr, incx: number): number {
+export function isamax(
+      n: number,
+      sx: FortranArr,
+      incx: number
+): number {
       let _isamax = 0;
       let smax: number;
 

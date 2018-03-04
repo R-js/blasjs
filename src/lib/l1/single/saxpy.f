@@ -125,6 +125,7 @@
                SY(I) = SY(I) + SA*SX(I)
             END DO
          END IF
+         
          IF (N.LT.4) RETURN
          MP1 = M + 1
          DO I = MP1,N,4
@@ -143,7 +144,7 @@
          IF (INCX.LT.0) IX = (-N+1)*INCX + 1
          IF (INCY.LT.0) IY = (-N+1)*INCY + 1
          DO I = 1,N
-          SY(vbv) = SY(IY) + SA*SX(IX)
+          SY(IY) = SY(IY) + SA*SX(IX)
           IX = IX + INCX
           IY = IY + INCY
          END DO
