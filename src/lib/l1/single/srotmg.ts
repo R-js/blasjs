@@ -103,21 +103,17 @@ const CONSTANTS = Object.freeze({
 });
 
 const { abs, abs: ABS, pow } = Math;
+import { FortranArr } from '../../f_func';
 
-export function srotmg(
+export function srotmg(p: {
     sd1: number,
     sd2: number,
     sx1: number,
-    sy1: number): {
-        SD1: number,
-        SD2: number,
-        SX1: number,
-        SY1: number,
-        SPARAM: number[]
-    } {
+    sy1: number,
+    sparam: FortranArr
+}): void {
 
-    let SPARAM = Array(5).fill(0);
-    let SD1 = sd1, SD2 = sd2, SX1 = sx1, SY1 = sy1;
+    let SD1 = p.sd1, SD2 = p.sd2, SX1 = p.sx1, SY1 = p.sy1;
 
     //locals
     let GAM = 2 << 11; // 4096
@@ -128,6 +124,7 @@ export function srotmg(
     let SFLAG, SH11, SH12, SH21, SH22, SP1, SP2, SQ1,
         SQ2, STEMP, SU, TWO = 2, ZERO = 0;
 
+    let pb = p.sparam.base;
 
     if (SD1 < ZERO) {
         // GO ZERO - H - D - AND - SX1..
@@ -146,8 +143,12 @@ export function srotmg(
         SP2 = SD2 * SY1;
         if (SP2 === ZERO) {
             SFLAG = -TWO;
-            SPARAM[0] = SFLAG;
-            return { SD1, SD2, SX1, SY1, SPARAM };
+            p.sparam.r[1 - pb] = SFLAG;
+            p.sd1 = SD1;
+            p.sd2 = SD2;
+            p.sx1 = SX1;
+            p.sy1 = SY1;
+            return;
         }
         // REGULAR - CASE..
         SP1 = SD1 * SX1;
@@ -244,24 +245,27 @@ export function srotmg(
                     SH22 = SH22 * GAM;
                 }
             }//while
-        }//
+        }//if
     }//if
+    // shortcut
+    const parr = p.sparam.r;
+
     if (SFLAG < ZERO) {
-        SPARAM[1] = SH11;
-        SPARAM[2] = SH21;
-        SPARAM[3] = SH12;
-        SPARAM[4] = SH22;
+        parr[2 - pb] = SH11;
+        parr[3 - pb] = SH21;
+        parr[4 - pb] = SH12;
+        parr[5 - pb] = SH22;
     }
     else if (SFLAG === ZERO) {
-        SPARAM[2] = SH21;
-        SPARAM[3] = SH12;
+        parr[3 - pb] = SH21;
+        parr[4 - pb] = SH12;
     }
     else {
-        SPARAM[1] = SH11;
-        SPARAM[4] = SH22;
+        parr[2 - pb] = SH11;
+        parr[5 - pb] = SH22;
     }
-    SPARAM[0] = SFLAG
-    return { SD1, SD2, SX1, SY1, SPARAM };
+    parr[1 - pb] = SFLAG;
+
 }
 
 
