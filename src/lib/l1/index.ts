@@ -8,6 +8,7 @@ import { sdot } from './single/sdot';
 import { sdotdot } from './single/sdsdot';
 import { snrm2 } from './single/snrm2';
 import { srot } from './single/srot';
+import { srotm } from './single/srotm';
 import { srotmg } from './single/srotmg';
 
 export const level1 = {
@@ -20,5 +21,6 @@ export const level1 = {
     sdotdot,
     snrm2,
     srot,
+    srotm,
     srotmg,
 };
