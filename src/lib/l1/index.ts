@@ -6,15 +6,18 @@ import { scnrm2 } from './single/scnrm2';
 import { scopy } from './single/scopy';
 import { sdot } from './single/sdot';
 import { sdotdot } from './single/sdsdot';
+import { snrm2 } from './single/snrm2';
 import { srotmg } from './single/srotmg';
 
 export const level1 = {
     isamax,
     sasum,
-    srotmg,
     saxpy,
     scnrm2,
     scopy,
     sdot,
-    sdotdot
+    sdotdot,
+    snrm2,
+
+    srotmg,
 };
