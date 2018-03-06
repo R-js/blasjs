@@ -11,6 +11,7 @@ import { srot } from './single/srot';
 import { srotm } from './single/srotm';
 import { srotmg } from './single/srotmg';
 import { sscal } from './single/sscal';
+import { sswap } from './single/sswap';
 
 export const level1 = {
     isamax,
@@ -24,5 +25,6 @@ export const level1 = {
     srot,
     srotm,
     srotmg,
-    sscal
+    sscal,
+    sswap
 };
