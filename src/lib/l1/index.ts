@@ -7,6 +7,7 @@ import { scopy } from './single/scopy';
 import { sdot } from './single/sdot';
 import { sdotdot } from './single/sdsdot';
 import { snrm2 } from './single/snrm2';
+import { srot } from './single/srot';
 import { srotmg } from './single/srotmg';
 
 export const level1 = {
@@ -18,6 +19,6 @@ export const level1 = {
     sdot,
     sdotdot,
     snrm2,
-
+    srot,
     srotmg,
 };
