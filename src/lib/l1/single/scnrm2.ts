@@ -3,9 +3,12 @@
   Reference BLAS is a software package provided by Univ. of Tennessee,    --
   Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
   November 2017
- jacob bogers, javascript 03/2018 (jkfbogers@gmail.com)
-*/
+  jacob bogers, javascript 03/2018 (jkfbogers@gmail.com)
 
+  NOTE: the original Fortran code contained COMPLEX*16 X(*) 
+  as a decleration of its complex array argument, thats 2x REAL*8 vars
+  for real and imaginary parts
+*/
 
 import { FortranArr } from '../../f_func';
 
@@ -19,12 +22,16 @@ export function scnrm2(n: number, x: FortranArr, incx: number): number {
 
       let scale = 0;
       let ssq = 1;
+
       /*
        The following loop is equivalent to this call to the LAPACK
-*        auxiliary routine:
-*        CALL CLASSQ( N, X, INCX, SCALE, SSQ )
+       auxiliary routine:
+       CALL CLASSQ( N, X, INCX, SCALE, SSQ )
       */
       const bx = x.base;
+      if (!x.r || !x.i) {
+            throw new Error('complex real and/or imaginary parts are missing');
+      }
 
       for (let ix = 1; ix <= 1 + (n - 1) * incx; ix += incx) {
             const k = ix - bx;

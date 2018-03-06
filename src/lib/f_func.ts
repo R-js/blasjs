@@ -1,5 +1,7 @@
 //intrinsic routines of fortran
 
+const { abs } = Math;
+
 export function sign(a: number, b?: number): number {
     if (b === undefined) {
         return a;
@@ -54,3 +56,6 @@ export function mimicFArray(r: fpArray, i?: fpArray) {
     return func;
 }
 
+export function scabs1(c: Complex) {
+    return abs(c.re) + abs(c.im);
+}

@@ -15,7 +15,7 @@
 
 import { FortranArr } from '../../f_func';
 
-export function sdotdot(
+export function sdsdot(
     n: number,
     sb: number,
     sx: FortranArr,
