@@ -1,6 +1,7 @@
 
 //complex
 import { caxpy } from './complex/caxpy';
+import { ccopy } from './complex/ccopy';
 // single
 import { isamax } from './single/isamax';
 import { sasum } from './single/sasum';
@@ -48,5 +49,6 @@ export const level1 = {
     dswap: sswap,
     idamax: isamax,
     //complex
-    caxpy
+    caxpy,
+    ccopy
 };

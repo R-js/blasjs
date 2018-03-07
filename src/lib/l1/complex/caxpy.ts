@@ -51,9 +51,9 @@ export function caxpy(
                   let ra = (ca.re * cxRe - ca.im * cxIm);
                   let ia = (ca.re * cxIm + ca.im * cxRe);
 
-                  cy.r[ix - kby] += ra;
+                  cy.r[iy - kby] += ra;
                   if (cy.i) {
-                        cy.i[i - kby] += ia;
+                        cy.i[iy - kby] += ia;
                   }
                   //
                   ix += incx;
