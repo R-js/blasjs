@@ -72,3 +72,7 @@ export const cmult = (reA: number, imA: number, reB: number, imB: number): Compl
         im: (reA * imB + imA * reB)
     };
 }
+
+export const cabs = (reA: number, imA: number) => {
+    return Math.sqrt(reA * reA + imA * imA);
+}

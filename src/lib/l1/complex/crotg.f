@@ -1,5 +1,8 @@
+
 *> \brief \b CROTG
 *
+*  NOTE CA is
+* 
 *  =========== DOCUMENTATION ===========
 *
 * Online html documentation available at
@@ -91,7 +94,8 @@
          ALPHA = CA/CABS(CA)
          C = CABS(CA)/NORM
          S = ALPHA*CONJG(CB)/NORM
-         CA = ALPHA*NORM
+c        NOTE: CA is an input argument, why is it set here? 
+         CA = ALPHA*NORM 
       END IF
       RETURN
       END
