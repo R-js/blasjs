@@ -3,6 +3,7 @@
 import { caxpy } from './complex/caxpy';
 import { ccopy } from './complex/ccopy';
 import { cdotc } from './complex/cdotc';
+import { cdotu } from './complex/cdotu';
 // single
 import { isamax } from './single/isamax';
 import { sasum } from './single/sasum';
@@ -52,5 +53,6 @@ export const level1 = {
     //complex
     caxpy,
     ccopy,
-    cdotc
+    cdotc,
+    cdotu
 };

@@ -63,3 +63,12 @@ export function scabs1(c: Complex) {
 export function complex(re: number = 0, im: number = 0): Complex {
     return { re, im };
 }
+
+// dont sue
+export const cmult = (reA: number, imA: number, reB: number, imB: number): Complex {
+    //   (a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
+    return {
+        re: (reA * reB - imA * imB),
+        im: (reA * imB + imA * reB)
+    };
+}
