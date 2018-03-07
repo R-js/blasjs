@@ -59,3 +59,7 @@ export function mimicFArray(r: fpArray, i?: fpArray) {
 export function scabs1(c: Complex) {
     return abs(c.re) + abs(c.im);
 }
+
+export function complex(re: number = 0, im: number = 0): Complex {
+    return { re, im };
+}
