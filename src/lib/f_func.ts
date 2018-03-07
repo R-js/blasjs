@@ -65,7 +65,7 @@ export function complex(re: number = 0, im: number = 0): Complex {
 }
 
 // dont sue
-export const cmult = (reA: number, imA: number, reB: number, imB: number): Complex {
+export const cmult = (reA: number, imA: number, reB: number, imB: number): Complex => {
     //   (a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
     return {
         re: (reA * reB - imA * imB),
