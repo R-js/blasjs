@@ -5,6 +5,7 @@ import { ccopy } from './complex/ccopy';
 import { cdotc } from './complex/cdotc';
 import { cdotu } from './complex/cdotu';
 import { cscal } from './complex/cscal';
+import { csrot } from './complex/csrot';
 // single
 import { isamax } from './single/isamax';
 import { sasum } from './single/sasum';
@@ -56,5 +57,6 @@ export const level1 = {
     ccopy,
     cdotc,
     cdotu,
-    cscal
+    cscal,
+    csrot
 };
