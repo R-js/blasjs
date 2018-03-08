@@ -60,6 +60,10 @@ export function scabs1(c: Complex) {
     return abs(c.re) + abs(c.im);
 }
 
+export function scabs1A(re: number, im: number): number {
+    return abs(re) + abs(im);
+}
+
 export function complex(re: number = 0, im: number = 0): Complex {
     return { re, im };
 }
@@ -76,3 +80,32 @@ export const cmult = (reA: number, imA: number, reB: number, imB: number): Compl
 export const cabs = (reA: number, imA: number) => {
     return Math.sqrt(reA * reA + imA * imA);
 }
+
+export enum ERROR {
+    MISSING_IMAGINARY = 1,
+    MISSING_REAL = 2,
+    INTERNAL_NOTFOUND = 99
+}
+
+// private
+const errors = new Map<ERROR, string>([
+    [ERROR.MISSING_IMAGINARY, 'Missing imaginary part for %s'],
+    [ERROR.MISSING_REAL, 'Missing real part for %s'],
+
+]);
+
+const ERROR_UKNOWN = 'Unkown Error code used! [%s]';
+
+export function errorMsg(errNo: ERROR, fmt?: string): string {
+
+    let msg = errors.get(errNo);
+    if (!msg) {
+        msg = ERROR_UKNOWN;
+    }
+    return msg.replace('%s', fmt || '');
+}
+
+export function errMissingIm(fmt: string): string {
+    return errorMsg(ERROR.MISSING_IMAGINARY, fmt);
+}
+

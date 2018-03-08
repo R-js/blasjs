@@ -1,4 +1,4 @@
-import { complex, FortranArr } from '../../f_func';
+import { complex, errMissingIm, FortranArr } from '../../f_func';
 
 /*
   Univ. of Tennessee
@@ -17,9 +17,12 @@ export function csrot(
       s: number
 ): void {
 
+      if (!cx.i) {
+            throw new Error(errMissingIm('cx'));
+      }
 
-      if (!cx.i || !cy.i) {
-            throw new Error('cx or cy arguments dont have imaginary part');
+      if (!cy.i) {
+            throw new Error(errMissingIm('cy'));
       }
 
       if (n <= 0) return;
@@ -33,7 +36,8 @@ export function csrot(
       if (incx < 0) ix = (-n + 1) * incx + 1;
       if (incy < 0) iy = (-n + 1) * incy + 1;
 
-      //place it outside the loop, faster slightly))
+      //place it outside the loop, faster slightly??
+
       let xr = 0;
       let yr = 0;
       for (let i = 1; i <= n; i++) {
@@ -44,7 +48,6 @@ export function csrot(
 
             cy.r[yr] = c * cy.r[yr] - s * cx.r[xr];
             cy.i[yr] = c * cy.i[yr] - s * cx.i[xr];
-
 
             cx.r[xr] = ct.re;
             cx.r[xr] = ct.im;

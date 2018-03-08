@@ -6,6 +6,11 @@ import { cdotc } from './complex/cdotc';
 import { cdotu } from './complex/cdotu';
 import { cscal } from './complex/cscal';
 import { csrot } from './complex/csrot';
+import { csscal } from './complex/csscal';
+import { cswap } from './complex/cswap';
+import { icamax } from './complex/icamax';
+import { scasum } from './complex/scasum';
+
 // single
 import { isamax } from './single/isamax';
 import { sasum } from './single/sasum';
@@ -58,5 +63,9 @@ export const level1 = {
     cdotc,
     cdotu,
     cscal,
-    csrot
+    csrot,
+    csscal,
+    cswap,
+    icamax,
+    scasum
 };
