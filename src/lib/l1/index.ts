@@ -67,5 +67,16 @@ export const level1 = {
     csscal,
     cswap,
     icamax,
-    scasum
+    scasum,
+    //double complex
+    dzasum: scasum,
+    izamax: icamax,
+    zaxpy: caxpy,
+    zcopy: ccopy,
+    zdotc: cdotc,
+    zdotu: cdotu,
+    zdrot: csrot,
+    zrotg: csrot,
+    zscal: cscal,
+    zswap: cswap
 };
