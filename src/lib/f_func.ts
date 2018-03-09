@@ -2,6 +2,8 @@
 
 const { abs } = Math;
 
+const { isNaN, isInteger } = Number;
+
 export function sign(a: number, b?: number): number {
     if (b === undefined) {
         return a;
@@ -27,7 +29,7 @@ export type FortranArr = {
 //2
 export function mimicFArray(r: fpArray, i?: fpArray) {
     //Lets make some curry
-    let func = function n(startIndex: number = 0): FortranArr {
+    let func = function n(startIndex: number = 1): FortranArr {
 
         return Object.freeze({
             base: startIndex,
@@ -82,30 +84,97 @@ export const cabs = (reA: number, imA: number) => {
 }
 
 export enum ERROR {
-    MISSING_IMAGINARY = 1,
-    MISSING_REAL = 2,
-    INTERNAL_NOTFOUND = 99
+    ERR_MISSING_IMAGINARY = 1,
+    ERR_MISSING_REAL = 2,
+    ERR_WRONG_ARGUMENT = 3,
 }
 
 // private
 const errors = new Map<ERROR, string>([
-    [ERROR.MISSING_IMAGINARY, 'Missing imaginary part for %s'],
-    [ERROR.MISSING_REAL, 'Missing real part for %s'],
-
+    [ERROR.ERR_MISSING_IMAGINARY, 'Missing imaginary part for %s'],
+    [ERROR.ERR_MISSING_REAL, 'Missing real part for %s'],
+    [ERROR.ERR_WRONG_ARGUMENT, 'Argument [%s] is has invalid value:[%s]']
 ]);
 
 const ERROR_UKNOWN = 'Unkown Error code used! [%s]';
 
-export function errorMsg(errNo: ERROR, fmt?: string): string {
+export function errorMsg(errNo: ERROR, ...fmt: string[]): string {
 
     let msg = errors.get(errNo);
     if (!msg) {
         msg = ERROR_UKNOWN;
     }
-    return msg.replace('%s', fmt || '');
+    if (fmt.length === 0) {
+        return msg;
+    }
+    return fmt.reduce((p, v, k) => p.replace('%s', v), msg);
 }
+
+//helpers for errorMsg
 
 export function errMissingIm(fmt: string): string {
-    return errorMsg(ERROR.MISSING_IMAGINARY, fmt);
+    return errorMsg(ERROR.ERR_MISSING_IMAGINARY, fmt);
 }
 
+export function errWrongArg(arg: string, value): string {
+    return errorMsg(ERROR.ERR_WRONG_ARGUMENT, value);
+}
+
+
+// Matrix
+// Matrix
+// Matrix
+// Matrix
+
+export type FortranMatrixSetterGetter = (col: number) => (row?: number) => number | Complex;
+
+export type Matrix2D = Readonly<{
+    rowBase: number,
+    colBase: number,
+    nrCols: number, // inclusive note!!
+    nrRows: number,
+    r: fpArray, //[(ncols+1)*(nrows+1)]
+    i?: fpArray, //imaginary part of matrix [(ncols+1)*(nrows+1)]
+    //s: FortranMatrixSetterGetter
+}>;
+
+
+export function mimicFMatrix2D(r: fpArray, i?: fpArray) {
+
+    return function c1(nrRows: number, nrCols: number, rowBase: number = 1, colBase = 1): Matrix2D {
+
+        // check rows
+        if (nrRows < 0) {
+            throw new Error(errWrongArg('nrRows', 'is Negative'));
+        }
+        if (!isInteger(nrRows)) {
+            throw new Error(errWrongArg('nrRows', 'is a NaN'));
+        }
+        if (!isInteger(rowBase)) {
+            throw new Error(errWrongArg('rowBase', 'is a NaN'));
+        }
+        // check columns
+        if (nrCols < 0) {
+            throw new Error(errWrongArg('nrCols', 'is Negative'));
+        }
+        if (!isInteger(nrCols)) {
+            throw new Error(errWrongArg('nrCols', 'is a NaN'));
+        }
+        if (!isInteger(colBase)) {
+            throw new Error(errWrongArg('colBase', 'is a NaN'));
+        }
+        return Object.freeze({
+            rowBase,
+            colBase,
+            nrCols,
+            nrRows,
+            r,
+            i
+        });
+    }
+
+}
+
+export function xerbla(fn: string, idx: number) {
+    return ` ** On entry to ${fn}, parameter number ${idx}, had an illegal value`;
+}
