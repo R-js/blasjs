@@ -108,9 +108,9 @@ export function sgbmv(
             for (let j = 1; j <= n; j++) {
                 let temp = alpha * x.r[jx - x.base];
                 let k = kup1 - j;
-                let coords = a.coord(j); //currying
+                let coords = a.colOf(j); //a.coord(j); //currying
                 for (let i = max(1, j - ku); i <= min(m, j + kl); i++) {
-                    y.r[i - y.base] += temp * a.r[coords(k + i)];
+                    y.r[i - y.base] += temp * a.r[coords + k + i - a.rowBase];
                 }
                 jx += incx;
             }
@@ -123,9 +123,9 @@ export function sgbmv(
                 let temp = alpha * x.r[jx - x.base];
                 let iy = ky; //starts with 1
                 let k = kup1 - j;
-                const coords = a.coord(j); //currying
+                const coords = a.colOf(j); //a.coord(j); //currying
                 for (let i = max(1, j - ku); i <= min(m, j + kl); i++) {
-                    y.r[iy - y.base] += temp * a.r[coords(k + i)];
+                    y.r[iy - y.base] += temp * a.r[coords + k + i - a.rowBase];
                     iy += incy;
                 }
                 jx += incx;
