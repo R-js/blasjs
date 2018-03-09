@@ -2,7 +2,7 @@
 
 const { abs } = Math;
 
-const { isNaN, isInteger } = Number;
+const { isInteger } = Number;
 
 export function sign(a: number, b?: number): number {
     if (b === undefined) {
@@ -135,6 +135,7 @@ export type Matrix2D = Readonly<{
     nrRows: number,
     r: fpArray, //[(ncols+1)*(nrows+1)]
     i?: fpArray, //imaginary part of matrix [(ncols+1)*(nrows+1)]
+    coord: (number) => (number) => number;
     //s: FortranMatrixSetterGetter
 }>;
 
@@ -169,12 +170,18 @@ export function mimicFMatrix2D(r: fpArray, i?: fpArray) {
             nrCols,
             nrRows,
             r,
-            i
+            i,
+            coord: (col) => {
+                const tb = (col - colBase) * nrRows;
+                return row => tb + (row - rowBase)
+            }
         });
-    }
 
+    }
 }
 
 export function xerbla(fn: string, idx: number) {
     return ` ** On entry to ${fn}, parameter number ${idx}, had an illegal value`;
 }
+
+
