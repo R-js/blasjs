@@ -4,7 +4,7 @@
    -- Written on 22-October-1986.
      Jack Dongarra, Argonne National Lab.
      Jeremy Du Croz, Nag Central Office.
-    Sven Hammarling, Nag Central Office.
+     Sven Hammarling, Nag Central Office.
      Richard Hanson, Sandia National Labs.
 */
 
@@ -19,7 +19,7 @@
 
 import { errWrongArg, FortranArr, Matrix2D } from '../../f_func';
 
-const { max, min } = Math;
+const { max } = Math;
 
 export function ssymv(
     _uplo: 'U' | 'L',
