@@ -78,11 +78,12 @@ export function ssbmv(
         //efficiency
         if (beta === 0 && incy === 1) {
             y.r.fill(0);
-            return;
         }
-        for (let i = 1; i <= n; i++) {
-            y.r[iy - y.base] = beta === 0 ? 0 : beta * y.r[iy - y.base];
-            iy += incy;
+        else {
+            for (let i = 1; i <= n; i++) {
+                y.r[iy - y.base] = beta === 0 ? 0 : beta * y.r[iy - y.base];
+                iy += incy;
+            }
         }
     }
 
