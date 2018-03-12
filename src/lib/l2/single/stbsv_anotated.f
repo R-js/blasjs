@@ -1,4 +1,4 @@
-*> \brief \b STPSV
+*> \brief \b STBSV
 *
 *  =========== DOCUMENTATION ===========
 *
@@ -8,14 +8,14 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE STPSV(UPLO,TRANS,DIAG,N,AP,X,INCX)
+*       SUBROUTINE STBSV(UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX)
 *
 *       .. Scalar Arguments ..
-*       INTEGER INCX,N
+*       INTEGER INCX,K,LDA,N
 *       CHARACTER DIAG,TRANS,UPLO
 *       ..
 *       .. Array Arguments ..
-*       REAL AP(*),X(*)
+*       REAL A(LDA,*),X(*)
 *       ..
 *
 *
@@ -24,12 +24,13 @@
 *>
 *> \verbatim
 *>
-*> STPSV  solves one of the systems of equations
+*> STBSV  solves one of the systems of equations
 *>
 *>    A*x = b,   or   A**T*x = b,
 *>
 *> where b and x are n element vectors and A is an n by n unit, or
-*> non-unit, upper or lower triangular matrix, supplied in packed form.
+*> non-unit, upper or lower triangular band matrix, with ( k + 1 )
+*> diagonals.
 *>
 *> No test for singularity or near-singularity is included in this
 *> routine. Such tests must be performed before calling this routine.
@@ -81,22 +82,66 @@
 *>           N must be at least zero.
 *> \endverbatim
 *>
-*> \param[in] AP
+*> \param[in] K
 *> \verbatim
-*>          AP is REAL array, dimension at least
-*>           ( ( n*( n + 1 ) )/2 ).
-*>           Before entry with  UPLO = 'U' or 'u', the array AP must
-*>           contain the upper triangular matrix packed sequentially,
-*>           column by column, so that AP( 1 ) contains a( 1, 1 ),
-*>           AP( 2 ) and AP( 3 ) contain a( 1, 2 ) and a( 2, 2 )
-*>           respectively, and so on.
-*>           Before entry with UPLO = 'L' or 'l', the array AP must
-*>           contain the lower triangular matrix packed sequentially,
-*>           column by column, so that AP( 1 ) contains a( 1, 1 ),
-*>           AP( 2 ) and AP( 3 ) contain a( 2, 1 ) and a( 3, 1 )
-*>           respectively, and so on.
-*>           Note that when  DIAG = 'U' or 'u', the diagonal elements of
-*>           A are not referenced, but are assumed to be unity.
+*>          K is INTEGER
+*>           On entry with UPLO = 'U' or 'u', K specifies the number of
+*>           super-diagonals of the matrix A.
+*>           On entry with UPLO = 'L' or 'l', K specifies the number of
+*>           sub-diagonals of the matrix A.
+*>           K must satisfy  0 .le. K.
+*> \endverbatim
+*>
+*> \param[in] A
+*> \verbatim
+*>          A is REAL array, dimension ( LDA, N )
+*>           Before entry with UPLO = 'U' or 'u', the leading ( k + 1 )
+*>           by n part of the array A must contain the upper triangular
+*>           band part of the matrix of coefficients, supplied column by
+*>           column, with the leading diagonal of the matrix in row
+*>           ( k + 1 ) of the array, the first super-diagonal starting at
+*>           position 2 in row k, and so on. The top left k by k triangle
+*>           of the array A is not referenced.
+*>           The following program segment will transfer an upper
+*>           triangular band matrix from conventional full matrix storage
+*>           to band storage:
+*>
+*>                 DO 20, J = 1, N
+*>                    M = K + 1 - J
+*>                    DO 10, I = MAX( 1, J - K ), J
+*>                       A( M + I, J ) = matrix( I, J )
+*>              10    CONTINUE
+*>              20 CONTINUE
+*>
+*>           Before entry with UPLO = 'L' or 'l', the leading ( k + 1 )
+*>           by n part of the array A must contain the lower triangular
+*>           band part of the matrix of coefficients, supplied column by
+*>           column, with the leading diagonal of the matrix in row 1 of
+*>           the array, the first sub-diagonal starting at position 1 in
+*>           row 2, and so on. The bottom right k by k triangle of the
+*>           array A is not referenced.
+*>           The following program segment will transfer a lower
+*>           triangular band matrix from conventional full matrix storage
+*>           to band storage:
+*>
+*>                 DO 20, J = 1, N
+*>                    M = 1 - J
+*>                    DO 10, I = J, MIN( N, J + K )
+*>                       A( M + I, J ) = matrix( I, J )
+*>              10    CONTINUE
+*>              20 CONTINUE
+*>
+*>           Note that when DIAG = 'U' or 'u' the elements of the array A
+*>           corresponding to the diagonal elements of the matrix are not
+*>           referenced, but are assumed to be unity.
+*> \endverbatim
+*>
+*> \param[in] LDA
+*> \verbatim
+*>          LDA is INTEGER
+*>           On entry, LDA specifies the first dimension of A as declared
+*>           in the calling (sub) program. LDA must be at least
+*>           ( k + 1 ).
 *> \endverbatim
 *>
 *> \param[in,out] X
@@ -142,7 +187,7 @@
 *> \endverbatim
 *>
 *  =====================================================================
-      SUBROUTINE STPSV(UPLO,TRANS,DIAG,N,AP,X,INCX)
+      SUBROUTINE STBSV(UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX)
 *
 *  -- Reference BLAS level2 routine (version 3.7.0) --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -150,11 +195,11 @@
 *     December 2016
 *
 *     .. Scalar Arguments ..
-      INTEGER INCX,N
+      INTEGER INCX,K,LDA,N
       CHARACTER DIAG,TRANS,UPLO
 *     ..
 *     .. Array Arguments ..
-      REAL AP(*),X(*)
+      REAL A(LDA,*),X(*)
 *     ..
 *
 *  =====================================================================
@@ -165,7 +210,7 @@
 *     ..
 *     .. Local Scalars ..
       REAL TEMP
-      INTEGER I,INFO,IX,J,JX,K,KK,KX
+      INTEGER I,INFO,IX,J,JX,KPLUS1,KX,L
       LOGICAL NOUNIT
 *     ..
 *     .. External Functions ..
@@ -174,6 +219,9 @@
 *     ..
 *     .. External Subroutines ..
       EXTERNAL XERBLA
+*     ..
+*     .. Intrinsic Functions ..
+      INTRINSIC MAX,MIN
 *     ..
 *
 *     Test the input parameters.
@@ -188,11 +236,15 @@
           INFO = 3
       ELSE IF (N.LT.0) THEN
           INFO = 4
-      ELSE IF (INCX.EQ.0) THEN
+      ELSE IF (K.LT.0) THEN
+          INFO = 5
+      ELSE IF (LDA.LT. (K+1)) THEN
           INFO = 7
+      ELSE IF (INCX.EQ.0) THEN
+          INFO = 9
       END IF
       IF (INFO.NE.0) THEN
-          CALL XERBLA('STPSV ',INFO)
+          CALL XERBLA('STBSV ',INFO)
           RETURN
       END IF
 *
@@ -211,144 +263,97 @@
           KX = 1
       END IF
 *
-*     Start the operations. In this version the elements of AP are
-*     accessed sequentially with one pass through AP.
+*     Start the operations. In this version the elements of A are
+*     accessed by sequentially with one pass through A.
 *
       IF (LSAME(TRANS,'N')) THEN
 *
 *        Form  x := inv( A )*x.
 *
           IF (LSAME(UPLO,'U')) THEN
-               KK = (N* (N+1))/2
-c              IF (INCX.EQ.1) THEN
-c                  DO 20 J = N,1,-1
-c                      IF (X(J).NE.ZERO) THEN
-c                          IF (NOUNIT) X(J) = X(J)/AP(KK)
-c                          TEMP = X(J)
-c                          K = KK - 1
-c                          DO 10 I = J - 1,1,-1
-c                              X(I) = X(I) - TEMP*AP(K)
-c                              K = K - 1
-c   10                     CONTINUE
-c                      END IF
-c                      KK = KK - J
-c   20             CONTINUE
-c              ELSE
-                  JX = KX + (N-1)*INCX
+              KPLUS1 = K + 1
+              
+                  KX = KX + (N-1)*INCX
+                  JX = KX
                   DO 40 J = N,1,-1
+                      KX = KX - INCX
                       IF (X(JX).NE.ZERO) THEN
-                          IF (NOUNIT) X(JX) = X(JX)/AP(KK)
+                          IX = KX
+                          L = KPLUS1 - J
+                          IF (NOUNIT) X(JX) = X(JX)/A(KPLUS1,J)
                           TEMP = X(JX)
-                          IX = JX
-                          DO 30 K = KK - 1,KK - J + 1,-1
+                          DO 30 I = J - 1,MAX(1,J-K),-1
+                              X(IX) = X(IX) - TEMP*A(L+I,J)
                               IX = IX - INCX
-                              X(IX) = X(IX) - TEMP*AP(K)
    30                     CONTINUE
                       END IF
                       JX = JX - INCX
-                      KK = KK - J
    40             CONTINUE
-c              END IF
+            
           ELSE
-              KK = 1
-c              IF (INCX.EQ.1) THEN
-c                  DO 60 J = 1,N
-c                      IF (X(J).NE.ZERO) THEN
-c                          IF (NOUNIT) X(J) = X(J)/AP(KK)
-c                          TEMP = X(J)
-c                          K = KK + 1
-c                          DO 50 I = J + 1,N
-c                              X(I) = X(I) - TEMP*AP(K)
-c                              K = K + 1
-c   50                     CONTINUE
-c                      END IF
-c                      KK = KK + (N-J+1)
-c   60             CONTINUE
-c              ELSE
+              
                   JX = KX
                   DO 80 J = 1,N
+                      KX = KX + INCX
                       IF (X(JX).NE.ZERO) THEN
-                          IF (NOUNIT) X(JX) = X(JX)/AP(KK)
+                          IX = KX
+                          L = 1 - J
+                          IF (NOUNIT) X(JX) = X(JX)/A(1,J)
                           TEMP = X(JX)
-                          IX = JX
-                          DO 70 K = KK + 1,KK + N - J
+                          DO 70 I = J + 1,MIN(N,J+K)
+                              X(IX) = X(IX) - TEMP*A(L+I,J)
                               IX = IX + INCX
-                              X(IX) = X(IX) - TEMP*AP(K)
    70                     CONTINUE
                       END IF
                       JX = JX + INCX
-                      KK = KK + (N-J+1)
    80             CONTINUE
-c              END IF
+              
           END IF
       ELSE
 *
-*        Form  x := inv( A**T )*x.
+*        Form  x := inv( A**T)*x.
 *
           IF (LSAME(UPLO,'U')) THEN
-              KK = 1
-c              IF (INCX.EQ.1) THEN
-c                  DO 100 J = 1,N
-c                      TEMP = X(J)
-c                      K = KK
-c                      DO 90 I = 1,J - 1
-c                          TEMP = TEMP - AP(K)*X(I)
-c                          K = K + 1
-c   90                 CONTINUE
-c                      IF (NOUNIT) TEMP = TEMP/AP(KK+J-1)
-c                      X(J) = TEMP
-c                      KK = KK + J
-c  100             CONTINUE
-c              ELSE
+              KPLUS1 = K + 1
+         
                   JX = KX
                   DO 120 J = 1,N
                       TEMP = X(JX)
                       IX = KX
-                      DO 110 K = KK,KK + J - 2
-                          TEMP = TEMP - AP(K)*X(IX)
+                      L = KPLUS1 - J
+                      DO 110 I = MAX(1,J-K),J - 1
+                          TEMP = TEMP - A(L+I,J)*X(IX)
                           IX = IX + INCX
   110                 CONTINUE
-                      IF (NOUNIT) TEMP = TEMP/AP(KK+J-1)
+                      IF (NOUNIT) TEMP = TEMP/A(KPLUS1,J)
                       X(JX) = TEMP
                       JX = JX + INCX
-                      KK = KK + J
+                      IF (J.GT.K) KX = KX + INCX
   120             CONTINUE
-c             END IF
+             
           ELSE
-              KK = (N* (N+1))/2
-c              IF (INCX.EQ.1) THEN
-c                  DO 140 J = N,1,-1
-c                      TEMP = X(J)
-c                      K = KK
-c                      DO 130 I = N,J + 1,-1
-c                          TEMP = TEMP - AP(K)*X(I)
-c                          K = K - 1
-c  130                 CONTINUE
-c                      IF (NOUNIT) TEMP = TEMP/AP(KK-N+J)
-c                      X(J) = TEMP
-c                      KK = KK - (N-J+1)
-c  140             CONTINUE
-c              ELSE
+             
                   KX = KX + (N-1)*INCX
                   JX = KX
                   DO 160 J = N,1,-1
                       TEMP = X(JX)
                       IX = KX
-                      DO 150 K = KK,KK - (N- (J+1)),-1
-                          TEMP = TEMP - AP(K)*X(IX)
+                      L = 1 - J
+                      DO 150 I = MIN(N,J+K),J + 1,-1
+                          TEMP = TEMP - A(L+I,J)*X(IX)
                           IX = IX - INCX
   150                 CONTINUE
-                      IF (NOUNIT) TEMP = TEMP/AP(KK-N+J)
+                      IF (NOUNIT) TEMP = TEMP/A(1,J)
                       X(JX) = TEMP
                       JX = JX - INCX
-                      KK = KK - (N-J+1)
+                      IF ((N-J).GE.K) KX = KX - INCX
   160             CONTINUE
-c              END IF
+             
           END IF
       END IF
 *
       RETURN
 *
-*     End of STPSV .
+*     End of STBSV .
 *
       END

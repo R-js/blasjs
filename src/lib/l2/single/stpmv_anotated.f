@@ -1,4 +1,4 @@
-*> \brief \b STPSV
+*> \brief \b STPMV
 *
 *  =========== DOCUMENTATION ===========
 *
@@ -8,7 +8,7 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE STPSV(UPLO,TRANS,DIAG,N,AP,X,INCX)
+*       SUBROUTINE STPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
 *
 *       .. Scalar Arguments ..
 *       INTEGER INCX,N
@@ -24,15 +24,12 @@
 *>
 *> \verbatim
 *>
-*> STPSV  solves one of the systems of equations
+*> STPMV  performs one of the matrix-vector operations
 *>
-*>    A*x = b,   or   A**T*x = b,
+*>    x := A*x,   or   x := A**T*x,
 *>
-*> where b and x are n element vectors and A is an n by n unit, or
-*> non-unit, upper or lower triangular matrix, supplied in packed form.
-*>
-*> No test for singularity or near-singularity is included in this
-*> routine. Such tests must be performed before calling this routine.
+*> where x is an n element vector and  A is an n by n unit, or non-unit,
+*> upper or lower triangular matrix, supplied in packed form.
 *> \endverbatim
 *
 *  Arguments:
@@ -52,14 +49,14 @@
 *> \param[in] TRANS
 *> \verbatim
 *>          TRANS is CHARACTER*1
-*>           On entry, TRANS specifies the equations to be solved as
+*>           On entry, TRANS specifies the operation to be performed as
 *>           follows:
 *>
-*>              TRANS = 'N' or 'n'   A*x = b.
+*>              TRANS = 'N' or 'n'   x := A*x.
 *>
-*>              TRANS = 'T' or 't'   A**T*x = b.
+*>              TRANS = 'T' or 't'   x := A**T*x.
 *>
-*>              TRANS = 'C' or 'c'   A**T*x = b.
+*>              TRANS = 'C' or 'c'   x := A**T*x.
 *> \endverbatim
 *>
 *> \param[in] DIAG
@@ -104,8 +101,8 @@
 *>          X is REAL array, dimension at least
 *>           ( 1 + ( n - 1 )*abs( INCX ) ).
 *>           Before entry, the incremented array X must contain the n
-*>           element right-hand side vector b. On exit, X is overwritten
-*>           with the solution vector x.
+*>           element vector x. On exit, X is overwritten with the
+*>           transformed vector x.
 *> \endverbatim
 *>
 *> \param[in] INCX
@@ -133,6 +130,7 @@
 *> \verbatim
 *>
 *>  Level 2 Blas routine.
+*>  The vector and matrix arguments are not referenced when N = 0, or M = 0
 *>
 *>  -- Written on 22-October-1986.
 *>     Jack Dongarra, Argonne National Lab.
@@ -142,7 +140,7 @@
 *> \endverbatim
 *>
 *  =====================================================================
-      SUBROUTINE STPSV(UPLO,TRANS,DIAG,N,AP,X,INCX)
+      SUBROUTINE STPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
 *
 *  -- Reference BLAS level2 routine (version 3.7.0) --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -192,7 +190,7 @@
           INFO = 7
       END IF
       IF (INFO.NE.0) THEN
-          CALL XERBLA('STPSV ',INFO)
+          CALL XERBLA('STPMV ',INFO)
           RETURN
       END IF
 *
@@ -216,139 +214,89 @@
 *
       IF (LSAME(TRANS,'N')) THEN
 *
-*        Form  x := inv( A )*x.
+*        Form  x:= A*x.
 *
           IF (LSAME(UPLO,'U')) THEN
-               KK = (N* (N+1))/2
-c              IF (INCX.EQ.1) THEN
-c                  DO 20 J = N,1,-1
-c                      IF (X(J).NE.ZERO) THEN
-c                          IF (NOUNIT) X(J) = X(J)/AP(KK)
-c                          TEMP = X(J)
-c                          K = KK - 1
-c                          DO 10 I = J - 1,1,-1
-c                              X(I) = X(I) - TEMP*AP(K)
-c                              K = K - 1
-c   10                     CONTINUE
-c                      END IF
-c                      KK = KK - J
-c   20             CONTINUE
-c              ELSE
-                  JX = KX + (N-1)*INCX
-                  DO 40 J = N,1,-1
-                      IF (X(JX).NE.ZERO) THEN
-                          IF (NOUNIT) X(JX) = X(JX)/AP(KK)
-                          TEMP = X(JX)
-                          IX = JX
-                          DO 30 K = KK - 1,KK - J + 1,-1
-                              IX = IX - INCX
-                              X(IX) = X(IX) - TEMP*AP(K)
-   30                     CONTINUE
-                      END IF
-                      JX = JX - INCX
-                      KK = KK - J
-   40             CONTINUE
-c              END IF
-          ELSE
               KK = 1
-c              IF (INCX.EQ.1) THEN
-c                  DO 60 J = 1,N
-c                      IF (X(J).NE.ZERO) THEN
-c                          IF (NOUNIT) X(J) = X(J)/AP(KK)
-c                          TEMP = X(J)
-c                          K = KK + 1
-c                          DO 50 I = J + 1,N
-c                              X(I) = X(I) - TEMP*AP(K)
-c                              K = K + 1
-c   50                     CONTINUE
-c                      END IF
-c                      KK = KK + (N-J+1)
-c   60             CONTINUE
-c              ELSE
+             
                   JX = KX
-                  DO 80 J = 1,N
+                  DO 40 J = 1,N
                       IF (X(JX).NE.ZERO) THEN
-                          IF (NOUNIT) X(JX) = X(JX)/AP(KK)
                           TEMP = X(JX)
-                          IX = JX
-                          DO 70 K = KK + 1,KK + N - J
+                          IX = KX
+                          DO 30 K = KK,KK + J - 2
+                              X(IX) = X(IX) + TEMP*AP(K)
                               IX = IX + INCX
-                              X(IX) = X(IX) - TEMP*AP(K)
-   70                     CONTINUE
+   30                     CONTINUE
+                          IF (NOUNIT) X(JX) = X(JX)*AP(KK+J-1)
                       END IF
                       JX = JX + INCX
-                      KK = KK + (N-J+1)
+                      KK = KK + J
+   40             CONTINUE
+          
+          ELSE
+              KK = (N* (N+1))/2
+             
+                  KX = KX + (N-1)*INCX
+                  JX = KX
+                  DO 80 J = N,1,-1
+                      IF (X(JX).NE.ZERO) THEN
+                          TEMP = X(JX)
+                          IX = KX
+                          DO 70 K = KK,KK - (N- (J+1)),-1
+                              X(IX) = X(IX) + TEMP*AP(K)
+                              IX = IX - INCX
+   70                     CONTINUE
+                          IF (NOUNIT) X(JX) = X(JX)*AP(KK-N+J)
+                      END IF
+                      JX = JX - INCX
+                      KK = KK - (N-J+1)
    80             CONTINUE
-c              END IF
+              
           END IF
       ELSE
 *
-*        Form  x := inv( A**T )*x.
+*        Form  x := A**T*x.
 *
           IF (LSAME(UPLO,'U')) THEN
-              KK = 1
-c              IF (INCX.EQ.1) THEN
-c                  DO 100 J = 1,N
-c                      TEMP = X(J)
-c                      K = KK
-c                      DO 90 I = 1,J - 1
-c                          TEMP = TEMP - AP(K)*X(I)
-c                          K = K + 1
-c   90                 CONTINUE
-c                      IF (NOUNIT) TEMP = TEMP/AP(KK+J-1)
-c                      X(J) = TEMP
-c                      KK = KK + J
-c  100             CONTINUE
-c              ELSE
-                  JX = KX
-                  DO 120 J = 1,N
-                      TEMP = X(JX)
-                      IX = KX
-                      DO 110 K = KK,KK + J - 2
-                          TEMP = TEMP - AP(K)*X(IX)
-                          IX = IX + INCX
-  110                 CONTINUE
-                      IF (NOUNIT) TEMP = TEMP/AP(KK+J-1)
-                      X(JX) = TEMP
-                      JX = JX + INCX
-                      KK = KK + J
-  120             CONTINUE
-c             END IF
-          ELSE
               KK = (N* (N+1))/2
-c              IF (INCX.EQ.1) THEN
-c                  DO 140 J = N,1,-1
-c                      TEMP = X(J)
-c                      K = KK
-c                      DO 130 I = N,J + 1,-1
-c                          TEMP = TEMP - AP(K)*X(I)
-c                          K = K - 1
-c  130                 CONTINUE
-c                      IF (NOUNIT) TEMP = TEMP/AP(KK-N+J)
-c                      X(J) = TEMP
-c                      KK = KK - (N-J+1)
-c  140             CONTINUE
-c              ELSE
-                  KX = KX + (N-1)*INCX
-                  JX = KX
-                  DO 160 J = N,1,-1
+         
+                  JX = KX + (N-1)*INCX
+                  DO 120 J = N,1,-1
                       TEMP = X(JX)
-                      IX = KX
-                      DO 150 K = KK,KK - (N- (J+1)),-1
-                          TEMP = TEMP - AP(K)*X(IX)
+                      IX = JX
+                      IF (NOUNIT) TEMP = TEMP*AP(KK)
+                      DO 110 K = KK - 1,KK - J + 1,-1
                           IX = IX - INCX
-  150                 CONTINUE
-                      IF (NOUNIT) TEMP = TEMP/AP(KK-N+J)
+                          TEMP = TEMP + AP(K)*X(IX)
+  110                 CONTINUE
                       X(JX) = TEMP
                       JX = JX - INCX
-                      KK = KK - (N-J+1)
+                      KK = KK - J
+  120             CONTINUE
+          
+          ELSE
+              KK = 1
+          
+                  JX = KX
+                  DO 160 J = 1,N
+                      TEMP = X(JX)
+                      IX = JX
+                      IF (NOUNIT) TEMP = TEMP*AP(KK)
+                      DO 150 K = KK + 1,KK + N - J
+                          IX = IX + INCX
+                          TEMP = TEMP + AP(K)*X(IX)
+  150                 CONTINUE
+                      X(JX) = TEMP
+                      JX = JX + INCX
+                      KK = KK + (N-J+1)
   160             CONTINUE
-c              END IF
+           
           END IF
       END IF
 *
       RETURN
 *
-*     End of STPSV .
+*     End of STPMV .
 *
       END

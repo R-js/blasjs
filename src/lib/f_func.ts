@@ -128,17 +128,17 @@ export function errWrongArg(arg: string, value): string {
 
 export type FortranMatrixSetterGetter = (col: number) => (row?: number) => number | Complex;
 
-export type Matrix2D = Readonly<{
-    rowBase: number,
-    colBase: number,
-    nrCols: number, // inclusive note!!
-    nrRows: number,
-    r: fpArray, //[(ncols+1)*(nrows+1)]
-    i?: fpArray, //imaginary part of matrix [(ncols+1)*(nrows+1)]
-    coord: (number) => (number) => number;
-    colOf: (number) => number;
+export type Matrix2D = {
+    readonly rowBase: number,
+    readonly colBase: number,
+    readonly nrCols: number, // inclusive note!!
+    readonly nrRows: number,
+    readonly r: fpArray, //[(ncols+1)*(nrows+1)]
+    readonly i?: fpArray, //imaginary part of matrix [(ncols+1)*(nrows+1)]
+    readonly coord: (number) => (number) => number;
+    readonly colOf: (number) => number;
     //s: FortranMatrixSetterGetter
-}>;
+};
 
 
 export function mimicFMatrix2D(r: fpArray, i?: fpArray) {
