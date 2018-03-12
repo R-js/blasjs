@@ -6,6 +6,7 @@ import { ssbmv } from './single/ssbmv';
 import { sspmv } from './single/sspmv';
 import { sspr } from './single/sspr';
 import { ssymv } from './single/ssymv';
+import { ssyr } from './single/ssyr';
 
 export const level2 = {
     sgbmv,
@@ -14,6 +15,7 @@ export const level2 = {
     ssbmv,
     sspmv,
     sspr,
-    ssymv
+    ssymv,
+    ssyr
 };
 
