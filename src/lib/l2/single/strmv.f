@@ -227,17 +227,17 @@
 *        Form  x := A*x.
 *
           IF (LSAME(UPLO,'U')) THEN
-              IF (INCX.EQ.1) THEN
-                  DO 20 J = 1,N
-                      IF (X(J).NE.ZERO) THEN
-                          TEMP = X(J)
-                          DO 10 I = 1,J - 1
-                              X(I) = X(I) + TEMP*A(I,J)
-   10                     CONTINUE
-                          IF (NOUNIT) X(J) = X(J)*A(J,J)
-                      END IF
-   20             CONTINUE
-              ELSE
+c              IF (INCX.EQ.1) THEN
+c                  DO 20 J = 1,N
+c                      IF (X(J).NE.ZERO) THEN
+c                          TEMP = X(J)
+c                          DO 10 I = 1,J - 1
+c                              X(I) = X(I) + TEMP*A(I,J)
+c   10                     CONTINUE
+c                          IF (NOUNIT) X(J) = X(J)*A(J,J)
+c                      END IF
+c   20             CONTINUE
+c              ELSE
                   JX = KX
                   DO 40 J = 1,N
                       IF (X(JX).NE.ZERO) THEN
@@ -251,19 +251,19 @@
                       END IF
                       JX = JX + INCX
    40             CONTINUE
-              END IF
+c              END IF
           ELSE
-              IF (INCX.EQ.1) THEN
-                  DO 60 J = N,1,-1
-                      IF (X(J).NE.ZERO) THEN
-                          TEMP = X(J)
-                          DO 50 I = N,J + 1,-1
-                              X(I) = X(I) + TEMP*A(I,J)
-   50                     CONTINUE
-                          IF (NOUNIT) X(J) = X(J)*A(J,J)
-                      END IF
-   60             CONTINUE
-              ELSE
+c              IF (INCX.EQ.1) THEN
+c                  DO 60 J = N,1,-1
+c                      IF (X(J).NE.ZERO) THEN
+c                          TEMP = X(J)
+c                          DO 50 I = N,J + 1,-1
+c                              X(I) = X(I) + TEMP*A(I,J)
+c   50                     CONTINUE
+c                          IF (NOUNIT) X(J) = X(J)*A(J,J)
+c                      END IF
+c   60             CONTINUE
+c              ELSE
                   KX = KX + (N-1)*INCX
                   JX = KX
                   DO 80 J = N,1,-1
@@ -278,23 +278,23 @@
                       END IF
                       JX = JX - INCX
    80             CONTINUE
-              END IF
+c              END IF
           END IF
       ELSE
 *
 *        Form  x := A**T*x.
 *
           IF (LSAME(UPLO,'U')) THEN
-              IF (INCX.EQ.1) THEN
-                  DO 100 J = N,1,-1
-                      TEMP = X(J)
-                      IF (NOUNIT) TEMP = TEMP*A(J,J)
-                      DO 90 I = J - 1,1,-1
-                          TEMP = TEMP + A(I,J)*X(I)
-   90                 CONTINUE
-                      X(J) = TEMP
-  100             CONTINUE
-              ELSE
+c              IF (INCX.EQ.1) THEN
+c                  DO 100 J = N,1,-1
+c                      TEMP = X(J)
+c                      IF (NOUNIT) TEMP = TEMP*A(J,J)
+c                      DO 90 I = J - 1,1,-1
+c                          TEMP = TEMP + A(I,J)*X(I)
+c   90                 CONTINUE
+c                      X(J) = TEMP
+c  100             CONTINUE
+c              ELSE
                   JX = KX + (N-1)*INCX
                   DO 120 J = N,1,-1
                       TEMP = X(JX)
@@ -307,18 +307,18 @@
                       X(JX) = TEMP
                       JX = JX - INCX
   120             CONTINUE
-              END IF
+c              END IF
           ELSE
-              IF (INCX.EQ.1) THEN
-                  DO 140 J = 1,N
-                      TEMP = X(J)
-                      IF (NOUNIT) TEMP = TEMP*A(J,J)
-                      DO 130 I = J + 1,N
-                          TEMP = TEMP + A(I,J)*X(I)
-  130                 CONTINUE
-                      X(J) = TEMP
-  140             CONTINUE
-              ELSE
+c              IF (INCX.EQ.1) THEN
+c                  DO 140 J = 1,N
+c                      TEMP = X(J)
+c                      IF (NOUNIT) TEMP = TEMP*A(J,J)
+c                      DO 130 I = J + 1,N
+c                          TEMP = TEMP + A(I,J)*X(I)
+c  130                 CONTINUE
+c                      X(J) = TEMP
+c  140             CONTINUE
+c              ELSE
                   JX = KX
                   DO 160 J = 1,N
                       TEMP = X(JX)
@@ -331,7 +331,7 @@
                       X(JX) = TEMP
                       JX = JX + INCX
   160             CONTINUE
-              END IF
+c              END IF
           END IF
       END IF
 *

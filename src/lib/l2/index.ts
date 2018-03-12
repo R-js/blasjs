@@ -12,6 +12,7 @@ import { stbmv } from './single/stbmv';
 import { stbsv } from './single/stbsv';
 import { stpmv } from './single/stpmv';
 import { stpsv } from './single/stpsv';
+import { strmv } from './single/strmv';
 
 export const level2 = {
     //single
@@ -27,6 +28,7 @@ export const level2 = {
     stbmv,
     stbsv,
     stpmv,
-    stpsv
+    stpsv,
+    strmv
 };
 
