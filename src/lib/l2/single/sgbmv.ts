@@ -30,11 +30,14 @@ export function sgbmv(
     incy: number
 ): void {
 
-    const tr = trans.toUpperCase()[0];
+    // lowerCase it all in a fast way
+
+    const tr = String.fromCharCode(trans.charCodeAt(0) | 0x20);
+
 
     let info = 0;
 
-    if (tr !== 'N' && tr !== 'T' && tr !== 'C') {
+    if (tr !== 'n' && tr !== 't' && tr !== 'c') {
         info = 1;
     }
     else if (m < 0) info = 2
@@ -51,8 +54,8 @@ export function sgbmv(
 
     if (m === 0 || n === 0 || (alpha === 0 && beta === 0)) return;
 
-    let lenx = tr === 'N' ? n : m;
-    let leny = tr === 'N' ? m : n;
+    let lenx = tr === 'n' ? n : m;
+    let leny = tr === 'n' ? m : n;
 
     let kx = incx > 0 ? 1 : 1 - (lenx - 1) * incx;
     let ky = incy > 0 ? 1 : 1 - (leny - 1) * incy;
@@ -96,7 +99,7 @@ export function sgbmv(
 
     const kup1 = ku + 1;
 
-    if (tr === 'N') {
+    if (tr === 'n') {
         // FORM: y := alpha*A*x + y.
         let jx = kx;
 
