@@ -1,4 +1,7 @@
 
+import { cgbmv } from './complex/cgbmv';
+import { cgemv } from './complex/cgemv';
+//
 import { sgbmv } from './single/sgbmv';
 import { sgemv } from './single/sgemv';
 import { sger } from './single/sger';
@@ -52,6 +55,7 @@ export const level2 = {
     dtrmv: strmv, //15
     dtrsv: strsv,
     //complex single
-
+    cgemv,
+    cgbmv
 };
 
