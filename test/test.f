@@ -17,7 +17,7 @@ C
 
       PRINT *, "LOWERBOUND", LB(2)
       PRINT *, "UPPERBOUND", UBOUND(VALUE)
-c        INTEGER X1,X2
+c      INTEGER X1,X2
 c      ADD2(X1,X2)
       RETURN
     

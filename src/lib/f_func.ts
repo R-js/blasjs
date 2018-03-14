@@ -70,7 +70,7 @@ export function complex(re: number = 0, im: number = 0): Complex {
     return { re, im };
 }
 
-// dont sue
+// TODO: REMOVE THIS in next iteration!! explicitly it out  
 export const cmult = (reA: number, imA: number, reB: number, imB: number): Complex => {
     //   (a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
     return {

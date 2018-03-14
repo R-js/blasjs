@@ -285,17 +285,17 @@
 *     First form  y := beta*y.
 *
       IF (BETA.NE.ONE) THEN
-          IF (INCY.EQ.1) THEN
-              IF (BETA.EQ.ZERO) THEN
-                  DO 10 I = 1,LENY
-                      Y(I) = ZERO
-   10             CONTINUE
-              ELSE
-                  DO 20 I = 1,LENY
-                      Y(I) = BETA*Y(I)
-   20             CONTINUE
-              END IF
-          ELSE
+c          IF (INCY.EQ.1) THEN
+c              IF (BETA.EQ.ZERO) THEN
+c                  DO 10 I = 1,LENY
+c                      Y(I) = ZERO
+c   10             CONTINUE
+c              ELSE
+c                  DO 20 I = 1,LENY
+c                      Y(I) = BETA*Y(I)
+c   20             CONTINUE
+c              END IF
+c          ELSE
               IY = KY
               IF (BETA.EQ.ZERO) THEN
                   DO 30 I = 1,LENY
@@ -317,16 +317,16 @@
 *        Form  y := alpha*A*x + y.
 *
           JX = KX
-          IF (INCY.EQ.1) THEN
-              DO 60 J = 1,N
-                  TEMP = ALPHA*X(JX)
-                  K = KUP1 - J
-                  DO 50 I = MAX(1,J-KU),MIN(M,J+KL)
-                      Y(I) = Y(I) + TEMP*A(K+I,J)
-   50             CONTINUE
-                  JX = JX + INCX
-   60         CONTINUE
-          ELSE
+c          IF (INCY.EQ.1) THEN
+c              DO 60 J = 1,N
+c                  TEMP = ALPHA*X(JX)
+c                  K = KUP1 - J
+c                  DO 50 I = MAX(1,J-KU),MIN(M,J+KL)
+c                      Y(I) = Y(I) + TEMP*A(K+I,J)
+c   50             CONTINUE
+c                  JX = JX + INCX
+c   60         CONTINUE
+c          ELSE
               DO 80 J = 1,N
                   TEMP = ALPHA*X(JX)
                   IY = KY
@@ -338,29 +338,29 @@
                   JX = JX + INCX
                   IF (J.GT.KU) KY = KY + INCY
    80         CONTINUE
-          END IF
+c          END IF
       ELSE
 *
 *        Form  y := alpha*A**T*x + y  or  y := alpha*A**H*x + y.
 *
           JY = KY
-          IF (INCX.EQ.1) THEN
-              DO 110 J = 1,N
-                  TEMP = ZERO
-                  K = KUP1 - J
-                  IF (NOCONJ) THEN
-                      DO 90 I = MAX(1,J-KU),MIN(M,J+KL)
-                          TEMP = TEMP + A(K+I,J)*X(I)
-   90                 CONTINUE
-                  ELSE
-                      DO 100 I = MAX(1,J-KU),MIN(M,J+KL)
-                          TEMP = TEMP + CONJG(A(K+I,J))*X(I)
-  100                 CONTINUE
-                  END IF
-                  Y(JY) = Y(JY) + ALPHA*TEMP
-                  JY = JY + INCY
-  110         CONTINUE
-          ELSE
+c          IF (INCX.EQ.1) THEN
+c              DO 110 J = 1,N
+c                  TEMP = ZERO
+c                  K = KUP1 - J
+c                  IF (NOCONJ) THEN
+c                      DO 90 I = MAX(1,J-KU),MIN(M,J+KL)
+c                          TEMP = TEMP + A(K+I,J)*X(I)
+c   90                 CONTINUE
+c                  ELSE
+c                      DO 100 I = MAX(1,J-KU),MIN(M,J+KL)
+c                          TEMP = TEMP + CONJG(A(K+I,J))*X(I)
+c  100                 CONTINUE
+c                  END IF
+c                  Y(JY) = Y(JY) + ALPHA*TEMP
+c                  JY = JY + INCY
+c  110         CONTINUE
+c          ELSE
               DO 140 J = 1,N
                   TEMP = ZERO
                   IX = KX
@@ -380,7 +380,7 @@
                   JY = JY + INCY
                   IF (J.GT.KU) KX = KX + INCX
   140         CONTINUE
-          END IF
+c          END IF
       END IF
 *
       RETURN
