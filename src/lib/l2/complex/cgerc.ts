@@ -23,13 +23,12 @@ export function cgerc(
     m: number,
     n: number,
     alpha: Complex,
-    a: Matrix2D,
-    lda: number,
     x: FortranArr,
     incx: number,
-    beta: Complex,
     y: FortranArr,
-    incy: number): void {
+    incy: number,
+    a: Matrix2D,
+    lda: number): void {
 
     if (y.i === undefined) {
         throw new Error(errMissingIm('y.i'));
@@ -43,14 +42,11 @@ export function cgerc(
         throw new Error(errMissingIm('a.i'));
     }
 
-    const betaIsZero = beta.re === 0 && beta.im === 0;
-    const betaIsOne = beta.re === 1 && beta.im === 0;
-
     const alphaIsZero = alpha.re === 0 && alpha.im === 0;
 
     //stripp mine
     const { re: AlphaRe, im: AlphaIm } = alpha;
-    const { re: BetaRe, im: BetaIm } = beta;
+    //const { re: BetaRe, im: BetaIm } = beta;
 
 
     let info = 0;
@@ -85,19 +81,21 @@ export function cgerc(
     let jy = incy > 0 ? 1 : 1 - (n - 1) * incy;
     let kx = incx > 0 ? 1 : 1 - (m - 1) * incx;
 
+    jy -= y.base;
+
     for (let j = 1; j <= n; j++) {
-        if (y.r[jy - y.base] === 0 && y.i[jy - y.base] === 0) {
+        if (y.r[jy] === 0 && y.i[jy] === 0) {
             //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
             //CONJ( (a + bi) )(c+di)= (a*c+b*d), i(a*d-b*c)
-            let tempRe = AlphaRe * y.r[jy - y.base] + AlphaIm * y.i[jy - y.base];
-            let tempIm = AlphaRe * y.i[jy - y.base] + AlphaIm * y.r[jy - y.base];
+            let tempRe = AlphaRe * y.r[jy] + AlphaIm * y.i[jy];
+            let tempIm = AlphaRe * y.i[jy] - AlphaIm * y.r[jy];
 
-            let ix = kx;
+            let ix = kx - x.base;
             const coords = a.colOfEx(j);
             for (let i = 1; i <= m; i++) {
                 //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-                a.r[coords] += x.r[ix - x.base] * tempRe - x.i[ix - x.base] * tempIm;
-                a.i[coords] += x.r[ix - x.base] * tempIm + x.i[ix - x.base] * tempRe;
+                a.r[coords + i] += x.r[ix] * tempRe - x.i[ix] * tempIm;
+                a.i[coords + i] += x.r[ix] * tempIm + x.i[ix] * tempRe;
                 ix += incx;
             }
             jy += incy;

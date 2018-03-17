@@ -234,17 +234,17 @@
 *     First form  y := beta*y.
 *
       IF (BETA.NE.ONE) THEN
-          IF (INCY.EQ.1) THEN
-              IF (BETA.EQ.ZERO) THEN
-                  DO 10 I = 1,N
-                      Y(I) = ZERO
-   10             CONTINUE
-              ELSE
-                  DO 20 I = 1,N
-                      Y(I) = BETA*Y(I)
-   20             CONTINUE
-              END IF
-          ELSE
+c          IF (INCY.EQ.1) THEN
+c              IF (BETA.EQ.ZERO) THEN
+c                  DO 10 I = 1,N
+c                      Y(I) = ZERO
+c   10             CONTINUE
+c              ELSE
+c                  DO 20 I = 1,N
+c                      Y(I) = BETA*Y(I)
+c   20             CONTINUE
+c             END IF
+c          ELSE
               IY = KY
               IF (BETA.EQ.ZERO) THEN
                   DO 30 I = 1,N
@@ -257,24 +257,24 @@
                       IY = IY + INCY
    40             CONTINUE
               END IF
-          END IF
+c          END IF
       END IF
       IF (ALPHA.EQ.ZERO) RETURN
       IF (LSAME(UPLO,'U')) THEN
 *
 *        Form  y  when A is stored in upper triangle.
 *
-          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
-              DO 60 J = 1,N
-                  TEMP1 = ALPHA*X(J)
-                  TEMP2 = ZERO
-                  DO 50 I = 1,J - 1
-                      Y(I) = Y(I) + TEMP1*A(I,J)
-                      TEMP2 = TEMP2 + CONJG(A(I,J))*X(I)
-   50             CONTINUE
-                  Y(J) = Y(J) + TEMP1*REAL(A(J,J)) + ALPHA*TEMP2
-   60         CONTINUE
-          ELSE
+c          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
+c              DO 60 J = 1,N
+c                  TEMP1 = ALPHA*X(J)
+c                  TEMP2 = ZERO
+c                  DO 50 I = 1,J - 1
+c                      Y(I) = Y(I) + TEMP1*A(I,J)
+c                      TEMP2 = TEMP2 + CONJG(A(I,J))*X(I)
+c   50             CONTINUE
+c                  Y(J) = Y(J) + TEMP1*REAL(A(J,J)) + ALPHA*TEMP2
+c   60         CONTINUE
+c          ELSE
               JX = KX
               JY = KY
               DO 80 J = 1,N
@@ -292,23 +292,23 @@
                   JX = JX + INCX
                   JY = JY + INCY
    80         CONTINUE
-          END IF
+c          END IF
       ELSE
 *
 *        Form  y  when A is stored in lower triangle.
 *
-          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
-              DO 100 J = 1,N
-                  TEMP1 = ALPHA*X(J)
-                  TEMP2 = ZERO
-                  Y(J) = Y(J) + TEMP1*REAL(A(J,J))
-                  DO 90 I = J + 1,N
-                      Y(I) = Y(I) + TEMP1*A(I,J)
-                      TEMP2 = TEMP2 + CONJG(A(I,J))*X(I)
-   90             CONTINUE
-                  Y(J) = Y(J) + ALPHA*TEMP2
-  100         CONTINUE
-          ELSE
+c          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
+c              DO 100 J = 1,N
+c                  TEMP1 = ALPHA*X(J)
+c                  TEMP2 = ZERO
+c                  Y(J) = Y(J) + TEMP1*REAL(A(J,J))
+c                  DO 90 I = J + 1,N
+c                      Y(I) = Y(I) + TEMP1*A(I,J)
+c                      TEMP2 = TEMP2 + CONJG(A(I,J))*X(I)
+c   90             CONTINUE
+c                  Y(J) = Y(J) + ALPHA*TEMP2
+c  100         CONTINUE
+c          ELSE
               JX = KX
               JY = KY
               DO 120 J = 1,N
@@ -327,7 +327,7 @@
                   JX = JX + INCX
                   JY = JY + INCY
   120         CONTINUE
-          END IF
+c          END IF
       END IF
 *
       RETURN

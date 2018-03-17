@@ -191,17 +191,17 @@
       ELSE
           JY = 1 - (N-1)*INCY
       END IF
-      IF (INCX.EQ.1) THEN
-          DO 20 J = 1,N
-              IF (Y(JY).NE.ZERO) THEN
-                  TEMP = ALPHA*Y(JY)
-                  DO 10 I = 1,M
-                      A(I,J) = A(I,J) + X(I)*TEMP
-   10             CONTINUE
-              END IF
-              JY = JY + INCY
-   20     CONTINUE
-      ELSE
+c      IF (INCX.EQ.1) THEN
+c          DO 20 J = 1,N
+c              IF (Y(JY).NE.ZERO) THEN
+c                  TEMP = ALPHA*Y(JY)
+c                  DO 10 I = 1,M
+c                      A(I,J) = A(I,J) + X(I)*TEMP
+c   10             CONTINUE
+c              END IF
+c              JY = JY + INCY
+c   20     CONTINUE
+c      ELSE
           IF (INCX.GT.0) THEN
               KX = 1
           ELSE
@@ -218,7 +218,7 @@
               END IF
               JY = JY + INCY
    40     CONTINUE
-      END IF
+c      END IF
 *
       RETURN
 *

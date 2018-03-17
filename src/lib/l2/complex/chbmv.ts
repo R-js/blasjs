@@ -94,40 +94,42 @@ export function chbmv(
         }
         else {
             for (let i = 1; i <= n; i++) {
-                y.r[iy - y.base] = betaIsZero ? 0 : BetaRe * y.r[iy - y.base] - BetaIm * y.i[iy - y.base];
-                y.i[iy - y.base] = betaIsZero ? 0 : BetaRe * y.i[iy - y.base] + BetaIm * y.r[iy - y.base];
+                y.r[iy] = betaIsZero ? 0 : BetaRe * y.r[iy] - BetaIm * y.i[iy];
+                y.i[iy] = betaIsZero ? 0 : BetaRe * y.i[iy] + BetaIm * y.r[iy];
                 iy += incy;
             }
         }
     }
     if (alphaIsZero) return;
+
+    let jx = kx - x.base;
+    let jy = ky - y.base;
+
     if (ul === 'u') {
         let kplus1 = k + 1;
-        let jx = kx;
-        let jy = ky;
         for (let j = 1; j <= n; j++) {
-            let temp1Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
-            let temp1Im = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
+            let temp1Re = AlphaRe * x.r[jx] - AlphaIm * x.i[jx];
+            let temp1Im = AlphaRe * x.i[jx] + AlphaIm * x.r[jx];
 
             let temp2Re = 0;
             let temp2Im = 0;
 
-            let ix = kx;
-            let iy = ky;
+            let ix = kx - x.base;
+            let iy = ky - y.base;
 
             let L = kplus1 - j;
             let coords = a.colOfEx(j);
             for (let i = max(1, j - k); i <= j - 1; i++) {
-                y.r[iy - y.base] += temp1Re * a.r[coords + L + i] - temp1Im * a.i[coords + L + I];
-                y.i[iy - y.base] += temp1Re * a.i[coords + L + i] + temp1Im * a.r[coords + L + i];
+                y.r[iy] += temp1Re * a.r[coords + L + i] - temp1Im * a.i[coords + L + i];
+                y.i[iy] += temp1Re * a.i[coords + L + i] + temp1Im * a.r[coords + L + i];
                 // conjugate
-                temp2Re += a.r[coords + L + i] * x.r[ix - x.base] + a.i[coords + L + i] * x.i[ix - x.base];
-                temp2Im += a.r[coords + L + i] * x.i[ix - x.base] - a.i[coords + L + i] * x.r[ix - x.base];
+                temp2Re += a.r[coords + L + i] * x.r[ix] + a.i[coords + L + i] * x.i[ix];
+                temp2Im += a.r[coords + L + i] * x.i[ix] - a.i[coords + L + i] * x.r[ix];
                 ix += incx;
                 iy += incy;
             }
-            y.r[iy - y.base] += temp1Re * a.r[coords + kplus1] + (AlphaRe * temp2Re - AlphaIm * temp2Im);
-            y.i[iy - y.base] += temp1Im * a.r[coords + kplus1] + (AlphaRe * temp2Im + AlphaIm * temp2Re);
+            y.r[iy] += temp1Re * a.r[coords + kplus1] + (AlphaRe * temp2Re - AlphaIm * temp2Im);
+            y.i[iy] += temp1Im * a.r[coords + kplus1] + (AlphaRe * temp2Im + AlphaIm * temp2Re);
 
             jx += incx;
             jy += incy;
@@ -138,18 +140,17 @@ export function chbmv(
         }
     }
     else {
-        let jx = kx;
-        let jy = ky;
+
         for (let j = 1; j <= n; j++) {
-            let temp1Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
-            let temp1Im = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
+            let temp1Re = AlphaRe * x.r[jx] - AlphaIm * x.i[jx];
+            let temp1Im = AlphaRe * x.i[jx] + AlphaIm * x.r[jx];
 
             let temp2Re = 0;
             let temp2Im = 0;
 
             const coords = a.colOfEx(j);
-            y.r[jy - y.base] += temp1Re * a.r[coords + 1];
-            y.i[jy - y.base] += temp1Im * a.r[coords + 1];
+            y.r[jy] += temp1Re * a.r[coords + 1];
+            y.i[jy] += temp1Im * a.r[coords + 1];
 
             let L = 1 - j;
             let ix = jx;
@@ -159,15 +160,15 @@ export function chbmv(
                 ix += incx;
                 iy += incy;
 
-                y.r[iy - y.base] += temp1Re * a.r[coords + L + i] - temp1Im * a.i[coords + L + i];
-                y.i[iy - y.base] += temp1Re * a.i[coords + L + i] + temp1Im * a.r[coords + L + i];
+                y.r[iy] += temp1Re * a.r[coords + L + i] - temp1Im * a.i[coords + L + i];
+                y.i[iy] += temp1Re * a.i[coords + L + i] + temp1Im * a.r[coords + L + i];
 
                 // conjugate!!!
-                temp2Re += a.r[coords + L + i] * x.r[ix + x.base] + a.i[coords + L + i] * x.i[ix - x.base];
-                temp2Im += a.r[coords + L + i] * x.i[ix - x.base] - a.i[coords + L + i] * x.r[ix - x.base];
+                temp2Re += a.r[coords + L + i] * x.r[ix] + a.i[coords + L + i] * x.i[ix];
+                temp2Im += a.r[coords + L + i] * x.i[ix] - a.i[coords + L + i] * x.r[ix];
             }
-            y.r[jy - y.base] += AlphaRe * temp2Re - AlphaIm * temp2Im;
-            y.i[jy - y.base] += AlphaRe * temp2Im + AlphaIm * temp2Re;
+            y.r[jy] += AlphaRe * temp2Re - AlphaIm * temp2Im;
+            y.i[jy] += AlphaRe * temp2Im + AlphaIm * temp2Re;
 
             jx += incx;
             jy += incy;
