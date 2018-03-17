@@ -207,19 +207,19 @@
 *
 *        Form  A  when A is stored in upper triangle.
 *
-          IF (INCX.EQ.1) THEN
-              DO 20 J = 1,N
-                  IF (X(J).NE.ZERO) THEN
-                      TEMP = ALPHA*CONJG(X(J))
-                      DO 10 I = 1,J - 1
-                          A(I,J) = A(I,J) + X(I)*TEMP
-   10                 CONTINUE
-                      A(J,J) = REAL(A(J,J)) + REAL(X(J)*TEMP)
-                  ELSE
-                      A(J,J) = REAL(A(J,J))
-                  END IF
-   20         CONTINUE
-          ELSE
+c          IF (INCX.EQ.1) THEN
+c              DO 20 J = 1,N
+c                  IF (X(J).NE.ZERO) THEN
+c                      TEMP = ALPHA*CONJG(X(J))
+c                      DO 10 I = 1,J - 1
+c                          A(I,J) = A(I,J) + X(I)*TEMP
+c   10                 CONTINUE
+c                      A(J,J) = REAL(A(J,J)) + REAL(X(J)*TEMP)
+c                  ELSE
+c                      A(J,J) = REAL(A(J,J))
+c                  END IF
+c   20         CONTINUE
+c          ELSE
               JX = KX
               DO 40 J = 1,N
                   IF (X(JX).NE.ZERO) THEN
@@ -235,24 +235,24 @@
                   END IF
                   JX = JX + INCX
    40         CONTINUE
-          END IF
+c          END IF
       ELSE
 *
 *        Form  A  when A is stored in lower triangle.
 *
-          IF (INCX.EQ.1) THEN
-              DO 60 J = 1,N
-                  IF (X(J).NE.ZERO) THEN
-                      TEMP = ALPHA*CONJG(X(J))
-                      A(J,J) = REAL(A(J,J)) + REAL(TEMP*X(J))
-                      DO 50 I = J + 1,N
-                          A(I,J) = A(I,J) + X(I)*TEMP
-   50                 CONTINUE
-                  ELSE
-                      A(J,J) = REAL(A(J,J))
-                  END IF
-   60         CONTINUE
-          ELSE
+c          IF (INCX.EQ.1) THEN
+c              DO 60 J = 1,N
+c                  IF (X(J).NE.ZERO) THEN
+c                      TEMP = ALPHA*CONJG(X(J))
+c                      A(J,J) = REAL(A(J,J)) + REAL(TEMP*X(J))
+c                      DO 50 I = J + 1,N
+c                          A(I,J) = A(I,J) + X(I)*TEMP
+c   50                 CONTINUE
+c                  ELSE
+c                      A(J,J) = REAL(A(J,J))
+c                  END IF
+c   60         CONTINUE
+c          ELSE
               JX = KX
               DO 80 J = 1,N
                   IF (X(JX).NE.ZERO) THEN
@@ -268,7 +268,7 @@
                   END IF
                   JX = JX + INCX
    80         CONTINUE
-          END IF
+c          END IF
       END IF
 *
       RETURN

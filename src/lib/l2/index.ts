@@ -5,6 +5,8 @@ import { cgerc } from './complex/cgerc';
 import { cgeru } from './complex/cgeru';
 import { chbmv } from './complex/chbmv';
 import { chemv } from './complex/chemv';
+import { cher2 } from './complex/cher2';
+import { chpmv } from './complex/chpmv';
 //
 import { sgbmv } from './single/sgbmv';
 import { sgemv } from './single/sgemv';
@@ -65,6 +67,8 @@ export const level2 = {
     cgerc,
     cgeru,
     chbmv,
-    chemv
+    chemv,
+    cher2,
+    chpmv
 };
 

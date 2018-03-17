@@ -234,21 +234,21 @@
 *
 *        Form  A  when A is stored in the upper triangle.
 *
-          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
-              DO 20 J = 1,N
-                  IF ((X(J).NE.ZERO) .OR. (Y(J).NE.ZERO)) THEN
-                      TEMP1 = ALPHA*CONJG(Y(J))
-                      TEMP2 = CONJG(ALPHA*X(J))
-                      DO 10 I = 1,J - 1
-                          A(I,J) = A(I,J) + X(I)*TEMP1 + Y(I)*TEMP2
-   10                 CONTINUE
-                      A(J,J) = REAL(A(J,J)) +
-     +                         REAL(X(J)*TEMP1+Y(J)*TEMP2)
-                  ELSE
-                      A(J,J) = REAL(A(J,J))
-                  END IF
-   20         CONTINUE
-          ELSE
+c          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
+c              DO 20 J = 1,N
+c                  IF ((X(J).NE.ZERO) .OR. (Y(J).NE.ZERO)) THEN
+c                      TEMP1 = ALPHA*CONJG(Y(J))
+c                      TEMP2 = CONJG(ALPHA*X(J))
+c                      DO 10 I = 1,J - 1
+c                          A(I,J) = A(I,J) + X(I)*TEMP1 + Y(I)*TEMP2
+c   10                 CONTINUE
+c                      A(J,J) = REAL(A(J,J)) +
+c     +                         REAL(X(J)*TEMP1+Y(J)*TEMP2)
+c                  ELSE
+c                      A(J,J) = REAL(A(J,J))
+c                  END IF
+c   20         CONTINUE
+c          ELSE
               DO 40 J = 1,N
                   IF ((X(JX).NE.ZERO) .OR. (Y(JY).NE.ZERO)) THEN
                       TEMP1 = ALPHA*CONJG(Y(JY))
@@ -273,21 +273,21 @@
 *
 *        Form  A  when A is stored in the lower triangle.
 *
-          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
-              DO 60 J = 1,N
-                  IF ((X(J).NE.ZERO) .OR. (Y(J).NE.ZERO)) THEN
-                      TEMP1 = ALPHA*CONJG(Y(J))
-                      TEMP2 = CONJG(ALPHA*X(J))
-                      A(J,J) = REAL(A(J,J)) +
-     +                         REAL(X(J)*TEMP1+Y(J)*TEMP2)
-                      DO 50 I = J + 1,N
-                          A(I,J) = A(I,J) + X(I)*TEMP1 + Y(I)*TEMP2
-   50                 CONTINUE
-                  ELSE
-                      A(J,J) = REAL(A(J,J))
-                  END IF
-   60         CONTINUE
-          ELSE
+c          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
+c              DO 60 J = 1,N
+c                  IF ((X(J).NE.ZERO) .OR. (Y(J).NE.ZERO)) THEN
+c                      TEMP1 = ALPHA*CONJG(Y(J))
+c                      TEMP2 = CONJG(ALPHA*X(J))
+c                      A(J,J) = REAL(A(J,J)) +
+c     +                         REAL(X(J)*TEMP1+Y(J)*TEMP2)
+c                      DO 50 I = J + 1,N
+c                          A(I,J) = A(I,J) + X(I)*TEMP1 + Y(I)*TEMP2
+c   50                 CONTINUE
+c                  ELSE
+c                      A(J,J) = REAL(A(J,J))
+c                  END IF
+c   60         CONTINUE
+c         ELSE
               DO 80 J = 1,N
                   IF ((X(JX).NE.ZERO) .OR. (Y(JY).NE.ZERO)) THEN
                       TEMP1 = ALPHA*CONJG(Y(JY))
@@ -307,7 +307,7 @@
                   JX = JX + INCX
                   JY = JY + INCY
    80         CONTINUE
-          END IF
+c          END IF
       END IF
 *
       RETURN

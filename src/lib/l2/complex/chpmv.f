@@ -226,17 +226,17 @@
 *     First form  y := beta*y.
 *
       IF (BETA.NE.ONE) THEN
-          IF (INCY.EQ.1) THEN
-              IF (BETA.EQ.ZERO) THEN
-                  DO 10 I = 1,N
-                      Y(I) = ZERO
-   10             CONTINUE
-              ELSE
-                  DO 20 I = 1,N
-                      Y(I) = BETA*Y(I)
-   20             CONTINUE
-              END IF
-          ELSE
+c          IF (INCY.EQ.1) THEN
+c              IF (BETA.EQ.ZERO) THEN
+c                  DO 10 I = 1,N
+c                      Y(I) = ZERO
+c   10             CONTINUE
+c              ELSE
+c                  DO 20 I = 1,N
+c                      Y(I) = BETA*Y(I)
+c   20             CONTINUE
+c              END IF
+c          ELSE
               IY = KY
               IF (BETA.EQ.ZERO) THEN
                   DO 30 I = 1,N
@@ -249,7 +249,7 @@
                       IY = IY + INCY
    40             CONTINUE
               END IF
-          END IF
+c          END IF
       END IF
       IF (ALPHA.EQ.ZERO) RETURN
       KK = 1
@@ -257,20 +257,20 @@
 *
 *        Form  y  when AP contains the upper triangle.
 *
-          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
-              DO 60 J = 1,N
-                  TEMP1 = ALPHA*X(J)
-                  TEMP2 = ZERO
-                  K = KK
-                  DO 50 I = 1,J - 1
-                      Y(I) = Y(I) + TEMP1*AP(K)
-                      TEMP2 = TEMP2 + CONJG(AP(K))*X(I)
-                      K = K + 1
-   50             CONTINUE
-                  Y(J) = Y(J) + TEMP1*REAL(AP(KK+J-1)) + ALPHA*TEMP2
-                  KK = KK + J
-   60         CONTINUE
-          ELSE
+c          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
+c              DO 60 J = 1,N
+c                  TEMP1 = ALPHA*X(J)
+c                  TEMP2 = ZERO
+c                  K = KK
+c                  DO 50 I = 1,J - 1
+c                      Y(I) = Y(I) + TEMP1*AP(K)
+c                      TEMP2 = TEMP2 + CONJG(AP(K))*X(I)
+c                      K = K + 1
+c   50             CONTINUE
+c                  Y(J) = Y(J) + TEMP1*REAL(AP(KK+J-1)) + ALPHA*TEMP2
+c                  KK = KK + J
+c   60         CONTINUE
+c          ELSE
               JX = KX
               JY = KY
               DO 80 J = 1,N
@@ -289,26 +289,26 @@
                   JY = JY + INCY
                   KK = KK + J
    80         CONTINUE
-          END IF
+c          END IF
       ELSE
 *
 *        Form  y  when AP contains the lower triangle.
 *
-          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
-              DO 100 J = 1,N
-                  TEMP1 = ALPHA*X(J)
-                  TEMP2 = ZERO
-                  Y(J) = Y(J) + TEMP1*REAL(AP(KK))
-                  K = KK + 1
-                  DO 90 I = J + 1,N
-                      Y(I) = Y(I) + TEMP1*AP(K)
-                      TEMP2 = TEMP2 + CONJG(AP(K))*X(I)
-                      K = K + 1
-   90             CONTINUE
-                  Y(J) = Y(J) + ALPHA*TEMP2
-                  KK = KK + (N-J+1)
-  100         CONTINUE
-          ELSE
+c          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
+c              DO 100 J = 1,N
+c                  TEMP1 = ALPHA*X(J)
+c                  TEMP2 = ZERO
+c                  Y(J) = Y(J) + TEMP1*REAL(AP(KK))
+c                  K = KK + 1
+c                  DO 90 I = J + 1,N
+c                      Y(I) = Y(I) + TEMP1*AP(K)
+c                      TEMP2 = TEMP2 + CONJG(AP(K))*X(I)
+c                      K = K + 1
+c   90             CONTINUE
+c                  Y(J) = Y(J) + ALPHA*TEMP2
+c                  KK = KK + (N-J+1)
+c  100         CONTINUE
+c          ELSE
               JX = KX
               JY = KY
               DO 120 J = 1,N
@@ -328,7 +328,7 @@
                   JY = JY + INCY
                   KK = KK + (N-J+1)
   120         CONTINUE
-          END IF
+c          END IF
       END IF
 *
       RETURN
