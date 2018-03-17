@@ -200,22 +200,22 @@
 *
 *        Form  A  when upper triangle is stored in AP.
 *
-          IF (INCX.EQ.1) THEN
-              DO 20 J = 1,N
-                  IF (X(J).NE.ZERO) THEN
-                      TEMP = ALPHA*CONJG(X(J))
-                      K = KK
-                      DO 10 I = 1,J - 1
-                          AP(K) = AP(K) + X(I)*TEMP
-                          K = K + 1
-   10                 CONTINUE
-                      AP(KK+J-1) = REAL(AP(KK+J-1)) + REAL(X(J)*TEMP)
-                  ELSE
-                      AP(KK+J-1) = REAL(AP(KK+J-1))
-                  END IF
-                  KK = KK + J
-   20         CONTINUE
-          ELSE
+c          IF (INCX.EQ.1) THEN
+c              DO 20 J = 1,N
+c                  IF (X(J).NE.ZERO) THEN
+c                      TEMP = ALPHA*CONJG(X(J))
+c                      K = KK
+c                      DO 10 I = 1,J - 1
+c                          AP(K) = AP(K) + X(I)*TEMP
+c                          K = K + 1
+c   10                 CONTINUE
+c                      AP(KK+J-1) = REAL(AP(KK+J-1)) + REAL(X(J)*TEMP)
+c                  ELSE
+c                      AP(KK+J-1) = REAL(AP(KK+J-1))
+c                  END IF
+c                  KK = KK + J
+c   20         CONTINUE
+c          ELSE
               JX = KX
               DO 40 J = 1,N
                   IF (X(JX).NE.ZERO) THEN
@@ -232,27 +232,27 @@
                   JX = JX + INCX
                   KK = KK + J
    40         CONTINUE
-          END IF
+c          END IF
       ELSE
 *
 *        Form  A  when lower triangle is stored in AP.
 *
-          IF (INCX.EQ.1) THEN
-              DO 60 J = 1,N
-                  IF (X(J).NE.ZERO) THEN
-                      TEMP = ALPHA*CONJG(X(J))
-                      AP(KK) = REAL(AP(KK)) + REAL(TEMP*X(J))
-                      K = KK + 1
-                      DO 50 I = J + 1,N
-                          AP(K) = AP(K) + X(I)*TEMP
-                          K = K + 1
-   50                 CONTINUE
-                  ELSE
-                      AP(KK) = REAL(AP(KK))
-                  END IF
-                  KK = KK + N - J + 1
-   60         CONTINUE
-          ELSE
+c          IF (INCX.EQ.1) THEN
+c              DO 60 J = 1,N
+c                  IF (X(J).NE.ZERO) THEN
+c                      TEMP = ALPHA*CONJG(X(J))
+c                      AP(KK) = REAL(AP(KK)) + REAL(TEMP*X(J))
+c                      K = KK + 1
+c                      DO 50 I = J + 1,N
+c                          AP(K) = AP(K) + X(I)*TEMP
+c                          K = K + 1
+c   50                 CONTINUE
+c                  ELSE
+c                      AP(KK) = REAL(AP(KK))
+c                  END IF
+c                  KK = KK + N - J + 1
+c   60         CONTINUE
+c          ELSE
               JX = KX
               DO 80 J = 1,N
                   IF (X(JX).NE.ZERO) THEN
@@ -269,7 +269,7 @@
                   JX = JX + INCX
                   KK = KK + N - J + 1
    80         CONTINUE
-          END IF
+c          END IF
       END IF
 *
       RETURN
