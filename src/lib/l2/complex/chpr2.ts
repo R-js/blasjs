@@ -32,7 +32,7 @@ export function chpr2(
     }
 
     if (ap.i === undefined) {
-        throw new Error(errMissingIm('a.i'));
+        throw new Error(errMissingIm('ap.i'));
     }
 
     // faster then String.toLowerCase()
