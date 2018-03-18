@@ -273,18 +273,18 @@
 *
           IF (LSAME(UPLO,'U')) THEN
               KPLUS1 = K + 1
-              IF (INCX.EQ.1) THEN
-                  DO 20 J = N,1,-1
-                      IF (X(J).NE.ZERO) THEN
-                          L = KPLUS1 - J
-                          IF (NOUNIT) X(J) = X(J)/A(KPLUS1,J)
-                          TEMP = X(J)
-                          DO 10 I = J - 1,MAX(1,J-K),-1
-                              X(I) = X(I) - TEMP*A(L+I,J)
-   10                     CONTINUE
-                      END IF
-   20             CONTINUE
-              ELSE
+c              IF (INCX.EQ.1) THEN
+c                  DO 20 J = N,1,-1
+c                      IF (X(J).NE.ZERO) THEN
+c                          L = KPLUS1 - J
+c                          IF (NOUNIT) X(J) = X(J)/A(KPLUS1,J)
+c                          TEMP = X(J)
+c                          DO 10 I = J - 1,MAX(1,J-K),-1
+c                              X(I) = X(I) - TEMP*A(L+I,J)
+c   10                     CONTINUE
+c                      END IF
+c   20             CONTINUE
+c              ELSE
                   KX = KX + (N-1)*INCX
                   JX = KX
                   DO 40 J = N,1,-1
@@ -301,20 +301,20 @@
                       END IF
                       JX = JX - INCX
    40             CONTINUE
-              END IF
+c              END IF
           ELSE
-              IF (INCX.EQ.1) THEN
-                  DO 60 J = 1,N
-                      IF (X(J).NE.ZERO) THEN
-                          L = 1 - J
-                          IF (NOUNIT) X(J) = X(J)/A(1,J)
-                          TEMP = X(J)
-                          DO 50 I = J + 1,MIN(N,J+K)
-                              X(I) = X(I) - TEMP*A(L+I,J)
-   50                     CONTINUE
-                      END IF
-   60             CONTINUE
-              ELSE
+c              IF (INCX.EQ.1) THEN
+c                  DO 60 J = 1,N
+c                      IF (X(J).NE.ZERO) THEN
+c                          L = 1 - J
+c                          IF (NOUNIT) X(J) = X(J)/A(1,J)
+c                          TEMP = X(J)
+c                          DO 50 I = J + 1,MIN(N,J+K)
+c                              X(I) = X(I) - TEMP*A(L+I,J)
+c   50                     CONTINUE
+c                      END IF
+c   60             CONTINUE
+c              ELSE
                   JX = KX
                   DO 80 J = 1,N
                       KX = KX + INCX
@@ -330,7 +330,7 @@
                       END IF
                       JX = JX + INCX
    80             CONTINUE
-              END IF
+c              END IF
           END IF
       ELSE
 *
@@ -338,24 +338,24 @@
 *
           IF (LSAME(UPLO,'U')) THEN
               KPLUS1 = K + 1
-              IF (INCX.EQ.1) THEN
-                  DO 110 J = 1,N
-                      TEMP = X(J)
-                      L = KPLUS1 - J
-                      IF (NOCONJ) THEN
-                          DO 90 I = MAX(1,J-K),J - 1
-                              TEMP = TEMP - A(L+I,J)*X(I)
-   90                     CONTINUE
-                          IF (NOUNIT) TEMP = TEMP/A(KPLUS1,J)
-                      ELSE
-                          DO 100 I = MAX(1,J-K),J - 1
-                              TEMP = TEMP - CONJG(A(L+I,J))*X(I)
-  100                     CONTINUE
-                          IF (NOUNIT) TEMP = TEMP/CONJG(A(KPLUS1,J))
-                      END IF
-                      X(J) = TEMP
-  110             CONTINUE
-              ELSE
+c              IF (INCX.EQ.1) THEN
+c                  DO 110 J = 1,N
+c                      TEMP = X(J)
+c                      L = KPLUS1 - J
+c                      IF (NOCONJ) THEN
+c                          DO 90 I = MAX(1,J-K),J - 1
+c                              TEMP = TEMP - A(L+I,J)*X(I)
+c   90                     CONTINUE
+c                          IF (NOUNIT) TEMP = TEMP/A(KPLUS1,J)
+c                      ELSE
+c                          DO 100 I = MAX(1,J-K),J - 1
+c                              TEMP = TEMP - CONJG(A(L+I,J))*X(I)
+c  100                     CONTINUE
+c                          IF (NOUNIT) TEMP = TEMP/CONJG(A(KPLUS1,J))
+c                      END IF
+c                      X(J) = TEMP
+c  110             CONTINUE
+c              ELSE
                   JX = KX
                   DO 140 J = 1,N
                       TEMP = X(JX)
@@ -378,26 +378,26 @@
                       JX = JX + INCX
                       IF (J.GT.K) KX = KX + INCX
   140             CONTINUE
-              END IF
+c              END IF
           ELSE
-              IF (INCX.EQ.1) THEN
-                  DO 170 J = N,1,-1
-                      TEMP = X(J)
-                      L = 1 - J
-                      IF (NOCONJ) THEN
-                          DO 150 I = MIN(N,J+K),J + 1,-1
-                              TEMP = TEMP - A(L+I,J)*X(I)
-  150                     CONTINUE
-                          IF (NOUNIT) TEMP = TEMP/A(1,J)
-                      ELSE
-                          DO 160 I = MIN(N,J+K),J + 1,-1
-                              TEMP = TEMP - CONJG(A(L+I,J))*X(I)
-  160                     CONTINUE
-                          IF (NOUNIT) TEMP = TEMP/CONJG(A(1,J))
-                      END IF
-                      X(J) = TEMP
-  170             CONTINUE
-              ELSE
+c              IF (INCX.EQ.1) THEN
+c                  DO 170 J = N,1,-1
+c                      TEMP = X(J)
+c                      L = 1 - J
+c                      IF (NOCONJ) THEN
+c                          DO 150 I = MIN(N,J+K),J + 1,-1
+c                              TEMP = TEMP - A(L+I,J)*X(I)
+c  150                     CONTINUE
+c                          IF (NOUNIT) TEMP = TEMP/A(1,J)
+c                      ELSE
+c                          DO 160 I = MIN(N,J+K),J + 1,-1
+c                              TEMP = TEMP - CONJG(A(L+I,J))*X(I)
+c  160                     CONTINUE
+c                          IF (NOUNIT) TEMP = TEMP/CONJG(A(1,J))
+c                      END IF
+c                      X(J) = TEMP
+c  170             CONTINUE
+c              ELSE
                   KX = KX + (N-1)*INCX
                   JX = KX
                   DO 200 J = N,1,-1
@@ -421,7 +421,7 @@
                       JX = JX - INCX
                       IF ((N-J).GE.K) KX = KX - INCX
   200             CONTINUE
-              END IF
+c              END IF
           END IF
       END IF
 *
