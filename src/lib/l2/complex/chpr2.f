@@ -227,24 +227,24 @@
 *
 *        Form  A  when upper triangle is stored in AP.
 *
-          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
-              DO 20 J = 1,N
-                  IF ((X(J).NE.ZERO) .OR. (Y(J).NE.ZERO)) THEN
-                      TEMP1 = ALPHA*CONJG(Y(J))
-                      TEMP2 = CONJG(ALPHA*X(J))
-                      K = KK
-                      DO 10 I = 1,J - 1
-                          AP(K) = AP(K) + X(I)*TEMP1 + Y(I)*TEMP2
-                          K = K + 1
-   10                 CONTINUE
-                      AP(KK+J-1) = REAL(AP(KK+J-1)) +
-     +                             REAL(X(J)*TEMP1+Y(J)*TEMP2)
-                  ELSE
-                      AP(KK+J-1) = REAL(AP(KK+J-1))
-                  END IF
-                  KK = KK + J
-   20         CONTINUE
-          ELSE
+c          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
+c              DO 20 J = 1,N
+c                  IF ((X(J).NE.ZERO) .OR. (Y(J).NE.ZERO)) THEN
+c                      TEMP1 = ALPHA*CONJG(Y(J))
+c                      TEMP2 = CONJG(ALPHA*X(J))
+c                      K = KK
+c                      DO 10 I = 1,J - 1
+c                          AP(K) = AP(K) + X(I)*TEMP1 + Y(I)*TEMP2
+c                          K = K + 1
+c   10                 CONTINUE
+c                      AP(KK+J-1) = REAL(AP(KK+J-1)) +
+c     +                             REAL(X(J)*TEMP1+Y(J)*TEMP2)
+c                  ELSE
+c                      AP(KK+J-1) = REAL(AP(KK+J-1))
+c                  END IF
+c                  KK = KK + J
+c   20         CONTINUE
+c          ELSE
               DO 40 J = 1,N
                   IF ((X(JX).NE.ZERO) .OR. (Y(JY).NE.ZERO)) THEN
                       TEMP1 = ALPHA*CONJG(Y(JY))
@@ -265,35 +265,36 @@
                   JY = JY + INCY
                   KK = KK + J
    40         CONTINUE
-          END IF
+c          END IF
       ELSE
 *
 *        Form  A  when lower triangle is stored in AP.
 *
-          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
-              DO 60 J = 1,N
-                  IF ((X(J).NE.ZERO) .OR. (Y(J).NE.ZERO)) THEN
-                      TEMP1 = ALPHA*CONJG(Y(J))
-                      TEMP2 = CONJG(ALPHA*X(J))
-                      AP(KK) = REAL(AP(KK)) +
-     +                         REAL(X(J)*TEMP1+Y(J)*TEMP2)
-                      K = KK + 1
-                      DO 50 I = J + 1,N
-                          AP(K) = AP(K) + X(I)*TEMP1 + Y(I)*TEMP2
-                          K = K + 1
-   50                 CONTINUE
-                  ELSE
-                      AP(KK) = REAL(AP(KK))
-                  END IF
-                  KK = KK + N - J + 1
-   60         CONTINUE
-          ELSE
+c          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
+c              DO 60 J = 1,N
+c                  IF ((X(J).NE.ZERO) .OR. (Y(J).NE.ZERO)) THEN
+c                      TEMP1 = ALPHA*CONJG(Y(J))
+c                      TEMP2 = CONJG(ALPHA*X(J))
+c                      AP(KK) = REAL(AP(KK)) +
+c     +                         REAL(X(J)*TEMP1+Y(J)*TEMP2)
+c                      K = KK + 1
+c                      DO 50 I = J + 1,N
+c                          AP(K) = AP(K) + X(I)*TEMP1 + Y(I)*TEMP2
+c                          K = K + 1
+c   50                 CONTINUE
+c                  ELSE
+c                      AP(KK) = REAL(AP(KK))
+c                  END IF
+c                  KK = KK + N - J + 1
+c   60         CONTINUE
+c          ELSE
               DO 80 J = 1,N
                   IF ((X(JX).NE.ZERO) .OR. (Y(JY).NE.ZERO)) THEN
                       TEMP1 = ALPHA*CONJG(Y(JY))
                       TEMP2 = CONJG(ALPHA*X(JX))
                       AP(KK) = REAL(AP(KK)) +
-     +                         REAL(X(JX)*TEMP1+Y(JY)*TEMP2)
+     +                         REAL(X(JX)*TEMP1
+                        +Y(JY)*TEMP2)
                       IX = JX
                       IY = JY
                       DO 70 K = KK + 1,KK + N - J
@@ -308,7 +309,7 @@
                   JY = JY + INCY
                   KK = KK + N - J + 1
    80         CONTINUE
-          END IF
+c          END IF
       END IF
 *
       RETURN
