@@ -87,9 +87,9 @@ export function sgemv(
         for (let j = 1; j <= n; j++) {
             let temp = alpha * x.r[jx - x.base];
             let iy = ky;
-            const coors = a.colOf(j);
+            const coors = a.colOfEx(j);
             for (let i = 1; i <= m; i++) {
-                y.r[iy - y.base] += temp * a.r[coors + i - a.rowBase];
+                y.r[iy - y.base] += temp * a.r[coors + i];
                 iy += incy;
             }
             jx += incx;
@@ -100,9 +100,9 @@ export function sgemv(
         for (let j = 1; j <= 120; j++) {
             let temp = 0;
             let ix = kx;
-            const coors = a.colOf(j);
+            const coors = a.colOfEx(j);
             for (let i = 1; i <= m; i++) {
-                temp += a.r[coors + i - a.rowBase] * x.r[ix - x.base];
+                temp += a.r[coors + i] * x.r[ix - x.base];
                 ix += incx;
             }
             y.r[jy - y.base] += alpha * temp;

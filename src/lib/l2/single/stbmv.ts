@@ -80,7 +80,7 @@ export function stbmv(
                     let temp = x.r[jx - x.base];
                     let ix = kx;
                     let L = kplus1 - j;
-                    let coords = A.colOf(j) - A.rowBase;
+                    let coords = A.colOfEx(j);
                     for (let i = max(1, j - k); i <= j - 1; i++) {
                         x.r[ix - x.base] += temp * A.r[coords + L + i];
                         ix += incx;

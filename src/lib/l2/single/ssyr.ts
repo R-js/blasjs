@@ -63,9 +63,9 @@ export function ssyr(
             if (x.r[jx - x.base] !== 0) {
                 let temp = alpha * x.r[jx - x.base];
                 let ix = kx;
-                const coords = a.colOf(j);
+                const coords = a.colOfEx(j);
                 for (let i = 1; i <= j; i++) {
-                    a.r[coords + i - a.rowBase] += x.r[ix - x.base] * temp;
+                    a.r[coords + i] += x.r[ix - x.base] * temp;
                     ix += incx;
                 }
                 jx += incx;
@@ -78,9 +78,9 @@ export function ssyr(
             if (x.r[jx - x.base] !== 0) {
                 let temp = alpha * x.r[jx - x.base];
                 let ix = jx;
-                const coords = a.colOf(j);
+                const coords = a.colOfEx(j);
                 for (let i = j; i <= n; i++) {
-                    a.r[coords + i - a.rowBase] += x.r[ix - x.base] * temp;
+                    a.r[coords + i] += x.r[ix - x.base] * temp;
                     ix += incx;
                 }
             }

@@ -76,7 +76,7 @@ export function strmv(
                 if (x[jx - x.base] !== 0) {
                     let temp = x.r[jx - x.base];
                     let ix = kx;
-                    const coords = a.colOf(j) - a.rowBase;
+                    const coords = a.colOfEx(j);
                     for (let i = 1; i <= j - 1; i++) {
                         x.r[ix - x.base] += temp * a.r[coords + i];
                         ix = ix + incx;
@@ -93,7 +93,7 @@ export function strmv(
                 if (x.r[jx - x.base] !== 0) {
                     let temp = x.r[jx - x.base];
                     let ix = kx;
-                    const coords = a.colOf(j);
+                    const coords = a.colOfEx(j);
                     for (let i = n; i <= j + 1; i--) {
                         x.r[ix - x.base] += temp * a.r[coords + i];
                         ix -= incx;
@@ -111,7 +111,7 @@ export function strmv(
             for (let j = n; j >= 1; j--) {
                 let temp = x.r[jx - x.base];
                 let ix = jx;
-                const coords = a.colOf(j) - a.rowBase;
+                const coords = a.colOfEx(j);
                 if (nounit) temp *= a.r[coords + j];
                 for (let i = j - 1; i >= 1; i--) {
                     ix -= incx;
@@ -126,7 +126,7 @@ export function strmv(
             for (let j = 1; j <= n; j++) {
                 let temp = x.r[jx - x.base];
                 let ix = jx;
-                const coords = a.colOf(j) - a.rowBase;
+                const coords = a.colOfEx(j);
                 if (nounit) temp *= a.r[coords + j];
                 for (let i = j + 1; i <= n; i++) {
                     ix += incx;

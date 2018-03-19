@@ -44,9 +44,9 @@ export function sger(
         if (y.r[jy - y.base] !== 0) {
             let temp = alpha * y.r[jy - y.base];
             let ix = kx;
-            const coords = a.colOf(j);
+            const coords = a.colOfEx(j);
             for (let i = 1; i <= m; i++) {
-                a.r[coords + i - a.rowBase] += x.r[ix - x.base] * temp;
+                a.r[coords + i] += x.r[ix - x.base] * temp;
                 ix += incx;
             }
         }

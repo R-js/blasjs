@@ -76,7 +76,6 @@ export function ctbmv(
 
     let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
 
-
     if (tr === 'n') {
         if (ul === 'u') {
             let kplus1 = k + 1;
@@ -88,7 +87,7 @@ export function ctbmv(
                     let tempIm = x.i[jx];
                     let ix = kx - x.base;
                     let L = kplus1 - j;
-                    const coords = a.colOf(j);
+                    const coords = a.colOfEx(j);
                     for (let i = max(1, j - k); i <= j - 1; i++) {
                         x.r[ix] += tempRe * a.r[coords + L + i] - tempIm * a.i[coords + L + i];
                         ix += incx;
@@ -107,7 +106,7 @@ export function ctbmv(
             kx += (n - 1) * incx;
             let jx = kx - x.base;
             for (let j = n; j >= 1; j--) {
-                const coords = a.colOf(j);
+                const coords = a.colOfEx(j);
                 const xIsZero = x.r[jx] === 0 && x.i[jx] === 0;
                 if (!xIsZero) {
                     let tempRe = x.r[jx];
@@ -140,7 +139,7 @@ export function ctbmv(
                 kx -= incx;
                 let ix = kx - x.base;
                 let L = kplus1 - j;
-                const coords = a.colOf(j);
+                const coords = a.colOfEx(j);
                 const extrI = max(1, j - k); // evaluate once!
                 if (noconj) {
                     if (nounit) {
@@ -180,7 +179,7 @@ export function ctbmv(
                 kx += incx;
                 let ix = kx - x.base;
                 const L = 1 - j;
-                const coords = a.colOf(j);
+                const coords = a.colOfEx(j);
                 const extrI = max(n, j + k); // evaluate once!
                 if (noconj) {
                     if (nounit) {

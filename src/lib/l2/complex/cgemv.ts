@@ -117,30 +117,30 @@ export function cgemv(
      *     First form  y := beta*y.
      */
     if (betaIsOne) {
-        let iy = ky;
+        let iy = ky - y.base;
         if (betaIsZero && incy === 1) {
             y.r.fill(0);
             y.i.fill(0);
         }
         else {
             for (let i = 1; i <= leny; i++) {
-                y.r[iy - y.base] = betaIsZero ? 0 : BetaRe * y.r[iy - y.base] - BetaIm * y.i[iy - y.base];
-                y.i[iy - y.base] = betaIsZero ? 0 : BetaRe * y.i[iy - y.base] + BetaIm * y.r[iy - y.base];
+                y.r[iy] = betaIsZero ? 0 : BetaRe * y.r[iy] - BetaIm * y.i[iy];
+                y.i[iy] = betaIsZero ? 0 : BetaRe * y.i[iy] + BetaIm * y.r[iy];
                 iy += incy;
             }
         }
     }
     if (alphaIsZero) return;
     if (tr === 'n') {
-        let jx = kx;
+        let jx = kx - x.base;
         for (let j = 1; j <= n; j++) {
-            let tempRe = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
-            let tempIm = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
+            let tempRe = AlphaRe * x.r[jx] - AlphaIm * x.i[jx];
+            let tempIm = AlphaRe * x.i[jx] + AlphaIm * x.r[jx];
             let iy = ky;
-            const coords = a.colOf(j) - a.rowBase;
+            const coords = a.colOfEx(j);
             for (let i = 1; i <= m; i++) {
-                y.r[iy - y.base] += tempRe * a.r[coords + i] - tempIm * a.i[coords + i];
-                y.i[iy - y.base] += tempRe * a.i[coords + i] + tempIm * a.r[coords + i];
+                y.r[iy] += tempRe * a.r[coords + i] - tempIm * a.i[coords + i];
+                y.i[iy] += tempRe * a.i[coords + i] + tempIm * a.r[coords + i];
                 iy += incy;
             }
             jx += incx;
@@ -148,28 +148,28 @@ export function cgemv(
     }
     else {
         // Form  y := alpha*A**T*x + y  or  y := alpha*A**H*x + y.
-        let jy = ky;
+        let jy = ky - y.base;
 
         for (let j = 1; j <= n; j++) {
             let tempRe = 0;
             let tempIm = 0;
-            let ix = kx;
-            const coords = a.colOf(j) - a.rowBase;
+            let ix = kx - x.base;
+            const coords = a.colOfEx(j);
             if (noconj) {
                 for (let i = 1; i <= m; i++) {
-                    tempRe += a.r[coords + i] * x.r[ix - x.base] - a.i[coords + i] * x.i[ix - x.base];
-                    tempIm += a.r[coords + i] * x.i[ix - x.base] + a.i[coords + i] * x.r[ix - x.base];
+                    tempRe += a.r[coords + i] * x.r[ix] - a.i[coords + i] * x.i[ix];
+                    tempIm += a.r[coords + i] * x.i[ix] + a.i[coords + i] * x.r[ix];
                     ix += incx;
                 }
             } else {
                 for (let i = 1; i <= m; i++) {
-                    tempRe += a.r[coords + i] * x.r[ix - x.base] + a.i[coords + i] * x.i[ix - x.base];
-                    tempIm += a.r[coords + i] * x.i[ix - x.base] - a.i[coords + i] * x.r[ix - x.base];
+                    tempRe += a.r[coords + i] * x.r[ix] + a.i[coords + i] * x.i[ix];
+                    tempIm += a.r[coords + i] * x.i[ix] - a.i[coords + i] * x.r[ix];
                     ix += incx;
                 }
             }
-            y.r[jy - y.base] += AlphaRe * tempRe - AlphaRe * tempIm;
-            y.i[jy - y.base] += AlphaRe * tempIm + AlphaRe * tempRe;
+            y.r[jy] += AlphaRe * tempRe - AlphaRe * tempIm;
+            y.i[jy] += AlphaRe * tempIm + AlphaRe * tempRe;
             jy += incy;
         }
     }

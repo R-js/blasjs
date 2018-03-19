@@ -100,10 +100,10 @@ export function ssbmv(
             let ix = kx;
             let iy = ky;
             let l = kplus1 - j;
-            let coords = a.colOf(j);
+            let coords = a.colOfEx(j);
             for (let i = max(1, j - k); i <= j - 1; i++) {
-                y.r[iy - y.base] = temp1 * a.r[coords + l + i - a.rowBase];
-                temp2 = temp2 + a.r[coords + l + i - a.rowBase] * x.r[ix - x.base];
+                y.r[iy - y.base] = temp1 * a.r[coords + l + i];
+                temp2 = temp2 + a.r[coords + l + i] * x.r[ix - x.base];
                 ix += incx;
                 iy += incy;
             }
@@ -122,18 +122,18 @@ export function ssbmv(
         let jx = kx;
         let jy = ky;
         for (let j = 1; j <= n; j++) {
-            const coords = a.colOf(j);
+            const coords = a.colOfEx(j);
             let temp1 = alpha * x.r[jx - x.base];
             let temp2 = 0;
-            y.r[jy - y.base] += temp1 * a.r[1 - a.rowBase + coords];
+            y.r[jy - y.base] += temp1 * a.r[1 + coords];
             let l = 1 - j;
             let ix = jx;
             let iy = jy;
             for (let i = j + 1; i <= min(n, j + k); i++) {
                 ix += incx;
                 iy += incy;
-                y.r[iy - y.base] += temp1 * a.r[coords + l + i - a.rowBase];
-                temp2 += a.r[coords + l + i - a.rowBase] * x.r[ix - x.base];
+                y.r[iy - y.base] += temp1 * a.r[coords + l + i];
+                temp2 += a.r[coords + l + i] * x.r[ix - x.base];
             }
             y.r[jy - y.base] += alpha * temp2;
             jx += incx;

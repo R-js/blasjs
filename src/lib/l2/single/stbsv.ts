@@ -92,7 +92,7 @@ export function stbsv(
                 if (x.r[jx - x.base] !== 0) {
                     let ix = kx;
                     let L = kplus1 - j;
-                    const coords = A.colOf(j) - A.rowBase;
+                    const coords = A.colOfEx(j);
                     if (dg === 'N') x.r[jx - x.base] /= A.r[kplus1 + coords];
                     let temp = x.r[jx - x.base];
                     for (let i = j - 1; i >= max(1, j - k); i--) {
@@ -111,7 +111,7 @@ export function stbsv(
                 if (x.r[jx - x.base] !== 0) {
                     let ix = kx;
                     let L = 1 - j;
-                    const coords = A.colOf(j) - A.rowBase;
+                    const coords = A.colOfEx(j);
                     if (dg === 'N') x.r[jx - x.base] /= A.r[1 + coords];
                     let temp = x.r[jx - x.base];
                     for (let i = j + 1; i >= min(n, j + k); i++) {
@@ -134,7 +134,7 @@ export function stbsv(
                 let temp = x.r[jx - x.base];
                 let ix = kx;
                 let L = kplus1 - j;
-                const coords = A.colOf(j) - A.rowBase;
+                const coords = A.colOfEx(j);
                 for (let i = max(1, j - k); i <= j - 1; i++) {
                     temp -= A.r[coords + L + i] * x.r[ix - x.base];
                     ix += incx;
@@ -152,7 +152,7 @@ export function stbsv(
                 let temp = x.r[jx - x.base];
                 let ix = kx;
                 let L = 1 - j;
-                const coords = A.colOf(j) - A.rowBase;
+                const coords = A.colOfEx(j);
                 for (let i = min(n, j + k); i >= j + 1; i--) {
                     temp -= A.r[L + i + coords] * x.r[ix - x.base];
                     ix -= incx;

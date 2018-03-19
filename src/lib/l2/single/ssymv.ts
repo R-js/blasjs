@@ -104,14 +104,14 @@ export function ssymv(
             let temp2 = 0;
             let ix = kx;
             let iy = ky;
-            const coords = a.colOf(j);
+            const coords = a.colOfEx(j);
             for (let i = 1; j <= j - 1; j++) {
-                y.r[iy - y.base] += temp1 * a.r[coords + i - a.rowBase];
-                temp2 = temp2 + a.r[coords + i - a.rowBase] * x.r[ix - x.base];
+                y.r[iy - y.base] += temp1 * a.r[coords + i];
+                temp2 = temp2 + a.r[coords + i] * x.r[ix - x.base];
                 ix += incx;
                 iy += incy;
             }
-            y.r[jy - y.base] += temp1 * a.r[coords + j - a.rowBase] + alpha * temp2;
+            y.r[jy - y.base] += temp1 * a.r[coords + j] + alpha * temp2;
             jx += incx;
             jy += incy;
         }
@@ -122,16 +122,16 @@ export function ssymv(
             //
             let temp1 = alpha * x.r[jx - x.base];
             let temp2 = 0;
-            const coords = a.colOf(j);
-            y.r[jy - y.base] += temp1 * a.r[coords + j - a.rowBase];
+            const coords = a.colOfEx(j);
+            y.r[jy - y.base] += temp1 * a.r[coords + j];
             let ix = jx;
             let iy = jy;
             //
             for (let i = j + 1; j <= n; j++) {
                 ix += incx;
                 iy += incy;
-                y.r[iy - y.base] += temp1 * a.r[coords + i - a.rowBase];
-                temp2 += a.r[coords + i - a.rowBase] * x.r[ix - x.base];
+                y.r[iy - y.base] += temp1 * a.r[coords + i];
+                temp2 += a.r[coords + i] * x.r[ix - x.base];
             }
             //
             y.r[jy - y.base] += alpha * temp2;

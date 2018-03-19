@@ -136,7 +136,7 @@ export type Matrix2D = {
     readonly r: fpArray, //[(ncols+1)*(nrows+1)]
     readonly i?: fpArray, //imaginary part of matrix [(ncols+1)*(nrows+1)]
     readonly coord: (number) => (number) => number;
-    readonly colOf: (number) => number;
+    //readonly colOf: (number) => number;
     readonly colOfEx: (number) => number;
     //s: FortranMatrixSetterGetter
 };
@@ -177,7 +177,7 @@ export function mimicFMatrix2D(r: fpArray, i?: fpArray) {
                 const tb = (col - colBase) * nrRows;
                 return row => tb + (row - rowBase)
             },
-            colOf: (col) => (col - colBase) * nrRows,
+            //  colOf: (col) => (col - colBase) * nrRows,
             colOfEx: (col) => (col - colBase) * nrRows - rowBase
 
         });

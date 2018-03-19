@@ -97,9 +97,9 @@ export function ssyr2(
                 let temp2 = alpha * x.r[jx - x.base];
                 let ix = kx;
                 let iy = ky;
-                const coords = A.colOf(j);
+                const coords = A.colOfEx(j);
                 for (let i = 1; i <= j; i++) {
-                    A.r[coords + i - A.rowBase] += x.r[ix - x.base] * temp1 + y.r[iy - y.base] * temp2;
+                    A.r[coords + i] += x.r[ix - x.base] * temp1 + y.r[iy - y.base] * temp2;
                     ix += incx;
                     iy += incy;
                 }
@@ -116,7 +116,7 @@ export function ssyr2(
                 let temp2 = alpha * x.r[jx - xb];
                 let ix = jx;
                 let iy = jy;
-                const coords = A.colOf(j) - A.rowBase;
+                const coords = A.colOfEx(j);
                 for (let i = j; j <= n; j++) {
                     A.r[coords + i] += x.r[ix - xb] * temp1 + y.r[iy - yb] * temp2;
                     ix += incx;

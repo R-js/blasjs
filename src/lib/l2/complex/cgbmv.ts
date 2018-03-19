@@ -125,7 +125,7 @@ export function cgbmv(
 
 
     if (!(betaIsOne)) {
-        let iy = ky;
+        let iy = ky - y.base;
         //speedup
         if (betaIsZero && incy === 1) {
             y.r.fill(0);
@@ -134,8 +134,8 @@ export function cgbmv(
         else {
             //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
             for (let i = 1; i <= leny; i++) {
-                y.r[iy - y.base] = betaIsZero ? 0 : BetaRe * y.r[iy - y.base] - BetaIm * y.i[iy - y.base];
-                y.i[iy - y.base] = betaIsZero ? 0 : BetaRe * y.i[iy - y.base] + BetaIm * y.r[iy - y.base];
+                y.r[iy] = betaIsZero ? 0 : BetaRe * y.r[iy] - BetaIm * y.i[iy];
+                y.i[iy] = betaIsZero ? 0 : BetaRe * y.i[iy] + BetaIm * y.r[iy];
                 iy += incy;
             }
         }
@@ -144,19 +144,19 @@ export function cgbmv(
     const kup1 = ku + 1;
     if (trans === 'n') { // not [t]ranspose or [c]onjugate
         //Form  y := alpha*A*x + y.
-        let jx = kx;
+        let jx = kx - x.base;
         for (let j = 1; j <= n; j++) {
 
             //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-            let tempRe = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
-            let tempIm = AlphaRe * x.i[jx - x.base] - AlphaIm * x.r[jx - x.base];
-            let iy = ky;
+            let tempRe = AlphaRe * x.r[jx] - AlphaIm * x.i[jx];
+            let tempIm = AlphaRe * x.i[jx] - AlphaIm * x.r[jx];
+            let iy = ky - y.base;
             let k = kup1 - j;
-            const coords = a.colOf(j) - a.rowBase;
+            const coords = a.colOfEx(j);
             for (let i = max(1, j - ku); i <= min(m, j + kl); i++) {
                 //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-                y.r[iy - y.base] += tempRe * a.r[coords + k + i] - tempIm * a.i[coords + k + i];
-                y.i[iy - y.base] += tempIm * a.i[coords + k + i] + tempIm * a.r[coords + k + i];
+                y.r[iy] += tempRe * a.r[coords + k + i] - tempIm * a.i[coords + k + i];
+                y.i[iy] += tempIm * a.i[coords + k + i] + tempIm * a.r[coords + k + i];
             }
             jx += incx;
             if (j > ku) { ky += incy; }
@@ -164,34 +164,36 @@ export function cgbmv(
     }
     else {
         // Form  y := alpha*A**T*x + y  or  y := alpha*A**H*x + y.
-        let jy = kx;
+        let jy = ky - y.base;
         for (let j = 1; j <= n; j++) {
             let tempRe = 0;
             let tempIm = 0;
-            let ix = kx;
+            let ix = kx - x.base;
             let k = kup1 - j;
-            const coords = a.colOf(j) - a.rowBase;
+            const coords = a.colOfEx(j);
+            const istart = max(1, j - ku);
+            const iend = min(m, j + kl);
             // NOTE: I am not going to merge the 2, keeping it readable this way
             if (noconj) {
-                for (let i = max(1, j - ku); i < min(m, j + kl); i++) {
+                for (let i = istart; i <= iend; i++) {
                     //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-                    tempRe += a.r[coords + k + i] * x.r[ix - x.base] - a.i[coords + k + i] * x.i[ix - x.base];
-                    tempIm += a.r[coords + k + i] * x.i[ix - x.base] + a.i[coords + k + i] * x.r[ix - x.base];
+                    tempRe += a.r[coords + k + i] * x.r[ix] - a.i[coords + k + i] * x.i[ix];
+                    tempIm += a.r[coords + k + i] * x.i[ix] + a.i[coords + k + i] * x.r[ix];
                     ix += incx;
                 }
             }
             // CONJUGATE
             else {
-                for (let i = max(1, j - ku); i < min(m, j + kl); i++) {
+                for (let i = istart; i <= iend; i++) {
                     //CONJ( (a + bi) )(c+di)= (a*c+b*d)+i(a*d-b*c)
-                    tempRe += a.r[coords + k + i] * x.r[ix - x.base] + a.i[coords + k + i] * x.i[ix - x.base];
-                    tempIm += a.r[coords + k + i] * x.i[ix - x.base] - a.i[coords + k + i] * x.r[ix - x.base];
+                    tempRe += a.r[coords + k + i] * x.r[ix] + a.i[coords + k + i] * x.i[ix];
+                    tempIm += a.r[coords + k + i] * x.i[ix] - a.i[coords + k + i] * x.r[ix];
                     ix += incx;
                 }
             }
             //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-            y.r[jy - y.base] += AlphaRe * tempRe - AlphaIm * tempIm;
-            y.i[jy - y.base] += AlphaRe * tempIm - AlphaIm * tempRe;
+            y.r[jy] += AlphaRe * tempRe - AlphaIm * tempIm;
+            y.i[jy] += AlphaRe * tempIm - AlphaIm * tempRe;
             jy += incy;
             if (j > ku) kx += incx;
         }
