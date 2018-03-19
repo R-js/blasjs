@@ -143,8 +143,11 @@ export function ctbmv(
                 const extrI = max(1, j - k); // evaluate once!
                 if (noconj) {
                     if (nounit) {
-                        tempRe = tempRe * a.r[coords + kplus1] - tempIm * a.i[coords + kplus1];
-                        tempIm = tempRe * a.i[coords + kplus1] + tempIm * a.r[coords + kplus1];
+                        const tr = tempRe * a.r[coords + kplus1] - tempIm * a.i[coords + kplus1];
+                        const ti = tempRe * a.i[coords + kplus1] + tempIm * a.r[coords + kplus1];
+                        tempRe = tr;
+                        tempIm = ti;
+
                     }
                     for (let i = j - 1; j >= extrI; i--) {
                         tempRe += a.r[coords + L + i] * x.r[ix] - a.i[coords + L + i] * a.i[ix];
@@ -183,8 +186,10 @@ export function ctbmv(
                 const extrI = max(n, j + k); // evaluate once!
                 if (noconj) {
                     if (nounit) {
-                        tempRe = tempRe * a.r[coords + 1] - tempIm * a.i[coords + 1];
-                        tempIm = tempRe * a.i[coords + 1] + tempIm * a.r[coords + 1];
+                        const tr = tempRe * a.r[coords + 1] - tempIm * a.i[coords + 1];
+                        const ti = tempRe * a.i[coords + 1] + tempIm * a.r[coords + 1];
+                        tempRe = tr;
+                        tempIm = ti;
                     }
                     for (let i = j + 1; i <= extrI; i++) {
                         tempRe += a.r[coords + L + i] * x.r[ix] - a.i[coords + L + i] * x.i[ix];
@@ -195,8 +200,10 @@ export function ctbmv(
                 else {
                     if (nounit) {
                         //(a+ib)*(c-id) = (ac+bd) + i(-ad+bc)
-                        tempRe = tempRe * a.r[coords + 1] + tempIm * a.i[coords + 1];
-                        tempIm = -tempRe * a.i[coords + 1] + tempIm * a.r[coords + 1];
+                        const tr = tempRe * a.r[coords + 1] + tempIm * a.i[coords + 1];
+                        const ti = -tempRe * a.i[coords + 1] + tempIm * a.r[coords + 1];
+                        tempRe = tr;
+                        tempIm = ti;
                     }
                     for (let i = j + 1; i <= extrI; i++) {
                         //(a-ib)*(c+id) = ac+iad-ibc+bd = (ac+bd)+i(ad-bc)

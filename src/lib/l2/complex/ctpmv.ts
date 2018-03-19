@@ -142,8 +142,11 @@ export function ctpmv(
                 if (noconj) {
                     if (nounit) {
                         const apk = kk - ap.base;
-                        tempRe = tempRe * ap.r[apk] - tempIm * ap.i[apk];
-                        tempIm = tempRe * ap.i[apk] + tempIm * ap.r[apk];
+                        const tr = tempRe * ap.r[apk] - tempIm * ap.i[apk];
+                        const ti = tempRe * ap.i[apk] + tempIm * ap.r[apk];
+                        tempRe = tr;
+                        tempIm = ti;
+
                     }
                     for (let k = kk - 1; k >= kk - j + 1; k--) {
                         ix -= incx;
@@ -156,8 +159,10 @@ export function ctpmv(
                     if (nounit) {
                         //(a+ib)*(c-id) = (ac+bd)+i(-ad+bc)
                         const apk2 = kk - ap.base;
-                        tempRe = tempRe * ap.r[apk2] - tempIm * ap.i[apk2];
-                        tempIm = tempRe * ap.i[apk2] + tempIm * ap.i[apk2];
+                        const tr = tempRe * ap.r[apk2] - tempIm * ap.i[apk2];
+                        const ti = tempRe * ap.i[apk2] + tempIm * ap.i[apk2];
+                        tempRe = tr;
+                        tempIm = ti;
                     }
                     for (let k = kk - 1; k >= kk - j + 1; k--) {
                         ix -= incx;
