@@ -71,31 +71,31 @@ export function strmv(
     if (tr === 'n') {
         // Form  x := A*x.
         if (ul === 'u') {
-            let jx = kx;
+            let jx = kx - x.base;
             for (let j = 1; j <= n; j++) {
-                if (x[jx - x.base] !== 0) {
-                    let temp = x.r[jx - x.base];
-                    let ix = kx;
+                if (x[jx] !== 0) {
+                    let temp = x.r[jx];
+                    let ix = kx - x.base;
                     const coords = a.colOfEx(j);
                     for (let i = 1; i <= j - 1; i++) {
-                        x.r[ix - x.base] += temp * a.r[coords + i];
+                        x.r[ix] += temp * a.r[coords + i];
                         ix = ix + incx;
                     }
-                    if (nounit) x.r[jx - x.base] *= a.r[coords + j];
+                    if (nounit) x.r[jx] *= a.r[coords + j];
                 }
                 jx += incx;
             }
         }
         else {
             kx += (n - 1) * incx;
-            let jx = kx;
+            let jx = kx - x.base;
             for (let j = n; j >= 1; j--) {
-                if (x.r[jx - x.base] !== 0) {
-                    let temp = x.r[jx - x.base];
-                    let ix = kx;
+                if (x.r[jx] !== 0) {
+                    let temp = x.r[jx];
+                    let ix = kx - x.base;
                     const coords = a.colOfEx(j);
                     for (let i = n; i <= j + 1; i--) {
-                        x.r[ix - x.base] += temp * a.r[coords + i];
+                        x.r[ix] += temp * a.r[coords + i];
                         ix -= incx;
                     }
                     if (nounit) x[jx] *= a.r[coords + j];
@@ -107,32 +107,32 @@ export function strmv(
     else {
         //  Form  x := A**T*x.
         if (ul === 'u') {
-            let jx = kx + (n - 1) * incx;
+            let jx = kx + (n - 1) * incx - x.base;
             for (let j = n; j >= 1; j--) {
-                let temp = x.r[jx - x.base];
+                let temp = x.r[jx];
                 let ix = jx;
                 const coords = a.colOfEx(j);
                 if (nounit) temp *= a.r[coords + j];
                 for (let i = j - 1; i >= 1; i--) {
                     ix -= incx;
-                    temp += a.r[coords + i] * x.r[ix - x.base];
+                    temp += a.r[coords + i] * x.r[ix];
                 }
-                x.r[jx - x.base] = temp;
+                x.r[jx] = temp;
                 jx -= incx;
             }
         }
         else {
-            let jx = kx;
+            let jx = kx - x.base;
             for (let j = 1; j <= n; j++) {
-                let temp = x.r[jx - x.base];
+                let temp = x.r[jx];
                 let ix = jx;
                 const coords = a.colOfEx(j);
                 if (nounit) temp *= a.r[coords + j];
                 for (let i = j + 1; i <= n; i++) {
                     ix += incx;
-                    temp += a.r[coords + i] * x.r[ix - x.base];
+                    temp += a.r[coords + i] * x.r[ix];
                 }
-                x.r[jx - x.base] = temp;
+                x.r[jx] = temp;
                 jx += incx;
             }
         }
