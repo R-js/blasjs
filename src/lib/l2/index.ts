@@ -5,11 +5,14 @@ import { cgerc } from './complex/cgerc';
 import { cgeru } from './complex/cgeru';
 import { chbmv } from './complex/chbmv';
 import { chemv } from './complex/chemv';
+import { cher } from './complex/cher';
 import { cher2 } from './complex/cher2';
 import { chpmv } from './complex/chpmv';
 import { chpr } from './complex/chpr';
+import { chpr2 } from './complex/chpr2';
 import { ctbmv } from './complex/ctbmv';
 import { ctbsv } from './complex/ctbsv';
+import { ctpmv } from './complex/ctpmv';
 import { ctpsv } from './complex/ctpsv';
 import { ctrmv } from './complex/ctrmv';
 import { ctrsv } from './complex/ctrsv';
@@ -75,6 +78,7 @@ export const level2 = {
     cgeru,
     chbmv,
     chemv,
+    cher,
     cher2,
     chpmv,
     chpr,
@@ -82,7 +86,24 @@ export const level2 = {
     ctbsv,
     ctpsv,
     ctrmv,
-    ctrsv
+    ctrsv,
     //complex double
+    zgbmv: cgbmv,
+    zgemv: cgemv,
+    zgerc: cgerc,
+    zgeru: cgeru,
+    zhbmv: chbmv,
+    zhemv: chemv,
+    zher: cher,
+    zher2: cher2,
+    zhpmv: chpmv,
+    zhpr: chpr,
+    zhpr2: chpr2,
+    ztbmv: ctbmv,
+    ztbsv: ctbsv,
+    ztpmv: ctpmv,
+    ztpsv: ctpsv,
+    ztrmv: ctrmv,
+    ztrsv: ctrsv,
 };
 
