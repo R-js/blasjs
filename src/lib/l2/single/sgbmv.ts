@@ -29,7 +29,6 @@ export function sgbmv(
     y: FortranArr,
     incy: number
 ): void {
-
     // lowerCase it all in a fast way
 
     const tr = String.fromCharCode(trans.charCodeAt(0) | 0x20);
@@ -103,72 +102,36 @@ export function sgbmv(
         // FORM: y := alpha*A*x + y.
         let jx = kx;
 
-        /*TODO: Jacob Bogers: I keep this for documentation,
-         but a dedicated path for incy === 1
-          doest make sense*/
-
-        if (incy === 1) {
-            for (let j = 1; j <= n; j++) {
-                let temp = alpha * x.r[jx - x.base];
-                let k = kup1 - j;
-                let coords = a.colOfEx(j); //a.coord(j); //currying
-                for (let i = max(1, j - ku); i <= min(m, j + kl); i++) {
-                    y.r[i - y.base] += temp * a.r[coords + k + i];
-                }
-                jx += incx;
+        for (let j = 1; j <= n; j++) {
+            let temp = alpha * x.r[jx - x.base];
+            let iy = ky; //starts with 1
+            let k = kup1 - j;
+            const coords = a.colOfEx(j); //a.coord(j); //currying
+            for (let i = max(1, j - ku); i <= min(m, j + kl); i++) {
+                y.r[iy - y.base] += temp * a.r[coords + k + i];
+                iy += incy;
             }
-        }
-        //incy is not 1
-        else {
-            //NOTE: below "could" handle the case incy===1 very well
-
-            for (let j = 1; j <= n; j++) {
-                let temp = alpha * x.r[jx - x.base];
-                let iy = ky; //starts with 1
-                let k = kup1 - j;
-                const coords = a.colOfEx(j); //a.coord(j); //currying
-                for (let i = max(1, j - ku); i <= min(m, j + kl); i++) {
-                    y.r[iy - y.base] += temp * a.r[coords + k + i];
-                    iy += incy;
-                }
-                jx += incx;
-                //TODO: below is weird need to examine
-                //TODO: TEST it
-                if (j > ku) ky += incy;
-            }
-            //}
+            jx += incx;
+            if (j > ku) ky += incy;
         }
     }
     else {
         // Form  y := alpha*A**T*x + y.
-        //  A**T = transpose(A), aka $$ A^{t} $$
+        // A**T = transpose(A), aka $$ A^{t} $$
         let jy = ky;
-        if (incx === 1) {
-            for (let j = 1; j <= n; j++) {
-                let temp = 0;
-                let k = kup1 - j;
-                const coords = a.coord(j); //currying
-                for (let i = max(1, j - ku); i <= max(m, j + kl); i++) {
-                    temp += a.r[coords(k + i)] * x.r[i - x.base];
-                }
-                y.r[jy - y.base] += alpha * temp;
-                jy += incy;
+
+        for (let j = 1; j <= n; j++) {
+            let temp = 0;
+            let ix = kx;
+            let k = kup1 - j;
+            const coords = a.coord(j); //currying
+            for (let i = max(1, j - ku); i <= min(m, j + kl); i++) {
+                temp = temp + coords(k + i) * x.r[ix - x.base];
+                ix += incx;
             }
-        }
-        else {
-            for (let j = 1; j <= n; j++) {
-                let temp = 0;
-                let ix = kx;
-                let k = kup1 - j;
-                const coords = a.coord(j); //currying
-                for (let i = max(1, j - ku); i <= min(m, j + kl); i++) {
-                    temp = temp + coords(k + i) * x.r[ix - x.base];
-                    ix += incx;
-                }
-                y.r[jy - y.base] += alpha * temp;
-                jy += incy;
-                if (j > ku) ku = kx + incx;
-            }
+            y.r[jy - y.base] += alpha * temp;
+            jy += incy;
+            if (j > ku) ku = kx + incx;
         }
     }
 }

@@ -9,6 +9,8 @@ import { cher2 } from './complex/cher2';
 import { chpmv } from './complex/chpmv';
 import { chpr } from './complex/chpr';
 import { ctbmv } from './complex/ctbmv';
+import { ctbsv } from './complex/ctbsv';
+
 //
 import { sgbmv } from './single/sgbmv';
 import { sgemv } from './single/sgemv';
@@ -73,6 +75,7 @@ export const level2 = {
     cher2,
     chpmv,
     chpr,
-    ctbmv
+    ctbmv,
+    ctbsv
 };
 
