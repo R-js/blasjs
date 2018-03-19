@@ -61,18 +61,17 @@ export function stpsv(
 
     if (tr === 'N') {
         //  Form  x := inv( A )*x.
-
         if (ul === 'U') {
             let kk = (n * (n + 1)) / 2;
-            let jx = kx + (n - 1) * incx;
+            let jx = kx + (n - 1) * incx - x.base;
             for (let j = n; j >= 1; j--) {
-                if (x.r[jx - x.base] !== 0) {
-                    if (nounit) x.r[jx - x.base] /= ap.r[kk - ap.base];
-                    let temp = x.r[jx - x.base];
+                if (x.r[jx] !== 0) {
+                    if (nounit) x.r[jx] /= ap.r[kk - ap.base];
+                    let temp = x.r[jx];
                     let ix = jx;
                     for (let k = kk - 1; k >= kk - j + 1; k--) {
                         ix -= incx;
-                        x.r[ix - x.base] -= temp * ap.r[k - ap.base];
+                        x.r[ix] -= temp * ap.r[k - ap.base];
                     }
                 }
                 jx -= incx;
@@ -81,15 +80,15 @@ export function stpsv(
         }
         else {
             let kk = 1;
-            let jx = kx;
+            let jx = kx - x.base;
             for (let j = 1; j <= n; j++) {
-                if (x.r[jx - x.base] !== 0) {
-                    if (nounit) x.r[jx - x.base] /= ap.r[kk - ap.base];
-                    let temp = x.r[jx - x.base];
+                if (x.r[jx] !== 0) {
+                    if (nounit) x.r[jx] /= ap.r[kk - ap.base];
+                    let temp = x.r[jx];
                     let ix = jx;
                     for (let k = kk + 1; k <= kk + n - j; k++) {
                         ix += incx;
-                        x.r[ix - x.base] -= temp * ap.r[k - ap.base];
+                        x.r[ix] -= temp * ap.r[k - ap.base];
                     }
                 }
                 jx += incx;
@@ -101,16 +100,16 @@ export function stpsv(
         //  Form  x := inv( A**T )*x.
         if (ul === 'U') {
             let kk = 1;
-            let jx = kx;
+            let jx = kx - x.base;
             for (let j = 1; j <= n; j++) {
-                let temp = x.r[jx - x.base];
-                let ix = kx;
+                let temp = x.r[jx];
+                let ix = kx - x.base;
                 for (let k = kk; k <= kk + j - 2; k++) {
-                    temp -= ap.r[k - ap.base] * x.r[ix - x.base];
+                    temp -= ap.r[k - ap.base] * x.r[ix];
                     ix += incx;
                 }
                 if (nounit) temp /= ap.r[kk + j - 1 - ap.base];
-                x.r[jx - x.base] = temp;
+                x.r[jx] = temp;
                 jx += incx;
                 kk += j;
             }
@@ -118,16 +117,16 @@ export function stpsv(
         else {
             let kk = n * (n + 1) / 2;
             kx += (n - 1) * incx;
-            let jx = kx;
+            let jx = kx - x.base;
             for (let j = n; j >= 1; j--) {
-                let temp = x.r[jx - x.base];
-                let ix = kx;
+                let temp = x.r[jx];
+                let ix = kx - x.base;
                 for (let k = kk; k >= kk - (n - (j + 1)); j--) {
-                    temp -= ap.r[k - ap.base] * x.r[ix - x.base];
+                    temp -= ap.r[k - ap.base] * x.r[ix];
                     ix -= incx;
                 }
                 if (nounit) temp /= ap.r[kk - n + j - ap.base];
-                x.r[jx - x.base] = temp;
+                x.r[jx] = temp;
                 jx -= incx;
                 kk -= (n - j + 1);
             }//for
