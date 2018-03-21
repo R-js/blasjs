@@ -24,7 +24,8 @@ export type FortranArr = {
     base: number,
     r: fpArray,
     i?: fpArray,
-    s: FortranSetterGetter
+    s: FortranSetterGetter,
+    assertComplex: (msg: string) => void | never;
 };
 //2
 export function mimicFArray(r: fpArray, i?: fpArray) {
@@ -50,6 +51,11 @@ export function mimicFArray(r: fpArray, i?: fpArray) {
                     return { re: pRe || 0, im: pIm || 0 };
                 }
                 return pRe;
+            },
+            assertComplex: (msg: string) => {
+                if (i === undefined) {
+                    throw new Error(errMissingIm(msg))
+                }
             }
         });
     }
@@ -139,6 +145,7 @@ export type Matrix2D = {
     //readonly colOf: (number) => number;
     readonly colOfEx: (number) => number;
     //s: FortranMatrixSetterGetter
+    readonly assertComplex: (msg: string) => void | never;
 };
 
 
@@ -178,10 +185,13 @@ export function mimicFMatrix2D(r: fpArray, i?: fpArray) {
                 return row => tb + (row - rowBase)
             },
             //  colOf: (col) => (col - colBase) * nrRows,
-            colOfEx: (col) => (col - colBase) * nrRows - rowBase
-
+            colOfEx: (col) => (col - colBase) * nrRows - rowBase,
+            assertComplex: (msg: string) => {
+                if (i === undefined) {
+                    throw new Error(errMissingIm(msg))
+                }
+            }
         });
-
     }
 }
 
