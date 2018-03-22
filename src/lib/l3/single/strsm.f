@@ -276,64 +276,64 @@
 *           Form  B := alpha*inv( A )*B.
 *
               IF (UPPER) THEN
-                  DO 60 J = 1,N
-                      IF (ALPHA.NE.ONE) THEN
-                          DO 30 I = 1,M
-                              B(I,J) = ALPHA*B(I,J)
-   30                     CONTINUE
-                      END IF
-                      DO 50 K = M,1,-1
-                          IF (B(K,J).NE.ZERO) THEN
-                              IF (NOUNIT) B(K,J) = B(K,J)/A(K,K)
-                              DO 40 I = 1,K - 1
-                                  B(I,J) = B(I,J) - B(K,J)*A(I,K)
-   40                         CONTINUE
-                          END IF
-   50                 CONTINUE
-   60             CONTINUE
+c                  DO 60 J = 1,N
+c                      IF (ALPHA.NE.ONE) THEN
+c                          DO 30 I = 1,M
+c                              B(I,J) = ALPHA*B(I,J)
+c   30                     CONTINUE
+c                      END IF
+c                      DO 50 K = M,1,-1
+c                          IF (B(K,J).NE.ZERO) THEN
+c                              IF (NOUNIT) B(K,J) = B(K,J)/A(K,K)
+c                              DO 40 I = 1,K - 1
+c                                  B(I,J) = B(I,J) - B(K,J)*A(I,K)
+c   40                         CONTINUE
+c                          END IF
+c   50                 CONTINUE
+c   60             CONTINUE
               ELSE
-                  DO 100 J = 1,N
-                      IF (ALPHA.NE.ONE) THEN
-                          DO 70 I = 1,M
-                              B(I,J) = ALPHA*B(I,J)
-   70                     CONTINUE
-                      END IF
-                      DO 90 K = 1,M
-                          IF (B(K,J).NE.ZERO) THEN
-                              IF (NOUNIT) B(K,J) = B(K,J)/A(K,K)
-                              DO 80 I = K + 1,M
-                                  B(I,J) = B(I,J) - B(K,J)*A(I,K)
-   80                         CONTINUE
-                          END IF
-   90                 CONTINUE
-  100             CONTINUE
+c                  DO 100 J = 1,N
+c                      IF (ALPHA.NE.ONE) THEN
+c                          DO 70 I = 1,M
+c                              B(I,J) = ALPHA*B(I,J)
+c   70                     CONTINUE
+c                      END IF
+c                      DO 90 K = 1,M
+c                          IF (B(K,J).NE.ZERO) THEN
+c                              IF (NOUNIT) B(K,J) = B(K,J)/A(K,K)
+c                              DO 80 I = K + 1,M
+c                                  B(I,J) = B(I,J) - B(K,J)*A(I,K)
+c   80                         CONTINUE
+c                          END IF
+c   90                 CONTINUE
+c  100             CONTINUE
               END IF
           ELSE
 *
 *           Form  B := alpha*inv( A**T )*B.
 *
               IF (UPPER) THEN
-                  DO 130 J = 1,N
-                      DO 120 I = 1,M
-                          TEMP = ALPHA*B(I,J)
-                          DO 110 K = 1,I - 1
-                              TEMP = TEMP - A(K,I)*B(K,J)
-  110                     CONTINUE
-                          IF (NOUNIT) TEMP = TEMP/A(I,I)
-                          B(I,J) = TEMP
-  120                 CONTINUE
-  130             CONTINUE
+c                  DO 130 J = 1,N
+c                      DO 120 I = 1,M
+c                          TEMP = ALPHA*B(I,J)
+c                          DO 110 K = 1,I - 1
+c                              TEMP = TEMP - A(K,I)*B(K,J)
+c  110                     CONTINUE
+c                          IF (NOUNIT) TEMP = TEMP/A(I,I)
+c                          B(I,J) = TEMP
+c  120                 CONTINUE
+c  130             CONTINUE
               ELSE
-                  DO 160 J = 1,N
-                      DO 150 I = M,1,-1
-                          TEMP = ALPHA*B(I,J)
-                          DO 140 K = I + 1,M
-                              TEMP = TEMP - A(K,I)*B(K,J)
-  140                     CONTINUE
-                          IF (NOUNIT) TEMP = TEMP/A(I,I)
-                          B(I,J) = TEMP
-  150                 CONTINUE
-  160             CONTINUE
+c                  DO 160 J = 1,N
+c                      DO 150 I = M,1,-1
+c                          TEMP = ALPHA*B(I,J)
+c                          DO 140 K = I + 1,M
+c                              TEMP = TEMP - A(K,I)*B(K,J)
+c  140                     CONTINUE
+c                          IF (NOUNIT) TEMP = TEMP/A(I,I)
+c                          B(I,J) = TEMP
+c  150                 CONTINUE
+c  160             CONTINUE
               END IF
           END IF
       ELSE

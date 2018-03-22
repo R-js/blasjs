@@ -272,58 +272,58 @@
 *           Form  B := alpha*A*B.
 *
               IF (UPPER) THEN
-                  DO 50 J = 1,N
-                      DO 40 K = 1,M
-                          IF (B(K,J).NE.ZERO) THEN
-                              TEMP = ALPHA*B(K,J)
-                              DO 30 I = 1,K - 1
-                                  B(I,J) = B(I,J) + TEMP*A(I,K)
-   30                         CONTINUE
-                              IF (NOUNIT) TEMP = TEMP*A(K,K)
-                              B(K,J) = TEMP
-                          END IF
-   40                 CONTINUE
-   50             CONTINUE
+c                  DO 50 J = 1,N
+c                      DO 40 K = 1,M
+c                          IF (B(K,J).NE.ZERO) THEN
+c                              TEMP = ALPHA*B(K,J)
+c                              DO 30 I = 1,K - 1
+c                                  B(I,J) = B(I,J) + TEMP*A(I,K)
+c   30                         CONTINUE
+c                              IF (NOUNIT) TEMP = TEMP*A(K,K)
+c                              B(K,J) = TEMP
+c                          END IF
+c   40                 CONTINUE
+c   50             CONTINUE
               ELSE
-                  DO 80 J = 1,N
-                      DO 70 K = M,1,-1
-                          IF (B(K,J).NE.ZERO) THEN
-                              TEMP = ALPHA*B(K,J)
-                              B(K,J) = TEMP
-                              IF (NOUNIT) B(K,J) = B(K,J)*A(K,K)
-                              DO 60 I = K + 1,M
-                                  B(I,J) = B(I,J) + TEMP*A(I,K)
-   60                         CONTINUE
-                          END IF
-   70                 CONTINUE
-   80             CONTINUE
+c                  DO 80 J = 1,N
+c                      DO 70 K = M,1,-1
+c                          IF (B(K,J).NE.ZERO) THEN
+c                              TEMP = ALPHA*B(K,J)
+c                              B(K,J) = TEMP
+c                              IF (NOUNIT) B(K,J) = B(K,J)*A(K,K)
+c                              DO 60 I = K + 1,M
+c                                  B(I,J) = B(I,J) + TEMP*A(I,K)
+c   60                         CONTINUE
+c                          END IF
+c   70                 CONTINUE
+c   80             CONTINUE
               END IF
           ELSE
 *
 *           Form  B := alpha*A**T*B.
 *
               IF (UPPER) THEN
-                  DO 110 J = 1,N
-                      DO 100 I = M,1,-1
-                          TEMP = B(I,J)
-                          IF (NOUNIT) TEMP = TEMP*A(I,I)
-                          DO 90 K = 1,I - 1
-                              TEMP = TEMP + A(K,I)*B(K,J)
-   90                     CONTINUE
-                          B(I,J) = ALPHA*TEMP
-  100                 CONTINUE
-  110             CONTINUE
+c                  DO 110 J = 1,N
+c                      DO 100 I = M,1,-1
+c                          TEMP = B(I,J)
+c                          IF (NOUNIT) TEMP = TEMP*A(I,I)
+c                          DO 90 K = 1,I - 1
+c                              TEMP = TEMP + A(K,I)*B(K,J)
+c   90                     CONTINUE
+c                          B(I,J) = ALPHA*TEMP
+c  100                 CONTINUE
+c  110             CONTINUE
               ELSE
-                  DO 140 J = 1,N
-                      DO 130 I = 1,M
-                          TEMP = B(I,J)
-                          IF (NOUNIT) TEMP = TEMP*A(I,I)
-                          DO 120 K = I + 1,M
-                              TEMP = TEMP + A(K,I)*B(K,J)
-  120                     CONTINUE
-                          B(I,J) = ALPHA*TEMP
-  130                 CONTINUE
-  140             CONTINUE
+c                  DO 140 J = 1,N
+c                      DO 130 I = 1,M
+c                         TEMP = B(I,J)
+c                          IF (NOUNIT) TEMP = TEMP*A(I,I)
+c                          DO 120 K = I + 1,M
+c                              TEMP = TEMP + A(K,I)*B(K,J)
+c  120                     CONTINUE
+c                          B(I,J) = ALPHA*TEMP
+c  130                 CONTINUE
+c  140             CONTINUE
               END IF
           END IF
       ELSE
