@@ -9,7 +9,7 @@
 */
 const { max } = Math;
 
-import { errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 /** 
 SSYR2  performs the symmetric rank 2 operation
@@ -44,7 +44,7 @@ export function ssyr2(
     incx: number,
     y: FortranArr,
     incy: number,
-    A: Matrix2D,
+    A: Matrix,
     lda: number): void {
 
     const ul = _uplo.toUpperCase()[0];

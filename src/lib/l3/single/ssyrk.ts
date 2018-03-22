@@ -23,7 +23,7 @@
 */
 
 
-import { errWrongArg, Matrix2D } from '../../f_func';
+import { errWrongArg, Matrix } from '../../f_func';
 
 const { max } = Math;
 
@@ -33,10 +33,10 @@ export function ssyrk(
     n: number,
     k: number,
     alpha: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
     beta: number,
-    c: Matrix2D,
+    c: Matrix,
     ldc: number): void {
 
     const ul = String.fromCharCode(uplo.charCodeAt(0) | 0X20);

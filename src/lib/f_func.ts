@@ -134,7 +134,7 @@ export function errWrongArg(arg: string, value): string {
 
 export type FortranMatrixSetterGetter = (col: number) => (row?: number) => number | Complex;
 
-export type Matrix2D = {
+export type Matrix = {
     readonly rowBase: number,
     readonly colBase: number,
     readonly nrCols: number, // inclusive note!!
@@ -153,7 +153,7 @@ export type Matrix2D = {
 
 export function mimicFMatrix2D(r: fpArray, i?: fpArray) {
 
-    return function c1(nrRows: number, nrCols: number, rowBase: number = 1, colBase = 1): Matrix2D {
+    return function c1(nrRows: number, nrCols: number, rowBase: number = 1, colBase = 1): Matrix {
 
         // check rows
         if (nrRows < 0) {

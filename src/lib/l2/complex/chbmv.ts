@@ -17,7 +17,7 @@
 *> vector and A is an m by n matrix.
 */
 
-import { Complex, errMissingIm, errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { Complex, errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 const { max, min } = Math;
 
@@ -26,7 +26,7 @@ export function chbmv(
     n: number,
     k: number,
     alpha: Complex,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
     x: FortranArr,
     incx: number,

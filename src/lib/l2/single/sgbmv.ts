@@ -9,7 +9,7 @@ Written on 22-October-1986.
      Richard Hanson, Sandia National Labs.
 */
 
-import { FortranArr, Matrix2D, xerbla } from '../../f_func';
+import { FortranArr, Matrix, xerbla } from '../../f_func';
 
 const { min, max } = Math;
 
@@ -21,7 +21,7 @@ export function sgbmv(
     kl: number,
     ku: number,
     alpha: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
     x: FortranArr,
     incx: number,

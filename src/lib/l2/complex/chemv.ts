@@ -18,7 +18,7 @@
 *> A is an n by n hermitian matrix.
 */
 
-import { Complex, errMissingIm, errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { Complex, errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 const { max } = Math;
 
@@ -26,7 +26,7 @@ export function chemv(
     uplo: 'u' | 'l',
     n: number,
     alpha: Complex,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
     x: FortranArr,
     incx: number,

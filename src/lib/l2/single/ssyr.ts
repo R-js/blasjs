@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 /*
   Jacob Bogers, JavaScript Port, 03/2018,  jkfbogers@gmail.com
@@ -23,7 +23,7 @@ export function ssyr(
     alpha: number,
     x: FortranArr,
     incx: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number
 ): void {
 

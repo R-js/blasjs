@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 /*
 Jacob Bogers, 03/2008, jkfbogers@gmail.com
@@ -17,7 +17,7 @@ export function sgemv(
     m: number,
     n: number,
     alpha: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
     x: FortranArr,
     incx: number,

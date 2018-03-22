@@ -6,7 +6,7 @@
 *>     Richard Hanson, Sandia National Labs.
 */
 
-import { errMissingIm, errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 const { max } = Math;
 
@@ -16,7 +16,7 @@ export function cher(
     alpha: number, //acc to normal pattern, this would be complex
     x: FortranArr,
     incx: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number): void {
 
     if (x.i === undefined) {

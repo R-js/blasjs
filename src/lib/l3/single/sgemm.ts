@@ -1,4 +1,4 @@
-import { errWrongArg, Matrix2D } from '../../f_func';
+import { errWrongArg, Matrix } from '../../f_func';
 
 /*  -- Jacob Bogers, 03/2008, JS port, jkfbogers@gmail.cmom
 *>  -- Written on 8-February-1989.
@@ -17,12 +17,12 @@ export function sgemm(
     n: number,
     k: number,
     alpha: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
-    b: Matrix2D,
+    b: Matrix,
     ldb: number,
     beta: number,
-    c: Matrix2D,
+    c: Matrix,
     ldc: number): void {
 
     // faster then String.toLowerCase()

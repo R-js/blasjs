@@ -21,7 +21,7 @@
 *> routine. Such tests must be performed before calling this routine.
 */
 
-import { errMissingIm, errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 const { max, min } = Math;
 
@@ -31,7 +31,7 @@ export function ctbsv(
     diag: 'u' | 'n',
     n: number,
     k: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
     x: FortranArr,
     incx: number

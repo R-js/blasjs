@@ -6,7 +6,7 @@
 *>     Sven Hammarling, Nag Central Office.
 *>     Richard Hanson, Sandia National Labs.
 */
-import { errMissingIm, errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
 /*
 *>
 *> CTBMV  performs one of the matrix-vector operations
@@ -25,7 +25,7 @@ export function ctbmv(
     diag: 'u' | 'n',
     n: number,
     k: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
     x: FortranArr,
     incx: number): void {

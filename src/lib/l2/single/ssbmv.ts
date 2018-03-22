@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 /*
 
@@ -29,7 +29,7 @@ export function ssbmv(
     n: number,
     k: number,
     alpha: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
     x: FortranArr,
     incx: number,

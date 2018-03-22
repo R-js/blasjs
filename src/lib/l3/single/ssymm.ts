@@ -6,7 +6,7 @@
 *>     Sven Hammarling, Numerical Algorithms Group Ltd.
 */
 
-import { errWrongArg, Matrix2D } from '../../f_func';
+import { errWrongArg, Matrix } from '../../f_func';
 /*
 *>
 *> SSYMM  performs one of the matrix-matrix operations
@@ -30,12 +30,12 @@ export function ssymm(
     m: number,
     n: number,
     alpha: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
-    b: Matrix2D,
+    b: Matrix,
     ldb: number,
     beta: number,
-    c: Matrix2D,
+    c: Matrix,
     ldc: number): void {
 
 

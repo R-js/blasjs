@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 /*
   -- Written on 22-October-1986.
@@ -29,7 +29,7 @@ export function stbsv(
     diag: 'U' | 'N',
     n: number,
     k: number,
-    A: Matrix2D,
+    A: Matrix,
     lda: number,
     x: FortranArr,
     incx: number): void {

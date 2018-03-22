@@ -6,7 +6,7 @@
      Richard Hanson, Sandia National Labs.
 */
 
-import { errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 const { max } = Math;
 
@@ -18,7 +18,7 @@ export function sger(
     incx: number,
     y: FortranArr,
     incy: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number): void {
 
     let err = 0;

@@ -1,4 +1,4 @@
-import { Complex, errMissingIm, errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { Complex, errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 const { max } = Math;
 
@@ -27,7 +27,7 @@ export function cgerc(
     incx: number,
     y: FortranArr,
     incy: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number): void {
 
     if (y.i === undefined) {

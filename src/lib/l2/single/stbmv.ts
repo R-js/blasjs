@@ -7,7 +7,7 @@
      Richard Hanson, Sandia National Labs.
 */
 
-import { errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 //    STBMV  performs one of the matrix-vector operations
 //    x := A*x,   or   x := A**T*x
@@ -29,7 +29,7 @@ export function stbmv(
     diag: 'U' | 'N',
     n: number,
     k: number,
-    A: Matrix2D,
+    A: Matrix,
     lda: number,
     x: FortranArr,
     incx: number): void {

@@ -17,7 +17,7 @@
  A is an n by n symmetric matrix.
 */
 
-import { errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 const { max } = Math;
 
@@ -25,7 +25,7 @@ export function ssymv(
     _uplo: 'U' | 'L',
     n: number,
     alpha: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
     x: FortranArr,
     incx: number,

@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 /*
 
 *>  -- Jacob Bogers, 03/2018, JS port, jkfbogers@gmail.com
@@ -27,7 +27,7 @@ export function strmv(
     trans: '',
     diag: '',
     n: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
     x: FortranArr,
     incx: number): void {

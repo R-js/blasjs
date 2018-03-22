@@ -7,7 +7,7 @@
 *>     Richard Hanson, Sandia National Labs.
 */
 
-import { Complex, errMissingIm, errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { Complex, errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 // helpers
 
@@ -37,7 +37,7 @@ export function cgbmv(
     kl: number,
     ku: number,
     alpha: Complex,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
     x: FortranArr,
     incx: number,

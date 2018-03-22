@@ -1,4 +1,4 @@
-import { errMissingIm, errWrongArg, FortranArr, Matrix2D } from '../../f_func';
+import { errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
 
 /*
 *>  -- Jacob Bogers, 03/2018, jkfbogers@gmail.com
@@ -27,7 +27,7 @@ export function ctrsv(
     trans: 'n' | 't' | 'c',
     diag: 'u' | 'n',
     n: number,
-    a: Matrix2D,
+    a: Matrix,
     lda: number,
     x: FortranArr,
     incx: number): void {
