@@ -47,13 +47,13 @@ export function ctrsv(
     const dg: 'u' | 'n' = String.fromCharCode(diag.charCodeAt(0) | 0X20) as any;
 
     let info = 0;
-    if (ul !== 'u' && ul !== 'l') {
+    if (!'ul'.includes(ul)) {
         info = 1;
     }
-    else if (tr !== 'n' && tr !== 't' && tr !== 'c') {
+    else if (!'ntc'.includes(tr)) {
         info = 2;
     }
-    else if (dg !== 'u' && dg !== 'n') {
+    else if (!'un'.includes(dg)) {
         info = 3;
     }
     else if (n < 0) {

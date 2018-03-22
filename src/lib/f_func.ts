@@ -146,6 +146,8 @@ export type Matrix2D = {
     readonly colOfEx: (number) => number;
     //s: FortranMatrixSetterGetter
     readonly assertComplex: (msg: string) => void | never;
+    // zap a row with fa valie
+    readonly setCol: (col: number, rowStart: number, rowEnd: number, value: number) => void;
 };
 
 
@@ -190,6 +192,10 @@ export function mimicFMatrix2D(r: fpArray, i?: fpArray) {
                 if (i === undefined) {
                     throw new Error(errMissingIm(msg))
                 }
+            },
+            setCol(col: number, rowStart: number, rowEnd: number, value: number): void {
+                const coords = this.colOfEx(col);
+                this.r.fill(value, coords + rowStart, coords + rowEnd + 1);
             }
         });
     }
