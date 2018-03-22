@@ -1,10 +1,12 @@
 import { sgemm } from './single/sgemm';
 import { ssymm } from './single/ssymm';
 import { ssyr2k } from './single/ssyr2k';
+import { ssyrk } from './single/ssyrk';
 
 export const level3 = {
     //single
     sgemm,
     ssymm,
-    ssyr2k
+    ssyr2k,
+    ssyrk
 };
