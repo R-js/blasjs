@@ -76,7 +76,7 @@ export function strsm(
     }
 
     if (info !== 0) {
-        throw new Error(errWrongArg('strmm', info));
+        throw new Error(errWrongArg('strsm', info));
     }
 
     // Quick return if possible.
