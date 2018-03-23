@@ -12,5 +12,14 @@ export const level3 = {
     ssyr2k,
     ssyrk,
     strmm,
-    strsm
+    strsm,
+    //double
+    dgemm: sgemm,
+    dsymm: ssymm,
+    dsyr2k: ssyr2k,
+    dsyrk: ssyrk,
+    dtrmm: strmm,
+    dtrsm: strsm,
+    //complex
+
 };
