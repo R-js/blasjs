@@ -145,7 +145,6 @@ export type Matrix = {
     //readonly colOf: (number) => number;
     readonly colOfEx: (number) => number;
     //s: FortranMatrixSetterGetter
-    readonly assertComplex: (msg: string) => void | never;
     // zap a row with fa valie
     readonly setCol: (col: number, rowStart: number, rowEnd: number, value: number) => void;
 };
@@ -188,14 +187,12 @@ export function mimicFMatrix2D(r: fpArray, i?: fpArray) {
             },
             //  colOf: (col) => (col - colBase) * nrRows,
             colOfEx: (col) => (col - colBase) * nrRows - rowBase,
-            assertComplex: (msg: string) => {
-                if (i === undefined) {
-                    throw new Error(errMissingIm(msg))
-                }
-            },
             setCol(col: number, rowStart: number, rowEnd: number, value: number): void {
                 const coords = this.colOfEx(col);
                 this.r.fill(value, coords + rowStart, coords + rowEnd + 1);
+                if (this.i) {
+                    this.i.fill(value, coords + rowStart, coords + rowEnd + 1);
+                }
             }
         });
     }
@@ -203,6 +200,10 @@ export function mimicFMatrix2D(r: fpArray, i?: fpArray) {
 
 export function xerbla(fn: string, idx: number) {
     return ` ** On entry to ${fn}, parameter number ${idx}, had an illegal value`;
+}
+
+export function lowerChar<T extends string>(c: T): T {
+    return String.fromCharCode(c.charCodeAt(0) | 0X20) as any;
 }
 
 
