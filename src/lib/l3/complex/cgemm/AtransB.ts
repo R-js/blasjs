@@ -15,9 +15,9 @@ export function AtransB(beta: Complex, alpha: Complex, a: Matrix, b: Matrix, c: 
     if (a.i === undefined) {
         throw new Error(errMissingIm('a.i'));
     }
-
+    //
     // Form  C := alpha*A*B**T + beta*C
-    // DO 250 J = 1,N
+    //
     for (let j = 1; j <= n; j++) {
         const coorCJ = c.colOfEx(j);
         //  IF (BETA.EQ.ZERO) THEN
@@ -50,4 +50,5 @@ export function AtransB(beta: Complex, alpha: Complex, a: Matrix, b: Matrix, c: 
             }
         }
     }
+    //Form  C := alpha*B*A + beta*C.
 }
