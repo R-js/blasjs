@@ -3,6 +3,7 @@
 
       COMPLEX C1, C2, C3,c4,c5, beta
       LOGICAL T
+       INTEGER I
        COMPLEX ZERO
        PARAMETER (ZERO= (0.0E+0,0.0E+0))
       C1 = CMPLX(1,2)
@@ -11,6 +12,7 @@
       c4 = cmplx(3,2)
       c5 = real(c4);
       beta = cmplx(0,0);
+     
 
      
       
@@ -31,4 +33,9 @@
       print *, "c5", c5
       print *, "BETA.EQ.REAL(ZERO)", T
 
+      DO 99, I=1,4 
+            print *, 'I',I
+99    CONTINUE
+      print *, 'I',I
+      print *, 'I',I
       end program complextest

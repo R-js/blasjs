@@ -41,13 +41,6 @@ export function cher2k(
     c: Matrix,
     ldc: number): void {
 
-    const tr = lowerChar(trans);
-    const ul = lowerChar(uplo);
-
-    const alphaIsZero = alpha.re === 0 && alpha.im === 0;
-
-
-
     if (a.i === undefined) {
         throw new Error(errMissingIm('a.i'));
     }
@@ -57,6 +50,11 @@ export function cher2k(
     if (c.i === undefined) {
         throw new Error(errMissingIm('c.i'));
     }
+
+    const tr = lowerChar(trans);
+    const ul = lowerChar(uplo);
+
+    const alphaIsZero = alpha.re === 0 && alpha.im === 0;
 
     const nrowA = trans === 'n' ? n : k;
     const upper = ul === 'u';

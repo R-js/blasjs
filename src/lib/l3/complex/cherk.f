@@ -313,18 +313,7 @@
   130         CONTINUE
           ELSE
               DO 180 J = 1,N
-                  IF (BETA.EQ.ZERO) THEN
-                      DO 140 I = J,N
-                          C(I,J) = ZERO
-  140                 CONTINUE
-                  ELSE IF (BETA.NE.ONE) THEN
-                      C(J,J) = BETA*REAL(C(J,J))
-                      DO 150 I = J + 1,N
-                          C(I,J) = BETA*C(I,J)
-  150                 CONTINUE
-                  ELSE
-                      C(J,J) = REAL(C(J,J))
-                  END IF
+                 
                   DO 170 L = 1,K
                       IF (A(J,L).NE.CMPLX(ZERO)) THEN
                           TEMP = ALPHA*CONJG(A(J,L))
