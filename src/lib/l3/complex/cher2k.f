@@ -373,8 +373,7 @@
           END IF
       ELSE
 *
-*        Form  C := alpha*A**H*B + conjg( alpha )*B**H*A +
-*                   C.
+*        Form  C := alpha*A**H*B + conjg( alpha )*B**H*A + C.
 *
           IF (UPPER) THEN
               DO 210 J = 1,N

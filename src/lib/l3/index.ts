@@ -1,6 +1,7 @@
 //complex
 import { cgemm } from './complex/cgemm/index';
 import { chemm } from './complex/chemm';
+import { cher2k } from './complex/cher2k';
 //single
 import { sgemm } from './single/sgemm';
 import { ssymm } from './single/ssymm';
@@ -26,6 +27,7 @@ export const level3 = {
     //complex
     cgemm,
     chemm,
+    cher2k,
     //double complex
 
 };
