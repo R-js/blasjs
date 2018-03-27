@@ -5,6 +5,7 @@ import { cher2k } from './complex/cher2k';
 import { cherk } from './complex/cherk';
 import { csymm } from './complex/csymm';
 import { csyr2k } from './complex/csyr2k';
+import { csyrk } from './complex/csyrk';
 //single
 import { sgemm } from './single/sgemm';
 import { ssymm } from './single/ssymm';
@@ -33,7 +34,8 @@ export const level3 = {
     cher2k,
     cherk,
     csymm,
-    csyr2k
+    csyr2k,
+    csyrk
     //double complex
 
 };
