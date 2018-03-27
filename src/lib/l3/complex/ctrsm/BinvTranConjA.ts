@@ -69,10 +69,51 @@ export function BinvTranConjA(
                 }
             }
         }//k
-    }
+    }//upper
     else {
+        for (let k = 1; k <= n; k++) {
+            const coorAK = a.colOfEx(k);
+            const coorBK = b.colOfEx(k);
 
+            if (nounit) {
+                const akkRe = a.r[coorAK + k];
+                const akkIm = noconj ? a.i[coorAK + k] : -a.i[coorAK + k];
+                const n = akkRe * akkRe + akkIm * akkIm;
+                // (1+i0)/(c+id), a=1,b=0
+
+                // re= c/(cc+dd)
+                // im =-d/(cc+dd)
+                let tempRe = akkRe / n;
+                let tempIm = -akkIm / n;
+                for (let i = 1; i <= m; i++) {
+                    let re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
+                    let im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
+                    b.r[coorBK + i] = re;
+                    b.i[coorBK + i] = im;
+                }
+            }
+            for (let j = k + 1; j <= n; j++) {
+                const coorBJ = b.colOfEx(j);
+                const isAZero = a.r[coorAK + j] === 0 && a.i[coorAK + j] === 0;
+                if (!isAZero) {
+                    let tempRe = a.r[coorAK + j];
+                    let tempIm = noconj ? a.i[coorAK + j] : -a.i[coorAK + j];
+                    for (let i = 1; i <= m; i++) {
+                        const re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
+                        const im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
+                        b.r[coorBJ + i] -= re;
+                        b.i[coorBJ + i] -= im;
+                    }
+                }
+            }//j
+            if (!alphaIsOne) {
+                for (let i = 1; i <= m; i++) {
+                    const re = alpha.re * b.r[coorBK + i] - alpha.im * b.i[coorBK + i];
+                    const im = alpha.re * b.i[coorBK + i] + alpha.im * b.r[coorBK + i];
+                    b.r[coorBK + i] = re;
+                    b.i[coorBK + i] = im;
+                }
+            }
+        }//k
     }
-
-
 }

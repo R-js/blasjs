@@ -11,6 +11,7 @@
 import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../../f_func';
 import { BinvA } from './BinvA';
 import { BinvTranConjA } from './BinvTranConjA';
+import { invAB } from './invAB';
 
 /*
 *>
