@@ -1,5 +1,5 @@
-  Form  B := alpha*inv( A**T )*B
-*           or    B := alpha*inv( A**H )*B.
+c Form  B := alpha*inv( A**T )*B
+c or    B := alpha*inv( A**H )*B.
 *
               IF (UPPER) THEN
                   DO 140 J = 1,N

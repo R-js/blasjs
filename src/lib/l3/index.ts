@@ -7,6 +7,7 @@ import { csymm } from './complex/csymm';
 import { csyr2k } from './complex/csyr2k';
 import { csyrk } from './complex/csyrk';
 import { ctrmm } from './complex/ctrmm';
+import { ctrsm } from './complex/ctrsm';
 //single
 import { sgemm } from './single/sgemm';
 import { ssymm } from './single/ssymm';
@@ -37,7 +38,16 @@ export const level3 = {
     csymm,
     csyr2k,
     csyrk,
-    ctrmm
+    ctrmm,
+    ctrsm,
     //double complex
-
+    zgemm: cgemm,
+    zhemm: chemm,
+    zher2k: cher2k,
+    zherk: cherk,
+    zsymm: csymm,
+    zsyr2k: csyr2k,
+    zsyrk: csyrk,
+    ztrmm: ctrmm,
+    ztrsm: ctrsm
 };

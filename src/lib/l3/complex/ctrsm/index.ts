@@ -12,6 +12,7 @@ import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../../
 import { BinvA } from './BinvA';
 import { BinvTranConjA } from './BinvTranConjA';
 import { invAB } from './invAB';
+import { invTranConjAB } from './invTranConjAB';
 
 /*
 *>
@@ -111,25 +112,27 @@ export function ctrsm(
         //Form  B := alpha*inv( A )*B.
         //invA*B
         return invAB(nounit, upper, n, m, a, b, alpha);
-
     }
+
     if (si === 'l' && trA !== 'n') {
         //Form  B := alpha*inv( A**T )*B
         //or    B := alpha*inv( A**H )*B.
-        //invTranConjAB
+        invTranConjAB(nounit, upper, noconj, n, m, a, b, alpha);
     }
+
     if (si === 'r' && trA === 'n') {
         //   Form  B := alpha*B*inv( A ).
         //BinvA
         return BinvA(nounit, upper, n, m, a, b, alpha);
     }
+
     if (si === 'r' && trA !== 'n') {
         //Form  B := alpha*B*inv( A**T )
         // or    B := alpha*B*inv( A**H ).
         //BinvTranConjA
         return BinvTranConjA(nounit, upper, noconj, n, m, a, b, alpha);
-
     }
 
+    throw new Error('unreachable code');
 
 }
