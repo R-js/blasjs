@@ -1,3 +1,7 @@
+  
+  
+  //Form  B := alpha*inv( A )*B.
+  
   IF (UPPER) THEN
                   DO 230 J = 1,N
                       IF (ALPHA.NE.ONE) THEN

@@ -9,7 +9,7 @@
 */
 
 import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../../f_func';
-
+import { BinvA } from './BinvA';
 
 /*
 *>
@@ -108,6 +108,8 @@ export function ctrsm(
     if (si === 'l' && trA === 'n') {
         //Form  B := alpha*inv( A )*B.
         //invA*B
+        return BinvA(nounit, upper, n, m, a, b, alpha);
+
     }
     if (si === 'l' && trA !== 'n') {
         //Form  B := alpha*inv( A**T )*B
@@ -117,6 +119,7 @@ export function ctrsm(
     if (si === 'r' && trA === 'n') {
         //   Form  B := alpha*B*inv( A ).
         //BinvA
+        return BinvA(nounit, upper, n, m, a, b, alpha);
     }
     if (si === 'r' && trA !== 'n') {
         //Form  B := alpha*B*inv( A**T )
