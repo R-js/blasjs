@@ -1,7 +1,7 @@
 import { Complex, errMissingIm, Matrix } from '../../../f_func';
 //Form  B := alpha*inv( A )*B.
 
-export function invAB(
+export function BinvA(
     nounit: boolean,
     upper: boolean,
     n: number,

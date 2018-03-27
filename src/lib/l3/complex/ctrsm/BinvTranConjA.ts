@@ -1,64 +1,78 @@
- Form  B := alpha*B*inv( A**T )
-*           or    B := alpha*B*inv( A**H ).
-*
-              IF (UPPER) THEN
-                  DO 330 K = N,1,-1
-                      IF (NOUNIT) THEN
-                          IF (NOCONJ) THEN
-                              TEMP = ONE/A(K,K)
-                          ELSE
-                              TEMP = ONE/CONJG(A(K,K))
-                          END IF
-                          DO 290 I = 1,M
-                              B(I,K) = TEMP*B(I,K)
-  290                     CONTINUE
-                      END IF
-                      DO 310 J = 1,K - 1
-                          IF (A(J,K).NE.ZERO) THEN
-                              IF (NOCONJ) THEN
-                                  TEMP = A(J,K)
-                              ELSE
-                                  TEMP = CONJG(A(J,K))
-                              END IF
-                              DO 300 I = 1,M
-                                  B(I,J) = B(I,J) - TEMP*B(I,K)
-  300                         CONTINUE
-                          END IF
-  310                 CONTINUE
-                      IF (ALPHA.NE.ONE) THEN
-                          DO 320 I = 1,M
-                              B(I,K) = ALPHA*B(I,K)
-  320                     CONTINUE
-                      END IF
-  330             CONTINUE
-              ELSE
-                  DO 380 K = 1,N
-                      IF (NOUNIT) THEN
-                          IF (NOCONJ) THEN
-                              TEMP = ONE/A(K,K)
-                          ELSE
-                              TEMP = ONE/CONJG(A(K,K))
-                          END IF
-                          DO 340 I = 1,M
-                              B(I,K) = TEMP*B(I,K)
-  340                     CONTINUE
-                      END IF
-                      DO 360 J = K + 1,N
-                          IF (A(J,K).NE.ZERO) THEN
-                              IF (NOCONJ) THEN
-                                  TEMP = A(J,K)
-                              ELSE
-                                  TEMP = CONJG(A(J,K))
-                              END IF
-                              DO 350 I = 1,M
-                                  B(I,J) = B(I,J) - TEMP*B(I,K)
-  350                         CONTINUE
-                          END IF
-  360                 CONTINUE
-                      IF (ALPHA.NE.ONE) THEN
-                          DO 370 I = 1,M
-                              B(I,K) = ALPHA*B(I,K)
-  370                     CONTINUE
-                      END IF
-  380             CONTINUE
-              END IF
+import { Complex, errMissingIm, Matrix } from '../../../f_func';
+
+/*
+Form  B := alpha*B*inv( A**T )
+or    B := alpha*B*inv( A**H ).
+*/
+
+export function BinvTranConjA(
+    nounit: boolean,
+    upper: boolean,
+    noconj: boolean,
+    n: number,
+    m: number,
+    a: Matrix,
+    b: Matrix,
+    alpha: Complex): void {
+
+
+    if (a.i === undefined) {
+        throw new Error(errMissingIm('a.i'));
+    }
+    if (b.i === undefined) {
+        throw new Error(errMissingIm('b.i'));
+    }
+
+    const alphaIsOne = alpha.re === 1 && alpha.im === 0;
+
+    if (upper) {
+        for (let k = n; k >= 1; k--) {
+            const coorAK = a.colOfEx(k);
+            const coorBK = b.colOfEx(k);
+            if (nounit) {
+                // (1+i0)/(c+id), a=1,b=0
+                // re= c/(cc+dd)
+                // im =-d/(cc+dd)
+                const akkRe = a.r[coorAK + k];
+                const akkIm = noconj ? a.i[coorAK + k] : -a.i[coorAK + k];
+
+                const n = akkRe * akkRe + akkIm * akkIm;
+                let tempRe = akkRe / n;
+                let tempIm = -akkIm / n;
+                for (let i = 1; i <= m; i++) {
+                    const re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
+                    const im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
+                    b.r[coorBK + i] = re;
+                    b.i[coorBK + i] = im;
+                }
+            }
+            for (let j = 1; j <= k - 1; j++) {
+                const aIsZero = a.r[coorBK + j] === 0 && a.i[coorBK + j] === 0;
+                if (!aIsZero) {
+                    let tempRe = a.r[coorAK + j];
+                    let tempIm = noconj ? a.i[coorAK + j] : -a.i[coorAK + j];
+                    for (let i = 1; i <= m; i++) {
+                        //  B(I,J) = B(I,J) - TEMP*B(I,K)
+                        const re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
+                        const im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
+                        b.r[coorBK + i] -= re;
+                        b.r[coorBK + i] -= im;
+                    }
+                }
+            }
+            if (!alphaIsOne) {
+                for (let i = 1; i <= m; i++) {
+                    let re = alpha.re * b.r[coorBK + i] - alpha.im * b.i[coorBK + i];
+                    let im = alpha.re * b.i[coorBK + i] + alpha.im * b.r[coorBK + i];
+                    b.r[coorBK + i] = re;
+                    b.i[coorBK + i] = im;
+                }
+            }
+        }//k
+    }
+    else {
+
+    }
+
+
+}
