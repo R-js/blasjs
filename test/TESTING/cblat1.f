@@ -87,6 +87,11 @@
 99999 FORMAT (' Complex BLAS Test Program Results',/1X)
 99998 FORMAT ('                                    ----- PASS -----')
       END
+c
+c
+c
+c
+c      
       SUBROUTINE HEADER
 *     .. Parameters ..
       INTEGER          NOUT
@@ -99,10 +104,15 @@
 *     .. Common blocks ..
       COMMON           /COMBLA/ICASE, N, INCX, INCY, MODE, PASS
 *     .. Data statements ..
+c 3
       DATA             L(1)/'CDOTC '/
+c 4      
       DATA             L(2)/'CDOTU '/
+c 1
       DATA             L(3)/'CAXPY '/
+c 2
       DATA             L(4)/'CCOPY '/
+c 9      
       DATA             L(5)/'CSWAP '/
       DATA             L(6)/'SCNRM2'/
       DATA             L(7)/'SCASUM'/
@@ -115,6 +125,12 @@
 *
 99999 FORMAT (/' Test of subprogram number',I3,12X,A6)
       END
+c      
+c
+c
+c
+c
+c
       SUBROUTINE CHECK1(SFAC)
 *     .. Parameters ..
       INTEGER           NOUT
@@ -241,10 +257,15 @@
 *     .. Executable Statements ..
       DO 60 INCX = 1, 2
          DO 40 NP1 = 1, 5
+c           N=0,1,2,3,4
             N = NP1 - 1
             LEN = 2*MAX(N,1)
+c           LEN = 2*1, 2*1, 2*2, 2*3, 2*4=2+2+4+6+8=22
+c           CX=(0.1E0,0.1E0), (1.0E0,2.0E0), LEN=2, N=0, STRUE2=0 
+c           CX=(0.1E0,0.1E0), (1.0E0,2.0E0), LEN=2, N=1, STRUE2=0.5     
 *           .. Set vector arguments ..
             DO 20 I = 1, LEN
+               
                CX(I) = CV(I,NP1,INCX)
    20       CONTINUE
             IF (ICASE.EQ.6) THEN
@@ -316,6 +337,10 @@
       END IF
       RETURN
       END
+c
+c
+c
+
       SUBROUTINE CHECK2(SFAC)
 *     .. Parameters ..
       INTEGER           NOUT

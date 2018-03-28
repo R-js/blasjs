@@ -1,4 +1,4 @@
-# blasjs
+# BLASjs (Basic Linear Algebra Subprograms)
 Pure Javascript (Typescript) implementation of [BLAS](https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms) (Basic Linear Algebra Subprograms).
 
 * BLAS cheat sheet in [pdf](http://www.netlib.org/blas/blasqr.pdf).

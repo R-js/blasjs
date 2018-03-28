@@ -103,6 +103,7 @@
       IF (N.LT.1 .OR. INCX.LT.1) THEN
           NORM = ZERO
       ELSE
+c         X=(0.1E0,0.1E0), (1.0E0,2.0E0), LEN=2, N=1, STRUE2=0.5       
           SCALE = ZERO
           SSQ = ONE
 *        The following loop is equivalent to this call to the LAPACK
@@ -119,6 +120,7 @@
                       SSQ = SSQ + (TEMP/SCALE)**2
                   END IF
               END IF
+c             SSQ = 1, SCALE= 0.1 
               IF (AIMAG(X(IX)).NE.ZERO) THEN
                   TEMP = ABS(AIMAG(X(IX)))
                   IF (SCALE.LT.TEMP) THEN
@@ -128,7 +130,9 @@
                       SSQ = SSQ + (TEMP/SCALE)**2
                   END IF
               END IF
+c             SSQ = 1+0.1/0.1 = 2, SCALE = 0.1
    10     CONTINUE
+c              0.1*SQRT(2)   
           NORM = SCALE*SQRT(SSQ)
       END IF
 *

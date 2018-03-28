@@ -70,7 +70,9 @@
         "matrix inverse",
         "determinant",
         "jacobian",
-        "hermetian"
+        "hermetian",
+        "conjugate",
+        "conjugate matrix"
     ],
     "license": "GPL-3.0",
     "main": "dist/lib/libR.js",

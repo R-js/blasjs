@@ -1,19 +1,21 @@
 /*
-  Reference BLAS level1 routine (version 3.8.0) --
-  Reference BLAS is a software package provided by Univ. of Tennessee,    --
-  Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
-  November 2017
-  jacob bogers, javascript 03/2018 (jkfbogers@gmail.com)
-
-  NOTE: the original Fortran code contained COMPLEX*16 X(*) 
-  as a decleration of its complex array argument, thats 2x REAL*8 vars
-  for real and imaginary parts
+*>  -- jacob bogers, javascript port, 03/2018 (jkfbogers@gmail.com)
+*>  -- This version written on 25-October-1982.
+*>     Modified on 14-October-1993 to inline the call to CLASSQ.
+*>     Sven Hammarling, Nag Ltd.
 */
 
 import { FortranArr } from '../../f_func';
 
-const { pow, abs, sqrt } = Math;
+const { abs, sqrt } = Math;
 
+/*
+*>
+*> SCNRM2 returns the euclidean norm of a vector via the function
+*> name, so that
+*>
+*>    SCNRM2 := sqrt( x**H*x )
+*/
 export function scnrm2(n: number, x: FortranArr, incx: number): number {
 
       if (n < 1 || incx < 1) {
@@ -28,23 +30,37 @@ export function scnrm2(n: number, x: FortranArr, incx: number): number {
        auxiliary routine:
        CALL CLASSQ( N, X, INCX, SCALE, SSQ )
       */
+
       const bx = x.base;
-      if (!x.r || !x.i) {
-            throw new Error('complex real and/or imaginary parts are missing');
-      }
 
       for (let ix = 1; ix <= 1 + (n - 1) * incx; ix += incx) {
-            const k = ix - bx;
-            for (let key in { r: 'r', i: 'i' }) {
-                  if (x[key][k] !== 0) {
-                        let temp = abs(x[key][k]);
-                        if (scale < temp) {
-                              ssq = 1 + ssq * pow(scale / temp, 2);
-                              scale = temp;
-                        }
-                        else {
-                              ssq = ssq + pow(temp / scale, 2);
-                        }
+            const i = ix - bx;
+            //real
+            if (x.r[i] !== 0) {
+                  let temp = abs(x.r[i]);
+                  if (scale < temp) {
+                        //calc once
+                        const t1 = scale / temp
+                        ssq = 1 + ssq * t1 * t1;
+                        scale = temp;
+                  }
+                  else {
+                        const t1 = temp / scale;
+                        ssq = ssq + t1 * t1;
+                  }
+            }
+            //img
+            if (x.i && x.i[i] !== 0) {
+                  let temp = abs(x.i[i]);
+                  if (scale < temp) {
+                        //calc once
+                        const t1 = scale / temp
+                        ssq = 1 + ssq * t1 * t1;
+                        scale = temp;
+                  }
+                  else {
+                        const t1 = temp / scale;
+                        ssq = ssq + t1 * t1;
                   }
             }
       }

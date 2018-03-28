@@ -4,6 +4,8 @@ const { abs } = Math;
 
 const { isInteger } = Number;
 
+const { isArray } = Array;
+
 export function sign(a: number, b?: number): number {
     if (b === undefined) {
         return a;
@@ -74,6 +76,62 @@ export function scabs1A(re: number, im: number): number {
 
 export function complex(re: number = 0, im: number = 0): Complex {
     return { re, im };
+}
+export function flatten<T>(...rest: (T | T[])[]): T[] {
+    let rc: T[] = [];
+    for (const itm of rest) {
+        if (isArray(itm)) {
+            let rc2: T[] = flatten(...itm) as any;
+            rc.push(...rc2);
+            continue;
+        }
+        rc.push(itm as any);
+    }
+    return rc as any;
+}
+
+function demuxComplex(...rest: (Complex)[]): { reals: number[], imags?: number[] } {
+
+    const c = flatten(rest);
+
+    const collect: { reals: number[], imags: number[] } = { reals: [], imags: [] };
+
+    c.reduce((prev, v) => {
+        if (typeof v === 'number') {
+            prev.reals.push(v);
+            return prev;
+        }
+        let re = ('re' in v) ? v.re : v[0];
+        let im = ('im' in v) ? v.im : (v['1'] ? v[1] : undefined);
+        prev.reals.push(re);
+        prev.imags.push(im);
+        return prev;
+    }, collect);
+    //only reals?
+    if (collect.reals.length > 0 && collect.imags.length === 0) {
+        delete collect.imags;
+    }
+    return collect;
+}
+
+export function fortranArrComplex32(...rest: (Complex | Complex[])[]): (offset?: number) => FortranArr {
+
+    const collect = demuxComplex(rest as any);
+    let i: Float32Array | undefined;
+    if (collect.imags !== undefined) {
+        i = new Float32Array(collect.imags);
+    }
+    return mimicFArray(new Float32Array(collect.reals), i);
+}
+
+export function fortranArrComplex64(...rest: (Complex | Complex[])[]): (offset?: number) => FortranArr {
+
+    const collect = demuxComplex(rest as any);
+    let i: Float64Array | undefined;
+    if (collect.imags !== undefined) {
+        i = new Float64Array(collect.imags);
+    }
+    return mimicFArray(new Float64Array(collect.reals), i);
 }
 
 // TODO: REMOVE THIS in next iteration!! explicitly it out  
@@ -205,5 +263,6 @@ export function xerbla(fn: string, idx: number) {
 export function lowerChar<T extends string>(c: T): T {
     return String.fromCharCode(c.charCodeAt(0) | 0X20) as any;
 }
+
 
 
