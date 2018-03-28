@@ -4,6 +4,7 @@ dist/
 *.log
 TODO
 npm-debug.log*
+test/fortran-snippets
 *.pem
 .*
 !/.gitignore

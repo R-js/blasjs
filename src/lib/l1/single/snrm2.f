@@ -110,6 +110,24 @@
 *        auxiliary routine:
 *        CALL SLASSQ( N, X, INCX, SCALE, SSQ )
 *
+* DOCUMENTATION FROM SLASSQ
+*  =======
+*http://www.netlib.org/lapack/explore-3.1.1-html/slassq.f.html
+*
+*  SLASSQ  returns the values  scl  and  smsq  such that
+*
+*     ( scl**2 )*smsq = x( 1 )**2 +...+ x( n )**2 + ( scale**2 )*sumsq,
+*
+*  where  x( i ) = X( 1 + ( i - 1 )*INCX ). The value of  sumsq  is
+*  assumed to be non-negative and  scl  returns the value
+*
+*     scl = max( scale, abs( x( i ) ) ).
+*
+*  scale and sumsq must be supplied in SCALE and SUMSQ and
+*  scl and smsq are overwritten on SCALE and SUMSQ respectively.
+*
+*  The routine makes only one pass through the vector x.
+*
           DO 10 IX = 1,1 + (N-1)*INCX,INCX
               IF (X(IX).NE.ZERO) THEN
                   ABSXI = ABS(X(IX))
