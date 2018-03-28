@@ -1,5 +1,5 @@
 *> \brief \b CAXPY
-*
+*  link: http://www.netlib.org/lapack/explore-html/da/df6/group__complex__blas__level1_ga9605cb98791e2038fd89aaef63a31be1.html
 *  =========== DOCUMENTATION ===========
 *
 * Online html documentation available at
@@ -134,6 +134,13 @@
             IY = IY + INCY
          END DO
       END IF
+
+c       1 2 3 4 5 6 7 8 9 10  incx=-1 =>  -9*-1 = 9+1 = 10
+c       10 9 8 7 6 5 4 3 2 1
+c      (N-1)*INCX +1 - N*INCX = (-N+N)*INCX + INCX+1
+c       1 2 3 4 5 6 7 8 9 10  incx=-2 =>  -9*-2 +1= 18+1 = 19
+c       1 2 3 4 5 6 7 8 9 10  incx=-3 =>  -9*-3 +1= 27+1 = 28
+c          ==> 28, 25, 22, 19, 16, 13, 10, 7, 4, 1, -2
 *
       RETURN
       END

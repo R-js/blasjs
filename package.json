@@ -75,10 +75,10 @@
         "conjugate matrix"
     ],
     "license": "GPL-3.0",
-    "main": "dist/lib/libR.js",
+    "main": "dist/lib/blas.js",
     "module:disabled": "",
     "module:doc": "https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md",
-    "name": "lib-r-math.js",
+    "name": "blas.js",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/jacobbogers/blasjs.git"

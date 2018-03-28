@@ -497,3 +497,6 @@ ZTRSM - solving triangular matrix with multiple right hand sides
 
 [srotg]: https://en.wikipedia.org/wiki/Givens_rotation
 [givenmodified]: https://www.ibm.com/support/knowledgecenter/en/SSFHY8_5.5.0/com.ibm.cluster.essl.v5r5.essl100.doc/am5gr_srotm.htm
+
+[caxpy]: http://www.netlib.org/lapack/explore-html/da/df6/group__complex__blas__level1_ga9605cb98791e2038fd89aaef63a31be1.html
+
