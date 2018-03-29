@@ -5,7 +5,7 @@
    CY(IY) = CY(IY) + CA*CX(IX)
 */
 
-import { Complex, FortranArr, scabs1 } from '../../f_func';
+import { Complex, errMissingIm, FortranArr } from '../../f_func';
 
 export function caxpy(
       n: number,
@@ -19,24 +19,17 @@ export function caxpy(
       const caIsZero = ca.im === 0 && ca.re === 0;
       if (caIsZero) return;
 
+      if (cx.i === undefined) {
+            throw new Error(errMissingIm('cx.i'));
+      }
+      if (cy.i === undefined) {
+            throw new Error(errMissingIm('cy.i'));
+      }
+
+
       const kbx = cy.base;
       const kby = cx.base;
-      /* if (incx === 1 && incy === 1) {
-             for (let i = 1; i <= n; i++) {
-                   //   (a + bi)(c+di)= (ac-bd)+i(ad+bc)
-                   let cxIm = cx.i && cx.i[i - kbx] !== undefined ? cx.i[i - kbx] : 0;
-                   let cxRe = cx.r[i - kbx];
-                   // ca*cx
-                   let ra = (ca.re * cxRe - ca.im * cxIm);
-                   let ia = (ca.re * cxIm + ca.im * cxRe);
-                   // cy = ca*cx + cy
-                   cy.r[i - kby] += ra;
-                   if (cy.i) {
-                         cy.i[i - kby] += ia;
-                   }
-             }
-       }
-       else {*/
+
       let ix = 1;
       let iy = 1;
       if (incx < 0) {
@@ -48,17 +41,11 @@ export function caxpy(
 
       for (let i = 1; i <= n; i++) {
             //   (a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-
-            let cxIm = cx.i && cx.i[ix - kbx] !== undefined ? cx.i[ix - kbx] : 0;
-            let cxRe = cx.r[ix - kbx];
-
-            let ra = (ca.re * cxRe - ca.im * cxIm);
-            let ia = (ca.re * cxIm + ca.im * cxRe);
+            let ra = (ca.re * cx.r[ix - kbx] - ca.im * cx.i[ix - kbx]);
+            let ia = (ca.re * cx.i[ix - kbx] + ca.im * cx.r[ix - kbx]);
 
             cy.r[iy - kby] += ra;
-            if (cy.i) {
-                  cy.i[iy - kby] += ia;
-            }
+            cy.i[iy - kby] += ia;
             //
             ix += incx;
             iy += incy;

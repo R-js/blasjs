@@ -106,7 +106,9 @@ function demuxComplex(...rest: (Complex)[]): { reals: number[], imags?: number[]
         let re = ('re' in v) ? v.re : v[0];
         let im = ('im' in v) ? v.im : (v['1'] ? v[1] : undefined);
         prev.reals.push(re);
-        prev.imags.push(im);
+        if (im !== undefined) {
+            prev.imags.push(im);
+        }
         return prev;
     }, collect);
     //only reals?
@@ -375,5 +377,4 @@ export function multiplexer(...rest: (any | any[])[]) {
         return possibleScalar(rc);
     };
 }
-
 
