@@ -4,6 +4,7 @@ import { caxpy } from './complex/caxpy';
 import { ccopy } from './complex/ccopy';
 import { cdotc } from './complex/cdotc';
 import { cdotu } from './complex/cdotu';
+import { crotg } from './complex/crotg';
 import { cscal } from './complex/cscal';
 import { csrot } from './complex/csrot';
 import { csscal } from './complex/csscal';
@@ -62,6 +63,7 @@ export const level1 = {
     ccopy,
     cdotc,
     cdotu,
+    crotg,
     cscal,
     csrot,
     csscal,

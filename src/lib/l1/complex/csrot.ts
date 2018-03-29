@@ -27,7 +27,7 @@ export function csrot(
 
       if (n <= 0) return;
 
-      const ct = complex();
+      const ct = { re: 0, im: 0 };
       const xb = cx.base;
       const yb = cy.base;
 

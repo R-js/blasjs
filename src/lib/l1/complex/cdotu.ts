@@ -1,4 +1,4 @@
-import { cmult, Complex, complex, FortranArr } from '../../f_func';
+import { Complex, errMissingIm, FortranArr } from '../../f_func';
 
 /**
  * 
@@ -14,34 +14,31 @@ export function cdotu(
       cy: FortranArr,
       incy: number): Complex {
 
-      const ctemp = complex();
+      if (cx.i === undefined) {
+            throw new Error(errMissingIm('cx.i'));
+      }
+      if (cy.i === undefined) {
+            throw new Error(errMissingIm('cy.i'));
+      }
+
+      if (n <= 0) return { re: 0, im: 0 };
+
+      let re = 0;
+      let im = 0;
+
       const xb = cx.base;
       const yb = cy.base;
 
-      if (!cx.i || !cy.i) {
-            throw new Error('cx or/and cy are missing complex parts');
+      let ix = 1;
+      let iy = 1;
+      if (incx < 0) ix = (-n + 1) * incx + 1;
+      if (incy < 0) iy = (-n + 1) * incy + 1
+      for (let i = 1; i <= n; i++) {
+            //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
+            re += cx.r[ix - xb] * cy.r[iy - yb] - cx.i[ix - xb] * cy.i[iy - yb];
+            im += cx.r[ix - xb] * cy.i[iy - yb] + cx.i[ix - xb] * cy.r[iy - yb];
+            ix += incx;
+            iy += incy;
       }
-
-      if (n <= 0) return ctemp;
-      if (incx === 1 && incy === 1) {
-            for (let i = 1; i <= n; i++) {
-                  const c = cmult(cx.r[i - xb], cx.i[i - xb], cy.r[i - yb], cy.i[i - yb]);
-                  ctemp.re += c.re;
-                  ctemp.im += c.im;
-            }
-      }
-      else {
-            let ix = 1;
-            let iy = 1;
-            if (incx < 0) ix = (-n + 1) * incx + 1;
-            if (incy < 0) iy = (-n + 1) * incy + 1
-            for (let i = 1; i <= n; i++) {
-                  const c = cmult(cx.r[ix - xb], cx.i[ix - xb], cy.r[iy - yb], cy.i[iy - yb]);
-                  ctemp.re += c.re;
-                  ctemp.im += c.im;
-                  ix += incx;
-                  iy += incy;
-            }
-      }
-      return ctemp;
+      return { re, im };
 } 

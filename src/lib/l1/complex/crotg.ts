@@ -9,47 +9,48 @@
       subroutine
 */
 
-import { cabs, cmult, complex, Complex } from '../../f_func';
+import { Complex } from '../../f_func';
 
-const { sqrt, pow } = Math;
+const { sqrt, abs } = Math;
 
 export function crotg(
-      p: {
-            ca: Complex, // in
-            cb: Complex, // in
-            c: number, // out argument
-            s: Complex // out
-      }): void {
+      ca: Complex, // in
+      cb: Complex, // in
+      c: { val: number }, // out argument
+      s: Complex // out
+): void {
 
-      if (p.ca.re === 0 && p.ca.im === 0) {
-            p.c = 0;
-            p.s = complex(1);
-            p.ca.re = p.cb.re;
-            p.ca.im = p.cb.im;
+      if (ca.re === 0 && ca.im === 0) {
+            c.val = 0;
+            s.re = 1;
+            s.im = 0;
+            //NOTE: violates the documentation, but the source code does this
+            ca.re = cb.re;
+            ca.im = cb.im;
+            return;
       }
-      else {
-            const cabs_ca = cabs(p.ca.re, p.ca.im);
-            const cabs_cb = cabs(p.cb.re, p.cb.im);
-            let scale = cabs_ca + cabs_cb;
-            let norm = scale * sqrt(
-                  pow(cabs_ca / scale, 2) +
-                  pow(cabs_cb / scale, 2)
-            );
-            // c
-            let alpha = complex(p.ca.re / cabs_ca, p.ca.im / cabs_ca);
-            p.c = cabs_ca / norm;
 
-            // s
-            let _s = cmult(alpha.re, alpha.im, p.cb.re, -p.cb.im);
-            _s.re /= norm;
-            _s.im /= norm;
-            p.s.re = _s.re;
-            p.s.im = _s.im;
+      const cabs_ca = sqrt(ca.re * ca.re + ca.im * ca.im);
+      const cabs_cb = sqrt(cb.re * cb.re + cb.im * cb.im);
+      // numerical stability?
+      const scale = cabs_ca + cabs_cb;
+      const s1 = cabs_ca / scale;
+      const s2 = cabs_cb / scale;
+      const norm = scale * sqrt(s1 * s1 + s2 * s2);
+      //console.log('norm, |ca|,|cb|', norm, cabs_ca, cabs_cb);
+      //console.log('scale', scale);
 
-            // ca, strange because CA (accourding in comments)
-            //          is an input var not an output var
-            p.ca.re = alpha.re * norm;
-            p.ca.im = alpha.im * norm;
-            //
-      }
+      // c
+      const alphaRe = (ca.re / cabs_ca);
+      const alphaIm = (ca.im / cabs_ca);
+      c.val = cabs_ca / norm;
+      //S = ALPHA*CONJG(CB)/NORM
+      //(a+ib)*(c-id) = (ac+bd)+i(-ad+bc)
+      s.re = (alphaRe * cb.re + alphaIm * cb.im) / norm;
+      s.im = (-alphaRe * cb.im + alphaIm * cb.re) / norm;
+
+      //NOTE: violates the documentation, but the source code does this
+      ca.re = alphaRe * norm;
+      ca.im = alphaIm * norm;
+      //
 }

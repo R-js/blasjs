@@ -1,10 +1,15 @@
       PROGRAM complextest
       INTRINSIC CONJG
+      EXTERNAL CROTG, ZROTG
 
-      COMPLEX C1, C2, C3,c4,c5, beta,X(2)
+      COMPLEX C1, C2, C3,c4,c5, beta,X(2), CA, CB,S
+      REAL C
       LOGICAL T
        INTEGER I,N, INCX
        COMPLEX ZERO,  CV(8,5,2)
+      DOUBLE COMPLEX DCA, DCB, DS
+      REAL*8 DC
+
 
       DATA              ((CV(I,J,1),I=1,8),J=1,5)/(0.1E0,0.1E0),
      +                  (1.0E0,2.0E0), (1.0E0,2.0E0), (1.0E0,2.0E0),
@@ -50,7 +55,23 @@
       c5 = real(c4);
       beta = cmplx(0,0);
 
-      
+      CB = CMPLX(34,23)
+      CA = CMPLX(11,19)
+
+      DCB = CMPLX(34,23)
+      DCA = CMPLX(11,19)
+      DS = CMPLX(0,0)
+      DC = 0
+
+
+      print *, " before  CA,CB,C,S", CA,CB,C,S
+      CALL CROTG(CA,CB,C,S)
+      print *, " after  CA,CB,C,S", CA,CB,C,S
+
+c      print *, " before  DCA,DCB,DC,DS", DCA,DCB,DC,DS
+c      CALL ZROTG(DCA,DCB,DC,DS)
+c      print *, " after  DCA,DCB,DC,DS", DCA,DCB,DC,DS
+
      
 
      
@@ -61,6 +82,7 @@
       IF (C1.NE.1) THEN
          PRINT *, "c1 looks like", c1
       END IF
+
 
       print *, "c1=", c1
       print *, "c2=", c2
@@ -80,76 +102,9 @@
       write (6,100) "hello" 
 100   FORMAT(1X,A6)      
       print *, "cv(1,2,1)=",cv(1,2,1)
-      print *, "SCNRM2(N=1,X,INCX)", SCNRM2(N,X,INCX)
-      print *, "SCNRM2(N=2,X,INCX)", SCNRM2(2,X,INCX)
+     
+   
+     
       end
 
-      REAL FUNCTION SCNRM2(N,X,INCX)
-*
-*  -- Reference BLAS level1 routine (version 3.8.0) --
-*  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
-*  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
-*     November 2017
-*
-*     .. Scalar Arguments ..
-      INTEGER INCX,N
-*     ..
-*     .. Array Arguments ..
-      COMPLEX X(*)
-*     ..
-*
-*  =====================================================================
-*
-*     .. Parameters ..
-      REAL ONE,ZERO
-      PARAMETER (ONE=1.0E+0,ZERO=0.0E+0)
-*     ..
-*     .. Local Scalars ..
-      REAL NORM,SCALE,SSQ,TEMP
-      INTEGER IX
-*     ..
-*     .. Intrinsic Functions ..
-      INTRINSIC ABS,AIMAG,REAL,SQRT
-*     ..
-      IF (N.LT.1 .OR. INCX.LT.1) THEN
-          NORM = ZERO
-      ELSE
-c         X=(0.1E0,0.1E0), (1.0E0,2.0E0), LEN=2, N=1, STRUE2=0.5       
-          SCALE = ZERO
-          SSQ = ONE
-*        The following loop is equivalent to this call to the LAPACK
-*        auxiliary routine:
-*        CALL CLASSQ( N, X, INCX, SCALE, SSQ )
-*
-          DO 10 IX = 1,1 + (N-1)*INCX,INCX
-              IF (REAL(X(IX)).NE.ZERO) THEN
-                  TEMP = ABS(REAL(X(IX)))
-                  IF (SCALE.LT.TEMP) THEN
-                      SSQ = ONE + SSQ* (SCALE/TEMP)**2
-                      SCALE = TEMP
-                  ELSE
-                      SSQ = SSQ + (TEMP/SCALE)**2
-                  END IF
-              END IF
-c             SSQ = 1, SCALE= 0.1 
-              IF (AIMAG(X(IX)).NE.ZERO) THEN
-                  TEMP = ABS(AIMAG(X(IX)))
-                  IF (SCALE.LT.TEMP) THEN
-                      SSQ = ONE + SSQ* (SCALE/TEMP)**2
-                      SCALE = TEMP
-                  ELSE
-                      SSQ = SSQ + (TEMP/SCALE)**2
-                  END IF
-              END IF
-c             SSQ = 1+0.1/0.1 = 2, SCALE = 0.1
-   10     CONTINUE
-c              0.1*SQRT(2)   
-          NORM = SCALE*SQRT(SSQ)
-      END IF
-*
-      SCNRM2 = NORM
-      RETURN
-*
-*     End of SCNRM2.
-*
-      END
+     

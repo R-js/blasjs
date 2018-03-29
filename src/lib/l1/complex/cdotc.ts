@@ -1,4 +1,4 @@
-import { Complex, complex, errMissingIm, FortranArr } from '../../f_func';
+import { Complex, errMissingIm, FortranArr } from '../../f_func';
 
 /*
   jack dongarra, linpack,  3/11/78.
@@ -12,7 +12,8 @@ export function cdotc(
       cy: FortranArr,
       incy: number): Complex {
 
-      const ctemp = complex();
+      let tempRe = 0;
+      let tempIm = 0;
       const xb = cx.base;
       const yb = cy.base;
 
@@ -23,7 +24,7 @@ export function cdotc(
             throw new Error(errMissingIm('cy.i'));
       }
 
-      if (n <= 0) return ctemp;
+      if (n <= 0) return { re: tempRe, im: tempIm };
 
       let ix = 1;
       let iy = 1;
@@ -40,11 +41,11 @@ export function cdotc(
 
             //multiply
             //   (a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-            ctemp.re += Xre * Yre - Xim * Yim;
-            ctemp.im += Xre * Yim + Xim * Yre;
+            tempRe += Xre * Yre - Xim * Yim;
+            tempIm += Xre * Yim + Xim * Yre;
             ix += incx;
             iy += incy;
       }
 
-      return ctemp;
+      return { re: tempRe, im: tempIm };
 }

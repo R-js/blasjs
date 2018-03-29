@@ -1,25 +1,25 @@
-import { cmult, Complex, FortranArr } from '../../f_func';
+import { Complex, errMissingIm, FortranArr } from '../../f_func';
 
-/*
-    jack dongarra, linpack,  3/11/78.
+/*  jack dongarra, linpack,  3/11/78.
     jacob bogers, 03/2018, JS port
 */
 
 export function cscal(n: number, ca: Complex, cx: FortranArr, incx: number): void {
 
-      if (n <= 0 || incx <= 0) return;
+      if (cx.i === undefined) {
+            throw new Error(errMissingIm('cx.i'));
+      }
 
       const bx = cx.base;
 
-      if (!cx.i) {
-            throw new Error('cx doesnt have an imaginary part defined');
-      }
+      if (n <= 0) return;
+      if (incx <= 0) return;
 
       let nincx = n * incx;
       for (let i = 1; i <= nincx; i += incx) {
-            const _cx = cmult(ca.re, ca.im, cx.r[i - bx], cx.i[i - bx]);
-            cx.r[i - bx] = _cx.re;
-            cx.i[i - bx] = _cx.im;
+            const re = ca.re * cx.r[i - cx.base] - ca.im * cx.i[i - cx.base];
+            const im = ca.re * cx.i[i - cx.base] + ca.re * cx.r[i - cx.base];
+            cx.r[i - bx] = re;
+            cx.i[i - bx] = im;
       }
-
 }
