@@ -30,7 +30,19 @@ export type FortranArr = {
     i?: fpArray,
     s: FortranSetterGetter,
     assertComplex: (msg: string) => void | never;
+    toArr: () => Complex[] | number[];
+
 };
+
+export function isComplex(a): a is Complex {
+    return (
+        (a !== null) &&
+        (typeof a === 'object') &&
+        ('re' in a) &&
+        ('im' in a) &&
+        (typeof a['re'] === 'number' && typeof a['im'] === 'number')
+    );
+}
 //2
 export function mimicFArray(r: fpArray, i?: fpArray) {
     //Lets make some curry
@@ -60,6 +72,9 @@ export function mimicFArray(r: fpArray, i?: fpArray) {
                 if (i === undefined) {
                     throw new Error(errMissingIm(msg))
                 }
+            },
+            toArr: () => {
+                return multiplexer(Array.from(r), i && Array.from(i))((re, im) => i ? { re, im } : re);
             }
         });
     }
@@ -90,6 +105,10 @@ export function flatten<T>(...rest: (T | T[])[]): T[] {
         rc.push(itm as any);
     }
     return rc as any;
+}
+
+export function muxCmplx(re: number[], im: number[]): Complex[] {
+    return multiplexer(re, im)((re, im) => ({ re, im }))
 }
 
 function demuxComplex(...rest: (Complex)[]): { reals: number[], imags?: number[] } {
@@ -353,7 +372,9 @@ export function multiplexer(...rest: (any | any[])[]) {
             continue;
         }
         if (arg instanceof Object) {
-            throw new Error('Sorry, looping over properties not yet supported');
+            analyzed.push(arg);
+            continue;
+            //throw new Error('Sorry, looping over properties not yet supported');
         }
         if (arg instanceof Function) {
             throw new Error('Sorry function arguments are not yet supported');

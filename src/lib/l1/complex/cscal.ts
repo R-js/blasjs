@@ -18,7 +18,7 @@ export function cscal(n: number, ca: Complex, cx: FortranArr, incx: number): voi
       let nincx = n * incx;
       for (let i = 1; i <= nincx; i += incx) {
             const re = ca.re * cx.r[i - cx.base] - ca.im * cx.i[i - cx.base];
-            const im = ca.re * cx.i[i - cx.base] + ca.re * cx.r[i - cx.base];
+            const im = ca.re * cx.i[i - cx.base] + ca.im * cx.r[i - cx.base];
             cx.r[i - bx] = re;
             cx.i[i - bx] = im;
       }

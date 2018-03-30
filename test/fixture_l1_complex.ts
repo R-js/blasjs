@@ -1,7 +1,14 @@
+import { complex as _, fortranArrComplex64 as arr64 } from '../src/lib/f_func';
+
 const pI = Infinity;
 const nI = -Infinity;
-import { complex as _, fortranArrComplex64 as arr64 } from '../src/lib/f_func';
+const { PI, sin, cos } = Math;
+
+const cospi = x => cos(PI * x);
+const sinpi = x => sin(PI * x);
+
 export const fixture = {
+    // CY(IY) = CY(IY) + CA*CX(IX)
     caxpy: {
         case0: {
             desc: 'cy = cy + ca*cx, incx=1, incy=1',
@@ -318,8 +325,8 @@ export const fixture = {
 
             },
             output: {
-                re: [348],
-                im: [-64]
+                re: 348,
+                im: -64
             },
         },
         case1: {
@@ -339,8 +346,8 @@ export const fixture = {
 
             },
             output: {
-                re: [348],
-                im: [-64]
+                re: 348,
+                im: -64
             },
         },
         case2: {
@@ -359,8 +366,8 @@ export const fixture = {
                 incy: -1,
             },
             output: {
-                re: [0],
-                im: [0]
+                re: 0,
+                im: 0
             },
         }
     },
@@ -414,8 +421,8 @@ export const fixture = {
                 incy: 1,
             },
             output: {
-                re: [-208],
-                im: [284]
+                re: -208,
+                im: 284
             }
         },
         case1: {
@@ -434,8 +441,8 @@ export const fixture = {
                 incy: -1,
             },
             output: {
-                re: [-208],
-                im: [284]
+                re: -208,
+                im: 284
             }
         },
         case2: {
@@ -454,8 +461,8 @@ export const fixture = {
                 incy: 1,
             },
             output: {
-                re: [0],
-                im: [0]
+                re: 0,
+                im: 0
             }
         }
     },
@@ -543,7 +550,7 @@ export const fixture = {
                 }
             },
         },
-        case2: {
+        case1: {
             desc: 'cscal n=3, incx=2, ca={2,4}, cx={6}',
             input: {
                 n: 3,
@@ -565,7 +572,7 @@ export const fixture = {
                 }
             },
         },
-        case3: {
+        case2: {
             desc: 'cscal n=0, cx unchanged',
             input: {
                 n: 0,
@@ -587,7 +594,7 @@ export const fixture = {
                 },
             },
         },
-        case4: {
+        case3: {
             desc: 'cscal incx=0 cx unchanged',
             input: {
                 n: 3,
@@ -622,5 +629,128 @@ export const fixture = {
                 incx: 1
             }
         },
-    }
+    },
+    csrot: {
+        case0: {
+            desc: 'csrot n=2, cx={2}, cy={2}, incx=1,incy=1, c=cospi(1/6), s=sinpi(1/6)',
+            input: {
+                n: 2,
+                cx: {
+                    re: [1, 0],
+                    im: [0, 0]
+                },
+                cy: {
+                    re: [0, 1],
+                    im: [0, 0]
+                },
+                c: cospi(1 / 6), //30°
+                s: sinpi(1 / 6), //30°
+                incx: 1,
+                incy: 1
+            },
+            output: {
+                cx: {
+                    re: [0.866025403784439, 0.500000000000000],
+                    im: [0, 0]//,[0.500000000000000, 0.866025403784439]
+                },
+                cy: {
+                    re: [-0.500000000000000, 0.866025403784439],
+                    im: [0, 0]//[0.866025403784439, -0.500000000000000]
+                }
+            },
+        },
+        case1: {
+            desc: 'csrot n=2, cx={2}, cy={2}, incx=-1,incy=-1, c=cospi(1/6), s=sinpi(1/6)',
+            input: {
+                n: 2,
+                cx: {
+                    re: [1, 0],
+                    im: [0, 0]
+                },
+                cy: {
+                    re: [0, 1],
+                    im: [0, 0]
+                },
+                c: cospi(1 / 6), //30°
+                s: sinpi(1 / 6), //30°
+                incx: -1,
+                incy: -1
+            },
+            output: {
+                cx: {
+                    re: [0.866025403784439, 0.500000000000000],
+                    im: [0, 0]//,[0.500000000000000, 0.866025403784439]
+                },
+                cy: {
+                    re: [-0.500000000000000, 0.866025403784439],
+                    im: [0, 0]//[0.866025403784439, -0.500000000000000]
+                }
+            },
+        },
+        case2: {
+            desc: 'csrot n=0, cx={2}, cy={2}, incx=-1,incy=-1, c=cospi(1/6), s=sinpi(1/6)',
+            input: {
+                n: 0,
+                cx: {
+                    re: [1, 0],
+                    im: [0, 0]
+                },
+                cy: {
+                    re: [0, 1],
+                    im: [0, 0]
+                },
+                c: cospi(1 / 6), //30°
+                s: sinpi(1 / 6), //30°
+                incx: -1,
+                incy: -1
+            },
+            output: {
+                cx: {
+                    re: [1, 0],
+                    im: [0, 0]
+                },
+                cy: {
+                    re: [0, 1],
+                    im: [0, 0]
+                },
+            },
+        },
+    },
+    csrotError: {
+        case0: {
+            desc: 'fail because cx imaginary part missing',
+            input: {
+                n: 0,
+                cx: {
+                    re: [1, 0],
+                },
+                cy: {
+                    re: [0, 1],
+                    im: [0, 0]
+                },
+                c: cospi(1 / 6), //30°
+                s: sinpi(1 / 6), //30°
+                incx: -1,
+                incy: -1
+            },
+        },
+        case1: {
+            desc: 'fail because cy imaginary part missing',
+            input: {
+                n: 0,
+                cx: {
+                    re: [1, 0],
+                    im: [0, 0]
+                },
+                cy: {
+                    re: [0, 1],
+                },
+                c: cospi(1 / 6), //30°
+                s: sinpi(1 / 6), //30°
+                incx: -1,
+                incy: -1
+            },
+        },
+    },
 }
+

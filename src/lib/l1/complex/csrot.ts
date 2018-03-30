@@ -1,4 +1,4 @@
-import { complex, errMissingIm, FortranArr } from '../../f_func';
+import { errMissingIm, FortranArr } from '../../f_func';
 
 /*
   Univ. of Tennessee
@@ -27,10 +27,6 @@ export function csrot(
 
       if (n <= 0) return;
 
-      const ct = { re: 0, im: 0 };
-      const xb = cx.base;
-      const yb = cy.base;
-
       let ix = 1;
       let iy = 1;
       if (incx < 0) ix = (-n + 1) * incx + 1;
@@ -38,19 +34,17 @@ export function csrot(
 
       //place it outside the loop, faster slightly??
 
-      let xr = 0;
-      let yr = 0;
       for (let i = 1; i <= n; i++) {
-            xr = ix - xb;
-            yr = iy - yb;
-            ct.re = cx.r[xr] * c + s * cy.r[yr];
-            ct.im = cx.i[xr] * c + s * cy.i[yr];
-
-            cy.r[yr] = c * cy.r[yr] - s * cx.r[xr];
-            cy.i[yr] = c * cy.i[yr] - s * cx.i[xr];
-
-            cx.r[xr] = ct.re;
-            cx.r[xr] = ct.im;
+            // CTEMP = C*CX( IX ) + S*CY( IY )
+            // C and S are REAL
+            const re = cx.r[ix - cx.base] * c + s * cy.r[iy - cy.base];
+            const im = cx.i[ix - cx.base] * c + s * cy.i[iy - cy.base];
+            //CY( IY ) =- S*CX( IX ) + C*CY( IY ) 
+            cy.r[iy - cy.base] = - s * cx.r[ix - cx.base] + c * cy.r[iy - cy.base];
+            cy.i[iy - cy.base] = - s * cx.i[ix - cx.base] + c * cy.i[iy - cy.base];
+            //CX( IX ) = CTEMP
+            cx.r[ix - cx.base] = re;
+            cx.i[ix - cx.base] = im;
 
             ix += incx;
             iy += incy;
