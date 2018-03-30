@@ -12,7 +12,7 @@ export function scopy(
       sy: FortranArr,
       incy: number): void {
 
-      if (n < 0) return;
+      if (n <= 0) return;
       const xb = sx.base;
       const yb = sy.base;
 
@@ -27,7 +27,7 @@ export function scopy(
                   }
             }
             const mp1 = m + 1;
-            for (let i = mp1; i <= n;) {
+            for (let i = mp1; i <= n; i++) {
                   let kx = i - xb;
                   let ky = i - yb;
                   // prolly this helped the compiler(fortran) unwind for loops

@@ -336,7 +336,7 @@ export const fixture = {
             }
         },
     },
-    //TODO: scnrm2(n: number, x: FortranArr, incx: number): number
+    //DONE: scnrm2(n: number, x: FortranArr, incx: number): number
     scnrm2: {
         case0: {
             desc: 'Conj(x)*x, incx=1, n=10',
@@ -408,50 +408,133 @@ export const fixture = {
             output: 0
         },
     },
-    ccopy: {
+    scopy: {
         case0: {
             desc: 'n=4, cx={4}, cy={4}, incx=1, incy=1',
             input: {
                 n: 4,
-                cx: {
-                    re: [1, 2, 3, 4],
-                    im: [5, 6, 7, 8]
+                x: {
+                    re: [1, 2, 3, 4]
                 },
-                cy: {
-                    re: [0, 0, 0, 0],
-                    im: [0, 0, 0, 0]
+                y: {
+                    re: [0, 0, 0, 0]
                 },
                 incx: 1,
                 incy: 1,
-
             },
             output: {
-                re: [1, 2, 3, 4],
-                im: [5, 6, 7, 8]
+                re: [1, 2, 3, 4]
             },
         },
         case1: {
-            desc: 'n=4, cx={4}, cy={4}, incx=-1, incy=-1',
+            desc: 'n=10,(>7), incx=1, incy=1',
             input: {
-                n: 4,
-                cx: {
-                    re: [1, 2, 3, 4],
-                    im: [5, 6, 7, 8]
-                },
-                cy: {
-                    re: [0, 0, 0, 0],
-                    im: [0, 0, 0, 0]
-                },
-                incx: -1,
-                incy: -1,
+                n: 10,
+                x: {
+                    re: [1, 2, 3, 4, 5, 6, 7, 8, 9, 5],
 
+                },
+                y: {
+                    re: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                },
+                incx: 1,
+                incy: 1,
             },
             output: {
-                re: [1, 2, 3, 4],
-                im: [5, 6, 7, 8]
+                re: [1, 2, 3, 4, 5, 6, 7, 8, 9, 5]
             },
         },
         case2: {
+            desc: 'n=7,(n%7==0), incx=1, incy=1',
+            input: {
+                n: 7,
+                x: {
+                    re: [1, 2, 3, 4, 5, 6, 7],
+
+                },
+                y: {
+                    re: [0, 0, 0, 0, 0, 0, 0],
+                },
+                incx: 1,
+                incy: 1,
+            },
+            output: {
+                re: [1, 2, 3, 4, 5, 6, 7]
+            },
+        },
+        case3: {
+            desc: 'n=5, incx=2, incy=2',
+            input: {
+                n: 5,
+                x: {
+                    re: [1, 2, 3, 4, 5, 6, 7, 8, 9, 5],
+
+                },
+                y: {
+                    re: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                },
+                incx: 2,
+                incy: 2,
+            },
+            output: {
+                re: [1, 0, 3, 0, 5, 0, 7, 0, 9, 0]
+            },
+        },
+        case4: {
+            desc: 'n=5, incx=2, incy=-1',
+            input: {
+                n: 5,
+                x: {
+                    re: [1, 2, 3, 4, 5, 6, 7, 8, 9, 5],
+
+                },
+                y: {
+                    re: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                },
+                incx: 2,
+                incy: -1,
+            },
+            output: {
+                re: [9, 7, 5, 3, 1, 0, 0, 0, 0, 0]
+            },
+        },
+        case5: {
+            desc: 'n=5, incx=-2, incy=1',
+            input: {
+                n: 5,
+                x: {
+                    re: [1, 2, 3, 4, 5, 6, 7, 8, 9, 5],
+
+                },
+                y: {
+                    re: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                },
+                incx: -2,
+                incy: 1,
+            },
+            output: {
+                re: [9, 7, 5, 3, 1, 0, 0, 0, 0, 0]
+            },
+        },
+        case6: {
+            desc: 'n=0, incx=-2, incy=1',
+            input: {
+                n: 0,
+                x: {
+                    re: [1, 2, 3, 4, 5, 6, 7, 8, 9, 5],
+
+                },
+                y: {
+                    re: [0, 0, 0, 0, 5, 0, 9, 0, 0, 0],
+                },
+                incx: -2,
+                incy: 1,
+            },
+            output: {
+                re: [0, 0, 0, 0, 5, 0, 9, 0, 0, 0],
+            },
+        },
+        /*case2: {
             desc: 'n=0, cx={4}, cy={4}',
             input: {
                 n: 0,
@@ -471,39 +554,7 @@ export const fixture = {
                 re: [0, 0, 0, 0],
                 im: [0, 0, 0, 0]
             },
-        },
-    },
-    ccopyErrors: {
-        case3: {
-            desc: 'cx has no imaginary part',
-            input: {
-                n: 1,
-                cx: {
-                    re: [1, 2, 3, 4],
-                },
-                cy: {
-                    re: [0, 0, 0, 0],
-                    im: [0, 0, 0, 0]
-                },
-                incx: -1,
-                incy: -1,
-            }
-        },
-        case4: {
-            desc: 'cy has no imaginary part',
-            input: {
-                n: 1,
-                cx: {
-                    re: [1, 2, 3, 4],
-                    im: [2, 3, 4, 5]
-                },
-                cy: {
-                    re: [0, 0, 0, 0],
-                },
-                incx: -1,
-                incy: -1,
-            }
-        },
+        },*/
     },
     cdotc: {
         case0: {

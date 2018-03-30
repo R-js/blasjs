@@ -9,6 +9,7 @@ const {
     isamax,
     sasum,
     scnrm2,
+    scopy,
     //TODO:
     cswap,
     saxpy, csscal, caxpy, ccopy, cdotc, cdotu, crotg, cscal, csrot }
@@ -79,6 +80,24 @@ describe('blas level 1 single/double precision', function n() {
 
           const result = scnrm2(n, cx, incx);
           multiplexer(result, output)(approximitly);
+        });
+      });
+    });
+  });
+  describe('ccopy', () => {
+    describe('data tests', () => {
+
+      const { scopy: testData } = fixture;
+      each(testData)(({ input: { n, x, y, incx, incy }, output: out, desc }, key) => {
+
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
+          const cy = fortranArrComplex64(muxCmplx(y.re, y.im))();
+          const expected = fortranArrComplex64(muxCmplx(out.re, out.im))();
+
+          scopy(n, cx, incx, cy, incy);
+          multiplexer(cy.toArr(), expected.toArr())(approximitly);
         });
       });
     });
