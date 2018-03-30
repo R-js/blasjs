@@ -7,7 +7,7 @@ import { errMissingIm, FortranArr } from '../../f_func';
 
 export function csscal(
       n: number,
-      sa: number, // dimension(1 + (N - 1) * abs(INCX))
+      sa: number,
       cx: FortranArr, // dimension(1 + (N - 1) * abs(INCX))
       incx: number): void {
 
@@ -21,11 +21,8 @@ export function csscal(
             let nincx = n * incx;
             for (let i = 1; i <= nincx; i += incx) {
                   const k = i - xb;
-                  cx.r[k] = sa * cx.r[k];
-                  cx.i[k] = sa * cx.r[k];
+                  cx.r[k] = sa !== 0 ? sa * cx.r[k] : 0;
+                  cx.i[k] = sa !== 0 ? sa * cx.i[k] : 0;
             }
       }
-
-
-
 }

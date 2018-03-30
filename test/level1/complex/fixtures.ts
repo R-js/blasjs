@@ -1,8 +1,8 @@
-import { complex as _, fortranArrComplex64 as arr64 } from '../src/lib/f_func';
+import { complex as _, fortranArrComplex64 as arr64 } from '../../../src/lib/f_func';
 
 const pI = Infinity;
 const nI = -Infinity;
-const { PI, sin, cos } = Math;
+const { PI, sin, cos, abs } = Math;
 
 const cospi = x => cos(PI * x);
 const sinpi = x => sin(PI * x);
@@ -752,5 +752,402 @@ export const fixture = {
             },
         },
     },
-}
+    csscal: {
+        case0: {
+            desc: 'csscal n=6, cx={6}, incx=1',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                incx: 1,
+                sa: 2
+            },
+            output: {
+                cx: {
+                    re: [2, 4, 6, 8, 10, 12],
+                    im: [14, 16, 18, 20, 22, 24]
+                }
+            },
+        },
+        case1: {
+            desc: 'csscal n=3, cx={6}, incx=2',
+            input: {
+                n: 3,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                incx: 2,
+                sa: 2
+            },
+            output: {
+                cx: {
+                    re: [2, 2, 6, 4, 10, 6],
+                    im: [14, 8, 18, 10, 22, 12]
+                }
+            },
+        },
+        case2: {
+            desc: 'csscal n=3, cx={6}, incx=-1',
+            input: {
+                n: 3,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                incx: -1,
+                sa: 2
+            },
+            output: {
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                }
+            },
+        },
+        case3: {
+            desc: 'csscal n=0, cx={6}, incx=1',
+            input: {
+                n: 0,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                incx: 1,
+                sa: 2
+            },
+            output: {
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                }
+            },
+        },
+        case4: {
+            desc: 'csscal n=6, sa=0, incx=1',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                incx: 1,
+                sa: 0
+            },
+            output: {
+                cx: {
+                    re: [0, 0, 0, 0, 0, 0],
+                    im: [0, 0, 0, 0, 0, 0]
+                }
+            },
+        },
+    },
+    csscalError: {
+        case0: {
+            desc: 'fail because cx imaginary part missing',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                },
+                incx: 1,
+                sa: 2
+            }
+        },
+    },
+    cswap: {
+        case0: {
+            desc: 'csscal n=6, cx={6}, cy={6} incx=1, incy=1',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                cy: {
+                    re: [13, 23, 33, 43, 53, 63],
+                    im: [74, 84, 94, 104, 114, 124]
+                },
+                incx: 1,
+                incy: 1,
+            },
+            output: {
+                cy: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                cx: {
+                    re: [13, 23, 33, 43, 53, 63],
+                    im: [74, 84, 94, 104, 114, 124]
+                },
+            },
+        },
+        case1: {
+            desc: 'csscal [reverse cx,cy on swap) incx=-1, incy=1',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                cy: {
+                    re: [13, 23, 33, 43, 53, 63],
+                    im: [74, 84, 94, 104, 114, 124]
+                },
+                incx: -1,
+                incy: 1,
+            },
+            output: {
+                cy: {
+                    re: [1, 2, 3, 4, 5, 6].reverse(),
+                    im: [7, 8, 9, 10, 11, 12].reverse()
+                },
+                cx: {
+                    re: [13, 23, 33, 43, 53, 63].reverse(),
+                    im: [74, 84, 94, 104, 114, 124].reverse()
+                },
+            },
+        },
+        case2: {
+            desc: 'csscal [reverse cy,cx on swap] incx=1, incy=-1',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                cy: {
+                    re: [13, 23, 33, 43, 53, 63],
+                    im: [74, 84, 94, 104, 114, 124]
+                },
+                incx: 1,
+                incy: -1,
+            },
+            output: {
+                cy: {
+                    re: [1, 2, 3, 4, 5, 6].reverse(),
+                    im: [7, 8, 9, 10, 11, 12].reverse()
+                },
+                cx: {
+                    re: [13, 23, 33, 43, 53, 63].reverse(),
+                    im: [74, 84, 94, 104, 114, 124].reverse()
+                },
+            },
+        },
+        case3: {
+            desc: 'csscal n=0, no swap',
+            input: {
+                n: 0,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                cy: {
+                    re: [13, 23, 33, 43, 53, 63],
+                    im: [74, 84, 94, 104, 114, 124]
+                },
+                incx: 1,
+                incy: -1,
+            },
+            output: {
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                cy: {
+                    re: [13, 23, 33, 43, 53, 63],
+                    im: [74, 84, 94, 104, 114, 124]
+                },
+            },
+        },
+    },
+    cswapError: {
+        case0: {
+            desc: 'fail because cx imaginary part missing',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6]
+                },
+                cy: {
+                    re: [13, 23, 33, 43, 53, 63],
+                    im: [74, 84, 94, 104, 114, 124]
+                },
+                incx: 1,
+                incy: -1,
+            }
+        },
+        case1: {
+            desc: 'fail because cy imaginary part missing',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                cy: {
+                    re: [13, 23, 33, 43, 53, 63],
 
+                },
+                incx: 1,
+                incy: -1,
+            }
+        },
+    },
+    icamax: {
+        case0: {
+            desc: 'icamx n=6, incx=1',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 0, 3, 4, 5, 6],
+                    im: [7, 0, 9, 10, 11, 12]
+                },
+                incx: 1,
+            },
+            output: {
+                max: 6
+            },
+        },
+        case1: {
+            desc: 'icamx n=3, incx=2',
+            input: {
+                n: 3,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                incx: 2,
+            },
+            output: {
+                max: 5
+            },
+        },
+        case2: {
+            desc: 'icamx n=3, incx=-1',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                incx: -1,
+            },
+            output: {
+                max: 0
+            },
+        },
+        case3: {
+            desc: 'icamx n=0, incx=1',
+            input: {
+                n: 0,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                incx: 1,
+            },
+            output: {
+                max: 0
+            },
+        },
+        case4: {
+            desc: 'icamx n=1, incx=1',
+            input: {
+                n: 1,
+                cx: {
+                    re: [1, 0, 3, 4, 5, 6],
+                    im: [7, 1, 9, 10, 11, 12]
+                },
+                incx: 1,
+            },
+            output: {
+                max: 1
+            },
+        },
+    },
+    icamaxError: {
+        case0: {
+            desc: 'fail because cx imaginary part missing',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6]
+                },
+                incx: 1
+            }
+        },
+    },
+    scasum: {
+        case0: {
+            desc: 'scasum n=6, incx=1',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 0, 3, 4, 5, 6],
+                    im: [7, 0, 9, 10, 11, 12]
+                },
+                incx: 1,
+            },
+            output: {
+                sum: 1 + 3 + 4 + 5 + 6 + 7 + 9 + 10 + 11 + 12
+            },
+        },
+        case1: {
+            desc: 'scasum n=3, incx=2',
+            input: {
+                n: 3,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                incx: 2,
+            },
+            output: {
+                sum: 1 + 3 + 5 + 7 + 9 + 11
+            },
+        },
+        case2: {
+            desc: 'scasum n=0, incx=2',
+            input: {
+                n: 0,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                incx: 2,
+            },
+            output: {
+                sum: 0
+            },
+        },
+        case3: {
+            desc: 'scasum n=3, incx=0',
+            input: {
+                n: 0,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6],
+                    im: [7, 8, 9, 10, 11, 12]
+                },
+                incx: 0,
+            },
+            output: {
+                sum: 0
+            },
+        },
+    },
+    scasumError: {
+        case0: {
+            desc: 'fail because cx imaginary part missing',
+            input: {
+                n: 6,
+                cx: {
+                    re: [1, 2, 3, 4, 5, 6]
+                },
+                incx: 1
+            }
+        },
+    },
+}

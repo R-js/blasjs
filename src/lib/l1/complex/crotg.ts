@@ -11,7 +11,7 @@
 
 import { Complex } from '../../f_func';
 
-const { sqrt, abs } = Math;
+const { sqrt } = Math;
 
 export function crotg(
       ca: Complex, // in

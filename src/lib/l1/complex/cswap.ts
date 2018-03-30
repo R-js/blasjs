@@ -1,4 +1,4 @@
-import { complex, errMissingIm, FortranArr } from '../../f_func';
+import { errMissingIm, FortranArr } from '../../f_func';
 
 /*
  jack dongarra, linpack, 3/11/78.
@@ -24,9 +24,7 @@ export function cswap(
       if (n <= 0) return;
 
       const bx = cx.base;
-      const by = cx.base;
-
-      const ctemp = complex();
+      const by = cy.base;
 
       let ix = 1;
       let iy = 1;
@@ -34,17 +32,24 @@ export function cswap(
       if (incx <= 0) ix = (-n + 1) * incx + 1;
       if (incy <= 0) iy = (-n + 1) * incy + 1;
 
+      // case incx = -1 incy=1
+      //  x[n] = y[1]
+      //  y[1] = x[n]
+      //-
+      // x[n-1] = y[2]
+      // y[2]= x[n-1]
       for (let i = 1; i <= n; i++) {
             const kx = ix - bx;
             const ky = iy - by;
-            ctemp.re = cx.r[kx];
-            ctemp.im = cx.i[kx];
+
+            const re = cx.r[kx];
+            const im = cx.i[kx];
 
             cx.r[kx] = cy.r[ky];
             cx.i[kx] = cy.i[ky];
 
-            cy.r[ky] = ctemp.re;
-            cy.i[ky] = ctemp.im;
+            cy.r[ky] = re;
+            cy.i[ky] = im;
 
             ix += incx;
             iy += incy;

@@ -1,21 +1,18 @@
 import { assert, expect } from 'chai';
-import * as blas from '../src/lib';
-import { fixture } from './fixture_l1_complex';
-import { approximitly } from './test-helpers';
+import * as blas from '../../../src/lib';
+import { approximitly } from '../../test-helpers';
+import { fixture } from './fixtures';
 
 
 const {
   util: { arrayrify, numberPrecision, each, multiplexer, fortranArrComplex64, complex, muxCmplx },
-  level1: { caxpy, ccopy, cdotc, cdotu, crotg, cscal, csrot }
+  level1: { scasum, cswap, csscal, caxpy, ccopy, cdotc, cdotu, crotg, cscal, csrot, icamax }
 } = blas;
-
 
 const { abs } = Math;
 const { isNaN, isFinite } = Number;
 
-
-
-describe('blas level 1', function n() {
+describe('blas level 1 complex', function n() {
   //
 
   const precision = numberPrecision(9);
@@ -52,7 +49,6 @@ describe('blas level 1', function n() {
           const cy = fortranArrComplex64(muxCmplx(y.re, y.im))();
           const call = () => caxpy(n, ca, cx, incx, cy, incy);
           expect(call).to.throw();
-
         });
       });
     });
@@ -61,6 +57,7 @@ describe('blas level 1', function n() {
 
   describe('ccopy', () => {
     describe('data tests', () => {
+
       const { ccopy: testData } = fixture;
       each(testData)(({ input: { n, cx: x, cy: y, ca, c, output: o, incx, incy }, output: { re: ore, im: oim }, desc }, key) => {
 
@@ -77,6 +74,7 @@ describe('blas level 1', function n() {
     });
 
     describe('error tests', () => {
+
       const { ccopyErrors: testData } = fixture;
       each(testData)(({ input: { n, cx: x, cy: y, ca, c, output: o, incx, incy }, desc }, key) => {
 
@@ -93,6 +91,7 @@ describe('blas level 1', function n() {
   });
 
   describe('cdotc', () => {
+
     describe('data tests', () => {
       const { cdotc: testData } = fixture;
       each(testData)(({ input: { n, cx: x, cy: y, ca, c, output: o, incx, incy }, output: expected, desc }, key) => {
@@ -108,6 +107,7 @@ describe('blas level 1', function n() {
     });
 
     describe('error tests', () => {
+
       const { cdotcError: testData } = fixture;
       each(testData)(({ input: { n, cx: x, cy: y, ca, c, output: o, incx, incy }, desc }, key) => {
 
@@ -124,6 +124,7 @@ describe('blas level 1', function n() {
   });
 
   describe('cdotu', () => {
+
     describe('data tests', () => {
       const { cdotu: testData } = fixture;
       each(testData)(({ input: { n, cx: x, cy: y, ca, c, output: o, incx, incy }, output: expected, desc }, key) => {
@@ -203,8 +204,8 @@ describe('blas level 1', function n() {
           });
         });
       });
-
     });
+
     describe('csrot', () => {
       describe('data tests', () => {
         const { csrot: testData } = fixture;
@@ -239,11 +240,135 @@ describe('blas level 1', function n() {
           });
         });
       });
+    });
+    describe('csscal', () => {
+      describe('data tests', () => {
+        const { csscal: testData } = fixture;
 
+        each(testData)(({ input: { n, cx: x, incx, sa, }, output: { cx: cxOut }, desc }, key) => {
+          it(`[${key}]/[${desc}]`, function t() {
 
+            const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
+            const cxExpected = muxCmplx(cxOut.re, cxOut.im);
+
+            csscal(n, sa, cx, incx);
+
+            multiplexer(cx.toArr(), cxExpected)(approximitly);
+          });
+        });
+      });
+      describe('error tests', () => {
+        const { csscalError: testData } = fixture;
+        each(testData)(({ input: { n, cx: x, incx, sa, }, desc }, key) => {
+
+          it(`[${key}]/[${desc}]`, function t() {
+
+            const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
+
+            const call = () => csscal(n, sa, cx, incx);
+
+            expect(call).to.throw();
+          });
+        });
+      });
     });
 
   });
+
+  describe('cswap', () => {
+    describe('data tests', () => {
+      const { cswap: testData } = fixture;
+
+      each(testData)(({ input: { n, cx: x, cy: y, incx, incy }, output: { cx: cxOut, cy: cyOut }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
+          const cy = fortranArrComplex64(muxCmplx(y.re, y.im))();
+          const cxExpected = muxCmplx(cxOut.re, cxOut.im);
+          const cyExpected = muxCmplx(cyOut.re, cyOut.im);
+
+          cswap(n, cx, incx, cy, incy);
+
+          multiplexer(cx.toArr(), cxExpected)(approximitly);
+          multiplexer(cy.toArr(), cyExpected)(approximitly);
+        });
+      });
+    });
+    describe('error tests', () => {
+      const { cswapError: testData } = fixture;
+      each(testData)(({ input: { n, cx: x, cy: y, incx, incy }, desc }, key) => {
+
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
+          const cy = fortranArrComplex64(muxCmplx(y.re, y.im))();
+          const call = () => cswap(n, cx, incx, cy, incy);
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+
+  describe('icmax', () => {
+    describe('data tests', () => {
+      const { icamax: testData } = fixture;
+
+      each(testData)(({ input: { n, cx: x, incx }, output: { max }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+          const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
+          const result = icamax(n, cx, incx);
+          multiplexer(result, max)(approximitly);
+        });
+      });
+    });
+
+    describe('error tests', () => {
+      const { icamaxError: testData } = fixture;
+      each(testData)(({ input: { n, cx: x, incx }, desc }, key) => {
+
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
+
+          const call = () => icamax(n, cx, incx);
+
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+
+  describe('scasum', () => {
+    describe('data tests', () => {
+      const { scasum: testData } = fixture;
+
+      each(testData)(({ input: { n, cx: x, incx }, output: { sum }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
+          const result = scasum(n, cx, incx);
+
+          multiplexer(result, sum)(approximitly);
+        });
+      });
+    });
+    describe('error tests', () => {
+      const { scasumError: testData } = fixture;
+      each(testData)(({ input: { n, cx: x, incx }, desc }, key) => {
+
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
+
+          const call = () => scasum(n, cx, incx);
+
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
 });
+
+
 
 

@@ -37,7 +37,7 @@ export function isamax(
       for (let i = 2; i <= n; i++) {
             const v = a[ix - b];
             if (abs(v) > smax) {
-                  _isamax = i;
+                  _isamax = ix;
                   smax = abs(v);
             }
             ix = ix + incx;
