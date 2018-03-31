@@ -876,7 +876,7 @@ export const fixture = {
 
     srotmg: {
         case0: {
-            desc: 'sd1=4, sd2=2, sx1=3, sx2=9',
+            desc: 'sd1=-4, sd2=2, sx1=3, sx2=9',
             input: {
                 sd1: -4,
                 sd2: 2,
@@ -884,16 +884,17 @@ export const fixture = {
                 sy1: 9,
                 sparam: [0, 0, 0, 0, 0]
             },
+            //result values from fortran code
             output: {
-                sd1: 1.6363636363636,
-                sd2: 3.27272727272727,
-                sx1: 11.0000000,
-                sy1: 9.00000000,
-                sparam: [1, 0.666666687, 0, 0, 0.333333343]
+                sd1: 0,
+                sd2: 0,
+                sx1: 0,
+                sy1: 9,
+                sparam: [-1, 0, 0, 0, 0]
             }
         },
         case1: {
-            desc: 'sd1=-4, sd2=2, sx1=3, sx2=9',
+            desc: 'sd1=4, sd2=0, sx1=3, sx2=9',
             input: {
                 sd1: 4,
                 sd2: 0,
@@ -902,15 +903,15 @@ export const fixture = {
                 sparam: [0, 0, 0, 0, 0]
             },
             output: {
-                sd1: 0,
+                sd1: 4,
                 sd2: 0,
-                sx1: 0,
+                sx1: 3,
                 sy1: 9.00000000,
-                sparam: [-1, 0, 0, 0, 0]
+                sparam: [-2, 0, 0, 0, 0]
             }
         },
         case2: {
-            desc: 'sd1=4, sd2=0, sx1=3, sx2=9',
+            desc: 'sd1=1, sd2=2, sx1=3, sx2=1',
             input: {
                 sd1: 1,
                 sd2: 2,
@@ -919,32 +920,15 @@ export const fixture = {
                 sparam: [0, 0, 0, 0, 0]
             },
             output: {
-                sd1: 4,
-                sd2: 0,
-                sx1: 3,
-                sy1: 9.00000000,
-                sparam: [-2, 0, 0, 0, 0]
+                sd1: 0.81818181818181812,
+                sd2: 1.6363636363636362,
+                sx1: 3.6666666666666670,
+                sy1: 1,
+                sparam: [0, 0, -0.33333333333333331, 0.66666666666666663, 0]
             }
         },
         case3: {
-            desc: 'sd1=1, sd2=-1, sx1=3, sx2=1',
-            input: {
-                sd1: 1,
-                sd2: 2,
-                sx1: 3,
-                sy1: 1,
-                sparam: [0, 0, 0, 0, 0]
-            },
-            output: {
-                sd1: 4,
-                sd2: 0,
-                sx1: 3,
-                sy1: 9.00000000,
-                sparam: [-2, 0, 0, 0, 0]
-            }
-        },
-        case4: {
-            desc: 'sd1=1, sd2=-1, sx1=3, sx2=1',
+            desc: 'sd1=2, sd2=-1, sx1=3, sx2=8',
             input: {
                 sd1: 2,
                 sd2: -1,
@@ -953,11 +937,11 @@ export const fixture = {
                 sparam: [0, 0, 0, 0, 0]
             },
             output: {
-                sd1: 4,
+                sd1: 0,
                 sd2: 0,
-                sx1: 3,
-                sy1: 9.00000000,
-                sparam: [-2, 0, 0, 0, 0]
+                sx1: 0,
+                sy1: 8,
+                sparam: [-1, 0, 0, 0, 0]
             }
         },
         case5: {
@@ -1061,26 +1045,7 @@ export const fixture = {
                 sy1: 9.00000000,
                 sparam: [-2, 0, 0, 0, 0]
             }
-        },
-        /*
-        case4: {
-            desc: 'sd1=1, sd2=-1, sx1=3, sx2=1',
-            input: {
-                sd1: 1,
-                sd2: 1,
-                sx1: 1,
-                sy1: 3,
-                sparam: [0, 0, 0, 0, 0]
-            },
-            output: {
-                sd1: 4,
-                sd2: 0,
-                sx1: 3,
-                sy1: 9.00000000,
-                sparam: [-2, 0, 0, 0, 0]
-            }
-        },*/
-
+        }
     },
     /*
     cdotu: {
