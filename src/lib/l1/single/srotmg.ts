@@ -98,9 +98,7 @@
 
 */
 
-const CONSTANTS = Object.freeze({
-    '0.5**-24': Math.pow(1 / 2, -24)
-});
+
 
 const { abs, abs: ABS, pow } = Math;
 import { FortranArr } from '../../f_func';
@@ -109,17 +107,18 @@ export function srotmg(p: {
     sd1: number,
     sd2: number,
     sx1: number,
-    sy1: number,
+    sy1: number, //in
     sparam: FortranArr
 }): void {
 
     let SD1 = p.sd1, SD2 = p.sd2, SX1 = p.sx1, SY1 = p.sy1;
 
     //locals
-    let GAM = 2 << 11; // 4096
-    let GAMSQ = 2 << 23; //16777216
-    let ONE = 1;
-    let RGAMSQ = CONSTANTS['0.5**-24'];
+    const GAM = 2 << 11; // 4096
+    const GAM2 = GAM * GAM;
+    const GAMSQ = 2 << 23; //16777216
+    const ONE = 1;
+    const RGAMSQ = 1 / (2 << 23); //5.960464477539063e-8
 
     let SFLAG, SH11, SH12, SH21, SH22, SP1, SP2, SQ1,
         SQ2, STEMP, SU, TWO = 2, ZERO = 0;
@@ -127,7 +126,9 @@ export function srotmg(p: {
     let pb = p.sparam.base;
 
     if (SD1 < ZERO) {
+        //
         // GO ZERO - H - D - AND - SX1..
+        //
         SFLAG = -ONE;
         SH11 = ZERO;
         SH12 = ZERO;
@@ -144,6 +145,7 @@ export function srotmg(p: {
         if (SP2 === ZERO) {
             SFLAG = -TWO;
             p.sparam.r[1 - pb] = SFLAG;
+            // cleanup this is not fortran
             p.sd1 = SD1;
             p.sd2 = SD2;
             p.sx1 = SX1;
@@ -206,14 +208,15 @@ export function srotmg(p: {
                     SH12 = ONE;
                     SFLAG = -ONE;
                 }
+
                 if (SD1 <= RGAMSQ) {
-                    SD1 = SD1 * pow(GAM, 2);
+                    SD1 = SD1 * GAM2;
                     SX1 = SX1 / GAM;
                     SH11 = SH11 / GAM;
                     SH12 = SH12 / GAM;
                 }
                 else {
-                    SD1 = SD1 / pow(GAM, 2);
+                    SD1 = SD1 / GAM2;
                     SX1 = SX1 * GAM;
                     SH11 = SH11 * GAM;
                     SH12 = SH12 * GAM;
@@ -235,12 +238,12 @@ export function srotmg(p: {
                     SFLAG = -ONE;
                 }
                 if (ABS(SD2) <= RGAMSQ) {
-                    SD2 = SD2 * pow(GAM, 2);
+                    SD2 = SD2 * GAM2;
                     SH21 = SH21 / GAM;
                     SH22 = SH22 / GAM;
                 }
                 else {
-                    SD2 = SD2 / pow(GAM, 2);
+                    SD2 = SD2 / GAM2;
                     SH21 = SH21 * GAM;
                     SH22 = SH22 * GAM;
                 }
@@ -265,6 +268,11 @@ export function srotmg(p: {
         parr[5 - pb] = SH22;
     }
     parr[1 - pb] = SFLAG;
+    //wrap it up, => pushback
+    p.sd1 = SD1;
+    p.sd2 = SD2;
+    p.sx1 = SX1;
+    p.sy1 = SY1;
 
 }
 
