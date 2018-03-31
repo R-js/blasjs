@@ -138,14 +138,16 @@
          END IF
 *        REGULAR-CASE..
          SP1 = SD1*SX1
+c        SQ2 = (SD2*SY1)*SY1  SQ2 can only be negative if SD2 is negative
          SQ2 = SP2*SY1
          SQ1 = SP1*SX1
 *
          IF (ABS(SQ1).GT.ABS(SQ2)) THEN
             SH21 = -SY1/SX1
             SH12 = SP2/SP1
-*
             SU = ONE - SH12*SH21
+*
+* This will always be bigger then zero because:  abs(sq1) > abs(sq2)
 *
            IF (SU.GT.ZERO) THEN
              SFLAG = ZERO
@@ -154,7 +156,6 @@
              SX1 = SX1*SU
            END IF
          ELSE
-
             IF (SQ2.LT.ZERO) THEN
 *              GO ZERO-H-D-AND-SX1..
                SFLAG = -ONE
