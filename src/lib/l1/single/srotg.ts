@@ -4,44 +4,43 @@
   jacob bogers, js port, 03/2018
 */
 
-const { abs, sqrt, pow } = Math;
-import { sign } from '../../f_func';
+const { abs, sqrt } = Math;
 
 export function srotg(p: { sa: number, sb: number, c: number, s: number }): void {
 
-      let SA = p.sa;
-      let SB = p.sb;
-      let C = p.c;
-      let S = p.s;
+      let sa = p.sa;
+      let sb = p.sb;
+      const absA = abs(sa);
+      const absB = abs(sb);
 
-      let roe = SB;
       let Z = 0;
-      let R: number;
 
-      if (abs(SA) > abs(SB)) roe = SA;
-      let scale = abs(SA) + abs(SB);
+
+      const roe = absA > absB ? sa : sb;
+      let scale = absA + absB;
+
       if (scale === 0.0) {
-            C = 1.0;
-            S = 0.0;
-            R = 0.0;
-            Z = 0.0;
+            p.c = 1.0;
+            p.s = 0.0;
+            p.sa = 0; //R
+            p.sb = 0; //Z
+            return;
       }
-      else {
-            R = scale * sqrt(pow(SA / scale, 2) + pow(SB / scale, 2));
-            R = sign(1.0, roe) * R;
-            C = SA / R;
-            S = SB / R;
-            Z = 1.0;
-            if (abs(SA) > abs(SB)) Z = S;
-            if (abs(SB) >= abs(SA) && C !== 0.0) Z = 1.0 / C
-      }
+      const v1 = sa / scale;
+      const v2 = sb / scale;
+      // scale > 0 so R > 0
+      let R = scale * sqrt(v1 * v1 + v2 * v2);
+      //R = sign(1.0, roe) * R;
+      R = roe >= 0 ? R : -R;
+
+      p.c = sa / R;
+      p.s = sb / R;
+      Z = 1.0;
+      if (absA > absB) Z = p.s;
+      if (absA <= absB && p.c !== 0.0) Z = 1.0 / p.c;
       // keep as is below
-      SA = R;
-      SB = Z;
       // end original source code
       // repackage for exit
-      p.sa = SA;
-      p.sb = SB;
-      p.c = C;
-      p.s = S;
+      p.sa = R;
+      p.sb = Z;
 }

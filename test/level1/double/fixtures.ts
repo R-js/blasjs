@@ -2,7 +2,7 @@ import { complex as _, fortranArrComplex64 as arr64 } from '../../../src/lib/f_f
 
 const pI = Infinity;
 const nI = -Infinity;
-const { PI, sin, cos, abs } = Math;
+const { PI, sin, cos, abs, sqrt } = Math;
 
 const cospi = x => cos(PI * x);
 const sinpi = x => sin(PI * x);
@@ -445,15 +445,14 @@ export const fixture = {
             },
         },
         case2: {
-            desc: 'n=7,(n%7==0), incx=1, incy=1',
+            desc: 'n=7,( n % 7 == 0 ), incx=1, incy=1',
             input: {
                 n: 7,
                 x: {
-                    re: [1, 2, 3, 4, 5, 6, 7],
-
+                    re: [1, 2, 3, 4, 5, 6, 7]
                 },
                 y: {
-                    re: [0, 0, 0, 0, 0, 0, 0],
+                    re: [0, 0, 0, 0, 0, 0, 0]
                 },
                 incx: 1,
                 incy: 1,
@@ -534,125 +533,347 @@ export const fixture = {
                 re: [0, 0, 0, 0, 5, 0, 9, 0, 0, 0],
             },
         },
-        /*case2: {
-            desc: 'n=0, cx={4}, cy={4}',
-            input: {
-                n: 0,
-                cx: {
-                    re: [1, 2, 3, 4],
-                    im: [5, 6, 7, 8]
-                },
-                cy: {
-                    re: [0, 0, 0, 0],
-                    im: [0, 0, 0, 0]
-                },
-                incx: -1,
-                incy: -1,
-
-            },
-            output: {
-                re: [0, 0, 0, 0],
-                im: [0, 0, 0, 0]
-            },
-        },*/
     },
-    cdotc: {
+    sdot: {
+        /*sdot(
+                n: number,
+                sx: FortranArr, 
+                incx: number, 
+                sy: FortranArr,
+                incy: number
+            ): number */
         case0: {
-            desc: 'n=4, cx={4}, cy={4}, incx=1, incy=1',
+            desc: 'n=4, sx={4}, sy={4}, incx=1, incy=1',
             input: {
                 n: 4,
-                cx: {
-                    re: [1, 2, 3, 4],
-                    im: [5, 6, 7, 8]
+                sx: {
+                    re: [1, 2, 3, 4]
                 },
-                cy: {
-                    re: [5, 6, 7, 8],
-                    im: [9, 10, 11, 12]
+                sy: {
+                    re: [5, 6, 7, 8]
                 },
                 incx: 1,
                 incy: 1,
-
             },
-            output: {
-                re: 348,
-                im: -64
-            },
+            output: 70
         },
         case1: {
-            desc: 'n=4, cx={4}, cy={4}, incx=-1, incy=-1',
+            desc: 'n=10, incx=1, incy=1',
             input: {
-                n: 4,
-                cx: {
-                    re: [1, 2, 3, 4],
-                    im: [5, 6, 7, 8]
+                n: 10,
+                sx: {
+                    re: [1, 2, 3, 4, 5, 6, 7, 8, 9, 2]
                 },
-                cy: {
-                    re: [5, 6, 7, 8],
-                    im: [9, 10, 11, 12]
+                sy: {
+                    re: [5, 6, 7, 8, 5, 4, 3, 3, -1, -9]
                 },
-                incx: -1,
-                incy: -1,
-
+                incx: 1,
+                incy: 1,
             },
-            output: {
-                re: 348,
-                im: -64
-            },
+            output: 1 * 5 + 2 * 6 + 3 * 7 + 4 * 8 + 5 * 5 + 6 * 4 + 7 * 3 + 8 * 3 + 9 * -1 + 2 * -9
         },
         case2: {
-            desc: 'n=0, cx={4}, cy={4}, incx=-1, incy=-1',
+            desc: 'n=0, incx=1, incy=1',
             input: {
                 n: 0,
-                cx: {
-                    re: [1],
-                    im: [5]
+                sx: {
+                    re: [1, 2, 3, 4, 5, 6, 7, 8, 9, 2]
                 },
-                cy: {
-                    re: [5],
-                    im: [9]
+                sy: {
+                    re: [5, 6, 7, 8, 5, 4, 3, 3, -1, -9]
+                },
+                incx: 1,
+                incy: 1,
+            },
+            output: 0
+        },
+        case3: {
+            desc: 'n=5, incx=2, incy=2',
+            input: {
+                n: 5,
+                sx: {
+                    re: [1, 2, 3, 4, 5, 6, 7, 8, 9, 2]
+                },
+                sy: {
+                    re: [5, 6, 7, 8, 5, 4, 3, 3, -1, -9]
+                },
+                incx: 2,
+                incy: 2,
+            },
+            output: 1 * 5 + 3 * 7 + 5 * 5 + 7 * 3 - 9 * 1
+        },
+        case4: {
+            desc: 'n=5, incx=-2, incy=-2',
+            input: {
+                n: 5,
+                sx: {
+                    re: [1, 2, 3, 4, 5, 6, 7, 8, 9, 2]
+                },
+                sy: {
+                    re: [5, 6, 7, 8, 5, 4, 3, 3, -1, -9]
+                },
+                incx: -2,
+                incy: -2,
+            },
+            output: 1 * 5 + 3 * 7 + 5 * 5 + 7 * 3 - 9 * 1
+        },
+        case5: {
+            desc: 'n=7, incx=1, incy=1',
+            input: {
+                n: 7,
+                sx: {
+                    re: [1, 2, 3, 4, 5, 6, 7]
+                },
+                sy: {
+                    re: [5, 6, 7, 8, 5, 4, 3]
+                },
+                incx: 1,
+                incy: 1,
+            },
+            output: 1 * 5 + 2 * 6 + 3 * 7 + 4 * 8 + 5 * 5 + 6 * 4 + 7 * 3
+        }
+    },
+    sdsdot: {
+        /*  n: number,
+            sb: number,
+            sx: FortranArr,
+            incx: number,
+            sy: FortranArr,
+            incy: number */
+        case0: {
+            desc: 'n=4, sx={4}, sy={4}, incx=1, incy=1',
+            input: {
+                n: 4,
+                sb: 2,
+                sx: {
+                    re: [1, 2, 3, 4]
+                },
+                sy: {
+                    re: [5, 6, 7, 8]
+                },
+                incx: 1,
+                incy: 1,
+            },
+            output: (2) + (1 * 5) + (2 * 6) + (3 * 7) + (4 * 8)
+        },
+        case1: {
+            desc: 'n=0, sx={4}, sy={4}, incx=1, incy=1',
+            input: {
+                n: 0,
+                sb: 2,
+                sx: {
+                    re: [1, 2, 3, 4]
+                },
+                sy: {
+                    re: [5, 6, 7, 8]
+                },
+                incx: 1,
+                incy: 1,
+            },
+            output: 2
+        },
+        case2: {
+            desc: 'n=2, sx={4}, sy={4}, incx=2, incy=2',
+            input: {
+                n: 2,
+                sb: 3,
+                sx: {
+                    re: [1, 2, 3, 4]
+                },
+                sy: {
+                    re: [5, 6, 7, 8]
+                },
+                incx: 2,
+                incy: 2,
+            },
+            output: (3) + (1 * 5) + (3 * 7)
+        },
+        case3: {
+            desc: 'n=2, sx={4}, sy={4}, incx=-1, incy=-1',
+            input: {
+                n: 2,
+                sb: 3,
+                sx: {
+                    re: [1, 2, 3, 4]
+                },
+                sy: {
+                    re: [5, 6, 7, 8]
                 },
                 incx: -1,
                 incy: -1,
             },
-            output: {
-                re: 0,
-                im: 0
-            },
-        }
-    },
-    cdotcError: {
-        case3: {
-            desc: 'cx has no imaginary part, should fail',
-            input: {
-                n: 4,
-                cx: {
-                    re: [1, 2, 3, 4],
-                },
-                cy: {
-                    re: [5, 6, 7, 8],
-                    im: [9, 10, 11, 12]
-                },
-                incx: 1,
-                incy: 1,
-
-            }
+            output: (3) + (1 * 5) + (2 * 6)
         },
         case4: {
-            desc: 'cy has no imaginary part, should fail',
+            desc: 'n=2, sx={4}, sy={4}, incx=1, incy=-1',
+            input: {
+                n: 2,
+                sb: 3,
+                sx: {
+                    re: [1, 2, 3, 4]
+                },
+                sy: {
+                    re: [5, 6, 7, 8]
+                },
+                incx: -1,
+                incy: 1,
+            },
+            output: (3) + (1 * 6) + (2 * 5)
+        },
+    },
+    //export function snrm2(n: number, x: FortranArr, incx: number): number
+    snrm2: {
+        case0: {
+            desc: 'n=4, x={4}, incx=1',
             input: {
                 n: 4,
-                cx: {
-                    re: [1, 2, 3, 4],
-                    im: [9, 10, 11, 12]
+                x: {
+                    re: [3, 2, 3, 0]
                 },
-                cy: {
-                    re: [5, 6, 7, 8],
+
+                incx: 1,
+            },
+            output: sqrt([3, 2, 3, 0].map(x => x * x).reduce((sum, v) => sum + v, 0))
+        },
+        case1: {
+            desc: 'n=4, x={4}, incx=-1',
+            input: {
+                n: 4,
+                x: {
+                    re: [1, 2, 3, 4]
+                },
+
+                incx: -1,
+            },
+            output: 0
+        },
+        case2: {
+            desc: 'n=1, x={4}, incx=1',
+            input: {
+                n: 1,
+                x: {
+                    re: [3, 2, 3, 4]
+                },
+
+                incx: 1,
+            },
+            output: 3
+        },
+    },
+    srot: {
+        /*
+      n: number,
+      sx: FortranArr,
+      incx: number,
+      sy: FortranArr,
+      incy: number,
+      c: number,
+      s: number
+      */
+        case0: {
+            desc: 'n=4, x={2},y={2} incx=1, incy=1',
+            input: {
+                n: 4,
+                x: {
+                    re: [1, 0]
                 },
                 incx: 1,
+                y: {
+                    re: [0, 1]
+                },
                 incy: 1,
+                c: cospi(1 / 6),
+                s: sinpi(1 / 6)
+            },
+            output: {
+                x: [0.86602540378443871, 0.5],
+                y: [-0.5, 0.86602540378443871]
             }
-        }
+        },
+        case1: {
+            desc: 'n=4,  incx=-1',
+            input: {
+                n: 4,
+                x: {
+                    re: [1, 0]
+                },
+                incx: -1,
+                y: {
+                    re: [0, 1]
+                },
+                incy: -1,
+                c: cospi(1 / 6),
+                s: sinpi(1 / 6)
+            },
+            output: {
+                x: [0.86602540378443871, 0.5],
+                y: [-0.5, 0.86602540378443871]
+            }
+        },
+        case2: {
+            desc: 'n=4,  incx=-1',
+            input: {
+                n: 0,
+                x: {
+                    re: [1, 0]
+                },
+                incx: -1,
+                y: {
+                    re: [0, 1]
+                },
+                incy: -1,
+                c: cospi(1 / 6),
+                s: sinpi(1 / 6)
+            },
+            output: {
+                x: [1, 0],
+                y: [0, 1]
+            }
+        },
     },
+    //srotg(p: { sa: number, sb: number, c: number, s: number })
+    srotg: {
+        case0: {
+            desc: 'sa=4, sb=2, => c= s=',
+            input: {
+                sa: 4,
+                sb: 2
+            },
+            output: {
+                sa: 4.47213595499958,
+                sb: 0.4472135954999579,
+                c: 0.8944271909999159,
+                s: 0.4472135954999579
+            }
+        },
+        case1: {
+            desc: 'sa=0, sb=0, => c=1 s=0',
+            input: {
+                sa: 0,
+                sb: 0
+            },
+            output: {
+                sa: 0,
+                sb: 0,
+                c: 1,
+                s: 0
+            }
+        },
+        case3: {
+            desc: 'sa=4, sb=2, => c= s=',
+            input: {
+                sa: -2,
+                sb: -4
+            },
+            output: {
+                sa: -4.47213595499958,
+                sb: 2.2360679774997898,
+                s: 0.8944271909999159,
+                c: 0.4472135954999579
+            }
+        },
+    },
+    /*
     cdotu: {
         case0: {
             desc: 'cdotu, n=4, cx={4}, cy={4}, incx=1, incy=1',
@@ -879,5 +1100,6 @@ export const fixture = {
             }
         },
     },
+    */
 
 }

@@ -16,8 +16,8 @@ export function sdot(
       let stemp = 0;
       const bx = sx.base;
       const by = sy.base;
-      if (n < 0) return 0;
-      if (incx < 1 && incy < 1) {
+      if (n <= 0) return 0;
+      if (incx === 1 && incy === 1) {
             //process in chunks of 5
             let m = n % 5;
             if (m !== 0) {

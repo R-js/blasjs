@@ -10,6 +10,11 @@ const {
     sasum,
     scnrm2,
     scopy,
+    sdot,
+    sdsdot,
+    snrm2,
+    srot,
+    srotg,
     //TODO:
     cswap,
     saxpy, csscal, caxpy, ccopy, cdotc, cdotu, crotg, cscal, csrot }
@@ -98,6 +103,91 @@ describe('blas level 1 single/double precision', function n() {
 
           scopy(n, cx, incx, cy, incy);
           multiplexer(cy.toArr(), expected.toArr())(approximitly);
+        });
+      });
+    });
+  });
+  describe('sdot', () => {
+    describe('data tests', () => {
+
+      const { sdot: testData } = fixture;
+      each(testData)(({ input: { n, sx, sy, incx, incy }, output: out, desc }, key) => {
+
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const cx = fortranArrComplex64(muxCmplx(sx.re, sx.im))();
+          const cy = fortranArrComplex64(muxCmplx(sy.re, sy.im))();
+          const result = sdot(n, cx, incx, cy, incy);
+
+          approximitly(result, out);
+        });
+      });
+    });
+  });
+  describe('sdsdot', () => {
+    describe('data tests', () => {
+
+      const { sdsdot: testData } = fixture;
+      each(testData)(({ input: { n, sb, sx, sy, incx, incy }, output: out, desc }, key) => {
+
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const cx = fortranArrComplex64(muxCmplx(sx.re, sx.im))();
+          const cy = fortranArrComplex64(muxCmplx(sy.re, sy.im))();
+          const result = sdsdot(n, sb, cx, incx, cy, incy);
+
+          approximitly(result, out);
+        });
+      });
+    });
+  });
+  describe('snrm2', () => {
+    describe('data tests', () => {
+
+      const { snrm2: testData } = fixture;
+      each(testData)(({ input: { n, x, incx }, output: out, desc }, key) => {
+
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
+          const result = snrm2(n, cx, incx);
+
+          approximitly(result, out);
+        });
+      });
+    });
+  });
+  describe('srot', () => {
+    describe('data tests', () => {
+
+      const { srot: testData } = fixture;
+      each(testData)(({ input: { n, x, y, incy, incx, c, s }, output: out, desc }, key) => {
+
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
+          const cy = fortranArrComplex64(muxCmplx(y.re, y.im))();
+          srot(n, cx, incx, cy, incy, c, s);
+          multiplexer(out.x, cx.toArr())(approximitly);
+          multiplexer(out.y, cy.toArr())(approximitly);
+        });
+      });
+    });
+  });
+
+  describe('srotg', () => {
+    describe('data tests', () => {
+
+      const { srotg: testData } = fixture;
+      each(testData)(({ input: { sa, sb }, output: expect, desc }, key) => {
+
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const p = { sa, sb, c: 0, s: 0 };
+          srotg(p);
+          const { c, s, sa: asa, sb: asb } = p;
+          const { c: ec, s: es, sa: esa, sb: esb } = expect;
+          multiplexer([c, s, asa, asb], [ec, es, esa, esb])(approximitly);
         });
       });
     });

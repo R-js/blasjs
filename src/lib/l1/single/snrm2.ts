@@ -9,7 +9,7 @@
 
 import { FortranArr } from '../../f_func';
 
-const { abs, sqrt, pow } = Math;
+const { abs, sqrt } = Math;
 
 export function snrm2(n: number, x: FortranArr, incx: number): number {
 
@@ -50,12 +50,14 @@ export function snrm2(n: number, x: FortranArr, incx: number): number {
             const kix = ix - x.base;
             if (x.r[kix] !== 0) {
                   let absxi = abs(x.r[kix]);
+                  const ratio = scale / absxi;
+                  const ratioP2 = ratio * ratio;
                   if (scale < absxi) {
-                        ssq = 1 + ssq * pow(scale / absxi, 2);
+                        ssq = 1 + ssq * ratioP2;
                         scale = absxi;
                   }
                   else {
-                        ssq = ssq + pow(absxi / scale, 2);
+                        ssq = ssq + 1 / ratioP2;
                   }
             }
       }

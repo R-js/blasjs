@@ -32,22 +32,20 @@ export function sdsdot(
     if (n <= 0) {
         return sdot;
     }
-    if (incx === incy && incx > 0) {
-        let ns = n * incx;
-        for (let i = 1; i <= ns; i += incx) {
-            sdot += sx.r[i - bx] * sy.r[i - by];
-        }
+
+    let kx = 1;
+    let ky = 1;
+    if (incx < 0) {
+        kx = 1 + (1 - n) * incx;
     }
-    else {
-        let kx = 1;
-        let ky = 1;
-        if (incx < 0) kx = 1 + (1 - n) * incx;
-        if (incy < 0) ky = 1 + (1 - n) * incy;
-        for (let i = 1; i <= n; i++) {
-            sdot += sx.r[kx - bx] * sy.r[ky - by];
-            kx += incx;
-            ky += incy;
-        }
+    if (incy < 0) {
+        ky = 1 + (1 - n) * incy;
     }
+    for (let i = 1; i <= n; i++) {
+        sdot += sx.r[kx - bx] * sy.r[ky - by];
+        kx += incx;
+        ky += incy;
+    }
+
     return sdot;
 }
