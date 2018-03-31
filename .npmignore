@@ -13,3 +13,4 @@ package-lock.json
 test
 node_modules
 scratch-pad
+*.exe
