@@ -24,7 +24,7 @@
 *> \verbatim
 *>
 *>    CONSTRUCT THE MODIFIED GIVENS TRANSFORMATION MATRIX H WHICH ZEROS
-*>    THE SECOND COMPONENT OF THE 2-VECTOR  (SQRT(SD1)*SX1,SQRT(SD2)*>    SY2)**T.
+*>    THE SECOND COMPONENT OF THE 2-VECTOR  (SQRT(SD1)*SX1,SQRT(SD2)*SY1)**T.
 *>    WITH SPARAM(1)=SFLAG, H HAS ONE OF THE FOLLOWING FORMS..
 *>
 *>    SFLAG=-1.E0     SFLAG=0.E0        SFLAG=1.E0     SFLAG=-2.E0
@@ -100,7 +100,7 @@
 
 
 
-const { abs, abs: ABS, pow } = Math;
+const { abs, abs: ABS } = Math;
 import { FortranArr } from '../../f_func';
 
 export function srotmg(p: {
@@ -155,6 +155,7 @@ export function srotmg(p: {
         // REGULAR - CASE..
         SP1 = SD1 * SX1;
         SQ2 = SP2 * SY1;
+
         SQ1 = SP1 * SX1;
 
         if (abs(SQ1) > abs(SQ2)) {
@@ -162,6 +163,24 @@ export function srotmg(p: {
             SH12 = SP2 / SP1;
 
             SU = ONE - SH12 * SH21;
+
+            /*  
+                In this place in the code:
+                    (sd1 >= 0)
+                    (sp2 !== 0)
+                    |sd1*sx1**2| > |sd2*sy1**2|
+                
+                therefore:
+                    SU = 1 - (-sy1/sx1)*((sd2*sy1)/(sd1*sx1))
+                    SU = 1 + (sd2*sy1**2)/(sd1*sx1**2) 
+                    SU = 1 + sq2/sq1
+                    min(SU) = 1 - max(0,1), 1 is "supremum" (never reached)
+                
+                Summary:
+                    the test "su > 0" is moot,
+                    because at this place in the code, it will
+                    always be su > 0 that way.
+            */
 
             if (SU > ZERO) {
                 SFLAG = ZERO

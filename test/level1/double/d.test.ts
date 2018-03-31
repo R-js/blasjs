@@ -15,6 +15,7 @@ const {
     snrm2,
     srot,
     srotg,
+    srotmg,
     //TODO:
     cswap,
     saxpy, csscal, caxpy, ccopy, cdotc, cdotu, crotg, cscal, csrot }
@@ -161,13 +162,16 @@ describe('blas level 1 single/double precision', function n() {
     describe('data tests', () => {
 
       const { srot: testData } = fixture;
-      each(testData)(({ input: { n, x, y, incy, incx, c, s }, output: out, desc }, key) => {
+      each(testData)(({ input, input: { n, x, y, incy, incx, c, s }, output: out, desc }, key) => {
 
         it(`[${key}]/[${desc}]`, function t() {
 
           const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
           const cy = fortranArrComplex64(muxCmplx(y.re, y.im))();
           srot(n, cx, incx, cy, incy, c, s);
+
+
+
           multiplexer(out.x, cx.toArr())(approximitly);
           multiplexer(out.y, cy.toArr())(approximitly);
         });
@@ -188,6 +192,26 @@ describe('blas level 1 single/double precision', function n() {
           const { c, s, sa: asa, sb: asb } = p;
           const { c: ec, s: es, sa: esa, sb: esb } = expect;
           multiplexer([c, s, asa, asb], [ec, es, esa, esb])(approximitly);
+        });
+      });
+    });
+  });
+
+  describe('srotgmg', () => {
+    describe('data tests', () => {
+
+      const { srotmg: testData } = fixture;
+      each(testData)(({ input, output: expect, desc }, key) => {
+
+        it(`[${key}]/[${desc}]`, function t() {
+          input.sparam = fortranArrComplex64(muxCmplx(input.sparam, undefined))();
+
+          srotmg(input);
+          const { sd1, sd2, sx1, sy1, sparam } = input;
+          const { sd1: esd1, sd2: esd2, sx1: esx1, sy1: esy1, sparam: esparam } = expect;
+          console.log({ h: sparam.toArr(), p: { sd1, sd2, sx1, sy1 } });
+          multiplexer([sd1, sd2, sx1, sy1], [esd1, esd2, esx1, esy1])(approximitly);
+          multiplexer(sparam.toArr(), expect)(approximitly);
         });
       });
     });
