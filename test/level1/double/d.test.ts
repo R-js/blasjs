@@ -15,6 +15,7 @@ const {
     snrm2,
     srot,
     srotg,
+    srotm,
     srotmg,
     //TODO:
     cswap,
@@ -26,7 +27,7 @@ const { isNaN, isFinite } = Number;
 
 describe('blas level 1 single/double precision', function n() {
 
-  describe('isamax', () => {
+  describe.skip('isamax', () => {
 
     const { isamax: testData } = fixture;
 
@@ -42,7 +43,7 @@ describe('blas level 1 single/double precision', function n() {
     });
   });
 
-  describe('sasum', () => {
+  describe.skip('sasum', () => {
     describe('data tests', () => {
       const { sasum: testData } = fixture;
 
@@ -56,7 +57,7 @@ describe('blas level 1 single/double precision', function n() {
     });
   });
 
-  describe('saxpy', () => {
+  describe.skip('saxpy', () => {
 
     describe('data tests', () => {
       const { saxpy: testData } = fixture;
@@ -74,7 +75,7 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
-  describe('scnrm2', () => {
+  describe.skip('scnrm2', () => {
 
     describe('data tests', () => {
       const { scnrm2: testData } = fixture;
@@ -90,7 +91,7 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
-  describe('ccopy', () => {
+  describe.skip('ccopy', () => {
     describe('data tests', () => {
 
       const { scopy: testData } = fixture;
@@ -108,7 +109,7 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
-  describe('sdot', () => {
+  describe.skip('sdot', () => {
     describe('data tests', () => {
 
       const { sdot: testData } = fixture;
@@ -125,7 +126,7 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
-  describe('sdsdot', () => {
+  describe.skip('sdsdot', () => {
     describe('data tests', () => {
 
       const { sdsdot: testData } = fixture;
@@ -142,7 +143,7 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
-  describe('snrm2', () => {
+  describe.skip('snrm2', () => {
     describe('data tests', () => {
 
       const { snrm2: testData } = fixture;
@@ -158,7 +159,7 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
-  describe('srot', () => {
+  describe.skip('srot', () => {
     describe('data tests', () => {
 
       const { srot: testData } = fixture;
@@ -179,7 +180,7 @@ describe('blas level 1 single/double precision', function n() {
     });
   });
 
-  describe('srotg', () => {
+  describe.skip('srotg', () => {
     describe('data tests', () => {
 
       const { srotg: testData } = fixture;
@@ -196,8 +197,25 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
+  describe('srotm', () => {
+    describe('data tests', () => {
 
-  describe('srotgmg', () => {
+      const { srotm: testData } = fixture;
+      each(testData)(({ input: { n, sx, sy, incx, incy, sparam }, output: expect, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+          const x = fortranArrComplex64(muxCmplx(sx))();
+          const y = fortranArrComplex64(muxCmplx(sy))();
+          const spar = fortranArrComplex64(muxCmplx(sparam))();
+          srotm(n, x, incx, y, incy, spar);
+          multiplexer(x.toArr(), expect.x)(approximitly);
+          multiplexer(y.toArr(), expect.y)(approximitly);
+          //console.log({ x: x.toArr(), y: y.toArr() });
+        });
+      });
+    });
+  });
+
+  describe.skip('srotmg', () => {
     describe('data tests', () => {
 
       const { srotmg: testData } = fixture;
@@ -209,9 +227,6 @@ describe('blas level 1 single/double precision', function n() {
           srotmg(input);
           const { sd1, sd2, sx1, sy1, sparam } = input;
           const { sd1: esd1, sd2: esd2, sx1: esx1, sy1: esy1, sparam: esparam } = expect;
-          if (['x'].indexOf(key as string) >= 0) {
-            console.log({ h: sparam.toArr(), p: { sd1, sd2, sx1, sy1 } });
-          }
           multiplexer([sd1, sd2, sx1, sy1], [esd1, esd2, esx1, esy1])(approximitly);
           multiplexer(sparam.toArr(), expect)(approximitly);
         });

@@ -107,7 +107,7 @@ export function flatten<T>(...rest: (T | T[])[]): T[] {
     return rc as any;
 }
 
-export function muxCmplx(re: number[], im: number[]): Complex[] {
+export function muxCmplx(re: number[], im?: number[]): Complex[] {
     return multiplexer(re, im)((re, im) => ({ re, im }))
 }
 
