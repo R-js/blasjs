@@ -1,6 +1,6 @@
 /*
-jack dongarra, linpack, 3/11/78.
-jacob bogers, 03/2018
+      jack dongarra, linpack, 3/11/78.
+      jacob bogers, 03/2018
 */
 
 import { FortranArr } from '../../f_func';
@@ -17,6 +17,7 @@ export function sscal(
 
 
       if (n <= 0 || incx <= 0) return;
+      if (sa === 1) return;
       if (incx === 1) {
             /*code for increment equal to 1
             *
@@ -32,11 +33,11 @@ export function sscal(
             }
             let mp1 = m + 1;
             for (let i = mp1; i <= n; i += 5) {
-                  sx.r[i] = sa * sx.r[i];
-                  sx.r[i + 1] *= sa;
-                  sx.r[i + 2] *= sa;
-                  sx.r[i + 3] *= sa;
-                  sx.r[i + 4] *= sa;
+                  sx.r[i - sb] = sa * sx.r[i - sb];
+                  sx.r[i + 1 - sb] *= sa;
+                  sx.r[i + 2 - sb] *= sa;
+                  sx.r[i + 3 - sb] *= sa;
+                  sx.r[i + 4 - sb] *= sa;
             }
       }
       else {

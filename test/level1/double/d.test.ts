@@ -17,9 +17,10 @@ const {
     srotg,
     srotm,
     srotmg,
-    //TODO:
-    cswap,
-    saxpy, csscal, caxpy, ccopy, cdotc, cdotu, crotg, cscal, csrot }
+    sscal,
+    sswap,
+    saxpy
+  }
 } = blas;
 
 const { abs } = Math;
@@ -27,7 +28,7 @@ const { isNaN, isFinite } = Number;
 
 describe('blas level 1 single/double precision', function n() {
 
-  describe.skip('isamax', () => {
+  describe('isamax', () => {
 
     const { isamax: testData } = fixture;
 
@@ -43,7 +44,7 @@ describe('blas level 1 single/double precision', function n() {
     });
   });
 
-  describe.skip('sasum', () => {
+  describe('sasum', () => {
     describe('data tests', () => {
       const { sasum: testData } = fixture;
 
@@ -57,7 +58,7 @@ describe('blas level 1 single/double precision', function n() {
     });
   });
 
-  describe.skip('saxpy', () => {
+  describe('saxpy', () => {
 
     describe('data tests', () => {
       const { saxpy: testData } = fixture;
@@ -75,7 +76,7 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
-  describe.skip('scnrm2', () => {
+  describe('scnrm2', () => {
 
     describe('data tests', () => {
       const { scnrm2: testData } = fixture;
@@ -91,7 +92,7 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
-  describe.skip('ccopy', () => {
+  describe('ccopy', () => {
     describe('data tests', () => {
 
       const { scopy: testData } = fixture;
@@ -109,7 +110,7 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
-  describe.skip('sdot', () => {
+  describe('sdot', () => {
     describe('data tests', () => {
 
       const { sdot: testData } = fixture;
@@ -126,7 +127,7 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
-  describe.skip('sdsdot', () => {
+  describe('sdsdot', () => {
     describe('data tests', () => {
 
       const { sdsdot: testData } = fixture;
@@ -143,7 +144,7 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
-  describe.skip('snrm2', () => {
+  describe('snrm2', () => {
     describe('data tests', () => {
 
       const { snrm2: testData } = fixture;
@@ -159,7 +160,7 @@ describe('blas level 1 single/double precision', function n() {
       });
     });
   });
-  describe.skip('srot', () => {
+  describe('srot', () => {
     describe('data tests', () => {
 
       const { srot: testData } = fixture;
@@ -180,7 +181,7 @@ describe('blas level 1 single/double precision', function n() {
     });
   });
 
-  describe.skip('srotg', () => {
+  describe('srotg', () => {
     describe('data tests', () => {
 
       const { srotg: testData } = fixture;
@@ -209,13 +210,18 @@ describe('blas level 1 single/double precision', function n() {
           srotm(n, x, incx, y, incy, spar);
           multiplexer(x.toArr(), expect.x)(approximitly);
           multiplexer(y.toArr(), expect.y)(approximitly);
-          //console.log({ x: x.toArr(), y: y.toArr() });
+          /*console.log({
+            x: x.toArr(),
+            y: y.toArr(),
+            ex: expect.x,
+            ey: expect.y
+          });*/
         });
       });
     });
   });
 
-  describe.skip('srotmg', () => {
+  describe('srotmg', () => {
     describe('data tests', () => {
 
       const { srotmg: testData } = fixture;
@@ -229,6 +235,41 @@ describe('blas level 1 single/double precision', function n() {
           const { sd1: esd1, sd2: esd2, sx1: esx1, sy1: esy1, sparam: esparam } = expect;
           multiplexer([sd1, sd2, sx1, sy1], [esd1, esd2, esx1, esy1])(approximitly);
           multiplexer(sparam.toArr(), expect)(approximitly);
+        });
+      });
+    });
+  });
+
+  describe('sscal', () => {
+    describe('data tests', () => {
+
+      const { sscal: testData } = fixture;
+      each(testData)(({ input: { n, sa, sx, incx }, output: expect, desc }, key) => {
+
+        it(`[${key}]/[${desc}]`, function t() {
+          const x = fortranArrComplex64(muxCmplx(sx))();
+          sscal(n, sa, x, incx);
+          //console.log({ x: x.toArr(), x2: expect.x });
+          multiplexer(x.toArr(), expect.x)(approximitly);
+        });
+      });
+    });
+  });
+  describe('sswap', () => {
+    describe('data tests', () => {
+
+      const { sswap: testData } = fixture;
+      each(testData)(({ input: { n, sx, incx, sy, incy }, output: expect, desc }, key) => {
+
+        it(`[${key}]/[${desc}]`, function t() {
+          //
+          const x = fortranArrComplex64(muxCmplx(sx))();
+          const y = fortranArrComplex64(muxCmplx(sy))();
+          //
+          sswap(n, x, incx, y, incy);
+          //console.log({ x: x.toArr(), y: expect.x });
+          multiplexer(x.toArr(), expect.x)(approximitly);
+          multiplexer(y.toArr(), expect.y)(approximitly);
         });
       });
     });

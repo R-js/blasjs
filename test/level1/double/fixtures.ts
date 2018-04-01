@@ -952,7 +952,7 @@ export const fixture = {
             }
         },
         case5: {
-            desc: 'n=4, sx={4}, incx=1, sy={4}, incy=1, sparam={5}',
+            desc: 'n=4, sx={4}, incx=-1, sy={4}, incy=1, sparam={5}',
             input: {
                 n: 4,
                 sx: [1, 2, 3, 4],
@@ -968,7 +968,7 @@ export const fixture = {
             }
         },
         case6: {
-            desc: 'n=4, sx={4}, incx=1, sy={4},incy=1, sparam={5}',
+            desc: 'n=4, sx={4}, incx=1, sy={4},incy=-1, sparam={5}',
             input: {
                 n: 4,
                 sx: [1, 2, 3, 4],
@@ -984,7 +984,7 @@ export const fixture = {
             }
         },
         case7: {
-            desc: 'n=4, sx={4}, incx=1, sy={4},incy=1, sparam={5}',
+            desc: 'n=2, sx={4}, incx=+1, sy={4},incy=-2, sparam={5}',
             input: {
                 n: 2,
                 sx: [1, 2, 3, 4],
@@ -1000,12 +1000,12 @@ export const fixture = {
             }
         },
         case8: {
-            desc: 'n=4, sx={4}, incx=1, sy={4},incy=1, sparam={5}',
+            desc: 'n=2, sx={4}, incx=2, sy={4},incy=2, sparam={5}',
             input: {
                 n: 2,
                 sx: [1, 2, 3, 4],
                 sy: [5, 6, 7, 8],
-                incx: +2,
+                incx: 2,
                 incy: -2,
                 sparam: [-1, 1, 2, 3, 4]
             },
@@ -1189,6 +1189,191 @@ export const fixture = {
             }
         }
     },
+    sscal: {
+        case0: {
+            desc: 'n=4, sx={4}, sa=1, incx=1',
+            input: {
+                n: 4,
+                sa: 1,
+                sx: [1, 2, 3, 4],
+                incx: 1
+            },
+            //result values from fortran code
+            output: {
+                x: [1, 2, 3, 4],
+            }
+        },
+        case1: {
+            desc: 'n=4, sx={4}, sa=2, incx=1',
+            input: {
+                n: 4,
+                sa: 2,
+                sx: [1, 2, 3, 4],
+                incx: 1
+            },
+            //result values from fortran code
+            output: {
+                x: [2, 4, 6, 8],
+            }
+        },
+        case2: {
+            desc: 'n=5, sx={5}, sa=2, incx=1',
+            input: {
+                n: 5,
+                sa: 2,
+                sx: [3, 1, 2, 3, 4],
+                incx: 1
+            },
+            //result values from fortran code
+            output: {
+                x: [6, 2, 4, 6, 8],
+            }
+        },
+        case4: {
+            desc: 'n=7, sx={4}, sa=2, incx=1',
+            input: {
+                n: 7,
+                sa: 2,
+                sx: [-1, 2, 3, 1, 2, 3, 4],
+                incx: 1
+            },
+            //result values from fortran code
+            output: {
+                x: [-2, 4, 6, 2, 4, 6, 8],
+            }
+        },
+        case5: {
+            desc: 'n=3, sx={7}, sa=2, incx=2',
+            input: {
+                n: 3,
+                sa: 2,
+                sx: [-1, 2, 3, 1, 2, 3, 4],
+                incx: 2
+            },
+            //result values from fortran code
+            output: {
+                x: [-2, 2, 6, 1, 4, 3, 4],
+            }
+        },
+        case6: {
+            desc: 'n=6, sx={4}, sa=2, incx=-2',
+            input: {
+                n: 6,
+                sa: 2,
+                sx: [-1, 2, 3, 1, 2, 3, 4],
+                incx: -2
+            },
+            //result values from fortran code
+            output: {
+                x: [-1, 2, 3, 1, 2, 3, 4],
+            }
+        },
+        case7: {
+            desc: 'n=0, sx={4}, sa=2, incx=-2',
+            input: {
+                n: 0,
+                sa: 2,
+                sx: [-1, 2, 3, 1, 2, 3, 4],
+                incx: -2
+            },
+            //result values from fortran code
+            output: {
+                x: [-1, 2, 3, 1, 2, 3, 4],
+            }
+        },
+    },
+    sswap: {
+        case0: {
+            desc: 'n=4, sx={4}, incx=1, incy=-1',
+            input: {
+                n: 4,
+                sx: [1, 2, 3, 4],
+                incx: 1,
+                sy: [1, 2, 3, 4],
+                incy: -1 //flip when copying to x, flip when assigning to y
+            },
+            //result values from fortran code
+            output: {
+                x: [4, 3, 2, 1],
+                y: [4, 3, 2, 1]
+            }
+        },
+        case1: {
+            desc: 'n=4, sx={4}, incx=-1, incy=1',
+            input: {
+                n: 4,
+                sx: [1, 2, 3, 4],
+                incx: -1, //flip when copying to y, flip when assigning to x
+                sy: [1, 2, 3, 4],
+                incy: 1
+            },
+            //result values from fortran code
+            output: {
+                x: [4, 3, 2, 1],
+                y: [4, 3, 2, 1]
+            }
+        },
+        case2: {
+            desc: 'n=4, sx={4}, incx=1, incy=1',
+            input: {
+                n: 4,
+                sx: [1, 2, 3, 4],
+                incx: 1,
+                sy: [7, 8, 9, 5],
+                incy: 1
+            },
+            //result values from fortran code
+            output: {
+                x: [7, 8, 9, 5],
+                y: [1, 2, 3, 4]
+            }
+        },
+        case3: {
+            desc: 'n=3, sx={4}, incx=1, incy=1',
+            input: {
+                n: 3, //batchsize
+                sx: [1, 2, 3],
+                incx: 1,
+                sy: [7, 8, 9],
+                incy: 1
+            },
+            //result values from fortran code
+            output: {
+                x: [7, 8, 9],
+                y: [1, 2, 3]
+            }
+        },
+        case4: {
+            desc: 'n=3, sx={4}, incx=1, incy=1',
+            input: {
+                n: 2, //batchsize
+                sx: [1, 2],
+                incx: 1,
+                sy: [7, 8],
+                incy: 1
+            },
+            //result values from fortran code
+            output: {
+                x: [7, 8],
+                y: [1, 2]
+            }
+        },
+        case5: {
+            desc: 'n=0, sx={4}, incx=1, incy=1',
+            input: {
+                n: 0, //batchsize
+                sx: [1, 2],
+                incx: 1,
+                sy: [7, 8],
+                incy: 1
+            },
+            //result values from fortran code
+            output: {
+                x: [1, 2],
+                y: [7, 8]
+            }
+        },
+    }
     /*
     cdotu: {
         case0: {
@@ -1284,7 +1469,7 @@ export const fixture = {
             }
         }
     },
-
+ 
     crotg: {
         case0: {
             desc: 'crotg givens rotation ca=(11,19), cb=(34,23), c=>0.471621990, s=>(0.793538332,0.384538263)',

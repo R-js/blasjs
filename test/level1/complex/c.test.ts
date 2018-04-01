@@ -12,7 +12,7 @@ const {
 const { abs } = Math;
 const { isNaN, isFinite } = Number;
 
-describe.skip('blas level 1 complex', function n() {
+describe('blas level 1 complex', function n() {
   //
 
   const precision = numberPrecision(9);
