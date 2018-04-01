@@ -157,6 +157,8 @@ export function fortranArrComplex64(...rest: (Complex | Complex[])[]): (offset?:
     return mimicFArray(new Float64Array(collect.reals), i);
 }
 
+
+
 // TODO: REMOVE THIS in next iteration!! explicitly it out  
 export const cmult = (reA: number, imA: number, reB: number, imB: number): Complex => {
     //   (a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
@@ -231,7 +233,7 @@ export type Matrix = {
 };
 
 
-export function mimicFMatrix2D(r: fpArray, i?: fpArray) {
+function mimicFMatrix(r: fpArray, i?: fpArray) {
 
     return function c1(nrRows: number, nrCols: number, rowBase: number = 1, colBase = 1): Matrix {
 
@@ -277,6 +279,28 @@ export function mimicFMatrix2D(r: fpArray, i?: fpArray) {
             }
         });
     }
+}
+
+export function fortranMatrixComplex32(...rest: (Complex | Complex[])[]):
+    (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix {
+
+    const collect = demuxComplex(rest as any);
+    let i: Float32Array | undefined;
+    if (collect.imags !== undefined) {
+        i = new Float32Array(collect.imags);
+    }
+    return mimicFMatrix(new Float32Array(collect.reals), i);
+}
+
+export function fortranMatrixComplex64(...rest: (Complex | Complex[])[]):
+    (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix {
+
+    const collect = demuxComplex(rest as any);
+    let i: Float64Array | undefined;
+    if (collect.imags !== undefined) {
+        i = new Float64Array(collect.imags);
+    }
+    return mimicFMatrix(new Float64Array(collect.reals), i);
 }
 
 export function xerbla(fn: string, idx: number) {
