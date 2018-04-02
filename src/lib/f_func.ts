@@ -229,6 +229,7 @@ export type Matrix = {
     //s: FortranMatrixSetterGetter
     // zap a row with fa valie
     readonly setCol: (col: number, rowStart: number, rowEnd: number, value: number) => void;
+    readonly slice: (rowStart: number, rowEnd: number, colStart: number, colEnd: number) => Matrix;
 };
 
 
@@ -275,6 +276,28 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
                 if (this.i) {
                     this.i.fill(value, coords + rowStart, coords + rowEnd + 1);
                 }
+            },
+            slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix {
+                const rowSize = (rowEnd - rowStart) + 1;
+                const colSize = (colEnd - colStart) + 1;
+
+                let re = new Float64Array(Array.from<number>({ length: rowSize * colSize }));
+                let im: Float64Array | undefined;
+                if (i) {
+                    im = new Float64Array(Array.from<number>({ length: rowSize * colSize }));
+                }
+                for (let j = colStart; j <= colEnd; j++) {
+                    const base = (j - colStart) * rowSize - 1;
+                    const coorJ = this.colOfEx(j);
+                    for (let i = rowStart; i <= rowEnd; i++) {
+                        // console.log(j, coorJ + i, base + i, r[coorJ + i]);
+                        re[base + i] = r[coorJ + i];
+                        if (im) {
+                            im[base + (i - rowStart)] = i[coorJ + i];
+                        }
+                    }
+                }
+                return mimicFMatrix(re, im)(rowSize, colSize);
             }
         });
     }

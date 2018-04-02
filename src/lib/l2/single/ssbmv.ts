@@ -122,18 +122,18 @@ export function ssbmv(
         let jx = kx;
         let jy = ky;
         for (let j = 1; j <= n; j++) {
-            const coords = a.colOfEx(j);
+            const coorAJ = a.colOfEx(j);
             let temp1 = alpha * x.r[jx - x.base];
             let temp2 = 0;
-            y.r[jy - y.base] += temp1 * a.r[1 + coords];
+            y.r[jy - y.base] += temp1 * a.r[1 + coorAJ];
             let l = 1 - j;
             let ix = jx;
             let iy = jy;
             for (let i = j + 1; i <= min(n, j + k); i++) {
                 ix += incx;
                 iy += incy;
-                y.r[iy - y.base] += temp1 * a.r[coords + l + i];
-                temp2 += a.r[coords + l + i] * x.r[ix - x.base];
+                y.r[iy - y.base] += temp1 * a.r[coorAJ + l + i];
+                temp2 += a.r[coorAJ + l + i] * x.r[ix - x.base];
             }
             y.r[jy - y.base] += alpha * temp2;
             jx += incx;

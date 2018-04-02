@@ -4,6 +4,8 @@
      Jeremy Du Croz, Nag Central Office.
      Sven Hammarling, Nag Central Office.
      Richard Hanson, Sandia National Labs.
+
+    A := alpha*x*y**T + A,
 */
 
 import { errWrongArg, FortranArr, Matrix } from '../../f_func';
