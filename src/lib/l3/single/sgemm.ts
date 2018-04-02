@@ -140,11 +140,12 @@ export function sgemm(
                 if (beta === 0) {
                     c.r.fill(0);
                 } else if (beta !== 1) {
+
                     (c.r as Float32Array).set((c.r as Float32Array).map(v => v * beta), 0);
                 }
                 const coorC = c.colOfEx(j);
                 for (let L = 1; L <= k; L++) {
-                    let temp = alpha * b.r[(L - b.colBase) * b.nrRows - b.rowBase + j];
+                    let temp = alpha * b.r[(L - b.colBase) * b.colSize - b.rowBase + j];
                     const coorA = a.colOfEx(L);
                     for (let i = 1; i <= m; i++) {
                         c.r[coorC + i] += temp * a.r[coorA + i];

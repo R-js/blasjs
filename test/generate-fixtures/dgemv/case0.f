@@ -44,7 +44,7 @@ c     DGEMV(TRANS,M,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
       INCX=1
       INCY=1
       LDA=6
-    
+    ù
       call DGEMV(TRANS,M,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 c           call DROTMG(DD1(i), DD2(I), DX1(I), DY1(I), DPARAM)
       print *,I,"|", Y

@@ -69,7 +69,7 @@ export function ssbmv(
     if (n === 0 || (alpha === 0 && beta === 1)) return;
 
     let kx = incx > 0 ? 1 : 1 - (n - 1) * incx;
-    let ky = incy > 0 ? 1 : 1 - (n - 1) * incx;
+    let ky = incy > 0 ? 1 : 1 - (n - 1) * incy;
 
     // First form  y := beta*y.
 
@@ -101,7 +101,7 @@ export function ssbmv(
                 ix += incx;
                 iy += incy;
             }
-            y.r[jy - y.base] += temp1 * a.r[coorAJ + j] + alpha * temp2;
+            y.r[jy - y.base] += temp1 * a.r[coorAJ + kplus1] + alpha * temp2;
             jx += incx;
             jy += incy;
             if (j > k) {

@@ -1,6 +1,6 @@
 //intrinsic routines of fortran
 
-const { abs, max } = Math;
+const { abs, max, min } = Math;
 
 const { isInteger } = Number;
 
@@ -232,6 +232,34 @@ export type Matrix = {
     readonly slice: (rowStart: number, rowEnd: number, colStart: number, colEnd: number) => Matrix;
 };
 
+function bandifyMatrix(uplo: 'u' | 'l', k: number, A: Matrix): Matrix {
+    const rowSize = (k + 1);
+    const colSize = A.nrCols;
+    const createArr = A.r instanceof Float64Array ? Float64Array : (
+        A.r instanceof Float32Array ? Float32Array : undefined);
+    if (createArr === undefined) throw Error('[re] type should be "Float64Array" or "Float32Array"');
+
+    let re = new createArr(rowSize * colSize);
+    let im: fpArray | undefined;
+    if (A.i) {
+        im = new createArr(rowSize * colSize);
+    }
+    for (let j = 1; j <= colSize; j++) {
+        const m = uplo === 'u' ? k + 1 - j : 1 - j;
+        const coorJ = A.colOfEx(j);
+        const base = (j - 1) * rowSize - 1;
+        const start = uplo === 'u' ? max(1, j - k) : j;
+        const stop = uplo === 'u' ? j : min(colSize, j + k);
+        for (let i = start; i <= stop; i++) {
+            re[base + m + i] = A.r[coorJ + i];
+            if (im && A.i) {
+                im[base + m + i] = A.i[coorJ + i];
+            }
+        }
+    }
+    return mimicFMatrix(re, im)(rowSize, colSize);
+
+}
 
 function mimicFMatrix(r: fpArray, i?: fpArray) {
 
@@ -257,6 +285,7 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
         if (!isInteger(colBase)) {
             throw new Error(errWrongArg('colBase', 'is a NaN'));
         }
+
         return Object.freeze({
             rowBase,
             colBase,
@@ -277,14 +306,20 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
                     this.i.fill(value, coords + rowStart, coords + rowEnd + 1);
                 }
             },
+            upperBand(k: number = lda) {
+                return bandifyMatrix('u', k, this);
+            },
+            lowerBand(k: number = lda) {
+                return bandifyMatrix('l', k, this);
+            },
             slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix {
                 const rowSize = (rowEnd - rowStart) + 1;
                 const colSize = (colEnd - colStart) + 1;
 
-                let re = new Float64Array(Array.from<number>({ length: rowSize * colSize }));
+                let re = new Float64Array(rowSize * colSize);
                 let im: Float64Array | undefined;
                 if (i) {
-                    im = new Float64Array(Array.from<number>({ length: rowSize * colSize }));
+                    im = new Float64Array(rowSize * colSize);
                 }
                 for (let j = colStart; j <= colEnd; j++) {
                     const base = (j - colStart) * rowSize - 1;

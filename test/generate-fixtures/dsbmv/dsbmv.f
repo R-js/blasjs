@@ -1,4 +1,4 @@
-*> \brief \b SSBMV
+*> \brief \b DSBMV
 *
 *  =========== DOCUMENTATION ===========
 *
@@ -8,15 +8,15 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE SSBMV(UPLO,N,K,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
+*       SUBROUTINE DSBMV(UPLO,N,K,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 *
 *       .. Scalar Arguments ..
-*       REAL ALPHA,BETA
+*       DOUBLE PRECISION ALPHA,BETA
 *       INTEGER INCX,INCY,K,LDA,N
 *       CHARACTER UPLO
 *       ..
 *       .. Array Arguments ..
-*       REAL A(LDA,*),X(*),Y(*)
+*       DOUBLE PRECISION A(LDA,*),X(*),Y(*)
 *       ..
 *
 *
@@ -25,7 +25,7 @@
 *>
 *> \verbatim
 *>
-*> SSBMV  performs the matrix-vector  operation
+*> DSBMV  performs the matrix-vector  operation
 *>
 *>    y := alpha*A*x + beta*y,
 *>
@@ -66,13 +66,13 @@
 *>
 *> \param[in] ALPHA
 *> \verbatim
-*>          ALPHA is REAL
+*>          ALPHA is DOUBLE PRECISION.
 *>           On entry, ALPHA specifies the scalar alpha.
 *> \endverbatim
 *>
 *> \param[in] A
 *> \verbatim
-*>          A is REAL array, dimension ( LDA, N )
+*>          A is DOUBLE PRECISION array, dimension ( LDA, N )
 *>           Before entry with UPLO = 'U' or 'u', the leading ( k + 1 )
 *>           by n part of the array A must contain the upper triangular
 *>           band part of the symmetric matrix, supplied column by
@@ -91,12 +91,6 @@
 *>              10    CONTINUE
 *>              20 CONTINUE
 *>
-c             k+1-1+1=A(k+1,1)=m(1,1)
-c             k+1-2+1=A(k,2)=m(1,2)
-c             k+1-2+2=A(k+1,2)=m(2,2)
-c             xx
-c              x  
-c
 *>           Before entry with UPLO = 'L' or 'l', the leading ( k + 1 )
 *>           by n part of the array A must contain the lower triangular
 *>           band part of the symmetric matrix, supplied column by
@@ -114,15 +108,6 @@ c
 *>                       A( M + I, J ) = matrix( I, J )
 *>              10    CONTINUE
 *>              20 CONTINUE
-
-c                i=1,k+1,
-c                  A(1,1)=_(1,1)
-c                  A(2,1)=_(2,1)
-c                  ..
-c                  A(1+K,1)=_(1+k,1))
-
-
-
 *> \endverbatim
 *>
 *> \param[in] LDA
@@ -135,7 +120,7 @@ c                  A(1+K,1)=_(1+k,1))
 *>
 *> \param[in] X
 *> \verbatim
-*>          X is REAL array, dimension at least
+*>          X is DOUBLE PRECISION array, dimension at least
 *>           ( 1 + ( n - 1 )*abs( INCX ) ).
 *>           Before entry, the incremented array X must contain the
 *>           vector x.
@@ -150,13 +135,13 @@ c                  A(1+K,1)=_(1+k,1))
 *>
 *> \param[in] BETA
 *> \verbatim
-*>          BETA is REAL
+*>          BETA is DOUBLE PRECISION.
 *>           On entry, BETA specifies the scalar beta.
 *> \endverbatim
 *>
 *> \param[in,out] Y
 *> \verbatim
-*>          Y is REAL array, dimension at least
+*>          Y is DOUBLE PRECISION array, dimension at least
 *>           ( 1 + ( n - 1 )*abs( INCY ) ).
 *>           Before entry, the incremented array Y must contain the
 *>           vector y. On exit, Y is overwritten by the updated vector y.
@@ -179,7 +164,7 @@ c                  A(1+K,1)=_(1+k,1))
 *
 *> \date December 2016
 *
-*> \ingroup single_blas_level2
+*> \ingroup double_blas_level2
 *
 *> \par Further Details:
 *  =====================
@@ -197,7 +182,7 @@ c                  A(1+K,1)=_(1+k,1))
 *> \endverbatim
 *>
 *  =====================================================================
-      SUBROUTINE SSBMV(UPLO,N,K,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
+      SUBROUTINE DSBMV(UPLO,N,K,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 *
 *  -- Reference BLAS level2 routine (version 3.7.0) --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -205,22 +190,22 @@ c                  A(1+K,1)=_(1+k,1))
 *     December 2016
 *
 *     .. Scalar Arguments ..
-      REAL ALPHA,BETA
+      DOUBLE PRECISION ALPHA,BETA
       INTEGER INCX,INCY,K,LDA,N
       CHARACTER UPLO
 *     ..
 *     .. Array Arguments ..
-      REAL A(LDA,*),X(*),Y(*)
+      DOUBLE PRECISION A(LDA,*),X(*),Y(*)
 *     ..
 *
 *  =====================================================================
 *
 *     .. Parameters ..
-      REAL ONE,ZERO
-      PARAMETER (ONE=1.0E+0,ZERO=0.0E+0)
+      DOUBLE PRECISION ONE,ZERO
+      PARAMETER (ONE=1.0D+0,ZERO=0.0D+0)
 *     ..
 *     .. Local Scalars ..
-      REAL TEMP1,TEMP2
+      DOUBLE PRECISION TEMP1,TEMP2
       INTEGER I,INFO,IX,IY,J,JX,JY,KPLUS1,KX,KY,L
 *     ..
 *     .. External Functions ..
@@ -251,7 +236,7 @@ c                  A(1+K,1)=_(1+k,1))
           INFO = 11
       END IF
       IF (INFO.NE.0) THEN
-          CALL XERBLA('SSBMV ',INFO)
+          CALL XERBLA('DSBMV ',INFO)
           RETURN
       END IF
 *
@@ -309,18 +294,18 @@ c                  A(1+K,1)=_(1+k,1))
 *        Form  y  when upper triangle of A is stored.
 *
           KPLUS1 = K + 1
-c          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
-c              DO 60 J = 1,N
-c                  TEMP1 = ALPHA*X(J)
-c                  TEMP2 = ZERO
-c                  L = KPLUS1 - J
-c                  DO 50 I = MAX(1,J-K),J - 1
-c                      Y(I) = Y(I) + TEMP1*A(L+I,J)
-c                      TEMP2 = TEMP2 + A(L+I,J)*X(I)
-c   50             CONTINUE
-c                  Y(J) = Y(J) + TEMP1*A(KPLUS1,J) + ALPHA*TEMP2
-c   60         CONTINUE
-c          ELSE
+          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
+              DO 60 J = 1,N
+                  TEMP1 = ALPHA*X(J)
+                  TEMP2 = ZERO
+                  L = KPLUS1 - J
+                  DO 50 I = MAX(1,J-K),J - 1
+                      Y(I) = Y(I) + TEMP1*A(L+I,J)
+                      TEMP2 = TEMP2 + A(L+I,J)*X(I)
+   50             CONTINUE
+                  Y(J) = Y(J) + TEMP1*A(KPLUS1,J) + ALPHA*TEMP2
+   60         CONTINUE
+          ELSE
               JX = KX
               JY = KY
               DO 80 J = 1,N
@@ -343,24 +328,24 @@ c          ELSE
                       KY = KY + INCY
                   END IF
    80         CONTINUE
-c          END IF
+          END IF
       ELSE
 *
 *        Form  y  when lower triangle of A is stored.
 *
-c          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
-c              DO 100 J = 1,N
-c                  TEMP1 = ALPHA*X(J)
-c                  TEMP2 = ZERO
-c                  Y(J) = Y(J) + TEMP1*A(1,J)
-c                  L = 1 - J
-c                  DO 90 I = J + 1,MIN(N,J+K)
-c                      Y(I) = Y(I) + TEMP1*A(L+I,J)
-c                      TEMP2 = TEMP2 + A(L+I,J)*X(I)
-c   90             CONTINUE
-c                  Y(J) = Y(J) + ALPHA*TEMP2
-c  100         CONTINUE
-c          ELSE
+          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
+              DO 100 J = 1,N
+                  TEMP1 = ALPHA*X(J)
+                  TEMP2 = ZERO
+                  Y(J) = Y(J) + TEMP1*A(1,J)
+                  L = 1 - J
+                  DO 90 I = J + 1,MIN(N,J+K)
+                      Y(I) = Y(I) + TEMP1*A(L+I,J)
+                      TEMP2 = TEMP2 + A(L+I,J)*X(I)
+   90             CONTINUE
+                  Y(J) = Y(J) + ALPHA*TEMP2
+  100         CONTINUE
+          ELSE
               JX = KX
               JY = KY
               DO 120 J = 1,N
@@ -380,11 +365,11 @@ c          ELSE
                   JX = JX + INCX
                   JY = JY + INCY
   120         CONTINUE
-c          END IF
+          END IF
       END IF
 *
       RETURN
 *
-*     End of SSBMV .
+*     End of DSBMV .
 *
       END
