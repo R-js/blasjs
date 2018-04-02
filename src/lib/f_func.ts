@@ -215,16 +215,15 @@ export function errWrongArg(arg: string, value: any): string {
 // Matrix
 // Matrix
 
-export type FortranMatrixSetterGetter = (col: number) => (row?: number) => number | Complex;
+export type FortranMatrixSetterGetter = (colSize: number) => (nrCols: number) => number | Complex;
 
 export type Matrix = {
     readonly rowBase: number,
     readonly colBase: number,
     readonly nrCols: number, // inclusive note!!
-    readonly nrRows: number,
+    readonly colSize: number,
     readonly r: fpArray, //[(ncols+1)*(nrows+1)]
     readonly i?: fpArray, //imaginary part of matrix [(ncols+1)*(nrows+1)]
-    readonly coord: (number) => (number) => number;
     //readonly colOf: (number) => number;
     readonly colOfEx: (number) => number;
     //s: FortranMatrixSetterGetter
@@ -235,13 +234,13 @@ export type Matrix = {
 
 function mimicFMatrix(r: fpArray, i?: fpArray) {
 
-    return function c1(nrRows: number, nrCols: number, rowBase: number = 1, colBase = 1): Matrix {
+    return function c1(lda: number, nrCols: number, rowBase: number = 1, colBase = 1): Matrix {
 
         // check rows
-        if (nrRows < 0) {
+        if (lda < 0) {
             throw new Error(errWrongArg('nrRows', 'is Negative'));
         }
-        if (!isInteger(nrRows)) {
+        if (!isInteger(lda)) {
             throw new Error(errWrongArg('nrRows', 'is a NaN'));
         }
         if (!isInteger(rowBase)) {
@@ -261,15 +260,15 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
             rowBase,
             colBase,
             nrCols,
-            nrRows,
+            colSize: lda,
             r,
             i,
             coord: (col) => {
-                const tb = (col - colBase) * nrRows;
+                const tb = (col - colBase) * lda;
                 return row => tb + (row - rowBase)
             },
             //  colOf: (col) => (col - colBase) * nrRows,
-            colOfEx: (col) => (col - colBase) * nrRows - rowBase,
+            colOfEx: (col) => (col - colBase) * lda - rowBase,
             setCol(col: number, rowStart: number, rowEnd: number, value: number): void {
                 const coords = this.colOfEx(col);
                 this.r.fill(value, coords + rowStart, coords + rowEnd + 1);

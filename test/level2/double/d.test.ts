@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai';
 import * as blas from '../../../src/lib';
-import { approximitly } from '../../test-helpers';
+import { approximately, approximatelyWithPrec } from '../../test-helpers';
 import { fixture } from './fixtures';
 
 const {
@@ -15,7 +15,8 @@ const {
     muxCmplx
   },
   level2: {
-    sgbmv
+    sgbmv,
+    sgemv
   }
 } = blas;
 
@@ -52,7 +53,7 @@ describe('blas level 2 single/double precision', function n() {
 
           sgbmv(trans, m, n, kl, ku, alpha, aM, lda, sx, incx, beta, sy, incy);
           //console.log({ sy });
-          multiplexer(sy.toArr(), expect.y)(approximitly);
+          multiplexer(sy.toArr(), expect.y)(approximately);
         });
       });
     });
@@ -88,6 +89,35 @@ describe('blas level 2 single/double precision', function n() {
       });
     });
   });
+  describe('sgemv', () => {
 
+    describe('data tests', () => {
+      const { sgemv: testData } = fixture;
+
+      each(testData)(({ input: {
+        trans,
+        m,
+        n,
+        alpha,
+        a,
+        lda,
+        x,
+        incx,
+        beta,
+        y,
+        incy
+      }, output: expect, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const aM = fortranMatrixComplex64(muxCmplx(a))(lda, n);
+          const sx = fortranArrComplex64(muxCmplx(x))();
+          const sy = fortranArrComplex64(muxCmplx(y))();
+          //console.log({ am: Array.from(aM.r) });
+          sgemv(trans, m, n, alpha, aM, lda, sx, incx, beta, sy, incy);
+          // console.log({ sy: sy.toArr() });
+          multiplexer(sy.toArr(), expect.y)(approximatelyWithPrec(1E-6));
+        });
+      });
+    });
+  });
 });
-

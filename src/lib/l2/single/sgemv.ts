@@ -55,7 +55,7 @@ export function sgemv(
     if (m === 0 || n === 0 || (alpha === 0 && beta === 1)) return;
 
     let lenx = tr === 'n' ? n : m;
-    let leny = tr === 'm' ? m : n;
+    let leny = tr === 'n' ? m : n;
 
     let kx = incx > 0 ? 1 : 1 - (lenx - 1) * incx;
     let ky = incy > 0 ? 1 : 1 - (leny - 1) * incy;
@@ -75,8 +75,8 @@ export function sgemv(
         else {
             let iy = ky;
             for (let i = 1; i <= leny; i++) {
-                y.r[i - y.base] = beta === 0 ? 0 : y.r[i - y.base] * beta;
-                iy += iy + incy;
+                y.r[iy - y.base] = beta === 0 ? 0 : y.r[iy - y.base] * beta;
+                iy += incy;
             }
         }
     }
@@ -98,7 +98,7 @@ export function sgemv(
     else {
         //Form  y:= alpha * A ** T * x + y.
         let jy = ky;
-        for (let j = 1; j <= 120; j++) {
+        for (let j = 1; j <= n; j++) {
             let temp = 0;
             let ix = kx;
             const coorAJ = a.colOfEx(j);

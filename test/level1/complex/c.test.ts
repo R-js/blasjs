@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai';
 import * as blas from '../../../src/lib';
-import { approximitly } from '../../test-helpers';
+import { approximately } from '../../test-helpers';
 import { fixture } from './fixtures';
 
 
@@ -34,7 +34,7 @@ describe('blas level 1 complex', function n() {
           const res = fortranArrComplex64(muxCmplx(ore, oim))();
 
           caxpy(n, ca, cx, incx, cy, incy);
-          multiplexer(cy.toArr(), res.toArr())(approximitly);
+          multiplexer(cy.toArr(), res.toArr())(approximately);
         });
       });
     });
@@ -68,7 +68,7 @@ describe('blas level 1 complex', function n() {
           const res = fortranArrComplex64(muxCmplx(ore, oim))();
 
           ccopy(n, cx, incx, cy, incy);
-          multiplexer(cy.toArr(), res.toArr())(approximitly);
+          multiplexer(cy.toArr(), res.toArr())(approximately);
         });
       });
     });
@@ -101,7 +101,7 @@ describe('blas level 1 complex', function n() {
           const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
           const cy = fortranArrComplex64(muxCmplx(y.re, y.im))();
           const answer = cdotc(n, cx, incx, cy, incy);
-          approximitly(answer, expected);
+          approximately(answer, expected);
         });
       });
     });
@@ -135,7 +135,7 @@ describe('blas level 1 complex', function n() {
           const cy = fortranArrComplex64(muxCmplx(y.re, y.im))();
 
           const answer = cdotu(n, cx, incx, cy, incy);
-          approximitly(answer, expected);
+          approximately(answer, expected);
 
         });
       });
@@ -168,10 +168,10 @@ describe('blas level 1 complex', function n() {
 
           crotg(aIn, bIn, c, s); // adjusts aIn
           //console.log({ aIn, ca, bIn, cb, c, s, cOut, sOut });
-          approximitly(aIn, ca);
-          approximitly(bIn, cb);
-          approximitly(c.val, cOut);
-          approximitly(s, sOut);
+          approximately(aIn, ca);
+          approximately(bIn, cb);
+          approximately(c.val, cOut);
+          approximately(s, sOut);
         });
       });
     });
@@ -187,7 +187,7 @@ describe('blas level 1 complex', function n() {
 
             cscal(n, ca, cx, incx); // adjusts aIn
 
-            multiplexer(cx.toArr(), result)(approximitly);
+            multiplexer(cx.toArr(), result)(approximately);
           });
         });
       });
@@ -220,8 +220,8 @@ describe('blas level 1 complex', function n() {
 
             csrot(n, cx, incx, cy, incy, c, s);
 
-            multiplexer(cx.toArr(), cxExpected)(approximitly);
-            multiplexer(cy.toArr(), cyExpected)(approximitly);
+            multiplexer(cx.toArr(), cxExpected)(approximately);
+            multiplexer(cy.toArr(), cyExpected)(approximately);
           });
         });
       });
@@ -253,7 +253,7 @@ describe('blas level 1 complex', function n() {
 
             csscal(n, sa, cx, incx);
 
-            multiplexer(cx.toArr(), cxExpected)(approximitly);
+            multiplexer(cx.toArr(), cxExpected)(approximately);
           });
         });
       });
@@ -289,8 +289,8 @@ describe('blas level 1 complex', function n() {
 
           cswap(n, cx, incx, cy, incy);
 
-          multiplexer(cx.toArr(), cxExpected)(approximitly);
-          multiplexer(cy.toArr(), cyExpected)(approximitly);
+          multiplexer(cx.toArr(), cxExpected)(approximately);
+          multiplexer(cy.toArr(), cyExpected)(approximately);
         });
       });
     });
@@ -317,7 +317,7 @@ describe('blas level 1 complex', function n() {
         it(`[${key}]/[${desc}]`, function t() {
           const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
           const result = icamax(n, cx, incx);
-          multiplexer(result, max)(approximitly);
+          multiplexer(result, max)(approximately);
         });
       });
     });
@@ -348,7 +348,7 @@ describe('blas level 1 complex', function n() {
           const cx = fortranArrComplex64(muxCmplx(x.re, x.im))();
           const result = scasum(n, cx, incx);
 
-          multiplexer(result, sum)(approximitly);
+          multiplexer(result, sum)(approximately);
         });
       });
     });
