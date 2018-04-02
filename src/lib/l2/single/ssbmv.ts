@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr, Matrix } from '../../f_func';
+import { errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
 
 /*
 
@@ -25,7 +25,7 @@ A is an n by n symmetric band matrix, with k super-diagonals.
 const { max, min } = Math;
 
 export function ssbmv(
-    _uplo: string,
+    uplo: string,
     n: number,
     k: number,
     alpha: number,
@@ -40,10 +40,10 @@ export function ssbmv(
 
     // test input params
 
-    const ul = _uplo.toLocaleUpperCase()[0];
+    const ul = lowerChar(uplo);
 
     let info = 0;
-    if (ul !== 'U' && ul !== 'L') {
+    if (!'ul'.includes(ul)) {
         info = 1;
     }
     else if (n < 0) {
@@ -75,20 +75,14 @@ export function ssbmv(
 
     if (beta !== 1) {
         let iy = ky;
-        //efficiency
-        if (beta === 0 && incy === 1) {
-            y.r.fill(0);
-        }
-        else {
-            for (let i = 1; i <= n; i++) {
-                y.r[iy - y.base] = beta === 0 ? 0 : beta * y.r[iy - y.base];
-                iy += incy;
-            }
+        for (let i = 1; i <= n; i++) {
+            y.r[iy - y.base] = beta === 0 ? 0 : beta * y.r[iy - y.base];
+            iy += incy;
         }
     }
 
     if (alpha === 0) return;
-    if (ul === 'U') {
+    if (ul === 'u') {
 
         let kplus1 = k + 1;
         let jx = kx;
@@ -100,14 +94,14 @@ export function ssbmv(
             let ix = kx;
             let iy = ky;
             let l = kplus1 - j;
-            let coords = a.colOfEx(j);
+            let coorAJ = a.colOfEx(j);
             for (let i = max(1, j - k); i <= j - 1; i++) {
-                y.r[iy - y.base] = temp1 * a.r[coords + l + i];
-                temp2 = temp2 + a.r[coords + l + i] * x.r[ix - x.base];
+                y.r[iy - y.base] += temp1 * a.r[coorAJ + l + i];
+                temp2 += a.r[coorAJ + l + i] * x.r[ix - x.base];
                 ix += incx;
                 iy += incy;
             }
-            y.r[jy - y.base] += temp1 * a.r[coords + j] + alpha * temp2;
+            y.r[jy - y.base] += temp1 * a.r[coorAJ + j] + alpha * temp2;
             jx += incx;
             jy += incy;
             if (j > k) {

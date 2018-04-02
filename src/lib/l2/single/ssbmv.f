@@ -91,6 +91,12 @@
 *>              10    CONTINUE
 *>              20 CONTINUE
 *>
+c             k+1-1+1=A(k+1,1)=m(1,1)
+c             k+1-2+1=A(k,2)=m(1,2)
+c             k+1-2+2=A(k+1,2)=m(2,2)
+c             xx
+c              x  
+c
 *>           Before entry with UPLO = 'L' or 'l', the leading ( k + 1 )
 *>           by n part of the array A must contain the lower triangular
 *>           band part of the symmetric matrix, supplied column by
@@ -108,6 +114,15 @@
 *>                       A( M + I, J ) = matrix( I, J )
 *>              10    CONTINUE
 *>              20 CONTINUE
+
+c                i=1,k+1,
+c                  A(1,1)=_(1,1)
+c                  A(2,1)=_(2,1)
+c                  ..
+c                  A(1+K,1)=_(1+k,1))
+
+
+
 *> \endverbatim
 *>
 *> \param[in] LDA
