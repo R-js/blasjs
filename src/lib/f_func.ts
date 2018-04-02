@@ -182,7 +182,7 @@ export enum ERROR {
 const errors = new Map<ERROR, string>([
     [ERROR.ERR_MISSING_IMAGINARY, 'Missing imaginary part for %s'],
     [ERROR.ERR_MISSING_REAL, 'Missing real part for %s'],
-    [ERROR.ERR_WRONG_ARGUMENT, 'Argument [%s] is has invalid value:[%s]']
+    [ERROR.ERR_WRONG_ARGUMENT, 'function:[%s], argument [%s] is has invalid value.']
 ]);
 
 const ERROR_UKNOWN = 'Unkown Error code used! [%s]';
@@ -205,8 +205,8 @@ export function errMissingIm(fmt: string): string {
     return errorMsg(ERROR.ERR_MISSING_IMAGINARY, fmt);
 }
 
-export function errWrongArg(arg: string, value): string {
-    return errorMsg(ERROR.ERR_WRONG_ARGUMENT, value);
+export function errWrongArg(arg: string, value: any): string {
+    return errorMsg(ERROR.ERR_WRONG_ARGUMENT, arg, JSON.stringify(value));
 }
 
 

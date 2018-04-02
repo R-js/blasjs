@@ -10,6 +10,8 @@ import {
     each,
     fortranArrComplex32,
     fortranArrComplex64,
+    fortranMatrixComplex32,
+    fortranMatrixComplex64,
     multiplexer,
     muxCmplx,
     numberPrecision
@@ -24,5 +26,7 @@ export const util = Object.freeze({
     numberPrecision,
     arrayrify,
     multiplexer,
-    muxCmplx
+    muxCmplx,
+    fortranMatrixComplex64,
+    fortranMatrixComplex32
 });

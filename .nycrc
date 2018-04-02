@@ -13,8 +13,7 @@
   "preserve-comments": false,
   "reporter": [
     "lcov",
-    "text",
-    "text-summary"
+    "text"
   ],
   "require": [
     "ts-node/register"

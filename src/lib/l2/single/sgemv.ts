@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr, Matrix } from '../../f_func';
+import { errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
 
 /*
 Jacob Bogers, 03/2008, jkfbogers@gmail.com
@@ -25,10 +25,10 @@ export function sgemv(
     y: FortranArr,
     incy: number): void {
 
-    const tr = trans.toUpperCase()[0];
+    const tr = lowerChar(trans);
 
     let info = 0;
-    if (tr !== 'N' && tr !== 'T' && tr !== 'C') {
+    if (!'ntc'.includes(tr)) {
         info = 1;
     }
     else if (m < 0) {
@@ -52,10 +52,10 @@ export function sgemv(
 
     //Quick return if possible.
 
-    if ((m === 0) || (n === 0) || (alpha === 0 && beta === 1)) return;
+    if (m === 0 || n === 0 || (alpha === 0 && beta === 1)) return;
 
-    let lenx = tr === 'N' ? n : m;
-    let leny = tr === 'M' ? m : n;
+    let lenx = tr === 'n' ? n : m;
+    let leny = tr === 'm' ? m : n;
 
     let kx = incx > 0 ? 1 : 1 - (lenx - 1) * incx;
     let ky = incy > 0 ? 1 : 1 - (leny - 1) * incy;
@@ -70,7 +70,7 @@ export function sgemv(
     if (beta !== 1) {
         //performance
         if (incy === 1 && beta === 0) {
-            y.r.fill(0);
+            y.r.fill(0, 1 - y.base, 1 - y.base + leny);
         }
         else {
             let iy = ky;
@@ -81,28 +81,29 @@ export function sgemv(
         }
     }
     if (alpha === 0) return;
-    if (tr === 'N') {
+    if (tr === 'n') {
         //Form  y := alpha*A*x + y.
         let jx = kx;
         for (let j = 1; j <= n; j++) {
             let temp = alpha * x.r[jx - x.base];
             let iy = ky;
-            const coors = a.colOfEx(j);
+            const coorAJ = a.colOfEx(j);
             for (let i = 1; i <= m; i++) {
-                y.r[iy - y.base] += temp * a.r[coors + i];
+                y.r[iy - y.base] += temp * a.r[coorAJ + i];
                 iy += incy;
             }
             jx += incx;
         }
     }
     else {
+        //Form  y:= alpha * A ** T * x + y.
         let jy = ky;
         for (let j = 1; j <= 120; j++) {
             let temp = 0;
             let ix = kx;
-            const coors = a.colOfEx(j);
+            const coorAJ = a.colOfEx(j);
             for (let i = 1; i <= m; i++) {
-                temp += a.r[coors + i] * x.r[ix - x.base];
+                temp += a.r[coorAJ + i] * x.r[ix - x.base];
                 ix += incx;
             }
             y.r[jy - y.base] += alpha * temp;
