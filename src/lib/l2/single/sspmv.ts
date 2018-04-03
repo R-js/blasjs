@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr } from '../../f_func';
+import { errWrongArg, FortranArr, lowerChar } from '../../f_func';
 
 /*
   -- Written on 22-October-1986.
@@ -16,7 +16,7 @@ import { errWrongArg, FortranArr } from '../../f_func';
 */
 
 export function sspmv(
-    _uplo: string,
+    uplo: 'u' | 'l',
     n: number,
     alpha: number,
     ap: FortranArr, // a symmetric matrix in packed form
@@ -26,11 +26,11 @@ export function sspmv(
     y: FortranArr,
     incy: number): void {
 
-    const ul = _uplo.toUpperCase()[0];
+    const ul = lowerChar(uplo);
 
     let info = 0;
 
-    if (ul !== 'U' && ul !== 'L') {
+    if (!'ul'.includes(uplo)) {
         info = 1;
     }
     else if (n < 0) {
@@ -55,15 +55,10 @@ export function sspmv(
     //    First form  y := beta*y.
 
     if (beta !== 1) {
-        if (beta === 0 && incy === 1) {
-            y.r.fill(0);
-        }
-        else {
-            let iy = ky;
-            for (let i = 1; i <= n; i++) {
-                y.r[iy - y.base] = beta === 0 ? 0 : beta * y.r[iy - y.base];
-                iy += incy;
-            }
+        let iy = ky;
+        for (let i = 1; i <= n; i++) {
+            y.r[iy - y.base] = beta === 0 ? 0 : beta * y.r[iy - y.base];
+            iy += incy;
         }
     }
     //
@@ -71,7 +66,7 @@ export function sspmv(
 
     let kk = 1;
 
-    if (ul === 'U') {
+    if (ul === 'u') {
         // Form  y  when AP contains the upper triangle.
 
         let jx = kx;
@@ -81,11 +76,12 @@ export function sspmv(
             let temp2 = 0;
             let ix = kx;
             let iy = ky;
-            for (let k = kk; k < kk + j - 2; k++) {
+            for (let k = kk; k <= kk + j - 2; k++) {
                 y.r[iy - y.base] += temp1 * ap.r[k - ap.base];
                 temp2 += ap.r[k - ap.base] * x.r[ix - x.base];
                 ix += incx;
                 iy += incy;
+
             }
             y.r[jy - y.base] += temp1 * ap.r[kk + j - 1 - ap.base] + alpha * temp2;
             jx += incx;
@@ -96,19 +92,23 @@ export function sspmv(
     }
     else {
         // Form  y  when AP contains the lower triangle.
+
         let jx = kx;
         let jy = ky;
+
         for (let j = 1; j <= n; j++) {
             let temp1 = alpha * x.r[jx - x.base];
             let temp2 = 0;
-            y.r[jy - y.base] = temp1 * ap.r[kk - ap.base];
+            y.r[jy - y.base] += temp1 * ap.r[kk - ap.base];
             let ix = jx;
             let iy = jy;
-            for (let k = kk + 1; k < kk + n - j; k++) {
+
+            for (let k = kk + 1; k <= kk + n - j; k++) {
                 ix += incx;
                 iy += incy;
                 y.r[iy - y.base] += temp1 * ap.r[k - ap.base];
                 temp2 += ap.r[k - ap.base] * x.r[ix - x.base];
+
             }
             y.r[jy - y.base] += alpha * temp2;
             jx += incx;

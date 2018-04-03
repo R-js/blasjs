@@ -258,8 +258,41 @@ function bandifyMatrix(uplo: 'u' | 'l', k: number, A: Matrix): Matrix {
         }
     }
     return mimicFMatrix(re, im)(rowSize, colSize);
-
 }
+
+function packedBandi_fied_Matrix(uplo: 'u' | 'l', k: number, A: Matrix): FortranArr {
+
+    const packedSize = -(k + 1) * k / 2 + A.nrCols * (k + 1);
+    const colSize = A.nrCols;
+    const createArr = A.r instanceof Float64Array ? Float64Array : (
+        A.r instanceof Float32Array ? Float32Array : undefined);
+    if (createArr === undefined) throw Error('[re] type should be "Float64Array" or "Float32Array"');
+
+    let re = new createArr(packedSize);
+    let im: fpArray | undefined;
+    if (A.i) {
+        im = new createArr(packedSize);
+    }
+    let cursor = 0;
+    for (let j = 1; j <= colSize; j++) {
+        const m = uplo === 'u' ? k + 1 - j : 1 - j;
+        const coorJ = A.colOfEx(j);
+        //const base = (j - 1) * rowSize - 1;
+        const start = uplo === 'u' ? max(1, j - k) : j;
+        const stop = uplo === 'u' ? j : min(colSize, j + k);
+        for (let i = start; i <= stop; i++) {
+            re[cursor] = A.r[coorJ + i];
+            //re[base + m + i] = A.r[coorJ + i];
+            if (im && A.i) {
+                m[cursor] = A.i[coorJ + i];
+                //im[base + m + i] = A.i[coorJ + i];
+            }
+            cursor++;
+        }
+    }
+    return mimicFArray(re, im)();
+}
+
 
 function mimicFMatrix(r: fpArray, i?: fpArray) {
 
@@ -306,11 +339,17 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
                     this.i.fill(value, coords + rowStart, coords + rowEnd + 1);
                 }
             },
-            upperBand(k: number = lda) {
+            upperBand(k: number = lda - 1) {
                 return bandifyMatrix('u', k, this);
             },
-            lowerBand(k: number = lda) {
+            lowerBand(k: number = lda - 1) {
                 return bandifyMatrix('l', k, this);
+            },
+            packedUpper(k: number = lda - 1) {
+                return packedBandi_fied_Matrix('u', k, this);
+            },
+            packedLower(k: number = lda - 1) {
+                return packedBandi_fied_Matrix('l', k, this);
             },
             slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix {
                 const rowSize = (rowEnd - rowStart) + 1;

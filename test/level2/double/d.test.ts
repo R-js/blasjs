@@ -18,7 +18,8 @@ const {
     sgbmv,
     sgemv,
     sger,
-    ssbmv
+    ssbmv,
+    sspmv
   }
 } = blas;
 
@@ -260,6 +261,62 @@ describe('blas level 2 single/double precision', function n() {
           const sy = fortranArrComplex64(muxCmplx([0]))();
 
           const call = () => ssbmv(uplo, n, k, alpha, aM, lda, sx, incx, beta, sy, incy);
+
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+  describe('sspmv', () => {
+
+    describe('data tests', () => {
+      const { sspmv: testData } = fixture;
+
+      each(testData)(({ input: {
+        uplo,
+        n,
+        alpha,
+        incx,
+        beta,
+        incy,
+        ap,
+        x,
+        y
+      }, expect, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const sap = fortranArrComplex64(muxCmplx(ap))();
+          const sx = fortranArrComplex64(muxCmplx(x))();
+          const sy = fortranArrComplex64(muxCmplx(y))();
+          //console.log({ incx, incy, n, alpha, beta, sx: sx.toArr(), sy: sy.toArr() });
+
+          sspmv(uplo, n, alpha, sap, sx, incx, beta, sy, incy);
+          // console.log({ sy: sy.toArr() });
+
+          multiplexer(sy.toArr(), expect.y)(approximatelyWithPrec(1E-6));
+        });
+      });
+    });
+    describe('error tests', () => {
+      const { sspmvErrors: testData } = fixture;
+      each(testData)(({ input: {
+        uplo,
+        n,
+        alpha,
+        beta,
+        incx,
+        incy,
+        ap,
+        x,
+        y,
+      }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const sap = fortranArrComplex64(muxCmplx([0]))();
+          const sx = fortranArrComplex64(muxCmplx([0]))();
+          const sy = fortranArrComplex64(muxCmplx([0]))();
+
+          const call = () => sspmv(uplo, n, alpha, sap, sx, incx, beta, sy, incy);
 
           expect(call).to.throw();
         });
