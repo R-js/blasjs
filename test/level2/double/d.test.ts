@@ -20,7 +20,8 @@ const {
     sger,
     ssbmv,
     sspmv,
-    sspr
+    sspr,
+    sspr2
   }
 } = blas;
 
@@ -346,6 +347,7 @@ describe('blas level 2 single/double precision', function n() {
 
           const sap = fortranArrComplex64(muxCmplx(ap))();
           const sx = fortranArrComplex64(muxCmplx(x))();
+
           //console.log({ incx, incy, n, alpha, beta, sx: sx.toArr(), sy: sy.toArr() });
 
           sspr(uplo, n, alpha, sx, incx, sap);
@@ -368,6 +370,62 @@ describe('blas level 2 single/double precision', function n() {
           const sap = fortranArrComplex64(muxCmplx([0]))();
           const sx = fortranArrComplex64(muxCmplx([0]))();
           const call = () => sspr(uplo, n, alpha, sx, incx, sap);
+
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+  describe('sspr2', () => {
+
+    describe('data tests', () => {
+      const { sspr2: testData } = fixture;
+
+      each(testData)(({ input, expect, desc }, key) => {
+        const {
+          uplo,
+          n,
+          alpha,
+          x,
+          y,
+          incx,
+          incy,
+          ap,
+        } = input;
+
+        const { ap: apExpect } = expect;
+
+        //console.log(input);
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const sap = fortranArrComplex64(muxCmplx(ap))();
+          const sx = fortranArrComplex64(muxCmplx(x))();
+          const sy = fortranArrComplex64(muxCmplx(y))();
+          sspr2(uplo, n, alpha, sx, incx, sy, incy, sap);
+          //console.log({ apAfter: sap.r });
+          multiplexer(apExpect, Array.from(sap.r))(approximatelyWithPrec(1E-6));
+        });
+      });
+    });
+    describe('error tests', () => {
+      const { sspr2Errors: testData } = fixture;
+      each(testData)(({ input: {
+        uplo,
+        n,
+        alpha,
+        incx,
+        incy,
+        x,
+        y,
+        ap
+      }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const sap = fortranArrComplex64(muxCmplx([0]))();
+          const sy = fortranArrComplex64(muxCmplx([0]))();
+          const sx = fortranArrComplex64(muxCmplx([0]))();
+
+          const call = () => sspr2(uplo, n, alpha, sx, incx, sy, incy, sap);
 
           expect(call).to.throw();
         });
