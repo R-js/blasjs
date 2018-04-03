@@ -19,7 +19,8 @@ const {
     sgemv,
     sger,
     ssbmv,
-    sspmv
+    sspmv,
+    sspr
   }
 } = blas;
 
@@ -271,7 +272,6 @@ describe('blas level 2 single/double precision', function n() {
 
     describe('data tests', () => {
       const { sspmv: testData } = fixture;
-
       each(testData)(({ input: {
         uplo,
         n,
@@ -317,6 +317,57 @@ describe('blas level 2 single/double precision', function n() {
           const sy = fortranArrComplex64(muxCmplx([0]))();
 
           const call = () => sspmv(uplo, n, alpha, sap, sx, incx, beta, sy, incy);
+
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+
+  describe('sspr', () => {
+
+    describe('data tests', () => {
+      const { sspr: testData } = fixture;
+
+      each(testData)(({ input, expect, desc }, key) => {
+        const {
+          uplo,
+          n,
+          alpha,
+          incx,
+          ap,
+          x
+        } = input;
+
+        const { ap: apExpect } = expect;
+
+        //console.log(input);
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const sap = fortranArrComplex64(muxCmplx(ap))();
+          const sx = fortranArrComplex64(muxCmplx(x))();
+          //console.log({ incx, incy, n, alpha, beta, sx: sx.toArr(), sy: sy.toArr() });
+
+          sspr(uplo, n, alpha, sx, incx, sap);
+          multiplexer(apExpect, Array.from(sap.r))(approximatelyWithPrec(1E-6));
+        });
+      });
+    });
+    describe('error tests', () => {
+      const { ssprErrors: testData } = fixture;
+      each(testData)(({ input: {
+        uplo,
+        n,
+        alpha,
+        incx,
+        ap,
+        x
+      }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const sap = fortranArrComplex64(muxCmplx([0]))();
+          const sx = fortranArrComplex64(muxCmplx([0]))();
+          const call = () => sspr(uplo, n, alpha, sx, incx, sap);
 
           expect(call).to.throw();
         });
