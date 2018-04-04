@@ -17,12 +17,12 @@
  A is an n by n symmetric matrix.
 */
 
-import { errWrongArg, FortranArr, Matrix } from '../../f_func';
+import { errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
 
 const { max } = Math;
 
 export function ssymv(
-    _uplo: 'U' | 'L',
+    uplo: 'u' | 'l',
     n: number,
     alpha: number,
     a: Matrix,
@@ -33,13 +33,13 @@ export function ssymv(
     y: FortranArr,
     incy: number): void {
 
-    const lu = _uplo.toUpperCase()[0];
+    const lu = lowerChar(uplo);
 
     //input check
 
     let info = 0;
 
-    if (lu !== 'U' && lu !== 'L') {
+    if (!'ul'.includes(lu)) {
         info = 1;
     }
     else if (n < 0) {
@@ -57,7 +57,6 @@ export function ssymv(
     if (info !== 0) {
         throw new Error(errWrongArg('ssymv', info));
     }
-
 
     // Quick return if possible.
     if (n === 0 || (alpha === 0 && beta === 1)) return;
@@ -80,16 +79,13 @@ export function ssymv(
     //     First form  y := beta*y.
 
     if (beta !== 1) {
-        if (incy === 1 && beta === 0) {
-            y.r.fill(0);
+
+        let iy = ky;
+        for (let i = 1; i <= n; i++) {
+            y.r[iy - y.base] = beta === 0 ? 0 : beta * y.r[iy - y.base];
+            iy += incy;
         }
-        else {
-            let iy = ky;
-            for (let i = 1; i <= n; i++) {
-                y.r[iy - y.base] = beta === 0 ? 0 : beta * y.r[iy - y.base];
-                iy += incy;
-            }
-        }
+
     }
 
     if (alpha === 0) return;
@@ -97,8 +93,9 @@ export function ssymv(
     let jx = kx;
     let jy = ky;
 
-    if (lu === 'U') {
-        // Form  y  when A is stored in upper triangle.  
+    if (lu === 'u') {
+        // Form  y  when A is stored in upper triangle.
+        // First form  y := beta*y.  
         for (let j = 1; j <= n; j++) {
             let temp1 = alpha * x.r[jx - x.base];
             let temp2 = 0;
