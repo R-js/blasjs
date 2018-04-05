@@ -230,6 +230,8 @@ export type Matrix = {
     // zap a row with fa valie
     readonly setCol: (col: number, rowStart: number, rowEnd: number, value: number) => void;
     readonly slice: (rowStart: number, rowEnd: number, colStart: number, colEnd: number) => Matrix;
+    readonly setLower: (value: number) => void;
+    readonly setUpper: (value: number) => void;
 };
 
 function bandifyMatrix(uplo: 'u' | 'l', k: number, A: Matrix): Matrix {
@@ -372,6 +374,24 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
                     }
                 }
                 return mimicFMatrix(re, im)(rowSize, colSize);
+            },
+            setLower(value = 0) {
+                for (let y = 1; y < nrCols; y++) {
+                    const coor = this.colOfEx(y);
+                    r.fill(value, coor + y + 1, coor + lda + 1);
+                    if (i) {
+                        i.fill(value, coor + y, coor + lda + 1);
+                    }
+                }
+            },
+            setUpper(value = 0) {
+                for (let y = 2; y <= nrCols; y++) {
+                    const coor = this.colOfEx(y);
+                    r.fill(value, coor + 1, coor + min(y, lda));
+                    if (i) {
+                        r.fill(value, coor + 1, coor + min(y, lda));
+                    }
+                }
             }
         });
     }

@@ -1,4 +1,4 @@
-*> \brief \b DSBMV
+*> \brief \b DSYMV
 *
 *  =========== DOCUMENTATION ===========
 *
@@ -8,11 +8,11 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE DSBMV(UPLO,N,K,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
+*       SUBROUTINE DSYMV(UPLO,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 *
 *       .. Scalar Arguments ..
 *       DOUBLE PRECISION ALPHA,BETA
-*       INTEGER INCX,INCY,K,LDA,N
+*       INTEGER INCX,INCY,LDA,N
 *       CHARACTER UPLO
 *       ..
 *       .. Array Arguments ..
@@ -25,11 +25,12 @@
 *>
 *> \verbatim
 *>
-*> DSBMV  performs the matrix-vector  operation
+*> DSYMV  performs the matrix-vector  operation
+*>
 *>    y := alpha*A*x + beta*y,
 *>
 *> where alpha and beta are scalars, x and y are n element vectors and
-*> A is an n by n symmetric band matrix, with k super-diagonals.
+*> A is an n by n symmetric matrix.
 *> \endverbatim
 *
 *  Arguments:
@@ -39,14 +40,14 @@
 *> \verbatim
 *>          UPLO is CHARACTER*1
 *>           On entry, UPLO specifies whether the upper or lower
-*>           triangular part of the band matrix A is being supplied as
+*>           triangular part of the array A is to be referenced as
 *>           follows:
 *>
-*>              UPLO = 'U' or 'u'   The upper triangular part of A is
-*>                                  being supplied.
+*>              UPLO = 'U' or 'u'   Only the upper triangular part of A
+*>                                  is to be referenced.
 *>
-*>              UPLO = 'L' or 'l'   The lower triangular part of A is
-*>                                  being supplied.
+*>              UPLO = 'L' or 'l'   Only the lower triangular part of A
+*>                                  is to be referenced.
 *> \endverbatim
 *>
 *> \param[in] N
@@ -54,13 +55,6 @@
 *>          N is INTEGER
 *>           On entry, N specifies the order of the matrix A.
 *>           N must be at least zero.
-*> \endverbatim
-*>
-*> \param[in] K
-*> \verbatim
-*>          K is INTEGER
-*>           On entry, K specifies the number of super-diagonals of the
-*>           matrix A. K must satisfy  0 .le. K.
 *> \endverbatim
 *>
 *> \param[in] ALPHA
@@ -72,41 +66,14 @@
 *> \param[in] A
 *> \verbatim
 *>          A is DOUBLE PRECISION array, dimension ( LDA, N )
-*>           Before entry with UPLO = 'U' or 'u', the leading ( k + 1 )
-*>           by n part of the array A must contain the upper triangular
-*>           band part of the symmetric matrix, supplied column by
-*>           column, with the leading diagonal of the matrix in row
-*>           ( k + 1 ) of the array, the first super-diagonal starting at
-*>           position 2 in row k, and so on. The top left k by k triangle
-*>           of the array A is not referenced.
-*>           The following program segment will transfer the upper
-*>           triangular part of a symmetric band matrix from conventional
-*>           full matrix storage to band storage:
-*>
-*>                 DO 20, J = 1, N
-*>                    M = K + 1 - J
-*>                    DO 10, I = MAX( 1, J - K ), J
-*>                       A( M + I, J ) = matrix( I, J )
-*>              10    CONTINUE
-*>              20 CONTINUE
-*>
-*>           Before entry with UPLO = 'L' or 'l', the leading ( k + 1 )
-*>           by n part of the array A must contain the lower triangular
-*>           band part of the symmetric matrix, supplied column by
-*>           column, with the leading diagonal of the matrix in row 1 of
-*>           the array, the first sub-diagonal starting at position 1 in
-*>           row 2, and so on. The bottom right k by k triangle of the
-*>           array A is not referenced.
-*>           The following program segment will transfer the lower
-*>           triangular part of a symmetric band matrix from conventional
-*>           full matrix storage to band storage:
-*>
-*>                 DO 20, J = 1, N
-*>                    M = 1 - J
-*>                    DO 10, I = J, MIN( N, J + K )
-*>                       A( M + I, J ) = matrix( I, J )
-*>              10    CONTINUE
-*>              20 CONTINUE
+*>           Before entry with  UPLO = 'U' or 'u', the leading n by n
+*>           upper triangular part of the array A must contain the upper
+*>           triangular part of the symmetric matrix and the strictly
+*>           lower triangular part of A is not referenced.
+*>           Before entry with UPLO = 'L' or 'l', the leading n by n
+*>           lower triangular part of the array A must contain the lower
+*>           triangular part of the symmetric matrix and the strictly
+*>           upper triangular part of A is not referenced.
 *> \endverbatim
 *>
 *> \param[in] LDA
@@ -114,15 +81,15 @@
 *>          LDA is INTEGER
 *>           On entry, LDA specifies the first dimension of A as declared
 *>           in the calling (sub) program. LDA must be at least
-*>           ( k + 1 ).
+*>           max( 1, n ).
 *> \endverbatim
 *>
 *> \param[in] X
 *> \verbatim
 *>          X is DOUBLE PRECISION array, dimension at least
 *>           ( 1 + ( n - 1 )*abs( INCX ) ).
-*>           Before entry, the incremented array X must contain the
-*>           vector x.
+*>           Before entry, the incremented array X must contain the n
+*>           element vector x.
 *> \endverbatim
 *>
 *> \param[in] INCX
@@ -135,15 +102,17 @@
 *> \param[in] BETA
 *> \verbatim
 *>          BETA is DOUBLE PRECISION.
-*>           On entry, BETA specifies the scalar beta.
+*>           On entry, BETA specifies the scalar beta. When BETA is
+*>           supplied as zero then Y need not be set on input.
 *> \endverbatim
 *>
 *> \param[in,out] Y
 *> \verbatim
 *>          Y is DOUBLE PRECISION array, dimension at least
 *>           ( 1 + ( n - 1 )*abs( INCY ) ).
-*>           Before entry, the incremented array Y must contain the
-*>           vector y. On exit, Y is overwritten by the updated vector y.
+*>           Before entry, the incremented array Y must contain the n
+*>           element vector y. On exit, Y is overwritten by the updated
+*>           vector y.
 *> \endverbatim
 *>
 *> \param[in] INCY
@@ -181,7 +150,7 @@
 *> \endverbatim
 *>
 *  =====================================================================
-      SUBROUTINE DSBMV(UPLO,N,K,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
+      SUBROUTINE DSYMV(UPLO,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 *
 *  -- Reference BLAS level2 routine (version 3.7.0) --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -190,7 +159,7 @@
 *
 *     .. Scalar Arguments ..
       DOUBLE PRECISION ALPHA,BETA
-      INTEGER INCX,INCY,K,LDA,N
+      INTEGER INCX,INCY,LDA,N
       CHARACTER UPLO
 *     ..
 *     .. Array Arguments ..
@@ -205,7 +174,7 @@
 *     ..
 *     .. Local Scalars ..
       DOUBLE PRECISION TEMP1,TEMP2
-      INTEGER I,INFO,IX,IY,J,JX,JY,KPLUS1,KX,KY,L
+      INTEGER I,INFO,IX,IY,J,JX,JY,KX,KY
 *     ..
 *     .. External Functions ..
       LOGICAL LSAME
@@ -215,7 +184,7 @@
       EXTERNAL XERBLA
 *     ..
 *     .. Intrinsic Functions ..
-      INTRINSIC MAX,MIN
+      INTRINSIC MAX
 *     ..
 *
 *     Test the input parameters.
@@ -225,17 +194,15 @@
           INFO = 1
       ELSE IF (N.LT.0) THEN
           INFO = 2
-      ELSE IF (K.LT.0) THEN
-          INFO = 3
-      ELSE IF (LDA.LT. (K+1)) THEN
-          INFO = 6
+      ELSE IF (LDA.LT.MAX(1,N)) THEN
+          INFO = 5
       ELSE IF (INCX.EQ.0) THEN
-          INFO = 8
+          INFO = 7
       ELSE IF (INCY.EQ.0) THEN
-          INFO = 11
+          INFO = 10
       END IF
       IF (INFO.NE.0) THEN
-          CALL XERBLA('DSBMV ',INFO)
+          CALL XERBLA('DSYMV ',INFO)
           RETURN
       END IF
 *
@@ -256,8 +223,9 @@
           KY = 1 - (N-1)*INCY
       END IF
 *
-*     Start the operations. In this version the elements of the array A
-*     are accessed sequentially with one pass through A.
+*     Start the operations. In this version the elements of A are
+*     accessed sequentially with one pass through the triangular part
+*     of A.
 *
 *     First form  y := beta*y.
 *
@@ -290,19 +258,17 @@
       IF (ALPHA.EQ.ZERO) RETURN
       IF (LSAME(UPLO,'U')) THEN
 *
-*        Form  y  when upper triangle of A is stored.
+*        Form  y  when A is stored in upper triangle.
 *
-          KPLUS1 = K + 1
           IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
               DO 60 J = 1,N
                   TEMP1 = ALPHA*X(J)
                   TEMP2 = ZERO
-                  L = KPLUS1 - J
-                  DO 50 I = MAX(1,J-K),J - 1
-                      Y(I) = Y(I) + TEMP1*A(L+I,J)
-                      TEMP2 = TEMP2 + A(L+I,J)*X(I)
+                  DO 50 I = 1,J - 1
+                      Y(I) = Y(I) + TEMP1*A(I,J)
+                      TEMP2 = TEMP2 + A(I,J)*X(I)
    50             CONTINUE
-                  Y(J) = Y(J) + TEMP1*A(KPLUS1,J) + ALPHA*TEMP2
+                  Y(J) = Y(J) + TEMP1*A(J,J) + ALPHA*TEMP2
    60         CONTINUE
           ELSE
               JX = KX
@@ -312,35 +278,29 @@
                   TEMP2 = ZERO
                   IX = KX
                   IY = KY
-                  L = KPLUS1 - J
-                  DO 70 I = MAX(1,J-K),J - 1
-                      Y(IY) = Y(IY) + TEMP1*A(L+I,J)
-                      TEMP2 = TEMP2 + A(L+I,J)*X(IX)
+                  DO 70 I = 1,J - 1
+                      Y(IY) = Y(IY) + TEMP1*A(I,J)
+                      TEMP2 = TEMP2 + A(I,J)*X(IX)
                       IX = IX + INCX
                       IY = IY + INCY
    70             CONTINUE
-                  Y(JY) = Y(JY) + TEMP1*A(KPLUS1,J) + ALPHA*TEMP2
+                  Y(JY) = Y(JY) + TEMP1*A(J,J) + ALPHA*TEMP2
                   JX = JX + INCX
                   JY = JY + INCY
-                  IF (J.GT.K) THEN
-                      KX = KX + INCX
-                      KY = KY + INCY
-                  END IF
    80         CONTINUE
           END IF
       ELSE
 *
-*        Form  y  when lower triangle of A is stored.
+*        Form  y  when A is stored in lower triangle.
 *
           IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
               DO 100 J = 1,N
                   TEMP1 = ALPHA*X(J)
                   TEMP2 = ZERO
-                  Y(J) = Y(J) + TEMP1*A(1,J)
-                  L = 1 - J
-                  DO 90 I = J + 1,MIN(N,J+K)
-                      Y(I) = Y(I) + TEMP1*A(L+I,J)
-                      TEMP2 = TEMP2 + A(L+I,J)*X(I)
+                  Y(J) = Y(J) + TEMP1*A(J,J)
+                  DO 90 I = J + 1,N
+                      Y(I) = Y(I) + TEMP1*A(I,J)
+                      TEMP2 = TEMP2 + A(I,J)*X(I)
    90             CONTINUE
                   Y(J) = Y(J) + ALPHA*TEMP2
   100         CONTINUE
@@ -350,15 +310,14 @@
               DO 120 J = 1,N
                   TEMP1 = ALPHA*X(JX)
                   TEMP2 = ZERO
-                  Y(JY) = Y(JY) + TEMP1*A(1,J)
-                  L = 1 - J
+                  Y(JY) = Y(JY) + TEMP1*A(J,J)
                   IX = JX
                   IY = JY
-                  DO 110 I = J + 1,MIN(N,J+K)
+                  DO 110 I = J + 1,N
                       IX = IX + INCX
                       IY = IY + INCY
-                      Y(IY) = Y(IY) + TEMP1*A(L+I,J)
-                      TEMP2 = TEMP2 + A(L+I,J)*X(IX)
+                      Y(IY) = Y(IY) + TEMP1*A(I,J)
+                      TEMP2 = TEMP2 + A(I,J)*X(IX)
   110             CONTINUE
                   Y(JY) = Y(JY) + ALPHA*TEMP2
                   JX = JX + INCX
@@ -369,6 +328,6 @@
 *
       RETURN
 *
-*     End of DSBMV .
+*     End of DSYMV .
 *
       END
