@@ -102,9 +102,9 @@ export function ssymv(
             let ix = kx;
             let iy = ky;
             const coords = a.colOfEx(j);
-            for (let i = 1; j <= j - 1; j++) {
+            for (let i = 1; i <= j - 1; i++) {
                 y.r[iy - y.base] += temp1 * a.r[coords + i];
-                temp2 = temp2 + a.r[coords + i] * x.r[ix - x.base];
+                temp2 += a.r[coords + i] * x.r[ix - x.base];
                 ix += incx;
                 iy += incy;
             }
@@ -124,7 +124,7 @@ export function ssymv(
             let ix = jx;
             let iy = jy;
             //
-            for (let i = j + 1; j <= n; j++) {
+            for (let i = j + 1; i <= n; i++) {
                 ix += incx;
                 iy += incy;
                 y.r[iy - y.base] += temp1 * a.r[coords + i];

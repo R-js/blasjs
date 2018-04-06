@@ -151,7 +151,7 @@
 *>
 *  =====================================================================
       SUBROUTINE DSYMV(UPLO,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
-*
+*ssymv(uplo, n, alpha, A, lda, sx, beta, incx, sy, incy);
 *  -- Reference BLAS level2 routine (version 3.7.0) --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
 *  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--

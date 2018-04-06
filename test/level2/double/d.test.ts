@@ -439,7 +439,7 @@ describe('blas level 2 single/double precision', function n() {
     describe('data tests', () => {
       const { ssymv: testData } = fixture;
 
-      each(testData)(({ input, expect, desc }, key) => {
+      each(testData)(({ input, expect: { y: ey }, desc }, key) => {
         const {
           uplo,
           n,
@@ -453,44 +453,45 @@ describe('blas level 2 single/double precision', function n() {
           beta
         } = input;
 
-        // const { ap: apExpect } = expect;
-
         //console.log(input);
         it(`[${key}]/[${desc}]`, function t() {
 
           const A = fortranMatrixComplex64(muxCmplx(a))(6, 6);
           const sx = fortranArrComplex64(muxCmplx(x))();
           const sy = fortranArrComplex64(muxCmplx(y))();
-          ssymv(uplo, n, alpha, A, lda, sx, beta, incx, sy, incy);
-          //console.log({ apAfter: sap.r });
-          //multiplexer(pExpect, Array.from(sap.r))(approximatelyWithPrec(1E-6));
+
+          ssymv(uplo, n, alpha, A, lda, sx, incx, beta, sy, incy);
+          //console.log(sy.toArr());
+          multiplexer(ey, sy.toArr())(approximatelyWithPrec(1E-6));
         });
       });
     });
-    /* describe('error tests', () => {
-       const { sspr2Errors: testData } = fixture;
-       each(testData)(({ input: {
-         uplo,
-         n,
-         alpha,
-         incx,
-         incy,
-         x,
-         y,
-         ap
-       }, desc }, key) => {
-         it(`[${key}]/[${desc}]`, function t() {
- 
-           const sap = fortranArrComplex64(muxCmplx([0]))();
-           const sy = fortranArrComplex64(muxCmplx([0]))();
-           const sx = fortranArrComplex64(muxCmplx([0]))();
- 
-           const call = () => sspr2(uplo, n, alpha, sx, incx, sy, incy, sap);
- 
-           expect(call).to.throw();
-         });
-       });
-     });*/
+    describe('error tests', () => {
+      const { ssymvErrors: testData } = fixture;
+      each(testData)(({ input: {
+        uplo,
+        n,
+        alpha,
+        a,
+        lda,
+        x,
+        incx,
+        y,
+        incy,
+        beta
+      }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const sx = fortranArrComplex64(muxCmplx([0]))();
+          const A = fortranMatrixComplex64(muxCmplx([]))(0, 9);
+          const sy = fortranArrComplex64(muxCmplx(y))();
+
+
+          const call = () => ssymv(uplo, n, alpha, A, lda, sx, incx, beta, sy, incy);
+          expect(call).to.throw();
+        });
+      });
+    });
   });
 });
 
