@@ -23,7 +23,8 @@ const {
     sspr,
     sspr2,
     ssymv,
-    ssyr
+    ssyr,
+    ssyr2
   }
 } = blas;
 
@@ -465,6 +466,7 @@ describe('blas level 2 single/double precision', function n() {
         });
       });
     });
+
     describe('error tests', () => {
       const { ssymvErrors: testData } = fixture;
       each(testData)(({ input: {
@@ -515,19 +517,14 @@ describe('blas level 2 single/double precision', function n() {
 
           ssyr(uplo, n, alpha, sx, incx, A, lda);
 
-
-          const approx = approximatelyWithPrec(1E-6);
-          let idx = 0;
-          multiplexer([A.r.length, ...Array.from(A.r)], [eA.length, ...eA])((a, b) => {
-            // const i = idx % 6;
-            // const j = (idx - i) / 6;
-            // console.log({ i: i + 1, j: j + 1, idx, a, b, });
-            // idx++;
-            approx(a, b);
-          });
+          multiplexer(
+            [A.r.length, ...Array.from(A.r)],
+            [eA.length, ...eA]
+          )(approximatelyWithPrec(1E-6));
         });
       });
     });
+
     describe('error tests', () => {
       const { ssyrErrors: testData } = fixture;
       each(testData)(({ input: {
@@ -548,6 +545,65 @@ describe('blas level 2 single/double precision', function n() {
       });
     });
   });
+  describe('ssyr2', () => {
+    describe('data tests', () => {
+      const { ssyr2: testData } = fixture;
+      each(testData)(({ input, expect, desc }, key) => {
+        const {
+          uplo,
+          n,
+          alpha,
+          incx,
+          incy,
+          lda,
+          a,
+          x,
+          y
+        } = input;
+        const eA = expect.a;
+
+        //console.log(input);
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const A = fortranMatrixComplex64(muxCmplx(a))(lda, n);
+          const sx = fortranArrComplex64(muxCmplx(x))();
+          const sy = fortranArrComplex64(muxCmplx(y))();
+
+
+          ssyr2(uplo, n, alpha, sx, incx, sy, incy, A, lda);
+          const approx = approximatelyWithPrec(1E-6);
+          //console.log(Array.from(A.r));
+          multiplexer(
+            [A.r.length, ...Array.from(A.r)],
+            [eA.length, ...eA])((a, b) => {
+              //debug stuff goes here
+              approx(a, b);
+            });
+        });
+      });
+    });
+  });
+  describe('error tests', () => {
+    const { ssyr2Errors: testData } = fixture;
+    each(testData)(({ input: {
+      uplo,
+      n,
+      alpha,
+      incx,
+      incy,
+      lda,
+    }, desc }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+        const sy = fortranArrComplex64(muxCmplx([0]))();
+        const sx = fortranArrComplex64(muxCmplx([0]))();
+        const A = fortranMatrixComplex64(muxCmplx([0]))(0, 0);
+
+        const call = () => ssyr2(uplo, n, alpha, sx, incx, sy, incy, A, lda);
+        expect(call).to.throw();
+      });
+    });
+  });
+
 });
 
 

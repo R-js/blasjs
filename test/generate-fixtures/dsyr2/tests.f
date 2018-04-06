@@ -5,8 +5,12 @@ c
 c     HELPERS
 c
 c
-c SUBROUTINE DSYR(UPLO,N,ALPHA,X,INCX,A,LDA)
-      EXTERNAL DSYR, COPY, ZEROA, COPYMA,FILL,FILLM, PRNMATR, PRNVEC
+
+c SUBROUTINE DSYR2(UPLO,N,ALPHA,X,INCX,Y,INCY,A,LDA)
+
+      EXTERNAL DSYR2, COPY, ZEROA, COPYMA,FILL
+      EXTERNAL FILLM, PRNMATR, PRNVEC
+
 
 
       CHARACTER UPLO
@@ -15,14 +19,18 @@ c SUBROUTINE DSYR(UPLO,N,ALPHA,X,INCX,A,LDA)
 
 
       DOUBLE PRECISION ALPHA, BETA, DUMMY
-      DOUBLE PRECISION X(6), XC(6),  A(6,6) , AC(6,6)
+
+      DOUBLE PRECISION X(6), XC(6), Y(6), YC(6)  
+      
+      DOUBLE PRECISION A(6,6) , AC(6,6)
   
           
 
 
       DATA   ((AC(I,J), I=1,6),J=1,6)/1.053750863028617, 0,0,0, 0, 0,
      +  0.197684262345795,-1.068692711254786,0, 0,0, 0,
-     +   0.2626454586627623,-1.2329011995712644,-0.00372353379218051,
+     +   0.2626454586627623,-1.2329011995712644,
+     + -0.00372353379218051,
      +   0,0,0,
      +   -0.9740025611125269,
      +   0.6893726977654734,
@@ -53,65 +61,94 @@ c SUBROUTINE DSYR(UPLO,N,ALPHA,X,INCX,A,LDA)
      +  0.10542139019376515,
      +  0.3528744733184766,
      +  0.5503933584550523/
-    
+
+       DATA     (YC(I),I=1,6)/ 
+     + -7.7995958197861910,
+     + -0.90987740363925695,
+     + -1.3999755270779133,
+     + 14.987896066159010,
+     + 6.2202929537743330,
+     + 11.557443037629128/
+
+      PRINT * , "==CASE 0======="
+      uplo = 'U'
+      N=6
+      alpha=1
+      lda=6
+      incx = 1
+      incy = 1
+
+      
+      CALL COPY(XC,X,6)
+      CALL COPY(YC,Y,6)
+      CALL COPYMA(AC,A,6,6)  
+c     DSYR2(UPLO,N,ALPHA,X,INCX,Y,INCY,A,LDA)    
+      CALL DSYR2(UPLO,N,ALPHA,X,INCX,Y, INCY, A,LDA)
+      PRINT *,"A="
+      CALL PRNMATR(A,LDA,N)
+
       PRINT * , "==CASE 1======="
       uplo = 'L'
       N=6
       alpha=1
       lda=6
       incx = -1
+      incy = -1
+
       
       CALL COPY(XC,X,6)
-    
+      CALL COPY(YC,Y,6)
       CALL COPYMA(AC,A,6,6)  
-      CALL DSYR(UPLO,N,ALPHA,X,INCX,A,LDA)
+c     DSYR2(UPLO,N,ALPHA,X,INCX,Y,INCY,A,LDA)    
+      CALL DSYR2(UPLO,N,ALPHA,X,INCX,Y, INCY, A,LDA)
       PRINT *,"A="
       CALL PRNMATR(A,LDA,N)
       
 
       PRINT * , "==CASE 2======="
+     
       uplo = 'L'
       N=6
-      alpha=1.5
+      alpha=1
       lda=6
-      incx = 1
+      incx = -1
+      incy = -1
+
       
       CALL COPY(XC,X,6)
-      dummy =1
-c      CALL FILL(X,6, dummy );
-      X(2)=0
-      X(4)=0
-      PRINT *,"X="
-      CALL PRNVEC(X,N)
-      dummy=0
-c      CALL FILLM(A,6,6, dummy)
-
-c      PRINT *, "X=",X
+      x(2)=0
+      x(5)=0
+      CALL COPY(YC,Y,6)
+      y(1)=0
+      y(2)=0
+      y(4)=0
       CALL COPYMA(AC,A,6,6)  
-      CALL DSYR(UPLO,N,ALPHA,X,INCX,A,LDA)
+c     DSYR2(UPLO,N,ALPHA,X,INCX,Y,INCY,A,LDA)    
+      CALL DSYR2(UPLO,N,ALPHA,X,INCX,Y, INCY, A,LDA)
       PRINT *,"A="
       CALL PRNMATR(A,LDA,N)
 
-       PRINT * , "==CASE 3======="
-      uplo = 'U'
+        PRINT * , "==CASE 3======="
+     
+      uplo = 'u'
       N=6
-      alpha=1.5
+      alpha=1
       lda=6
-      incx = 1
+      incx = -1
+      incy = -1
+
+
       
       CALL COPY(XC,X,6)
-      dummy =1
-c      CALL FILL(X,6, dummy );
-      X(2)=0
-      X(4)=0
-      PRINT *, "X="
-      CALL PRNVEC(X,N)
-      dummy=0
-c      CALL FILLM(A,6,6, dummy)
-
-c      PRINT *, "X=",X
+      x(2)=0
+      x(5)=0
+      CALL COPY(YC,Y,6)
+      y(1)=0
+      y(2)=0
+      y(4)=0
       CALL COPYMA(AC,A,6,6)  
-      CALL DSYR(UPLO,N,ALPHA,X,INCX,A,LDA)
+c     DSYR2(UPLO,N,ALPHA,X,INCX,Y,INCY,A,LDA)    
+      CALL DSYR2(UPLO,N,ALPHA,X,INCX,Y, INCY, A,LDA)
       PRINT *,"A="
       CALL PRNMATR(A,LDA,N)
 
