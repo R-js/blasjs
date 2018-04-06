@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr, Matrix } from '../../f_func';
+import { errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
 
 /*
   Jacob Bogers, JavaScript Port, 03/2018,  jkfbogers@gmail.com
@@ -18,7 +18,7 @@ import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 const { max } = Math;
 
 export function ssyr(
-    _uplo: 'U' | 'L',
+    uplo: 'u' | 'l',
     n: number,
     alpha: number,
     x: FortranArr,
@@ -27,10 +27,10 @@ export function ssyr(
     lda: number
 ): void {
 
-    const ul = _uplo.toUpperCase()[0];
+    const ul = lowerChar(uplo);
 
     let info = 0;
-    if (ul !== 'U' && ul !== 'L') {
+    if (!'ul'.includes(uplo)) {
         info = 1;
     }
     else if (n < 0) {
@@ -48,7 +48,7 @@ export function ssyr(
 
     // Quick return if possible
 
-    if (n !== 0 || alpha === 0) return;
+    if (n === 0 || alpha === 0) return;
 
     //Original had .LE.0 but the 0 case is already handled
     const kx = (incx < 0) ? 1 - (n - 1) * incx : 1;
@@ -56,7 +56,7 @@ export function ssyr(
 
     let jx = kx;
 
-    if (ul === 'U') {
+    if (ul === 'u') {
         //Form  A  when A is stored in upper triangle. 
         for (let j = 1; j <= n; j++) {
 
@@ -68,19 +68,25 @@ export function ssyr(
                     a.r[coords + i] += x.r[ix - x.base] * temp;
                     ix += incx;
                 }
-                jx += incx;
             }
+            jx += incx;
         }
     }
     else {
         //  Form  A  when A is stored in lower triangle.
+        jx = kx;
         for (let j = 1; j <= n; j++) {
             if (x.r[jx - x.base] !== 0) {
                 let temp = alpha * x.r[jx - x.base];
                 let ix = jx;
-                const coords = a.colOfEx(j);
-                for (let i = j; i <= n; i++) {
-                    a.r[coords + i] += x.r[ix - x.base] * temp;
+                const coorAJ = a.colOfEx(j);
+                let i = j
+                for (; i <= n; i++) {
+                    const delta = x.r[ix - x.base] * temp;
+                    //   console.log(`i:${i},j:${j}, A_${i}.${j}=${a.r[coorAJ + i]}, x_${i}.x_${j}*alpha=${delta},A_N=${a.r[coorAJ + i] + delta}`);
+
+                    a.r[coorAJ + i] = a.r[coorAJ + i] + delta;
+                    // console.log(a.r[coorAJ + i]);
                     ix += incx;
                 }
             }
