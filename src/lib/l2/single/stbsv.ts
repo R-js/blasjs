@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr, Matrix } from '../../f_func';
+import { errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
 
 /*
   -- Written on 22-October-1986.
@@ -24,9 +24,9 @@ import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 const { max, min } = Math;
 
 export function stbsv(
-    _uplo: 'U' | 'L',
-    trans: 'U' | 'N' | 'C',
-    diag: 'U' | 'N',
+    uplo: 'u' | 'l',
+    trans: 't' | 'n' | 'c',
+    diag: 'u' | 'n',
     n: number,
     k: number,
     A: Matrix,
@@ -34,19 +34,19 @@ export function stbsv(
     x: FortranArr,
     incx: number): void {
 
-    const ul = _uplo.toUpperCase()[0];
-    const dg = diag.toUpperCase()[0];
-    const tr = trans.toUpperCase()[0];
+    const ul = lowerChar(uplo);
+    const dg = lowerChar(diag);
+    const tr = lowerChar(trans);
 
     let info = 0;
 
-    if (ul !== 'U' && ul !== 'L') {
+    if (ul !== 'u' && ul !== 'l') {
         info = 1;
     }
-    else if (tr !== 'N' && tr !== 'T' && tr !== 'C') {
+    else if (tr !== 'n' && tr !== 't' && tr !== 'c') {
         info = 2;
     }
-    else if (dg !== 'U' && dg !== 'N') {
+    else if (dg !== 'u' && dg !== 'n') {
         info = 3;
     }
     else if (n < 0) {
@@ -79,10 +79,10 @@ export function stbsv(
     //    accessed by sequentially with one pass through A.
 
 
-    if (tr === 'N') {
+    if (tr === 'n') {
         //  Form  x := inv( A )*x.
 
-        if (ul === 'U') {
+        if (ul === 'u') {
             let kplus1 = k + 1;
             kx += (n - 1) * incx;
             let jx = kx;
@@ -93,7 +93,7 @@ export function stbsv(
                     let ix = kx;
                     let L = kplus1 - j;
                     const coords = A.colOfEx(j);
-                    if (dg === 'N') x.r[jx - x.base] /= A.r[kplus1 + coords];
+                    if (dg === 'n') x.r[jx - x.base] /= A.r[kplus1 + coords];
                     let temp = x.r[jx - x.base];
                     for (let i = j - 1; i >= max(1, j - k); i--) {
                         x.r[ix - x.base] -= temp * A.r[coords + L + i];
@@ -112,9 +112,9 @@ export function stbsv(
                     let ix = kx;
                     let L = 1 - j;
                     const coords = A.colOfEx(j);
-                    if (dg === 'N') x.r[jx - x.base] /= A.r[1 + coords];
-                    let temp = x.r[jx - x.base];
-                    for (let i = j + 1; i >= min(n, j + k); i++) {
+                    if (dg === 'n') x.r[jx - x.base] /= A.r[1 + coords];
+                    const temp = x.r[jx - x.base];
+                    for (let i = j + 1; i <= min(n, j + k); i++) {
                         x.r[ix - x.base] -= temp * A.r[coords + L + i];
                         ix += incx;
                     }
@@ -126,7 +126,7 @@ export function stbsv(
     // tr !== 'N', aka tr in[']
     else {
         // Form  x := inv( A**T)*x.
-        if (ul === 'U') {
+        if (ul === 'u') {
             let kplus1 = k + 1;
             let jx = kx;
             for (let j = 1; j <= n; j++) {
@@ -139,7 +139,7 @@ export function stbsv(
                     temp -= A.r[coords + L + i] * x.r[ix - x.base];
                     ix += incx;
                 }
-                if (dg === 'N') temp /= A.r[coords + kplus1];
+                if (dg === 'n') temp /= A.r[coords + kplus1];
                 x.r[jx - x.base] = temp;
                 jx += incx;
                 if (j > k) kx += incx;
@@ -157,7 +157,7 @@ export function stbsv(
                     temp -= A.r[L + i + coords] * x.r[ix - x.base];
                     ix -= incx;
                 }
-                if (dg === 'N') temp /= A.r[coords + 1];
+                if (dg === 'n') temp /= A.r[coords + 1];
                 x.r[jx - x.base] = temp;
                 jx -= incx;
                 if ((n - j) >= k) kx -= incx;
