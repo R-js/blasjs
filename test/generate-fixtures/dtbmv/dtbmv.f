@@ -1,4 +1,4 @@
-*> \brief \b STBMV
+*> \brief \b DTBMV
 *
 *  =========== DOCUMENTATION ===========
 *
@@ -8,14 +8,14 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE STBMV(UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX)
+*       SUBROUTINE DTBMV(UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX)
 *
 *       .. Scalar Arguments ..
 *       INTEGER INCX,K,LDA,N
 *       CHARACTER DIAG,TRANS,UPLO
 *       ..
 *       .. Array Arguments ..
-*       REAL A(LDA,*),X(*)
+*       DOUBLE PRECISION A(LDA,*),X(*)
 *       ..
 *
 *
@@ -24,7 +24,7 @@
 *>
 *> \verbatim
 *>
-*> STBMV  performs one of the matrix-vector operations
+*> DTBMV  performs one of the matrix-vector operations
 *>
 *>    x := A*x,   or   x := A**T*x,
 *>
@@ -90,7 +90,7 @@
 *>
 *> \param[in] A
 *> \verbatim
-*>          A is REAL array, dimension ( LDA, N )
+*>          A is DOUBLE PRECISION array, dimension ( LDA, N )
 *>           Before entry with UPLO = 'U' or 'u', the leading ( k + 1 )
 *>           by n part of the array A must contain the upper triangular
 *>           band part of the matrix of coefficients, supplied column by
@@ -142,7 +142,7 @@
 *>
 *> \param[in,out] X
 *> \verbatim
-*>          X is REAL array, dimension at least
+*>          X is DOUBLE PRECISION array, dimension at least
 *>           ( 1 + ( n - 1 )*abs( INCX ) ).
 *>           Before entry, the incremented array X must contain the n
 *>           element vector x. On exit, X is overwritten with the
@@ -166,7 +166,7 @@
 *
 *> \date December 2016
 *
-*> \ingroup single_blas_level2
+*> \ingroup double_blas_level2
 *
 *> \par Further Details:
 *  =====================
@@ -184,7 +184,7 @@
 *> \endverbatim
 *>
 *  =====================================================================
-      SUBROUTINE STBMV(UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX)
+      SUBROUTINE DTBMV(UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX)
 *
 *  -- Reference BLAS level2 routine (version 3.7.0) --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -196,17 +196,17 @@
       CHARACTER DIAG,TRANS,UPLO
 *     ..
 *     .. Array Arguments ..
-      REAL A(LDA,*),X(*)
+      DOUBLE PRECISION A(LDA,*),X(*)
 *     ..
 *
 *  =====================================================================
 *
 *     .. Parameters ..
-      REAL ZERO
-      PARAMETER (ZERO=0.0E+0)
+      DOUBLE PRECISION ZERO
+      PARAMETER (ZERO=0.0D+0)
 *     ..
 *     .. Local Scalars ..
-      REAL TEMP
+      DOUBLE PRECISION TEMP
       INTEGER I,INFO,IX,J,JX,KPLUS1,KX,L
       LOGICAL NOUNIT
 *     ..
@@ -241,7 +241,7 @@
           INFO = 9
       END IF
       IF (INFO.NE.0) THEN
-          CALL XERBLA('STBMV ',INFO)
+          CALL XERBLA('DTBMV ',INFO)
           RETURN
       END IF
 *
@@ -254,10 +254,11 @@
 *     Set up the start point in X if the increment is not unity. This
 *     will be  ( N - 1 )*INCX   too small for descending loops.
 *
+      KX=1
       IF (INCX.LE.0) THEN
           KX = 1 - (N-1)*INCX
-      ELSE IF (INCX.NE.1) THEN
-          KX = 1
+c      c ELSE IF (INCX.NE.1) THEN
+c          KX = 1
       END IF
 *
 *     Start the operations. In this version the elements of A are
@@ -269,18 +270,18 @@
 *
           IF (LSAME(UPLO,'U')) THEN
               KPLUS1 = K + 1
-              IF (INCX.EQ.1) THEN
-                  DO 20 J = 1,N
-                      IF (X(J).NE.ZERO) THEN
-                          TEMP = X(J)
-                          L = KPLUS1 - J
-                          DO 10 I = MAX(1,J-K),J - 1
-                              X(I) = X(I) + TEMP*A(L+I,J)
-   10                     CONTINUE
-                          IF (NOUNIT) X(J) = X(J)*A(KPLUS1,J)
-                      END IF
-   20             CONTINUE
-              ELSE
+c              IF (INCX.EQ.1) THEN
+c                  DO 20 J = 1,N
+c                      IF (X(J).NE.ZERO) THEN
+c                          TEMP = X(J)
+c                          L = KPLUS1 - J
+c                          DO 10 I = MAX(1,J-K),J - 1
+c                              X(I) = X(I) + TEMP*A(L+I,J)
+c   10                     CONTINUE
+c                          IF (NOUNIT) X(J) = X(J)*A(KPLUS1,J)
+c                      END IF
+c   20             CONTINUE
+c              ELSE
                   JX = KX
                   DO 40 J = 1,N
                       IF (X(JX).NE.ZERO) THEN
@@ -296,20 +297,20 @@
                       JX = JX + INCX
                       IF (J.GT.K) KX = KX + INCX
    40             CONTINUE
-              END IF
+c              END IF
           ELSE
-              IF (INCX.EQ.1) THEN
-                  DO 60 J = N,1,-1
-                      IF (X(J).NE.ZERO) THEN
-                          TEMP = X(J)
-                          L = 1 - J
-                          DO 50 I = MIN(N,J+K),J + 1,-1
-                              X(I) = X(I) + TEMP*A(L+I,J)
-   50                     CONTINUE
-                          IF (NOUNIT) X(J) = X(J)*A(1,J)
-                      END IF
-   60             CONTINUE
-              ELSE
+c              IF (INCX.EQ.1) THEN
+c                  DO 60 J = N,1,-1
+c                      IF (X(J).NE.ZERO) THEN
+c                          TEMP = X(J)
+c                          L = 1 - J
+c                          DO 50 I = MIN(N,J+K),J + 1,-1
+c                              X(I) = X(I) + TEMP*A(L+I,J)
+c   50                     CONTINUE
+c                          IF (NOUNIT) X(J) = X(J)*A(1,J)
+c                      END IF
+c   60             CONTINUE
+c              ELSE
                   KX = KX + (N-1)*INCX
                   JX = KX
                   DO 80 J = N,1,-1
@@ -326,7 +327,7 @@
                       JX = JX - INCX
                       IF ((N-J).GE.K) KX = KX - INCX
    80             CONTINUE
-              END IF
+c              END IF
           END IF
       ELSE
 *
@@ -334,17 +335,17 @@
 *
           IF (LSAME(UPLO,'U')) THEN
               KPLUS1 = K + 1
-              IF (INCX.EQ.1) THEN
-                  DO 100 J = N,1,-1
-                      TEMP = X(J)
-                      L = KPLUS1 - J
-                      IF (NOUNIT) TEMP = TEMP*A(KPLUS1,J)
-                      DO 90 I = J - 1,MAX(1,J-K),-1
-                          TEMP = TEMP + A(L+I,J)*X(I)
-   90                 CONTINUE
-                      X(J) = TEMP
-  100             CONTINUE
-              ELSE
+c              IF (INCX.EQ.1) THEN
+c                  DO 100 J = N,1,-1
+c                      TEMP = X(J)
+c                      L = KPLUS1 - J
+c                      IF (NOUNIT) TEMP = TEMP*A(KPLUS1,J)
+c                      DO 90 I = J - 1,MAX(1,J-K),-1
+c                          TEMP = TEMP + A(L+I,J)*X(I)
+c   90                 CONTINUE
+c                      X(J) = TEMP
+c  100             CONTINUE
+c              ELSE
                   KX = KX + (N-1)*INCX
                   JX = KX
                   DO 120 J = N,1,-1
@@ -360,19 +361,19 @@
                       X(JX) = TEMP
                       JX = JX - INCX
   120             CONTINUE
-              END IF
+c              END IF
           ELSE
-              IF (INCX.EQ.1) THEN
-                  DO 140 J = 1,N
-                      TEMP = X(J)
-                      L = 1 - J
-                      IF (NOUNIT) TEMP = TEMP*A(1,J)
-                      DO 130 I = J + 1,MIN(N,J+K)
-                          TEMP = TEMP + A(L+I,J)*X(I)
-  130                 CONTINUE
-                      X(J) = TEMP
-  140             CONTINUE
-              ELSE
+c              IF (INCX.EQ.1) THEN
+c                  DO 140 J = 1,N
+c                      TEMP = X(J)
+c                      L = 1 - J
+c                      IF (NOUNIT) TEMP = TEMP*A(1,J)
+c                      DO 130 I = J + 1,MIN(N,J+K)
+c                          TEMP = TEMP + A(L+I,J)*X(I)
+c  130                 CONTINUE
+c                      X(J) = TEMP
+c  140             CONTINUE
+c              ELSE
                   JX = KX
                   DO 160 J = 1,N
                       TEMP = X(JX)
@@ -387,12 +388,12 @@
                       X(JX) = TEMP
                       JX = JX + INCX
   160             CONTINUE
-              END IF
+c              END IF
           END IF
       END IF
 *
       RETURN
 *
-*     End of STBMV .
+*     End of DTBMV .
 *
       END

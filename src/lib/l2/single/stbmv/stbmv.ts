@@ -7,7 +7,7 @@
      Richard Hanson, Sandia National Labs.
 */
 
-import { errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
+import { errWrongArg, FortranArr, lowerChar, Matrix } from '../../../f_func';
 
 //    STBMV  performs one of the matrix-vector operations
 //    x := A*x,   or   x := A**T*x
@@ -103,7 +103,7 @@ export function stbmv(
                     let ix = kx;
                     const l = 1 - j;
                     const coorAJ = A.colOfEx(j);
-                    for (let i = min(n, j + k); i >= j + 1; i--) {
+                    for (let i = min(n, j + k); i <= j + 1; i--) {
                         x.r[ix - x.base] += temp * A.r[coorAJ + l + i];
                         ix -= incx;
                     }
@@ -116,45 +116,6 @@ export function stbmv(
         }
     }//N
     else {
-        // Form  x := A**T*x.
-        if (uplo === 'u') {
-            const kplus1 = k + 1;
-            kx += (n - 1) * incx;
-            let jx = kx;
-            for (let j = n; j >= 1; j--) {
-                const coorAJ = A.colOfEx(j);
-                let temp = x.r[jx - x.base];
-                kx -= incx;
-                let ix = kx;
-                let l = kplus1 - j;
-                if (nounit) temp *= A.r[kplus1 + coorAJ]
-                for (let i = j - 1; i >= max(1, j - k); i--) {
-                    temp += A.r[l + i + coorAJ] * x.r[ix - x.base];
-                    ix -= incx;
-                }
-                x.r[jx - x.base] = temp;
-                jx -= incx;
 
-            }
-
-        }
-        //lower matrix
-        else {
-            let jx = kx;
-            for (let j = 1; j <= n; j++) {
-                const coorAJ = A.colOfEx(j);
-                let temp = x.r[jx - x.base];
-                kx += incx;
-                let ix = kx;
-                const l = 1 - j;
-                if (nounit) temp *= A.r[coorAJ + 1];
-                for (let i = j + 1; i <= min(n, j + k); i++) {
-                    temp += A.r[coorAJ + l + i] * x.r[ix - x.base];
-                    ix += incx;
-                }
-                x.r[jx - x.base] = temp;
-                jx += incx;
-            }
-        }
     }
 }

@@ -24,7 +24,8 @@ const {
     sspr2,
     ssymv,
     ssyr,
-    ssyr2
+    ssyr2,
+    dtbmv
   }
 } = blas;
 
@@ -599,6 +600,64 @@ describe('blas level 2 single/double precision', function n() {
         const A = fortranMatrixComplex64(muxCmplx([0]))(0, 0);
 
         const call = () => ssyr2(uplo, n, alpha, sx, incx, sy, incy, A, lda);
+        expect(call).to.throw();
+      });
+    });
+  });
+
+  describe('dtbmv', () => {
+    describe('data tests', () => {
+      const { dtbmv: testData } = fixture;
+      each(testData)(({ input, expect, desc }, key) => {
+        const {
+          uplo,
+          trans,
+          diag,
+          n,
+          k,
+          lda,
+          incx,
+          x,
+          a
+        } = input;
+        const eX = expect.x;
+
+        //console.log(input);
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const A = fortranMatrixComplex64(muxCmplx(a))(lda, n);
+          const sx = fortranArrComplex64(muxCmplx(x))();
+
+          //UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX
+          dtbmv(uplo, trans, diag, n, k, A, lda, sx, incx);
+          //console.log(sx.toArr())
+          const approx = approximatelyWithPrec(1E-6);
+          multiplexer(
+            [sx.r.length, ...sx.toArr()],
+            [eX.length, ...eX])((a, b) => {
+              //debug stuff goes here
+              approx(a, b);
+            });
+        });
+      });
+    });
+  });
+  describe('error tests', () => {
+    const { dtbmvErrors: testData } = fixture;
+    each(testData)(({ input: {
+      uplo,
+      trans,
+      diag,
+      n,
+      k,
+      lda,
+      incx
+    }, desc }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+        const sx = fortranArrComplex64(muxCmplx([0]))();
+        const A = fortranMatrixComplex64(muxCmplx([0]))(0, 0);
+
+        const call = () => dtbmv(uplo, trans, diag, n, k, A, lda, sx, incx);
         expect(call).to.throw();
       });
     });
