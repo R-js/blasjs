@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr, Matrix } from '../../f_func';
+import { errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
 
 /*
 *>  -- Jacob Bogers on 03/2018, JS Port, jkfbogers@gmail.com
@@ -24,7 +24,7 @@ import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 const { max } = Math;
 
 export function strsv(
-    _uplo: 'u' | 'l',
+    uplo: 'u' | 'l',
     trans: 't' | 'c' | 'n',
     diag: 'u' | 'n',
     n: number,
@@ -34,19 +34,19 @@ export function strsv(
     incx: number): void {
 
     // lowerCase it all in a fast way
-    const ul = String.fromCharCode(_uplo.charCodeAt(0) | 0x20);
-    const tr = String.fromCharCode(trans.charCodeAt(0) | 0x20);
-    const dg = String.fromCharCode(diag.charCodeAt(0) | 0x20);
+    const ul = lowerChar(uplo);
+    const tr = lowerChar(trans);
+    const dg = lowerChar(diag);
 
-    let info = 0;
+    let info = 0
 
-    if (ul !== 'u' && ul !== 'l') {
+    if (!'ul'.includes(ul)) {
         info = 1;
     }
-    else if (tr !== 'n' && tr !== 't' && tr !== 'c') {
+    else if (!'ntc'.includes(tr)) {
         info = 2;
     }
-    else if (dg !== 'u' && dg !== 'n') {
+    else if (!'un'.includes(dg)) {
         info = 3;
     }
     else if (n < 0) {
@@ -78,7 +78,7 @@ export function strsv(
         //Form  x := inv( A )*x.
         if (ul === 'u') {
             let jx = (kx + (n - 1) * incx) - x.base;
-            for (let j = n; j => 1; j--) {
+            for (let j = n; j >= 1; j--) {
                 if (x.r[jx] !== 0) {
                     const coords = a.colOfEx(j);
 
@@ -112,33 +112,33 @@ export function strsv(
     }
     else {
         if (ul === 'u') {
-            let jx = kx - x.base;
+            let jx = kx;
             for (let j = 1; j <= n; j++) {
-                let temp = x.r[jx];
+                let temp = x.r[jx - x.base];
                 let ix = kx;
                 const coords = a.colOfEx(j);
                 for (let i = 1; i <= j - 1; i++) {
-                    temp -= a.r[coords + i] * x.r[ix];
+                    temp -= a.r[coords + i] * x.r[ix - x.base];
                     ix += incx;
                 }
                 if (nounit) temp /= a.r[coords + j];
-                x.r[jx] = temp;
+                x.r[jx - x.base] = temp;
                 jx += incx;
             }
         }
         else {
             kx += (n - 1) * incx;
-            let jx = kx - x.base;
-            for (let j = n; j <= 1; j--) {
-                let temp = x.r[jx];
+            let jx = kx;
+            for (let j = n; j >= 1; j--) {
+                let temp = x.r[jx - x.base];
                 let ix = kx;
                 const coords = a.colOfEx(j);
                 for (let i = n; i >= j + 1; i--) {
-                    temp -= a.r[coords + i] * x.r[ix];
+                    temp -= a.r[coords + i] * x.r[ix - x.base];
                     ix -= incx;
                 }
                 if (nounit) temp /= a.r[coords + j];
-                x.r[jx] = temp;
+                x.r[jx - x.base] = temp;
                 jx -= incx;
             }
         }

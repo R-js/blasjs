@@ -29,7 +29,8 @@ const {
     stbsv,
     stpsv,
     stpmv,
-    strmv
+    strmv,
+    strsv
   }
 } = blas;
 
@@ -886,6 +887,62 @@ describe('blas level 2 single/double precision', function n() {
           const A = fortranMatrixComplex64(muxCmplx([0]))(0, 0);
 
           const call = () => strmv(uplo, trans, diag, n, A, lda, sx, incx);
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+  describe('strsv', () => {
+    describe('data tests', () => {
+      const { strsv: testData } = fixture;
+      each(testData)(({ input, expect, desc }, key) => {
+        const {
+          uplo,
+          trans,
+          diag,
+          n,
+          incx,
+          lda,
+          x,
+          a
+        } = input;
+        const eX = expect.x;
+
+        //console.log(input);
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const A = fortranMatrixComplex64(muxCmplx(a))(6, 6);
+          const sx = fortranArrComplex64(muxCmplx(x))();
+
+          //UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX
+          strsv(uplo, trans, diag, n, A, lda, sx, incx);
+          // console.log(sx.toArr())
+          const approx = approximatelyWithPrec(1E-5);
+          multiplexer(
+            [sx.r.length, ...sx.toArr()],
+            [eX.length, ...eX])((a, b) => {
+              //debug stuff goes here
+              approx(a, b);
+            });
+        });
+      });
+    });
+
+    describe('error tests', () => {
+      const { strsvErrors: testData } = fixture;
+      each(testData)(({ input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        lda,
+        incx
+      }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+          const sx = fortranArrComplex64(muxCmplx([0]))();
+          const A = fortranMatrixComplex64(muxCmplx([0]))(0, 0);
+
+          const call = () => strsv(uplo, trans, diag, n, A, lda, sx, incx);
           expect(call).to.throw();
         });
       });
