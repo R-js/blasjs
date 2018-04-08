@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr, Matrix } from '../../f_func';
+import { errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
 /*
 
 *>  -- Jacob Bogers, 03/2018, JS port, jkfbogers@gmail.com
@@ -23,29 +23,28 @@ import { errWrongArg, FortranArr, Matrix } from '../../f_func';
 const { max } = Math;
 
 export function strmv(
-    _uplo: '',
-    trans: '',
-    diag: '',
+    uplo: 'u' | 'l',
+    trans: 't' | 'c' | 'n',
+    diag: 'u' | 'n',
     n: number,
     a: Matrix,
     lda: number,
     x: FortranArr,
     incx: number): void {
 
-    // lowerCase it all in a fast way
-    const ul = String.fromCharCode(_uplo.charCodeAt(0) | 0x20);
-    const tr = String.fromCharCode(trans.charCodeAt(0) | 0x20);
-    const dg = String.fromCharCode(diag.charCodeAt(0) | 0x20);
+    const ul = lowerChar(uplo);
+    const tr = lowerChar(trans);
+    const dg = lowerChar(diag);
 
-    let info = 0;
+    let info = 0
 
-    if (ul !== 'u' && ul !== 'l') {
+    if (!'ul'.includes(ul)) {
         info = 1;
     }
-    else if (tr !== 'n' && tr !== 't' && tr !== 'c') {
+    else if (!'ntc'.includes(tr)) {
         info = 2;
     }
-    else if (dg !== 'u' && dg !== 'n') {
+    else if (!'un'.includes(dg)) {
         info = 3;
     }
     else if (n < 0) {
@@ -94,11 +93,11 @@ export function strmv(
                     let temp = x.r[jx];
                     let ix = kx - x.base;
                     const coords = a.colOfEx(j);
-                    for (let i = n; i <= j + 1; i--) {
+                    for (let i = n; i >= j + 1; i--) {
                         x.r[ix] += temp * a.r[coords + i];
                         ix -= incx;
                     }
-                    if (nounit) x[jx] *= a.r[coords + j];
+                    if (nounit) x.r[jx] *= a.r[coords + j];
                 }
                 jx -= incx;
             }

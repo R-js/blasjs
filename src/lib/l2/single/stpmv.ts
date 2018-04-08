@@ -1,4 +1,4 @@
-import { errWrongArg, FortranArr } from '../../f_func';
+import { errWrongArg, FortranArr, lowerChar } from '../../f_func';
 
 /*
 Jacob Bogers, 03/2018, jkfbogers@gmail.com
@@ -20,28 +20,28 @@ Jacob Bogers, 03/2018, jkfbogers@gmail.com
 */
 
 export function stpmv(
-    _uplo: 'U' | 'L',
-    trans: 'N' | 'T' | 'C',
-    diag: 'U' | 'N',
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    diag: 'u' | 'n',
     n: number,
     ap: FortranArr,
     x: FortranArr,
     incx: number
 ): void {
 
-    const ul = _uplo.toUpperCase()[0];
-    const tr = trans.toUpperCase()[0];
-    const dg = trans.toUpperCase()[0];
+    const ul = lowerChar(uplo);
+    const tr = lowerChar(trans);
+    const dg = lowerChar(diag);
 
-    let info = 0;
+    let info = 0
 
-    if (ul !== 'U' && ul !== 'L') {
+    if (!'ul'.includes(ul)) {
         info = 1;
     }
-    else if (tr !== 'N' && tr !== 'T' && tr !== 'C') {
+    else if (!'ntc'.includes(tr)) {
         info = 2;
     }
-    else if (dg !== 'U' && dg !== 'N') {
+    else if (!'un'.includes(dg)) {
         info = 3;
     }
     else if (n < 0) {
@@ -59,15 +59,15 @@ export function stpmv(
 
     if (n === 0) return;
 
-    const nounit = dg === 'N';
+    const nounit = dg === 'n';
 
     let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
 
     // Start the operations. In this version the elements of AP are
     // accessed sequentially with one pass through AP.
 
-    if (tr === 'N') {
-        if (ul === 'U') {
+    if (tr === 'n') {
+        if (ul === 'u') {
             let kk = 1;
             let jx = kx;
             for (let j = 1; j <= n; j++) {
@@ -90,13 +90,13 @@ export function stpmv(
             let jx = kx;
             for (let j = n; j >= 1; j--) {
                 if (x.r[jx - x.base] !== 0) {
-                    let temp = x.r[jx - x.base];
+                    const temp = x.r[jx - x.base];
                     let ix = kx;
                     for (let k = kk; k >= kk - (n - (j + 1)); k--) {
                         x.r[ix - x.base] += temp * ap.r[k - ap.base];
                         ix -= incx;
                     }
-                    if (nounit) x.r[jx - x.base] *= ap.r[kk - n - j - ap.base];
+                    if (nounit) x.r[jx - x.base] *= ap.r[kk - n + j - ap.base];
                 }
                 jx -= incx;
                 kk -= (n - j + 1);
@@ -105,7 +105,7 @@ export function stpmv(
     }
     else {
         // Form  x := A**T*x.
-        if (ul === 'U') {
+        if (ul === 'u') {
             let kk = (n * (n + 1)) / 2;
             let jx = kx + (n - 1) * incx;
 
@@ -136,7 +136,7 @@ export function stpmv(
                 }
                 x.r[jx - x.base] = temp;
                 jx += incx;
-                kk += (n - j - 1);
+                kk += (n - j + 1);
             }
         }
     }

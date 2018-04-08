@@ -28,7 +28,8 @@ const {
     stbmv,
     stbsv,
     stpsv,
-    stpmv
+    stpmv,
+    strmv
   }
 } = blas;
 
@@ -586,31 +587,31 @@ describe('blas level 2 single/double precision', function n() {
         });
       });
     });
-  });
-  describe('error tests', () => {
-    const { ssyr2Errors: testData } = fixture;
-    each(testData)(({ input: {
-      uplo,
-      n,
-      alpha,
-      incx,
-      incy,
-      lda,
-    }, desc }, key) => {
-      it(`[${key}]/[${desc}]`, function t() {
-        const sy = fortranArrComplex64(muxCmplx([0]))();
-        const sx = fortranArrComplex64(muxCmplx([0]))();
-        const A = fortranMatrixComplex64(muxCmplx([0]))(0, 0);
 
-        const call = () => ssyr2(uplo, n, alpha, sx, incx, sy, incy, A, lda);
-        expect(call).to.throw();
+    describe('error tests', () => {
+      const { ssyr2Errors: testData } = fixture;
+      each(testData)(({ input: {
+        uplo,
+        n,
+        alpha,
+        incx,
+        incy,
+        lda,
+      }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+          const sy = fortranArrComplex64(muxCmplx([0]))();
+          const sx = fortranArrComplex64(muxCmplx([0]))();
+          const A = fortranMatrixComplex64(muxCmplx([0]))(0, 0);
+
+          const call = () => ssyr2(uplo, n, alpha, sx, incx, sy, incy, A, lda);
+          expect(call).to.throw();
+        });
       });
     });
   });
-
   describe('stbmv', () => {
     describe('data tests', () => {
-      const { dtbmv: testData } = fixture;
+      const { stbmv: testData } = fixture;
       each(testData)(({ input, expect, desc }, key) => {
         const {
           uplo,
@@ -646,7 +647,7 @@ describe('blas level 2 single/double precision', function n() {
     });
 
     describe('error tests', () => {
-      const { dtbmvErrors: testData } = fixture;
+      const { stbmvErrors: testData } = fixture;
       each(testData)(({ input: {
         uplo,
         trans,
@@ -801,7 +802,7 @@ describe('blas level 2 single/double precision', function n() {
 
           //UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX
           stpmv(uplo, trans, diag, n, ap, sx, incx);
-          console.log(sx.toArr())
+          //console.log(sx.toArr())
           const approx = approximatelyWithPrec(1E-5);
           multiplexer(
             [sx.r.length, ...sx.toArr()],
@@ -827,6 +828,64 @@ describe('blas level 2 single/double precision', function n() {
           const ap = fortranArrComplex64(muxCmplx([0]))();
 
           const call = () => stpmv(uplo, trans, diag, n, ap, sx, incx);
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+  describe('strmv', () => {
+    describe('data tests', () => {
+      const { strmv: testData } = fixture;
+      each(testData)(({ input, expect, desc }, key) => {
+        const {
+          uplo,
+          trans,
+          diag,
+          n,
+          incx,
+          lda,
+          x,
+          a
+
+
+        } = input;
+        const eX = expect.x;
+
+        //console.log(input);
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const A = fortranMatrixComplex64(muxCmplx(a))(6, 6);
+          const sx = fortranArrComplex64(muxCmplx(x))();
+
+          //UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX
+          strmv(uplo, trans, diag, n, A, lda, sx, incx);
+          // console.log(sx.toArr())
+          const approx = approximatelyWithPrec(1E-5);
+          multiplexer(
+            [sx.r.length, ...sx.toArr()],
+            [eX.length, ...eX])((a, b) => {
+              //debug stuff goes here
+              approx(a, b);
+            });
+        });
+      });
+    });
+
+    describe('error tests', () => {
+      const { strmvErrors: testData } = fixture;
+      each(testData)(({ input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        lda,
+        incx
+      }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+          const sx = fortranArrComplex64(muxCmplx([0]))();
+          const A = fortranMatrixComplex64(muxCmplx([0]))(0, 0);
+
+          const call = () => strmv(uplo, trans, diag, n, A, lda, sx, incx);
           expect(call).to.throw();
         });
       });

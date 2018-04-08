@@ -89,7 +89,7 @@ export function sspr2(
     }
     else {
         // Form  A  when lower triangle is stored in AP.
-        console.log('startw4');
+
         for (let j = 1; j <= n; j++) {
             //console.log('startw5');
             const xAndyIsZero = x.r[jx - x.base] === 0 && y.r[jy - y.base] === 0;
