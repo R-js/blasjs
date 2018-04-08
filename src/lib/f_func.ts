@@ -217,22 +217,31 @@ export function errWrongArg(arg: string, value: any): string {
 
 export type FortranMatrixSetterGetter = (colSize: number) => (nrCols: number) => number | Complex;
 
-export type Matrix = {
-    readonly rowBase: number,
-    readonly colBase: number,
-    readonly nrCols: number, // inclusive note!!
-    readonly colSize: number,
-    readonly r: fpArray, //[(ncols+1)*(nrows+1)]
-    readonly i?: fpArray, //imaginary part of matrix [(ncols+1)*(nrows+1)]
+export type MatrixType = 'n' | 'b' | 'bu' | 'bl' | 'pl' | 'pu'; //untyped, normal, bandified, bandified-upper, bandified-lower, packed-lower, packed-upper 
+
+export interface Matrix {
+    readonly type: MatrixType;
+    readonly rowBase: number;
+    readonly colBase: number;
+    readonly nrCols: number; // inclusive note!!
+    readonly colSize: number;
+    readonly r: fpArray; //[(ncols+1)*(nrows+1)]
+    readonly i?: fpArray; //imaginary part of matrix [(ncols+1)*(nrows+1)]
     //readonly colOf: (number) => number;
     readonly colOfEx: (number) => number;
     //s: FortranMatrixSetterGetter
     // zap a row with fa valie
-    readonly setCol: (col: number, rowStart: number, rowEnd: number, value: number) => void;
-    readonly slice: (rowStart: number, rowEnd: number, colStart: number, colEnd: number) => Matrix;
-    readonly setLower: (value: number) => void;
-    readonly setUpper: (value: number) => void;
-};
+    coord(col): (row) => number;
+    setCol(col: number, rowStart: number, rowEnd: number, value: number): void;
+    slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
+    setLower(value: number): void;
+    setUpper(value: number): void;
+    upperBand(value: number): Matrix;
+    lowerBand(value: number): Matrix;
+    packedUpper(value: number): FortranArr;
+    packedLower(value: number): FortranArr;
+}
+
 
 function bandifyMatrix(uplo: 'u' | 'l', k: number, A: Matrix): Matrix {
     const rowSize = (k + 1);
@@ -298,7 +307,7 @@ function packedBandi_fied_Matrix(uplo: 'u' | 'l', k: number, A: Matrix): Fortran
 
 function mimicFMatrix(r: fpArray, i?: fpArray) {
 
-    return function c1(lda: number, nrCols: number, rowBase: number = 1, colBase = 1): Matrix {
+    return function c1(lda: number, nrCols: number, matrixType: MatrixType = 'n', rowBase: number = 1, colBase = 1): Matrix {
 
         // check rows
         if (lda < 0) {
@@ -321,14 +330,16 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
             throw new Error(errWrongArg('colBase', 'is a NaN'));
         }
 
-        return Object.freeze({
+
+        return Object.freeze<Matrix>({
             rowBase,
             colBase,
             nrCols,
             colSize: lda,
             r,
             i,
-            coord: (col) => {
+            type: matrixType,
+            coord(col) {
                 const tb = (col - colBase) * lda;
                 return row => tb + (row - rowBase)
             },
@@ -398,7 +409,7 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
 }
 
 export function fortranMatrixComplex32(...rest: (Complex | Complex[])[]):
-    (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix {
+    (nrRows: number, nrCols: number, matrixType?: MatrixType, rowBase?: number, colBase?: number) => Matrix {
 
     const collect = demuxComplex(rest as any);
     let i: Float32Array | undefined;
@@ -409,7 +420,7 @@ export function fortranMatrixComplex32(...rest: (Complex | Complex[])[]):
 }
 
 export function fortranMatrixComplex64(...rest: (Complex | Complex[])[]):
-    (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix {
+    (nrRows: number, nrCols: number, matrixType?: MatrixType, rowBase?: number, colBase?: number) => Matrix {
 
     const collect = demuxComplex(rest as any);
     let i: Float64Array | undefined;
