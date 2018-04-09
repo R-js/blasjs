@@ -6,6 +6,14 @@ const { isInteger } = Number;
 
 const { isArray } = Array;
 
+export function isZero(v: Complex) {
+    return v.im === 0 && v.re === 0;
+}
+
+export function isOne(v: Complex) {
+    return v.re === 1 && v.im === 0;
+}
+
 export function sign(a: number, b?: number): number {
     if (b === undefined) {
         return a;

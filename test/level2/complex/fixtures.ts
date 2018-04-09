@@ -1,5 +1,5 @@
 import { complex, fortranArrComplex64 as arr64 } from '../../../src/lib/f_func';
-import { bandmatrix_nxm_ku_kl, vector } from './matrices';
+import { bandmatrix_nxm_ku_kl, matrix_nxm, vector } from './matrices';
 
 const pI = Infinity;
 const nI = -Infinity;
@@ -7,6 +7,7 @@ const { PI, sin, cos, abs, sqrt } = Math;
 
 const cospi = x => cos(PI * x);
 const sinpi = x => sin(PI * x);
+
 
 export const fixture = {
     // CGBMV(TRANS,M,N,KL,KU,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
@@ -375,5 +376,333 @@ export const fixture = {
             }
         },
     },
-
+    // CGEMV(TRANS,M,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
+    cgemv: {
+        case0: {
+            desc: 'trans=n, inc(1,1), m=6, n=8, alpha(0.8,0.2), beta(0.2,0.8)',
+            input: {
+                trans: 'n',
+                m: 6,
+                n: 8,
+                alpha: complex(0.8, 0.2),
+                beta: complex(0.2, 0.8),
+                a: matrix_nxm(6, 8, 6),
+                lda: 6,
+                x: vector(8),
+                incx: 1,
+                y: vector(6),
+                incy: 1
+            },
+            expect: {
+                y: [
+                    complex(-4.0955083795571205, 1.1357517892058278),
+                    complex(0.93896042218602016, 1.0838676654345458),
+                    complex(-1.5853445176637875, 1.6962449347899724),
+                    complex(-0.25555151836345036, -4.3800522220206233),
+                    complex(-1.2051793139138998, -2.9157429210651786),
+                    complex(0.38280021798680286, 0.19114175133433564),
+                ]
+            },
+        },
+        case1: {
+            desc: 'trans=n, inc(-1,-1), m=6, n=8, alpha(0.8,0.2), beta(0,0)',
+            input: {
+                trans: 'n',
+                m: 6,
+                n: 8,
+                alpha: complex(0.8, 0.2),
+                beta: complex(0, 0),
+                a: matrix_nxm(6, 8, 6),
+                lda: 6,
+                x: vector(8),
+                incx: -1,
+                y: vector(6),
+                incy: -1
+            },
+            expect: {
+                y: [
+                    complex(2.6017477475494872, -0.62451989822044895),
+                    complex(1.8074832963400977, -2.2773562366746307),
+                    complex(-4.2649596122103990, 2.1071421255650922),
+                    complex(0.27753542357045247, -1.9840473842815003),
+                    complex(2.2299686271484305, 0.24845760476943476),
+                    complex(0.20069066517622025, -1.0213684617581498),
+                ]
+            },
+        },
+        case2: {
+            desc: 'trans=n, inc(1,1), m=6, n=8, alpha(0.8,0.2), beta(1,0)',
+            input: {
+                trans: 'n',
+                m: 6,
+                n: 8,
+                alpha: complex(0.8, 0.2),
+                beta: complex(1, 0),
+                a: matrix_nxm(6, 8, 6),
+                lda: 6,
+                x: vector(8),
+                incx: 1,
+                y: vector(6),
+                incy: 1
+            },
+            expect: {
+                y: [
+                    complex(-3.9970026807046444, 2.2726735819034305),
+                    complex(0.66801290992029672, 1.0035901828539755),
+                    complex(-1.3938842013734591, 0.82508814026657729),
+                    complex(0.29003966083788602, -5.5960115682700131),
+                    complex(-0.29257262206414292, -2.2331706205478370),
+                    complex(6.7974918648228133E-002, 6.4722209339979742E-002),
+                ]
+            },
+        },
+        case3: {
+            desc: 'trans=t, inc(1,1), m=6, n=8, alpha(0.8,0.2), beta(1,0)',
+            input: {
+                trans: 't',
+                m: 6,
+                n: 8,
+                alpha: complex(0.8, 0.2),
+                beta: complex(1, 0),
+                a: matrix_nxm(6, 8, 6),
+                lda: 6,
+                x: vector(6),
+                incx: 1,
+                y: vector(8),
+                incy: 1
+            },
+            expect: {
+                y: [
+                    complex(-1.0722266311585562, 1.4276441972981582),
+                    complex(4.0697286775452355, -1.3751872740072097),
+                    complex(-1.7667910641302869, -1.3146598668049647),
+                    complex(2.7682588305027580, 0.43286241964465866),
+                    complex(0.61287748489518667, -1.2227666045246042),
+                    complex(-5.6604442768105556E-002, 1.3467393639005534),
+                    complex(-2.2131934192050711, 4.1552655661274187),
+                    complex(-2.9062411441513247, 2.3044710975088387),
+                ],
+            },
+        },
+        case4: {
+            desc: 'trans=c, inc(1,1), m=6, n=8, alpha(0.8,0.2), beta(1,0)',
+            input: {
+                trans: 'c',
+                m: 6,
+                n: 8,
+                alpha: complex(0.8, 0.2),
+                beta: complex(1, 0),
+                a: matrix_nxm(6, 8, 6),
+                lda: 6,
+                x: vector(6),
+                incx: 1,
+                y: vector(8),
+                incy: 1
+            },
+            expect: {
+                y: [
+                    complex(2.2502367460895774, 2.0732672240604177),
+                    complex(1.5386279370583802, 1.2491393341728396),
+                    complex(3.5354757160882668, 0.53153277666431009),
+                    complex(-0.65968123771844311, -0.51832467085111289),
+                    complex(-8.1751634328745854E-002, 0.52362043122181512),
+                    complex(-1.8050991363430615, -0.94441463917334822),
+                    complex(-0.25656634156597757, 1.6792353267609732),
+                    complex(-2.5932578406614151, -3.5422230487806061),
+                ]
+            },
+        },
+        case5: {
+            desc: 'trans=n, inc(1,1), m=6, n=8, alpha(0,0), beta(0.2,0.8)',
+            input: {
+                trans: 'n',
+                m: 6,
+                n: 8,
+                alpha: complex(0, 0),
+                beta: complex(0.2, 0.8),
+                a: matrix_nxm(6, 8, 6),
+                lda: 6,
+                x: vector(8),
+                incx: 1,
+                y: vector(6),
+                incy: 1
+            },
+            expect: {
+                y: [
+                    complex(-0.74751576107018813, -0.36477962083786153),
+                    complex(0.15177874642280853, -0.13923813908156957),
+                    complex(0.47267537821345584, 0.44634650418678667),
+                    complex(0.55537789695527984, 0.79697925443916384),
+                    complex(-0.76883520735554689, 0.31441456547997237),
+                    complex(0.19707170422482045, -0.14935848339436175),
+                ]
+            },
+        },
+        case6: {
+            desc: '(trivial: alpha=0, beta=1)',
+            input: {
+                trans: 'n',
+                m: 6,
+                n: 8,
+                alpha: complex(0, 0),
+                beta: complex(1, 0),
+                a: matrix_nxm(6, 8, 6),
+                lda: 6,
+                x: vector(8),
+                incx: 1,
+                y: vector(6),
+                incy: 1
+            },
+            expect: {
+                y: vector(6).toArr()
+            },
+        },
+    },
+    cgemvErrors: {
+        case0: {
+            desc: 'x has no imaginary part',
+            input: {
+                trans: 'n',
+                m: 6,
+                n: 8,
+                alpha: complex(0, 0),
+                lda: 6,
+                incx: 1,
+                beta: complex(2.5, +0.5),
+                incy: 1,
+                x: [0],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case1: {
+            desc: 'y has no imaginary part',
+            input: {
+                trans: 'n',
+                m: 6,
+                n: 8,
+                alpha: complex(0, 0),
+                lda: 6,
+                incx: 1,
+                beta: complex(2.5, +0.5),
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [0],
+                a: [complex(0, 0)],
+            }
+        },
+        case2: {
+            desc: 'A has no imaginary part',
+            input: {
+                trans: 'n',
+                m: 6,
+                n: 8,
+                alpha: complex(0, 0),
+                lda: 6,
+                incx: 1,
+                beta: complex(2.5, +0.5),
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [0],
+            }
+        },
+        case3: {
+            desc: 'trans !="ntc"',
+            input: {
+                trans: 'x',
+                m: 6,
+                n: 8,
+                alpha: complex(0, 0),
+                lda: 6,
+                incx: 1,
+                beta: complex(2.5, +0.5),
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case4: {
+            desc: 'n<0',
+            input: {
+                trans: 'n',
+                m: 6,
+                n: -8,
+                alpha: complex(0, 0),
+                lda: 6,
+                incx: 1,
+                beta: complex(2.5, +0.5),
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case5: {
+            desc: 'm<0',
+            input: {
+                trans: 'n',
+                m: -6,
+                n: 8,
+                alpha: complex(0, 0),
+                lda: 6,
+                incx: 1,
+                beta: complex(2.5, +0.5),
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case6: {
+            desc: 'lda<max(1,m)',
+            input: {
+                trans: 'n',
+                m: 6,
+                n: 8,
+                alpha: complex(0, 0),
+                lda: 4,
+                incx: 1,
+                beta: complex(2.5, +0.5),
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case7: {
+            desc: 'incx=0',
+            input: {
+                trans: 'n',
+                m: 6,
+                n: 8,
+                alpha: complex(0, 0),
+                lda: 6,
+                incx: 0,
+                beta: complex(2.5, +0.5),
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case8: {
+            desc: 'incy=0',
+            input: {
+                trans: 'n',
+                m: 6,
+                n: 8,
+                alpha: complex(0, 0),
+                lda: 6,
+                incx: 1,
+                beta: complex(2.5, +0.5),
+                incy: 0,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+    }
 }
+

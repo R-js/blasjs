@@ -15,7 +15,8 @@ const {
     muxCmplx
   },
   level2: {
-    cgbmv
+    cgbmv,
+    cgemv
   }
 } = blas;
 
@@ -47,7 +48,7 @@ describe('blas level 2 single/double complex', function n() {
       }, expect, desc }, key) => {
         it(`[${key}]/[${desc}]`, function t() {
 
-          //console.log('before', { are: a.r, aim: a.i });
+          // console.log('before', { are: a.r, aim: a.i });
           cgbmv(trans, m, n, kl, ku, alpha, a, lda, x, incx, beta, y, incy);
           //console.log(`after yr:${y.r}, yi:${y.i}`);
 
@@ -83,6 +84,62 @@ describe('blas level 2 single/double complex', function n() {
 
 
           const call = () => cgbmv(trans, m, n, kl, ku, alpha, aM, lda, sx, incx, beta, sy, incy);
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+
+  describe('cgemv', () => {
+
+    describe('data tests', () => {
+      const { cgemv: testData } = fixture;
+
+      each(testData)(({ input: {
+        trans,
+        m,
+        n,
+        alpha,
+        a,
+        lda,
+        x,
+        incx,
+        beta,
+        y,
+        incy
+      }, expect, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          //console.log(`before yr:${y.r}, yi:${y.i}`);
+          cgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy);
+          const approx = approximatelyWithPrec(1E-5);
+          multiplexer(y.toArr(), expect.y)(approx);
+        });
+      });
+    });
+
+    describe('test errors', () => {
+      const { cgemvErrors: errors } = fixture;
+      each(errors)(({ input: {
+        trans,
+        m,
+        n,
+        alpha,
+        a,
+        lda,
+        x,
+        incx,
+        beta,
+        y,
+        incy
+      }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const aM = fortranMatrixComplex64(a)(1, 1);
+          const sx = fortranArrComplex64(x)();
+          const sy = fortranArrComplex64(y)();
+
+          const call = () => cgemv(trans, m, n, alpha, aM, lda, sx, incx, beta, sy, incy);
           expect(call).to.throw();
         });
       });

@@ -29,7 +29,7 @@ const { min, max } = Math;
 *>    TRANS = 'T' or 't'   y := alpha*A**T*x + beta*y.
 *>    TRANS = 'C' or 'c'   y := alpha*A**H*x + beta*y.
 */
-//ZGBMV(TRANS,M,N,KL,KU,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
+// SUBROUTINE CGEMV(TRANS,M,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 export function cgbmv(
     trans: 'n' | 't' | 'c',
     m: number,
