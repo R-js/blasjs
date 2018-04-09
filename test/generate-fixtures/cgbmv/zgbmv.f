@@ -196,6 +196,8 @@
       COMPLEX*16 ALPHA,BETA
       INTEGER INCX,INCY,KL,KU,LDA,M,N
       CHARACTER TRANS
+
+      INTRINSIC AIMAG
 *     ..
 *     .. Array Arguments ..
       COMPLEX*16 A(LDA,*),X(*),Y(*)
@@ -317,57 +319,66 @@
 *        Form  y := alpha*A*x + y.
 *
           JX = KX
-          IF (INCY.EQ.1) THEN
-              DO 60 J = 1,N
-                  TEMP = ALPHA*X(JX)
-                  K = KUP1 - J
-                  DO 50 I = MAX(1,J-KU),MIN(M,J+KL)
-                      Y(I) = Y(I) + TEMP*A(K+I,J)
-   50             CONTINUE
-                  JX = JX + INCX
-   60         CONTINUE
-          ELSE
+c          IF (INCY.EQ.1) THEN
+c              DO 60 J = 1,N
+c                  TEMP = ALPHA*X(JX)
+c                  PRINT *,"TEMP=",TEMP
+c                  
+c                  K = KUP1 - J
+c                  DO 50 I = MAX(1,J-KU),MIN(M,J+KL)
+c                      Y(I) = Y(I) + TEMP*A(K+I,J)
+c   50             CONTINUE
+c                  JX = JX + INCX
+c   60         CONTINUE
+c          ELSE
+c              J=1  
               DO 80 J = 1,N
                   TEMP = ALPHA*X(JX)
+c                  PRINT *,"TEMP=",TEMP
                   IY = KY
                   K = KUP1 - J
                   DO 70 I = MAX(1,J-KU),MIN(M,J+KL)
                       Y(IY) = Y(IY) + TEMP*A(K+I,J)
+c                      PRINT *, "I,j",(K+I),J, 
+c     +                 "TEMP*A=",TEMP*A(K+I,J),"A[i,j]=",
+c     +                 A(K+I,J)
+c                      PRINT *, "IY=",IY,"Y(IY)=", Y(IY) 
                       IY = IY + INCY
    70             CONTINUE
                   JX = JX + INCX
                   IF (J.GT.KU) KY = KY + INCY
    80         CONTINUE
-          END IF
+c          END IF
       ELSE
 *
 *        Form  y := alpha*A**T*x + y  or  y := alpha*A**H*x + y.
 *
           JY = KY
-          IF (INCX.EQ.1) THEN
-              DO 110 J = 1,N
-                  TEMP = ZERO
-                  K = KUP1 - J
-                  IF (NOCONJ) THEN
-                      DO 90 I = MAX(1,J-KU),MIN(M,J+KL)
-                          TEMP = TEMP + A(K+I,J)*X(I)
-   90                 CONTINUE
-                  ELSE
-                      DO 100 I = MAX(1,J-KU),MIN(M,J+KL)
-                          TEMP = TEMP + DCONJG(A(K+I,J))*X(I)
-  100                 CONTINUE
-                  END IF
-                  Y(JY) = Y(JY) + ALPHA*TEMP
-                  JY = JY + INCY
-  110         CONTINUE
-          ELSE
+c          IF (INCX.EQ.1) THEN
+c              DO 110 J = 1,N
+c                  TEMP = ZERO
+c                  K = KUP1 - J
+c                  IF (NOCONJ) THEN
+c                      DO 90 I = MAX(1,J-KU),MIN(M,J+KL)
+c                          TEMP = TEMP + A(K+I,J)*X(I)
+c   90                 CONTINUE
+c                  ELSE
+c                      DO 100 I = MAX(1,J-KU),MIN(M,J+KL)
+c                          TEMP = TEMP + DCONJG(A(K+I,J))*X(I)
+c  100                 CONTINUE
+c                  END IF
+c                  Y(JY) = Y(JY) + ALPHA*TEMP
+c                  JY = JY + INCY
+c  110         CONTINUE
+c c         ELSE
               DO 140 J = 1,N
                   TEMP = ZERO
                   IX = KX
                   K = KUP1 - J
                   IF (NOCONJ) THEN
-                      DO 120 I = MAX(1,J-KU),MIN(M,J+KL)
+                      DO 120 I = MAX(1,J-KU),MIN(M,J+KL)            
                           TEMP = TEMP + A(K+I,J)*X(IX)
+                          PRINT *,"(i,j)=",K+I,j,"a=",A(K+I,J)           
                           IX = IX + INCX
   120                 CONTINUE
                   ELSE
@@ -380,7 +391,7 @@
                   JY = JY + INCY
                   IF (J.GT.KU) KX = KX + INCX
   140         CONTINUE
-          END IF
+c          END IF
       END IF
 *
       RETURN

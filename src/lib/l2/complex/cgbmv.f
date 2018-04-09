@@ -329,6 +329,7 @@ c   60         CONTINUE
 c          ELSE
               DO 80 J = 1,N
                   TEMP = ALPHA*X(JX)
+                  PRINT *,"TEMP=",TEMP
                   IY = KY
                   K = KUP1 - J
                   DO 70 I = MAX(1,J-KU),MIN(M,J+KL)

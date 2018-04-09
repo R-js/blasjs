@@ -11,8 +11,7 @@ c
 
       EXTERNAL ZGBMV, COPY, ZEROA, COPYMA,FILL
       EXTERNAL FILLM, PRNMATR, PRNVEC, CRCMPLX
-      EXTERNAL CCPLX
-
+      EXTERNAL CCPLX, PRNMATRC,PRNVECC
 
 
       CHARACTER TRANS
@@ -156,6 +155,9 @@ c
         CALL CCPLX(XC,X,N)
         CALL CCPLX(YC,Y,M)
 
+c        CALL PRNMATRC(A, N, M)
+c      RETURN
+
         TRANS='N'
         beta= complex(2.5, +0.5)
         alpha= complex(0, 0)
@@ -167,7 +169,77 @@ c
 
         PRINT *,'Y=',Y
      
-      
+        PRINT * , "==CASE 1======="
+
+        CALL CRCMPLX(ARE,AIM, A,N, LDA)
+        CALL CCPLX(XC,X,N)
+        CALL CCPLX(YC,Y,M)
+
+        TRANS='N'
+        beta= complex(2.5, +0.5)
+        alpha= complex(0.2, 0.8)
+       
+        INCX=1
+        INCY=1
+
+        CALL ZGBMV(TRANS,M,N,KL,KU,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
+
+        PRINT *,'after Y=',Y
+
+        PRINT * , "==CASE 2======="
+
+        CALL CRCMPLX(ARE,AIM, A,N, LDA)
+        CALL CCPLX(XC,X,N)
+        CALL CCPLX(YC,Y,M)
+
+        TRANS='T'
+        beta= complex(0, 0)
+        alpha= complex(0.2, 0.8)
+       
+        INCX=1
+        INCY=1
+
+        CALL ZGBMV(TRANS,M,N,KL,KU,ALPHA,A,LDA,Y,INCX,BETA,X,INCY)
+
+        PRINT *,'after Y='
+        CALL PRNVECC(X,N)
+
+         PRINT * , "==CASE 3======="
+
+        CALL CRCMPLX(ARE,AIM, A,N, LDA)
+        CALL CCPLX(XC,X,N)
+        CALL CCPLX(YC,Y,M)
+
+        TRANS='C'
+        beta= complex(1, 0)
+        alpha= complex(0.2, 0.8)
+       
+        INCX=-1
+        INCY=-1
+
+        CALL ZGBMV(TRANS,M,N,KL,KU,ALPHA,A,LDA,Y,INCX,BETA,X,INCY)
+
+        PRINT *,'after Y='
+        CALL PRNVECC(X,N)
+
+         PRINT * , "==CASE 4======="
+
+        CALL CRCMPLX(ARE,AIM, A,N, LDA)
+        CALL CCPLX(XC,X,N)
+        CALL CCPLX(YC,Y,M)
+
+        TRANS='C'
+        beta= complex(1, 0)
+        alpha= complex(0, 0)
+       
+        INCX=-1
+        INCY=-1
+
+        CALL ZGBMV(TRANS,M,N,KL,KU,ALPHA,A,LDA,Y,INCX,BETA,X,INCY)
+
+        PRINT *,'after Y='
+        CALL PRNVECC(X,N)
+           
     
       end
 
@@ -271,6 +343,20 @@ c
 
       END SUBROUTINE
 
+      SUBROUTINE PRNVECC(X, N)
+
+      INTEGER N
+      COMPLEX*16 X(*)
+
+      PRINT *, '['
+      DO J=1,N
+            PRINT *, "complex",X(J), ", "
+      END DO
+     
+      PRINT *, ']'
+
+      END SUBROUTINE
+
       SUBROUTINE CRCMPLX(RE,IM,A,N,LDA)
 
         INTEGER N, LDA, CUR
@@ -286,3 +372,17 @@ c
 40     CONTINUE
       END SUBROUTINE
 
+      SUBROUTINE PRNMATRC(A, N, M)
+
+      INTEGER N,M
+      COMPLEX *16 A(M,*)
+      PRINT *, '['
+      DO J=1,N
+         DO I=1,M
+            PRINT *, A(I,J), ","
+         END DO
+      END DO
+     
+      PRINT *, ']'
+
+      END SUBROUTINE

@@ -139,19 +139,27 @@ export function cgbmv(
     const kup1 = ku + 1;
     if (trans === 'n') { // not [t]ranspose or [c]onjugate
         //Form  y := alpha*A*x + y.
-        let jx = kx - x.base;
+        let jx = kx;
         for (let j = 1; j <= n; j++) {
 
             //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-            let tempRe = AlphaRe * x.r[jx] - AlphaIm * x.i[jx];
-            let tempIm = AlphaRe * x.i[jx] - AlphaIm * x.r[jx];
-            let iy = ky - y.base;
+            let tempRe = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
+            let tempIm = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
+            //console.log({ tempRe, tempIm });
+            let iy = ky;
             let k = kup1 - j;
-            const coords = a.colOfEx(j);
+            const coorAJ = a.colOfEx(j);
             for (let i = max(1, j - ku); i <= min(m, j + kl); i++) {
                 //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-                y.r[iy] += tempRe * a.r[coords + k + i] - tempIm * a.i[coords + k + i];
-                y.i[iy] += tempIm * a.i[coords + k + i] + tempIm * a.r[coords + k + i];
+                //console.log(`i${i + k},j:${j}, a[i,j]=(${a.r[coorAJ + k + i]},${a.i[coorAJ + k + i]})`);
+                const re = tempRe * a.r[coorAJ + k + i] - tempIm * a.i[coorAJ + k + i];
+                const im = tempRe * a.i[coorAJ + k + i] + tempIm * a.r[coorAJ + k + i];
+                //console.log(`i${i + k},j:${j}, a[i,j]=(${a.r[coorAJ + k + i]},${a.i[coorAJ + k + i]}), d=(${re},${im})`);
+                //console.log({ re, im, ar: a.r[coords + k + i], ai: a.i[coords + k + i] });
+                y.r[iy - y.base] += re;
+                y.i[iy - y.base] += im;
+                //console.log(`y(${iy})=(${y.r[iy - y.base]},${y.i[iy - y.base]})`);
+                iy += incy;
             }
             jx += incx;
             if (j > ku) { ky += incy; }
@@ -159,11 +167,11 @@ export function cgbmv(
     }
     else {
         // Form  y := alpha*A**T*x + y  or  y := alpha*A**H*x + y.
-        let jy = ky - y.base;
+        let jy = ky;
         for (let j = 1; j <= n; j++) {
             let tempRe = 0;
             let tempIm = 0;
-            let ix = kx - x.base;
+            let ix = kx;
             let k = kup1 - j;
             const coords = a.colOfEx(j);
             const istart = max(1, j - ku);
@@ -172,8 +180,9 @@ export function cgbmv(
             if (noconj) {
                 for (let i = istart; i <= iend; i++) {
                     //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-                    tempRe += a.r[coords + k + i] * x.r[ix] - a.i[coords + k + i] * x.i[ix];
-                    tempIm += a.r[coords + k + i] * x.i[ix] + a.i[coords + k + i] * x.r[ix];
+                    tempRe += a.r[coords + k + i] * x.r[ix - x.base] - a.i[coords + k + i] * x.i[ix - x.base];
+                    tempIm += a.r[coords + k + i] * x.i[ix - x.base] + a.i[coords + k + i] * x.r[ix - x.base];
+                    //console.log(`i,j=(${k + i},${j}), a=(${a.r[coords + k + i]},${a.i[coords + k + i]})`);
                     ix += incx;
                 }
             }
@@ -181,14 +190,14 @@ export function cgbmv(
             else {
                 for (let i = istart; i <= iend; i++) {
                     //CONJ( (a + bi) )(c+di)= (a*c+b*d)+i(a*d-b*c)
-                    tempRe += a.r[coords + k + i] * x.r[ix] + a.i[coords + k + i] * x.i[ix];
-                    tempIm += a.r[coords + k + i] * x.i[ix] - a.i[coords + k + i] * x.r[ix];
+                    tempRe += a.r[coords + k + i] * x.r[ix - x.base] + a.i[coords + k + i] * x.i[ix - x.base];
+                    tempIm += a.r[coords + k + i] * x.i[ix - x.base] - a.i[coords + k + i] * x.r[ix - x.base];
                     ix += incx;
                 }
             }
             //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-            y.r[jy] += AlphaRe * tempRe - AlphaIm * tempIm;
-            y.i[jy] += AlphaRe * tempIm - AlphaIm * tempRe;
+            y.r[jy - y.base] += AlphaRe * tempRe - AlphaIm * tempIm;
+            y.i[jy - y.base] += AlphaRe * tempIm + AlphaIm * tempRe;
             jy += incy;
             if (j > ku) kx += incx;
         }
