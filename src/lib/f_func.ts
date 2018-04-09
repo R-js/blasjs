@@ -389,7 +389,7 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
 
                 let re = new Float64Array(rowSize * colSize);
                 let im: Float64Array | undefined;
-                if (i) {
+                if (this.i) {
                     im = new Float64Array(rowSize * colSize);
                 }
                 for (let j = colStart; j <= colEnd; j++) {
@@ -398,8 +398,8 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
                     for (let i = rowStart; i <= rowEnd; i++) {
                         // console.log(j, coorJ + i, base + i, r[coorJ + i]);
                         re[base + i] = r[coorJ + i];
-                        if (im) {
-                            im[base + (i - rowStart)] = i[coorJ + i];
+                        if (this.i && im) {
+                            im[base + (i - rowStart)] = this.i[coorJ + i];
                         }
                     }
                 }
@@ -569,3 +569,15 @@ export function multiplexer(...rest: (any | any[])[]) {
     };
 }
 
+export function render(
+    a: string,
+    aix: string,
+    b: string,
+    bix: string,
+    conjA = false,
+    conjB = false): string {
+
+    const re = `= ${a}.r[${aix} - ${a}.base]*${b}.r[${bix}-${b}.base] - ${a}.i[${aix} - ${a}.base]*${b}.i[${bix}-${b}.base];`;
+    const im = `= ${a}.r[${aix} - ${a}.base]*${b}.i[${bix}-${b}.base] + ${a}.i[${aix} - ${a}.base]*${b}.r[${bix}-${b}.base];`;
+    return `${re}\n${im}\n`;
+}

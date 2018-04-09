@@ -96,9 +96,9 @@ export const fixture = {
                     complex(-4.2076520090095242, -0.50591381502069677),
                     complex(-0.81853765257644051, 1.4503261671516843),
                     complex(2.6631576242668459E-002, -0.63622673851522416),
-                    complex(0.0000000000000000, 0.0000000000000000),
-                    complex(0.0000000000000000, 0.0000000000000000),
-                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0, 0),
+                    complex(0, 0),
+                    complex(0, 0),
                 ]
             },
         },
@@ -1343,6 +1343,333 @@ export const fixture = {
                 lda: 6,
                 incx: 1,
                 incy: 0,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+    },
+    chbmv: {
+        case0: {
+            desc: 'uplo=u, inc(1,1), n=6, k=3, alpha(0.2,0.8), beta(0.3,-0.7)',
+            input: {
+                uplo: 'u',
+                n: 6,
+                k: 3,
+                alpha: complex(0.2, 0.8),
+                beta: complex(0.3, -0.7),
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).upperBand(3),
+                lda: 6,
+                incx: 1,
+                incy: 1,
+                x: vector(6),
+                y: (() => {
+                    let v = vector(6);
+                    v.s(4)(0, 0);
+                    v.s(2)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                y: [
+                    complex(-1.2534610371023731, 9.4703331729354634E-002),
+                    complex(-0.57417853027717758, -6.9983511992388614E-003),
+                    complex(-0.24071061122272883, -0.24386226459928881),
+                    complex(-1.9639075687356289E-003, 0.89891271445795673),
+                    complex(1.5460009072147165, 0.25069302006213029),
+                    complex(-1.0003110232032266, -0.49852299275348511)
+                ]
+            }
+        },
+        case1: {
+            desc: 'uplo=u, inc(-1,-1), n=6, k=3, alpha(0.2,0.8), beta(0,0)',
+            input: {
+                uplo: 'u',
+                n: 6,
+                k: 3,
+                alpha: complex(0.2, 0.8),
+                beta: complex(0, 0),
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).upperBand(3),
+                lda: 6,
+                incx: -1,
+                incy: -1,
+                x: vector(6),
+                y: (() => {
+                    let v = vector(6);
+                    v.s(4)(0, 0);
+                    v.s(2)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                y: [
+                    complex(-1.2736547002392706, -1.2409869471212633),
+                    complex(-1.5069594023144455, 0.16300769978973884),
+                    complex(1.3847341260375996, 0.25254847949457943),
+                    complex(0.41526650594237807, -0.14984859659953415),
+                    complex(-1.1204385690487695, -0.34592548946596602),
+                    complex(0.86249408001175165, -0.56909457127832508),
+                ]
+            }
+        },
+        case2: {
+            desc: 'uplo=u, inc(-1,-1), n=6, k=3, alpha(0,0), beta(0,0)',
+            input: {
+                uplo: 'u',
+                n: 6,
+                k: 3,
+                alpha: complex(0, 0),
+                beta: complex(0, 0),
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).upperBand(3),
+                lda: 6,
+                incx: -1,
+                incy: -1,
+                x: vector(6),
+                y: (() => {
+                    let v = vector(6);
+                    v.s(4)(0, 0);
+                    v.s(2)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                y: [
+                    complex(0, 0),
+                    complex(0, 0),
+                    complex(0, 0),
+                    complex(0, 0),
+                    complex(0, 0),
+                    complex(0, 0),
+                ]
+            }
+        },
+        case3: {
+            desc: 'trival, beta=(1,0), alpha=(0,0)',
+            input: {
+                uplo: 'u',
+                n: 6,
+                k: 3,
+                alpha: complex(0, 0),
+                beta: complex(1, 0),
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).upperBand(3),
+                lda: 6,
+                incx: -1,
+                incy: -1,
+                x: vector(6),
+                y: (() => {
+                    let v = vector(6);
+                    v.s(4)(0, 0);
+                    v.s(2)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                y: (() => {
+                    let v = vector(6);
+                    v.s(4)(0, 0);
+                    v.s(2)(0, 0);
+                    return v;
+                })().toArr()
+            }
+        },
+        case4: {
+            desc: 'upl="u",inc(-1,-1), beta=(1,0), alpha=(0.2,0.8)',
+            input: {
+                uplo: 'u',
+                n: 6,
+                k: 3,
+                alpha: complex(0.2, 0.8),
+                beta: complex(1, 0),
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).upperBand(3),
+                lda: 6,
+                incx: -1,
+                incy: -1,
+                x: vector(6),
+                y: (() => {
+                    let v = vector(6);
+                    v.s(4)(0, 0);
+                    v.s(2)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                y: [
+                    complex(-1.9226647624569830, -0.46884477526152213),
+                    complex(-1.5069594023144455, 0.16300769978973884),
+                    complex(2.0488698205413836, -0.17226181084202949),
+                    complex(0.41526650594237807, -0.14984859659953415),
+                    complex(-0.97666708455456019, 0.65106137653134821),
+                    complex(0.74474048489799738, -0.84487259666704273),
+                ]
+            }
+        },
+        case5: {
+            desc: 'uplo="l", beta=(1,0), alpha=(0.2,0.8)',
+            input: {
+                uplo: 'l',
+                n: 6,
+                k: 3,
+                alpha: complex(0.2, 0.8),
+                beta: complex(1, 0),
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).lowerBand(3),
+                lda: 6,
+                incx: 1,
+                incy: 1,
+                x: vector(6),
+                y: (() => {
+                    let v = vector(6);
+                    v.s(4)(0, 0);
+                    v.s(2)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                y: [
+                    complex(0.79654686947656517, 0.93230872508886198),
+                    complex(3.8235731030044517E-002, 3.6497121577365221),
+                    complex(0.38312451728225538, -3.0675595198095778),
+                    complex(-1.6321936347511552, -2.1997081054941319),
+                    complex(3.1857501193367059, 7.7298820669718160E-002),
+                    complex(0.28503740823625501, 1.0786387593676938),
+                ]
+            }
+        }
+    },
+    chbmvErrors: {
+        case0: {
+            desc: 'x has no imaginary part',
+            input: {
+                uplo: 'l',
+                n: 6,
+                k: 3,
+                alpha: complex(0.2, 0.8),
+                beta: complex(1, 0),
+                lda: 6,
+                incx: 1,
+                incy: 1,
+                y: [complex(0, 0)],
+                x: [0],
+                a: [complex(0, 0)],
+            }
+        },
+        case1: {
+            desc: 'y has no imaginary part',
+            input: {
+                uplo: 'l',
+                n: 6,
+                k: 3,
+                alpha: complex(0.2, 0.8),
+                beta: complex(1, 0),
+                lda: 6,
+                incx: 1,
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [0],
+                a: [complex(0, 0)],
+            }
+        },
+        case2: {
+            desc: 'A has no imaginary part',
+            input: {
+                uplo: 'l',
+                n: 6,
+                k: 3,
+                alpha: complex(0.2, 0.8),
+                beta: complex(1, 0),
+                lda: 6,
+                incx: 1,
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [0],
+            }
+        },
+        case3: {
+            desc: 'n<0',
+            input: {
+                uplo: 'l',
+                n: -6,
+                k: 3,
+                alpha: complex(0.2, 0.8),
+                beta: complex(1, 0),
+                lda: 6,
+                incx: 1,
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case4: {
+            desc: 'lda<(k+1)',
+            input: {
+                uplo: 'l',
+                n: 6,
+                alpha: complex(0, 0),
+                k: 4,
+                lda: 4,
+                incx: 1,
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case5: {
+            desc: 'k<0',
+            input: {
+                uplo: 'l',
+                n: 6,
+                alpha: complex(0, 0),
+                k: -4,
+                lda: 4,
+                incx: 1,
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case6: {
+            desc: 'incx=0',
+            input: {
+                uplo: 'l',
+                n: 6,
+                alpha: complex(0, 0),
+                k: 4,
+                lda: 5,
+                incx: 0,
+                incy: 1,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case7: {
+            desc: 'incy=0',
+            input: {
+                uplo: 'l',
+                n: 6,
+                alpha: complex(0, 0),
+                k: 4,
+                lda: 5,
+                incx: 1,
+                incy: 0,
+                x: [complex(0, 0)],
+                y: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case8: {
+            desc: 'uplo!="ul"',
+            input: {
+                uplo: 'x',
+                n: 6,
+                alpha: complex(0, 0),
+                k: 4,
+                lda: 5,
+                incx: 1,
+                incy: 1,
                 x: [complex(0, 0)],
                 y: [complex(0, 0)],
                 a: [complex(0, 0)],

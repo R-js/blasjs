@@ -19,7 +19,8 @@ const {
     cgbmv,
     cgemv,
     cgerc,
-    cgeru
+    cgeru,
+    chbmv
   }
 } = blas;
 
@@ -254,6 +255,64 @@ describe('blas level 2 single/double complex', function n() {
           const sy = fortranArrComplex64(y)();
 
           const call = () => cgeru(m, n, alpha, sx, incx, sy, incy, aM, lda);
+          //call();
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+  describe('chbmv', () => {
+
+    describe('data tests', () => {
+      const { chbmv: testData } = fixture;
+
+      each(testData)(({ input: {
+        uplo,
+        n,
+        k,
+        alpha,
+        beta,
+        a,
+        lda,
+        x,
+        incx,
+        y,
+        incy
+      }, expect, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+          //console.log(`before y:${JSON.stringify(y.toArr())}`);
+          //console.log(`before x:${JSON.stringify(x.toArr())}`);
+          chbmv(uplo, n, k, alpha, a, lda, x, incx, beta, y, incy);
+          //console.log(`y:${JSON.stringify(y.toArr())}`);
+          //});
+          const approx = approximatelyWithPrec(1E-5);
+          multiplexer(y.toArr(), expect.y)(approx);
+        });
+      });
+    });
+
+    describe('test errors', () => {
+      const { chbmvErrors: errors } = fixture;
+      each(errors)(({ input: {
+        uplo,
+        n,
+        k,
+        alpha,
+        beta,
+        a,
+        lda,
+        x,
+        incx,
+        y,
+        incy
+      }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const aM = fortranMatrixComplex64(a)(1, 1);
+          const sx = fortranArrComplex64(x)();
+          const sy = fortranArrComplex64(y)();
+
+          const call = () => chbmv(uplo, n, k, alpha, aM, lda, sx, incx, beta, sy, incy);
           //call();
           expect(call).to.throw();
         });
