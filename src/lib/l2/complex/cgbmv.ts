@@ -7,7 +7,7 @@
 *>     Richard Hanson, Sandia National Labs.
 */
 
-import { Complex, errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
+import { Complex, errMissingIm, errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
 
 // helpers
 
@@ -29,7 +29,7 @@ const { min, max } = Math;
 *>    TRANS = 'T' or 't'   y := alpha*A**T*x + beta*y.
 *>    TRANS = 'C' or 'c'   y := alpha*A**H*x + beta*y.
 */
-
+//ZGBMV(TRANS,M,N,KL,KU,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 export function cgbmv(
     trans: 'n' | 't' | 'c',
     m: number,
@@ -59,8 +59,7 @@ export function cgbmv(
     }
 
     // dont use String.toUpperCase()[0] because slow
-    const tr = String.fromCharCode(trans.charCodeAt(0) | 0x20);
-
+    const tr = lowerChar(trans);
 
     const betaIsZero = beta.re === 0 && beta.im === 0;
     const betaIsOne = beta.re === 1 && beta.im === 0;
@@ -74,7 +73,7 @@ export function cgbmv(
 
     let info = 0;
 
-    if (!(tr === 'n' || tr === 't' || tr === 'c')) {
+    if (!'ntc'.includes(tr)) {
         info = 1;
     }
     else if (m < 0) {
@@ -124,21 +123,17 @@ export function cgbmv(
     //   First form  y := beta*y.
 
 
-    if (!(betaIsOne)) {
-        let iy = ky - y.base;
-        //speedup
-        if (betaIsZero && incy === 1) {
-            y.r.fill(0);
-            y.i.fill(0);
-        }// "normal"
-        else {
-            //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-            for (let i = 1; i <= leny; i++) {
-                y.r[iy] = betaIsZero ? 0 : BetaRe * y.r[iy] - BetaIm * y.i[iy];
-                y.i[iy] = betaIsZero ? 0 : BetaRe * y.i[iy] + BetaIm * y.r[iy];
-                iy += incy;
-            }
+    if (!betaIsOne) {
+        let iy = ky;
+        //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
+        for (let i = 1; i <= leny; i++) {
+            const re = betaIsZero ? 0 : BetaRe * y.r[iy - y.base] - BetaIm * y.i[iy - y.base];
+            const im = betaIsZero ? 0 : BetaRe * y.i[iy - y.base] + BetaIm * y.r[iy - y.base];
+            y.r[iy - y.base] = re;
+            y.i[iy - y.base] = im;
+            iy += incy;
         }
+
     }
     if (alphaIsZero) return;
     const kup1 = ku + 1;

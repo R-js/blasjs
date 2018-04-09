@@ -37,7 +37,7 @@ const {
 const { abs } = Math;
 const { isNaN, isFinite } = Number;
 
-describe('blas level 2 single/double precision', function n() {
+describe.skip('blas level 2 single/double precision', function n() {
 
   describe('sgbmv', () => {
 
