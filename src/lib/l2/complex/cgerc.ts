@@ -1,4 +1,11 @@
-import { Complex, errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
+import {
+    Complex,
+    errMissingIm,
+    errWrongArg,
+    FortranArr,
+    isZero,
+    Matrix
+} from '../../f_func';
 
 const { max } = Math;
 
@@ -42,7 +49,7 @@ export function cgerc(
         throw new Error(errMissingIm('a.i'));
     }
 
-    const alphaIsZero = alpha.re === 0 && alpha.im === 0;
+    const alphaIsZero = isZero(alpha);
 
     //stripp mine
     const { re: AlphaRe, im: AlphaIm } = alpha;
@@ -81,24 +88,30 @@ export function cgerc(
     let jy = incy > 0 ? 1 : 1 - (n - 1) * incy;
     let kx = incx > 0 ? 1 : 1 - (m - 1) * incx;
 
-    jy -= y.base;
 
     for (let j = 1; j <= n; j++) {
-        if (y.r[jy] === 0 && y.i[jy] === 0) {
-            //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-            //CONJ( (a + bi) )(c+di)= (a*c+b*d), i(a*d-b*c)
-            let tempRe = AlphaRe * y.r[jy] + AlphaIm * y.i[jy];
-            let tempIm = AlphaRe * y.i[jy] - AlphaIm * y.r[jy];
-
-            let ix = kx - x.base;
+        if (!(y.r[jy - y.base] === 0 && y.i[jy - y.base] === 0)) {
+            // TEMP = ALPHA*DCONJG(Y(JY))
+            //(a + bi) )*(c-di)= (a*c+b*d)+ i(-a*d+b*c)
+            let tempRe = AlphaRe * y.r[jy - y.base] + AlphaIm * y.i[jy - y.base];
+            let tempIm = -AlphaRe * y.i[jy - y.base] + AlphaIm * y.r[jy - y.base];
+            //console.log(`j:${j}, alpha*conj(y[j])=(${tempRe},${tempIm})`);
+            let ix = kx;
             const coords = a.colOfEx(j);
             for (let i = 1; i <= m; i++) {
                 //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-                a.r[coords + i] += x.r[ix] * tempRe - x.i[ix] * tempIm;
-                a.i[coords + i] += x.r[ix] * tempIm + x.i[ix] * tempRe;
+
+                const re = x.r[ix - x.base] * tempRe - x.i[ix - x.base] * tempIm;
+                const im = x.r[ix - x.base] * tempIm + x.i[ix - x.base] * tempRe;
+
+                //console.log(`i,j:(${i},${j}), alpha*x[i]*conj(y[j])=(${re},${im})`);
+
+                a.r[coords + i] += re;
+                a.i[coords + i] += im;
+
                 ix += incx;
             }
-            jy += incy;
         }
+        jy += incy;
     }
 }

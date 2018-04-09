@@ -31,7 +31,7 @@ export function sign(a: number, b?: number): number {
 type ArrayElt = { key: string | number, val: any };
 export type Complex = { re: number, im: number };
 export type fpArray = Float32Array | Float64Array;
-export type FortranSetterGetter = (index: number) => (value?: number) => number | Complex;
+export type FortranSetterGetter = (index: number) => (re?: number, im?: number) => number | Complex;
 export type FortranArr = {
     base: number,
     r: fpArray,
@@ -71,7 +71,7 @@ export function mimicFArray(r: fpArray, i?: fpArray) {
                     throw new Error('You specified a complex number for a real array');
                 }
                 if (i !== undefined) {
-                    r[index - startIndex] = im || 0;
+                    i[index - startIndex] = im || 0;
                     return { re: pRe || 0, im: pIm || 0 };
                 }
                 return pRe;
@@ -248,6 +248,7 @@ export interface Matrix {
     lowerBand(value: number): Matrix;
     packedUpper(value: number): FortranArr;
     packedLower(value: number): FortranArr;
+    toArr(): Complex[] | number[];
 }
 
 
@@ -371,6 +372,16 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
             },
             packedLower(k: number = lda - 1) {
                 return packedBandi_fied_Matrix('l', k, this);
+            },
+            toArr(): Complex[] | number[] {
+                const rc: any[] = new Array(lda * nrCols).fill(0);
+                for (let j = 1; j <= nrCols; j++) {
+                    const coor = (j - 1) * this.colSize - 1;
+                    for (let i = 1; i <= lda; i++) {
+                        rc[coor + i] = (this.i === undefined) ? this.r[coor + i] : { re: this.r[coor + i], im: this.i[coor + i] };
+                    }
+                }
+                return rc;
             },
             slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix {
                 const rowSize = (rowEnd - rowStart) + 1;
