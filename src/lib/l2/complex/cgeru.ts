@@ -7,7 +7,14 @@
 *>     Richard Hanson, Sandia National Labs.
 */
 
-import { Complex, errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
+import {
+    Complex,
+    errMissingIm,
+    errWrongArg,
+    FortranArr,
+    isZero,
+    Matrix
+} from '../../f_func';
 
 const { max } = Math;
 
@@ -55,24 +62,24 @@ export function cgeru(
 
     const { re: AlphaRe, im: AlphaIm } = alpha;
 
-    const alphaIsZero = AlphaRe === 0 && AlphaIm === 0;
+    const alphaIsZero = isZero(alpha);
 
     //Quick return if possible.
 
     if (m === 0 || n === 0 || alphaIsZero) return;
 
     let jy = incy > 0 ? 1 : 1 - (n - 1) * incy;
-    let kx = incx > 0 ? 1 : 1 - (n - 1) * incx;
-    jy -= y.base;
+    let kx = incx > 0 ? 1 : 1 - (m - 1) * incx;
+
     for (let j = 1; j <= n; j++) {
-        if (y.r[jy] !== 0 && y.i[jy] !== 0) {
-            let tempRe = AlphaRe * y.r[jy] - AlphaIm * y.i[jy];
-            let tempIm = AlphaRe * y.i[jy] + AlphaIm * y.r[jy];
-            let ix = kx - x.base;
+        if (!(y.r[jy - y.base] === 0 && y.i[jy - y.base] === 0)) {
+            let tempRe = AlphaRe * y.r[jy - y.base] - AlphaIm * y.i[jy - y.base];
+            let tempIm = AlphaRe * y.i[jy - y.base] + AlphaIm * y.r[jy - y.base];
+            let ix = kx;
             const coords = a.colOfEx(j);
             for (let i = 1; i <= m; i++) {
-                a.r[coords + i] += x.r[ix] * tempRe - x.i[ix] * tempIm;
-                a.i[coords + i] += x.r[ix] * tempIm + x.i[ix] * tempRe;
+                a.r[coords + i] += x.r[ix - x.base] * tempRe - x.i[ix - x.base] * tempIm;
+                a.i[coords + i] += x.r[ix - x.base] * tempIm + x.i[ix - x.base] * tempRe;
                 ix += incx;
             }
         }

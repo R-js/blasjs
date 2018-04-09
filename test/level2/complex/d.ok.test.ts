@@ -18,7 +18,8 @@ const {
   level2: {
     cgbmv,
     cgemv,
-    cgerc
+    cgerc,
+    cgeru
   }
 } = blas;
 
@@ -197,6 +198,62 @@ describe('blas level 2 single/double complex', function n() {
           const sy = fortranArrComplex64(y)();
 
           const call = () => cgerc(m, n, alpha, sx, incx, sy, incy, aM, lda);
+          //call();
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+  describe('cgeru', () => {
+
+    describe('data tests', () => {
+      const { cgeru: testData } = fixture;
+
+      each(testData)(({ input: {
+        m,
+        n,
+        alpha,
+        a,
+        lda,
+        x,
+        incx,
+        y,
+        incy
+      }, expect, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+          //console.log('a:', a.toArr());
+          //console.log(`before y:${JSON.stringify(y.toArr())}`);
+          //console.log(`before x:${JSON.stringify(x.toArr())}`);
+          cgeru(m, n, alpha, x, incx, y, incy, a, lda);
+          //a.toArr().forEach(cplx => {
+          //  console.log(`(${cplx.re},${cplx.im})`);
+          //});
+          const approx = approximatelyWithPrec(1E-5);
+          multiplexer(a.toArr(), expect.a)(approx);
+        });
+      });
+    });
+
+    describe('test errors', () => {
+      const { cgeruErrors: errors } = fixture;
+      each(errors)(({ input: {
+        m,
+        n,
+        alpha,
+        a,
+        lda,
+        x,
+        incx,
+        y,
+        incy
+      }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const aM = fortranMatrixComplex64(a)(1, 1);
+          const sx = fortranArrComplex64(x)();
+          const sy = fortranArrComplex64(y)();
+
+          const call = () => cgeru(m, n, alpha, sx, incx, sy, incy, aM, lda);
           //call();
           expect(call).to.throw();
         });
