@@ -1,4 +1,4 @@
-*> \brief \b CHEMV
+*> \brief \b ZHEMV
 *
 *  =========== DOCUMENTATION ===========
 *
@@ -8,15 +8,15 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE CHEMV(UPLO,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
+*       SUBROUTINE ZHEMV(UPLO,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 *
 *       .. Scalar Arguments ..
-*       COMPLEX ALPHA,BETA
+*       COMPLEX*16 ALPHA,BETA
 *       INTEGER INCX,INCY,LDA,N
 *       CHARACTER UPLO
 *       ..
 *       .. Array Arguments ..
-*       COMPLEX A(LDA,*),X(*),Y(*)
+*       COMPLEX*16 A(LDA,*),X(*),Y(*)
 *       ..
 *
 *
@@ -25,7 +25,7 @@
 *>
 *> \verbatim
 *>
-*> CHEMV  performs the matrix-vector  operation
+*> ZHEMV  performs the matrix-vector  operation
 *>
 *>    y := alpha*A*x + beta*y,
 *>
@@ -59,20 +59,17 @@
 *>
 *> \param[in] ALPHA
 *> \verbatim
-*>          ALPHA is COMPLEX
+*>          ALPHA is COMPLEX*16
 *>           On entry, ALPHA specifies the scalar alpha.
 *> \endverbatim
 *>
 *> \param[in] A
 *> \verbatim
-*>           A is COMPLEX array, dimension ( LDA, N )
-*>           
+*>          A is COMPLEX*16 array, dimension ( LDA, N )
 *>           Before entry with  UPLO = 'U' or 'u', the leading n by n
-*>           
-*>           triangular part of the array A must contain the upper
+*>           upper triangular part of the array A must contain the upper
 *>           triangular part of the hermitian matrix and the strictly
 *>           lower triangular part of A is not referenced.
-*>           
 *>           Before entry with UPLO = 'L' or 'l', the leading n by n
 *>           lower triangular part of the array A must contain the lower
 *>           triangular part of the hermitian matrix and the strictly
@@ -91,7 +88,7 @@
 *>
 *> \param[in] X
 *> \verbatim
-*>          X is COMPLEX array, dimension at least
+*>          X is COMPLEX*16 array, dimension at least
 *>           ( 1 + ( n - 1 )*abs( INCX ) ).
 *>           Before entry, the incremented array X must contain the n
 *>           element vector x.
@@ -106,14 +103,14 @@
 *>
 *> \param[in] BETA
 *> \verbatim
-*>          BETA is COMPLEX
+*>          BETA is COMPLEX*16
 *>           On entry, BETA specifies the scalar beta. When BETA is
 *>           supplied as zero then Y need not be set on input.
 *> \endverbatim
 *>
 *> \param[in,out] Y
 *> \verbatim
-*>          Y is COMPLEX array, dimension at least
+*>          Y is COMPLEX*16 array, dimension at least
 *>           ( 1 + ( n - 1 )*abs( INCY ) ).
 *>           Before entry, the incremented array Y must contain the n
 *>           element vector y. On exit, Y is overwritten by the updated
@@ -137,7 +134,7 @@
 *
 *> \date December 2016
 *
-*> \ingroup complex_blas_level2
+*> \ingroup complex16_blas_level2
 *
 *> \par Further Details:
 *  =====================
@@ -155,7 +152,7 @@
 *> \endverbatim
 *>
 *  =====================================================================
-      SUBROUTINE CHEMV(UPLO,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
+      SUBROUTINE ZHEMV(UPLO,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 *
 *  -- Reference BLAS level2 routine (version 3.7.0) --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -163,24 +160,24 @@
 *     December 2016
 *
 *     .. Scalar Arguments ..
-      COMPLEX ALPHA,BETA
+      COMPLEX*16 ALPHA,BETA
       INTEGER INCX,INCY,LDA,N
       CHARACTER UPLO
 *     ..
 *     .. Array Arguments ..
-      COMPLEX A(LDA,*),X(*),Y(*)
+      COMPLEX*16 A(LDA,*),X(*),Y(*)
 *     ..
 *
 *  =====================================================================
 *
 *     .. Parameters ..
-      COMPLEX ONE
-      PARAMETER (ONE= (1.0E+0,0.0E+0))
-      COMPLEX ZERO
-      PARAMETER (ZERO= (0.0E+0,0.0E+0))
+      COMPLEX*16 ONE
+      PARAMETER (ONE= (1.0D+0,0.0D+0))
+      COMPLEX*16 ZERO
+      PARAMETER (ZERO= (0.0D+0,0.0D+0))
 *     ..
 *     .. Local Scalars ..
-      COMPLEX TEMP1,TEMP2
+      COMPLEX*16 TEMP1,TEMP2
       INTEGER I,INFO,IX,IY,J,JX,JY,KX,KY
 *     ..
 *     .. External Functions ..
@@ -191,7 +188,7 @@
       EXTERNAL XERBLA
 *     ..
 *     .. Intrinsic Functions ..
-      INTRINSIC CONJG,MAX,REAL
+      INTRINSIC DBLE,DCONJG,MAX
 *     ..
 *
 *     Test the input parameters.
@@ -209,7 +206,7 @@
           INFO = 10
       END IF
       IF (INFO.NE.0) THEN
-          CALL XERBLA('CHEMV ',INFO)
+          CALL XERBLA('ZHEMV ',INFO)
           RETURN
       END IF
 *
@@ -237,17 +234,17 @@
 *     First form  y := beta*y.
 *
       IF (BETA.NE.ONE) THEN
-c          IF (INCY.EQ.1) THEN
-c              IF (BETA.EQ.ZERO) THEN
-c                  DO 10 I = 1,N
-c                      Y(I) = ZERO
-c   10             CONTINUE
-c              ELSE
-c                  DO 20 I = 1,N
-c                      Y(I) = BETA*Y(I)
-c   20             CONTINUE
-c             END IF
-c          ELSE
+          IF (INCY.EQ.1) THEN
+              IF (BETA.EQ.ZERO) THEN
+                  DO 10 I = 1,N
+                      Y(I) = ZERO
+   10             CONTINUE
+              ELSE
+                  DO 20 I = 1,N
+                      Y(I) = BETA*Y(I)
+   20             CONTINUE
+              END IF
+          ELSE
               IY = KY
               IF (BETA.EQ.ZERO) THEN
                   DO 30 I = 1,N
@@ -260,24 +257,24 @@ c          ELSE
                       IY = IY + INCY
    40             CONTINUE
               END IF
-c          END IF
+          END IF
       END IF
       IF (ALPHA.EQ.ZERO) RETURN
       IF (LSAME(UPLO,'U')) THEN
 *
 *        Form  y  when A is stored in upper triangle.
 *
-c          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
-c              DO 60 J = 1,N
-c                  TEMP1 = ALPHA*X(J)
-c                  TEMP2 = ZERO
-c                  DO 50 I = 1,J - 1
-c                      Y(I) = Y(I) + TEMP1*A(I,J)
-c                      TEMP2 = TEMP2 + CONJG(A(I,J))*X(I)
-c   50             CONTINUE
-c                  Y(J) = Y(J) + TEMP1*REAL(A(J,J)) + ALPHA*TEMP2
-c   60         CONTINUE
-c          ELSE
+          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
+              DO 60 J = 1,N
+                  TEMP1 = ALPHA*X(J)
+                  TEMP2 = ZERO
+                  DO 50 I = 1,J - 1
+                      Y(I) = Y(I) + TEMP1*A(I,J)
+                      TEMP2 = TEMP2 + DCONJG(A(I,J))*X(I)
+   50             CONTINUE
+                  Y(J) = Y(J) + TEMP1*DBLE(A(J,J)) + ALPHA*TEMP2
+   60         CONTINUE
+          ELSE
               JX = KX
               JY = KY
               DO 80 J = 1,N
@@ -287,15 +284,15 @@ c          ELSE
                   IY = KY
                   DO 70 I = 1,J - 1
                       Y(IY) = Y(IY) + TEMP1*A(I,J)
-                      TEMP2 = TEMP2 + CONJG(A(I,J))*X(IX)
+                      TEMP2 = TEMP2 + DCONJG(A(I,J))*X(IX)
                       IX = IX + INCX
                       IY = IY + INCY
    70             CONTINUE
-                  Y(JY) = Y(JY) + TEMP1*REAL(A(J,J)) + ALPHA*TEMP2
+                  Y(JY) = Y(JY) + TEMP1*DBLE(A(J,J)) + ALPHA*TEMP2
                   JX = JX + INCX
                   JY = JY + INCY
    80         CONTINUE
-c          END IF
+          END IF
       ELSE
 *
 *        Form  y  when A is stored in lower triangle.
@@ -304,10 +301,10 @@ c          IF ((INCX.EQ.1) .AND. (INCY.EQ.1)) THEN
 c              DO 100 J = 1,N
 c                  TEMP1 = ALPHA*X(J)
 c                  TEMP2 = ZERO
-c                  Y(J) = Y(J) + TEMP1*REAL(A(J,J))
+c                  Y(J) = Y(J) + TEMP1*DBLE(A(J,J))
 c                  DO 90 I = J + 1,N
 c                      Y(I) = Y(I) + TEMP1*A(I,J)
-c                      TEMP2 = TEMP2 + CONJG(A(I,J))*X(I)
+c                      TEMP2 = TEMP2 + DCONJG(A(I,J))*X(I)
 c   90             CONTINUE
 c                  Y(J) = Y(J) + ALPHA*TEMP2
 c  100         CONTINUE
@@ -317,24 +314,24 @@ c          ELSE
               DO 120 J = 1,N
                   TEMP1 = ALPHA*X(JX)
                   TEMP2 = ZERO
-                  Y(JY) = Y(JY) + TEMP1*REAL(A(J,J))
+                  Y(JY) = Y(JY) + TEMP1*DBLE(A(J,J))
                   IX = JX
                   IY = JY
                   DO 110 I = J + 1,N
                       IX = IX + INCX
                       IY = IY + INCY
                       Y(IY) = Y(IY) + TEMP1*A(I,J)
-                      TEMP2 = TEMP2 + CONJG(A(I,J))*X(IX)
+                      TEMP2 = TEMP2 + DCONJG(A(I,J))*X(IX)
   110             CONTINUE
                   Y(JY) = Y(JY) + ALPHA*TEMP2
                   JX = JX + INCX
                   JY = JY + INCY
   120         CONTINUE
-c          END IF
-      END IF
+          END IF
+c      END IF
 *
       RETURN
 *
-*     End of CHEMV .
+*     End of ZHEMV .
 *
       END

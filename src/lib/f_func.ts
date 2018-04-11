@@ -242,8 +242,8 @@ export interface Matrix {
     coord(col): (row) => number;
     setCol(col: number, rowStart: number, rowEnd: number, value: number): void;
     slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
-    setLower(value: number): void;
-    setUpper(value: number): void;
+    setLower(value: number): Matrix;
+    setUpper(value: number): Matrix;
     upperBand(value: number): Matrix;
     lowerBand(value: number): Matrix;
     packedUpper(value: number): FortranArr;
@@ -408,20 +408,22 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
             setLower(value = 0) {
                 for (let y = 1; y < nrCols; y++) {
                     const coor = this.colOfEx(y);
-                    r.fill(value, coor + y + 1, coor + lda + 1);
-                    if (i) {
-                        i.fill(value, coor + y, coor + lda + 1);
+                    this.r.fill(value, coor + y + 1, coor + lda + 1);
+                    if (this.i) {
+                        this.i.fill(value, coor + y + 1, coor + lda + 1);
                     }
                 }
+                return this;
             },
             setUpper(value = 0) {
                 for (let y = 2; y <= nrCols; y++) {
                     const coor = this.colOfEx(y);
                     r.fill(value, coor + 1, coor + min(y, lda));
-                    if (i) {
-                        r.fill(value, coor + 1, coor + min(y, lda));
+                    if (this.i) {
+                        this.i.fill(value, coor + 1, coor + min(y, lda));
                     }
                 }
+                return this;
             }
         });
     }
