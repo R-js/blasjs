@@ -6,14 +6,14 @@
 *>     Richard Hanson, Sandia National Labs.
 */
 
-import { errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
+import { errMissingIm, errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
 
 const { max } = Math;
 
 export function cher(
     uplo: 'u' | 'l',
     n: number,
-    alpha: number, //acc to normal pattern, this would be complex
+    alpha: number, //this is the ONLY level 2, complex function that has a REAL/DOUBLE PREC alpha  
     x: FortranArr,
     incx: number,
     a: Matrix,
@@ -26,11 +26,10 @@ export function cher(
         throw new Error(errMissingIm('a.i'));
     }
 
-    const ul = String.fromCharCode(uplo.charCodeAt(0) | 0X20);
-
+    const ul = lowerChar(uplo);
 
     let info = 0;
-    if (ul !== 'u' && ul !== 'l') {
+    if (!'ul'.includes(ul)) {
         info = 1;
     }
     else if (n < 0) {
@@ -53,21 +52,34 @@ export function cher(
 
     if (ul === 'u') {
         //*        Form  A  when A is stored in upper triangle.
-        let jx = kx - x.base;
+        let jx = kx;
         for (let j = 1; j <= n; j++) {
+            // console.log(`(${x.r[jx - x.base]},${-x.i[jx - x.base]})`);
+
             const coords = a.colOfEx(j);
-            if (x.r[jx] !== 0 || x.i[jx] !== 0) {
-                let tempRe = alpha * x.r[jx];
-                let tempIm = alpha * x.i[jx];
-                let ix = kx - x.base;
+            //console.log(`j=(${j})`);
+            const xIsZero = x.r[jx - x.base] === 0 && x.i[jx - x.base] === 0;
+            if (!xIsZero) {
+
+                let tempRe = alpha * x.r[jx - x.base];
+                let tempIm = alpha * -x.i[jx - x.base];
+
+                let ix = kx;
 
                 for (let i = 1; i <= j - 1; i++) {
-                    a.r[coords + i] += x.r[ix] * tempRe - x.i[ix] * tempIm;
-                    a.i[coords + i] += x.r[ix] * tempIm + x.i[ix] * tempRe;
+                    //  console.log(`(${x.r[ix - x.base]},${x.i[ix - x.base]})*(${tempRe},${tempIm})`);
+                    const re = x.r[ix - x.base] * tempRe - x.i[ix - x.base] * tempIm;
+                    const im = x.r[ix - x.base] * tempIm + x.i[ix - x.base] * tempRe;
+                    a.r[coords + i] += re;
+                    a.i[coords + i] += im;
+                    //console.log(`${i},${j},(${a.r[coords + i]},${a.i[coords + i]})`);
+
+                    //console.log(`(i,j)=(${i},${j}), X*temp=(${re},${im})`);
+
                     ix += incx;
                 }
                 a.i[coords + j] = 0;
-                a.r[coords + j] += x.r[jx] * tempRe - x.i[jx] * tempIm;
+                a.r[coords + j] += (x.r[jx - x.base] * tempRe - x.i[jx - x.base] * tempIm);
             }
             else {
                 a.i[coords + j] = 0;
@@ -77,21 +89,27 @@ export function cher(
     }
     else {
         //    * Form  A  when A is stored in lower triangle.
-        let jx = kx - x.base;
+        let jx = kx
         for (let j = 1; j <= n; j++) {
             const coords = a.colOfEx(j);
-            if (!(x.r[jx] === 0 && x.i[jx] === 0)) {
-                let tempRe = alpha * x.r[jx];
-                let tempIm = -alpha * x.i[jx];
+            if (!(x.r[jx - x.base] === 0 && x.i[jx - x.base] === 0)) {
+                //   TEMP = ALPHA*CONJG(X(JX))
+                let tempRe = alpha * x.r[jx - x.base];
+                let tempIm = -alpha * x.i[jx - x.base];
+
+                //A(J,J) = REAL(A(J,J)) + REAL(TEMP*X(JX))
                 a.i[coords + j] = 0;
-                let ix = kx - x.base;
-                for (let i = 1; i <= j - 1; i++) {
-                    a.r[coords + i] += x.r[ix] * tempRe - x.i[ix] * tempIm;
-                    a.i[coords + i] += x.r[ix] * tempIm + x.i[ix] * tempRe;
+                a.r[coords + j] += tempRe * x.r[jx - x.base] - tempIm * x.i[jx - x.base];
+
+                //IX = JX
+
+                let ix = jx;
+                for (let i = j + 1; i <= n; i++) {
                     ix += incx;
+                    a.r[coords + i] += x.r[ix - x.base] * tempRe - x.i[ix - x.base] * tempIm;
+                    a.i[coords + i] += x.r[ix - x.base] * tempIm + x.i[ix - x.base] * tempRe;
+
                 }
-                a.r[coords + j] += x.r[jx] * tempRe - x.i[jx] * tempIm;
-                a.i[coords + j] = 0;
             }
             else {
                 a.i[coords + j] = 0;

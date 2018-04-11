@@ -21,7 +21,8 @@ const {
     cgerc,
     cgeru,
     chbmv,
-    chemv
+    chemv,
+    cher
   }
 } = blas;
 
@@ -343,7 +344,7 @@ describe('blas level 2 single/double complex', function n() {
              });
            }*/
           chemv(uplo, n, alpha, a, lda, x, incx, beta, y, incy);
-          console.log('y=')
+
           /* y.toArr().forEach(cplx => {
              console.log(`+  (${cplx.re},${cplx.im}),`);
            });*/
@@ -374,6 +375,65 @@ describe('blas level 2 single/double complex', function n() {
           const sy = fortranArrComplex64(y)();
 
           const call = () => chemv(uplo, n, alpha, aM, lda, sx, incx, beta, sy, incy);
+          //call();
+
+          //TODO: specify the Exception message explicitly
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+
+  describe('cher', () => {
+    describe('data tests', () => {
+      const { cher: testData } = fixture;
+      each(testData)(({ input: {
+        //ZHER(UPLO,N,ALPHA,X,INCX,A,LDA)
+        uplo,
+        n,
+        alpha,
+        x,
+        incx,
+        a,
+        lda
+      }, expect, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          //console.log('before a=');
+          /* a.toArr().forEach(cplx => {
+             console.log(`+  (${cplx.re},${cplx.im}),`);
+           });*/
+          //console.log('x', x.toArr());
+          cher(uplo, n, alpha, x, incx, a, lda);
+
+          //console.log('after a=')
+          /* a.toArr().forEach(cplx => {
+             console.log(`+  (${cplx.re},${cplx.im}),`);
+           });*/
+          const approx = approximatelyWithPrec(1E-5);
+          multiplexer(a.toArr(), expect.a)(approx);
+        });
+      });
+    });
+
+    describe('test errors', () => {
+      const { cherErrors: errors } = fixture;
+      each(errors)(({ input: {
+        uplo,
+        n,
+        alpha,
+        a,
+        lda,
+        x,
+        incx,
+      }, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const aM = fortranMatrixComplex64(a)(1, 1);
+          const sx = fortranArrComplex64(x)();
+
+
+          const call = () => cher(uplo, n, alpha, sx, incx, aM, lda);
           //call();
 
           //TODO: specify the Exception message explicitly

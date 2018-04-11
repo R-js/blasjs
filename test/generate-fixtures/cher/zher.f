@@ -1,4 +1,4 @@
-*> \brief \b CHER
+*> \brief \b ZHER
 *
 *  =========== DOCUMENTATION ===========
 *
@@ -8,15 +8,15 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE CHER(UPLO,N,ALPHA,X,INCX,A,LDA)
+*       SUBROUTINE ZHER(UPLO,N,ALPHA,X,INCX,A,LDA)
 *
 *       .. Scalar Arguments ..
-*       REAL ALPHA
+*       DOUBLE PRECISION ALPHA
 *       INTEGER INCX,LDA,N
 *       CHARACTER UPLO
 *       ..
 *       .. Array Arguments ..
-*       COMPLEX A(LDA,*),X(*)
+*       COMPLEX*16 A(LDA,*),X(*)
 *       ..
 *
 *
@@ -25,8 +25,8 @@
 *>
 *> \verbatim
 *>
-*> CHER   performs the hermitian rank 1 operation
-*> 
+*> ZHER   performs the hermitian rank 1 operation
+*>
 *>    A := alpha*x*x**H + A,
 *>
 *> where alpha is a real scalar, x is an n element vector and A is an
@@ -59,13 +59,13 @@
 *>
 *> \param[in] ALPHA
 *> \verbatim
-*>          ALPHA is REAL
+*>          ALPHA is DOUBLE PRECISION.
 *>           On entry, ALPHA specifies the scalar alpha.
 *> \endverbatim
 *>
 *> \param[in] X
 *> \verbatim
-*>          X is COMPLEX array, dimension at least
+*>          X is COMPLEX*16 array, dimension at least
 *>           ( 1 + ( n - 1 )*abs( INCX ) ).
 *>           Before entry, the incremented array X must contain the n
 *>           element vector x.
@@ -80,15 +80,13 @@
 *>
 *> \param[in,out] A
 *> \verbatim
-*>          A is COMPLEX array, dimension ( LDA, N )
-*>
+*>          A is COMPLEX*16 array, dimension ( LDA, N )
 *>           Before entry with  UPLO = 'U' or 'u', the leading n by n
 *>           upper triangular part of the array A must contain the upper
 *>           triangular part of the hermitian matrix and the strictly
 *>           lower triangular part of A is not referenced. On exit, the
 *>           upper triangular part of the array A is overwritten by the
 *>           upper triangular part of the updated matrix.
-*>
 *>           Before entry with UPLO = 'L' or 'l', the leading n by n
 *>           lower triangular part of the array A must contain the lower
 *>           triangular part of the hermitian matrix and the strictly
@@ -98,7 +96,6 @@
 *>           Note that the imaginary parts of the diagonal elements need
 *>           not be set, they are assumed to be zero, and on exit they
 *>           are set to zero.
-*>
 *> \endverbatim
 *>
 *> \param[in] LDA
@@ -119,7 +116,7 @@
 *
 *> \date December 2016
 *
-*> \ingroup complex_blas_level2
+*> \ingroup complex16_blas_level2
 *
 *> \par Further Details:
 *  =====================
@@ -136,7 +133,7 @@
 *> \endverbatim
 *>
 *  =====================================================================
-      SUBROUTINE CHER(UPLO,N,ALPHA,X,INCX,A,LDA)
+      SUBROUTINE ZHER(UPLO,N,ALPHA,X,INCX,A,LDA)
 *
 *  -- Reference BLAS level2 routine (version 3.7.0) --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -144,22 +141,22 @@
 *     December 2016
 *
 *     .. Scalar Arguments ..
-      REAL ALPHA
+      DOUBLE PRECISION ALPHA
       INTEGER INCX,LDA,N
       CHARACTER UPLO
 *     ..
 *     .. Array Arguments ..
-      COMPLEX A(LDA,*),X(*)
+      COMPLEX*16 A(LDA,*),X(*)
 *     ..
 *
 *  =====================================================================
 *
 *     .. Parameters ..
-      COMPLEX ZERO
-      PARAMETER (ZERO= (0.0E+0,0.0E+0))
+      COMPLEX*16 ZERO
+      PARAMETER (ZERO= (0.0D+0,0.0D+0))
 *     ..
 *     .. Local Scalars ..
-      COMPLEX TEMP
+      COMPLEX*16 TEMP
       INTEGER I,INFO,IX,J,JX,KX
 *     ..
 *     .. External Functions ..
@@ -170,7 +167,7 @@
       EXTERNAL XERBLA
 *     ..
 *     .. Intrinsic Functions ..
-      INTRINSIC CONJG,MAX,REAL
+      INTRINSIC DBLE,DCONJG,MAX
 *     ..
 *
 *     Test the input parameters.
@@ -186,13 +183,13 @@
           INFO = 7
       END IF
       IF (INFO.NE.0) THEN
-          CALL XERBLA('CHER  ',INFO)
+          CALL XERBLA('ZHER  ',INFO)
           RETURN
       END IF
 *
 *     Quick return if possible.
 *
-      IF ((N.EQ.0) .OR. (ALPHA.EQ.REAL(ZERO))) RETURN
+      IF ((N.EQ.0) .OR. (ALPHA.EQ.DBLE(ZERO))) RETURN
 *
 *     Set the start point in X if the increment is not unity.
 *
@@ -210,35 +207,40 @@
 *
 *        Form  A  when A is stored in upper triangle.
 *
-c          IF (INCX.EQ.1) THEN
-c              DO 20 J = 1,N
-c                  IF (X(J).NE.ZERO) THEN
-c                      TEMP = ALPHA*CONJG(X(J))
-c                      DO 10 I = 1,J - 1
-c                          A(I,J) = A(I,J) + X(I)*TEMP
-c   10                 CONTINUE
-c                      A(J,J) = REAL(A(J,J)) + REAL(X(J)*TEMP)
-c                  ELSE
-c                      A(J,J) = REAL(A(J,J))
-c                  END IF
-c   20         CONTINUE
-c          ELSE
+          IF (INCX.EQ.1) THEN
+              DO 20 J = 1,N
+c                  PRINT *, ALPHA
+                
+                  IF (X(J).NE.ZERO) THEN
+                      TEMP = ALPHA*DCONJG(X(J))
+c                  PRINT *,"J=",J,TEMP
+                      DO 10 I = 1,J - 1
+c         PRINT *,"I,J=",I,J,"x*temp",DCONJG(X(J)),TEMP
+                         A(I,J) = A(I,J) + X(I)*TEMP
+c                PRINT *,"I,J=",I,J, A(I,J)        
+   10                 CONTINUE
+                      A(J,J) = DBLE(A(J,J)) + DBLE(X(J)*TEMP)
+                  ELSE
+                      A(J,J) = DBLE(A(J,J))
+                  END IF
+   20         CONTINUE
+          ELSE
               JX = KX
               DO 40 J = 1,N
                   IF (X(JX).NE.ZERO) THEN
-                      TEMP = ALPHA*CONJG(X(JX))
+                      TEMP = ALPHA*DCONJG(X(JX))
                       IX = KX
                       DO 30 I = 1,J - 1
                           A(I,J) = A(I,J) + X(IX)*TEMP
                           IX = IX + INCX
    30                 CONTINUE
-                      A(J,J) = REAL(A(J,J)) + REAL(X(JX)*TEMP)
+                      A(J,J) = DBLE(A(J,J)) + DBLE(X(JX)*TEMP)
                   ELSE
-                      A(J,J) = REAL(A(J,J))
+                      A(J,J) = DBLE(A(J,J))
                   END IF
                   JX = JX + INCX
    40         CONTINUE
-c          END IF
+          END IF
       ELSE
 *
 *        Form  A  when A is stored in lower triangle.
@@ -246,28 +248,28 @@ c          END IF
 c          IF (INCX.EQ.1) THEN
 c              DO 60 J = 1,N
 c                  IF (X(J).NE.ZERO) THEN
-c                      TEMP = ALPHA*CONJG(X(J))
-c                      A(J,J) = REAL(A(J,J)) + REAL(TEMP*X(J))
+c                      TEMP = ALPHA*DCONJG(X(J))
+c                      A(J,J) = DBLE(A(J,J)) + DBLE(TEMP*X(J))
 c                      DO 50 I = J + 1,N
 c                          A(I,J) = A(I,J) + X(I)*TEMP
 c   50                 CONTINUE
 c                  ELSE
-c                      A(J,J) = REAL(A(J,J))
+c                      A(J,J) = DBLE(A(J,J))
 c                  END IF
 c   60         CONTINUE
 c          ELSE
               JX = KX
               DO 80 J = 1,N
                   IF (X(JX).NE.ZERO) THEN
-                      TEMP = ALPHA*CONJG(X(JX))
-                      A(J,J) = REAL(A(J,J)) + REAL(TEMP*X(JX))
+                      TEMP = ALPHA*DCONJG(X(JX))
+                      A(J,J) = DBLE(A(J,J)) + DBLE(TEMP*X(JX))
                       IX = JX
                       DO 70 I = J + 1,N
                           IX = IX + INCX
                           A(I,J) = A(I,J) + X(IX)*TEMP
    70                 CONTINUE
                   ELSE
-                      A(J,J) = REAL(A(J,J))
+                      A(J,J) = DBLE(A(J,J))
                   END IF
                   JX = JX + INCX
    80         CONTINUE
@@ -276,6 +278,6 @@ c          END IF
 *
       RETURN
 *
-*     End of CHER  .
+*     End of ZHER  .
 *
       END
