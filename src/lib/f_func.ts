@@ -246,8 +246,8 @@ export interface Matrix {
     setUpper(value: number): Matrix;
     upperBand(value: number): Matrix;
     lowerBand(value: number): Matrix;
-    packedUpper(value: number): FortranArr;
-    packedLower(value: number): FortranArr;
+    packedUpper(value?: number): FortranArr;
+    packedLower(value?: number): FortranArr;
     toArr(): Complex[] | number[];
 }
 
@@ -288,6 +288,7 @@ function packedBandi_fied_Matrix(uplo: 'u' | 'l', k: number, A: Matrix): Fortran
         A.r instanceof Float32Array ? Float32Array : undefined);
     if (createArr === undefined) throw Error('[re] type should be "Float64Array" or "Float32Array"');
 
+    console.log('packedsize:', packedSize);
     let re = new createArr(packedSize);
     let im: fpArray | undefined;
     if (A.i) {
@@ -304,7 +305,7 @@ function packedBandi_fied_Matrix(uplo: 'u' | 'l', k: number, A: Matrix): Fortran
             re[cursor] = A.r[coorJ + i];
             //re[base + m + i] = A.r[coorJ + i];
             if (im && A.i) {
-                m[cursor] = A.i[coorJ + i];
+                im[cursor] = A.i[coorJ + i];
                 //im[base + m + i] = A.i[coorJ + i];
             }
             cursor++;

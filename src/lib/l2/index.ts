@@ -82,6 +82,7 @@ export const level2 = {
     cher2,
     chpmv,
     chpr,
+    chpr2,
     ctbmv,
     ctbsv,
     ctpsv,
@@ -106,4 +107,5 @@ export const level2 = {
     ztrmv: ctrmv,
     ztrsv: ctrsv,
 };
+
 

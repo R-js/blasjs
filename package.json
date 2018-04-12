@@ -101,7 +101,7 @@
         "pre-test": "echo prestest",
         "preinstall": "echo install",
         "prepare": "echo 'prepare'",
-        "prepublish": "echo 'prepublish'",
+        "prepublish": "tsc",
         "prepublishOnly": "echo prepublishOnly",
         "prerestart": "echo prerestart",
         "preshrinkwrap": "echo preshrinkwrap",

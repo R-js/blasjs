@@ -22,7 +22,8 @@ const {
     cgeru,
     chbmv,
     chemv,
-    cher
+    cher,
+    chpr2
   }
 } = blas;
 
@@ -431,12 +432,73 @@ describe('blas level 2 single/double complex', function n() {
 
           const aM = fortranMatrixComplex64(a)(1, 1);
           const sx = fortranArrComplex64(x)();
-
-
           const call = () => cher(uplo, n, alpha, sx, incx, aM, lda);
-          //call();
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+  describe('chpr2', () => {
+    describe('data tests', () => {
+      const { chpr2: testData } = fixture;
+      each(testData)(({
+        input: {
+          //CHPR2(UPLO,N,ALPHA,X,INCX,Y,INCY,AP)
+          uplo,
+          n,
+          alpha,
+          x,
+          incx,
+          y,
+          incy,
+          ap
+        }, expect, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
 
-          //TODO: specify the Exception message explicitly
+          //console.log('before a=');
+          /* a.toArr().forEach(cplx => {
+             console.log(`+  (${cplx.re},${cplx.im}),`);
+           });*/
+          /*console.log('before ap');
+          ap.toArr().forEach(cplx => {
+            console.log(`     +  (${cplx.re},${cplx.im}),`);
+          });*/
+          //console.log('before y', y.toArr());
+          //console.log('before x', x.toArr());
+          chpr2(uplo, n, alpha, x, incx, y, incy, ap);
+          //console.log('after a=')
+          /*          ap.toArr().forEach(cplx => {
+                      console.log(`+  (${cplx.re},${cplx.im}),`);
+                    });*/
+          const approx = approximatelyWithPrec(1E-5);
+          multiplexer(ap.toArr(), expect.ap)(approx);
+        });
+      });
+    });
+
+    describe('test errors', () => {
+      const { chpr2Errors: errors } = fixture;
+      each(errors)(({
+        input: {
+          uplo,
+          n,
+          alpha,
+          ap,
+          y,
+          x,
+          incx,
+          incy
+        }, desc
+      }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const aP = fortranArrComplex64(ap)();
+          const sx = fortranArrComplex64(x)();
+          const sy = fortranArrComplex64(y)();
+
+          //console.log(aP, sx, sy, n, incx, incy, uplo)
+          const call = () => chpr2(uplo, n, alpha, sx, incx, sy, incy, aP);
+          //call();
           expect(call).to.throw();
         });
       });

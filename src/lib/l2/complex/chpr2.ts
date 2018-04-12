@@ -8,7 +8,14 @@
 */
 
 
-import { Complex, errMissingIm, errWrongArg, FortranArr } from '../../f_func';
+import {
+    Complex,
+    errMissingIm,
+    errWrongArg,
+    FortranArr,
+    isZero,
+    lowerChar
+} from '../../f_func';
 
 
 
@@ -36,10 +43,10 @@ export function chpr2(
     }
 
     // faster then String.toLowerCase()
-    const ul = String.fromCharCode(uplo.charCodeAt(0) | 0X20);
+    const ul = lowerChar(uplo);
 
     let info = 0;
-    if (ul !== 'u' && ul !== 'l') {
+    if (!'ul'.includes(ul)) {
         info = 1;
     }
     else if (n < 0) {
@@ -55,58 +62,67 @@ export function chpr2(
         throw new Error(errWrongArg('chpr2', info));
     }
     const { re: AlphaRe, im: AlphaIm } = alpha;
-    const alphaIsZero = AlphaRe === 0 && AlphaIm === 0;
+    const alphaIsZero = isZero(alpha);
 
     if (n === 0 || alphaIsZero) return;
 
     let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
     let ky = incy < 0 ? 1 - (n - 1) * incy : 1;
 
-    let jx = kx - x.base;
-    let jy = ky - y.base;
+    let jx = kx;
+    let jy = ky;
 
     let kk = 1;
 
     if (ul === 'u') {
         for (let j = 1; j <= n; j++) {
-            const apkk = kk - ap.base; //note kk is updated within this loop
-            const xIsZero = x.r[jx] === 0 && x.i[jx] === 0;
-            const yIsZero = y.r[jy] === 0 && y.i[jy] === 0;
+            //const apkk = kk - ap.base; //note kk is updated within this loop
+            const xIsZero = x.r[jx - x.base] === 0 && x.i[jx - x.base] === 0;
+            const yIsZero = y.r[jy - x.base] === 0 && y.i[jy - y.base] === 0;
             if (!xIsZero || !yIsZero) {
                 //(a+ib)(c-id)=(ac+bd)+i(-ad+ bc)
-                let temp1Re = AlphaRe * y.r[jy] + AlphaIm * y.i[jy];
-                let temp1Im = -AlphaRe * y.i[jy] + AlphaIm * y.r[jy];
+                //TEMP1 = ALPHA*CONJG(Y(JY))
 
+                let temp1Re = AlphaRe * y.r[jy - y.base] + AlphaIm * y.i[jy - y.base];
+                let temp1Im = -AlphaRe * y.i[jy - y.base] + AlphaIm * y.r[jy - y.base];
                 //(a-ib)(c+id)=(ac+bd)+i(ad-bc)
+                //TEMP2 = CONJG(ALPHA*X(JX))
 
-                let temp2Re = AlphaRe * y.r[jy] + AlphaIm * y.i[jy];
-                let temp2Im = AlphaRe * y.i[jy] - AlphaIm * y.i[jy];
-
-
-                ap.i[apkk] = 0;
-                ap.r[apkk] += (x.r[jx] * temp1Re - x.i[jx] * temp1Im)
-                    + (y.r[jy] * temp2Re - y.i[jy] * temp2Im);
-
-                let ix = jx;
-                let iy = jy;
+                let temp2Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
+                let temp2Im = -(AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base]);
+                //console.log(`j${j}, t1=(${temp1Re},${temp1Im}), t2=(${temp2Re},${temp2Im})`);
+                let ix = kx;
+                let iy = ky;
                 for (let k = kk; k <= kk + j - 2; k++) {
-                    ap.r[k - ap.base] +=
-                        (x.r[ix] * temp1Re - x.i[ix] * temp1Im) +
-                        (y.r[iy] * temp2Re - y.i[iy] * temp2Im);
+                    //AP(K) = AP(K) + X(IX)*TEMP1 + Y(IY)*TEMP2
+                    //X(IX)*TEMP1 
+                    // const xre = x.r[ix - x.base];
+                    // const xim = x.i[ix - x.base];
+                    // console.log(`j:${j},k:${k},ix:${ix},iy:${iy},x:(${xre},${xim}),`);
+
+                    let re = (x.r[ix - x.base] * temp1Re - x.i[ix - x.base] * temp1Im);
+                    let im = (x.r[ix - x.base] * temp1Im + x.i[ix - x.base] * temp1Re);
+                    // Y(IY)*TEMP2
+                    re += (y.r[iy - y.base] * temp2Re - y.i[iy - y.base] * temp2Im);
+                    im += (y.r[iy - y.base] * temp2Im + y.i[iy - y.base] * temp2Re);
+
+                    ap.r[k - ap.base] += re;
+                    ap.i[k - ap.base] += im;
+
                     ix += incx;
                     iy += incy;
                 }
-                ap.i[apkk + j - 1] = 0;
-                ap.r[apkk + j - 1] =
-                    // REAL(x[jx]*temp1)    
-                    (x.r[jx] * temp1Re - x.i[jx] * temp1Im)
-                    + //REAL(y[jy]*temp2)
-                    (y.r[jy] * temp2Re - y.i[jy] * temp2Im);
+                ap.i[kk + j - 1 - ap.base] = 0;
+                ap.r[kk + j - 1 - ap.base] +=
+                    //  REAL(X(JX)*TEMP1+Y(JY)*TEMP2)   
+                    (x.r[jx - x.base] * temp1Re - x.i[jx - x.base] * temp1Im)
+                    + //REAL(y[jy-y.base]*temp2)
+                    (y.r[jy - y.base] * temp2Re - y.i[jy - y.base] * temp2Im);
 
             } //if  !xIsZero || !yIsZero
             else {
                 // nuke imaginary part
-                ap.i[apkk] = 0;
+                ap.i[kk + j - 1 - ap.base] = 0;
             }// if
             jx += incx;
             jy += incy;
@@ -116,27 +132,26 @@ export function chpr2(
     else {
         // Form  A  when lower triangle is stored in AP.
         for (let j = 1; j <= n; j++) {
-            const apkk = kk - ap.base; //note kk is updated within this loop
-            const xIsZero = x.r[jx] === 0 && x.i[jx] === 0;
-            const yIsZero = y.r[jy] === 0 && y.i[jy] === 0;
+            //const apkk = kk - ap.base; //note kk is updated within this loop
+            const xIsZero = x.r[jx - x.base] === 0 && x.i[jx - x.base] === 0;
+            const yIsZero = y.r[jy - y.base] === 0 && y.i[jy - y.base] === 0;
 
             if (!(xIsZero && yIsZero)) {
-
+                //TEMP1 = ALPHA*CONJG(Y(JY))
                 //(a+ib)(c-id)=(ac+bd)+i(-ad+ bc)
-                let temp1Re = AlphaRe * y.r[jy] + AlphaIm * y.i[jy];
-                let temp1Im = -AlphaRe * y.i[jy] + AlphaIm * y.r[jy];
+                let temp1Re = AlphaRe * y.r[jy - y.base] + AlphaIm * y.i[jy - y.base];
+                let temp1Im = -AlphaRe * y.i[jy - y.base] + AlphaIm * y.r[jy - y.base];
 
                 //(a-ib)(c+id)=(ac+bd)+i(ad-bc)
+                //TEMP2 = CONJG(ALPHA*X(JX))
+                let temp2Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
+                let temp2Im = -(AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base]);
 
-                let temp2Re = AlphaRe * y.r[jy] + AlphaIm * y.i[jy];
-                let temp2Im = AlphaRe * y.i[jy] - AlphaIm * y.i[jy];
+                ap.r[kk - ap.base] += (x.r[jx - x.base] * temp1Re - x.i[jx - x.base] * temp1Im)
+                    + (y.r[jy - y.base] * temp2Re - y.i[jy - y.base] * temp2Im);
 
-                ap.i[apkk] = 0;
-                ap.r[apkk] =
-                    // REAL(x[jx]*temp1)    
-                    (x.r[jx] * temp1Re - x.i[jx] * temp1Im)
-                    + //REAL(y[jy]*temp2)
-                    (y.r[jy] * temp2Re - y.i[jy] * temp2Im);
+
+                ap.i[kk - ap.base] = 0;
 
                 let ix = jx;
                 let iy = jy;
@@ -145,13 +160,19 @@ export function chpr2(
 
                     ix += incx;
                     iy += incy;
+                    // AP(K) = AP(K) + X(IX)*TEMP1 + Y(IY)*TEMP2
+
                     ap.r[k - ap.base] +=
-                        (x.r[ix] * temp1Re - x.i[ix] * temp1Im)
+                        (x.r[ix - x.base] * temp1Re - x.i[ix - x.base] * temp1Im)
                         +
-                        (y.r[iy] * temp2Re - y.i[iy] * temp2Re);
+                        (y.r[iy - y.base] * temp2Re - y.i[iy - y.base] * temp2Im);
+                    ap.i[k - ap.base] +=
+                        (x.r[ix - x.base] * temp1Im + x.i[ix - x.base] * temp1Re)
+                        +
+                        (y.r[iy - y.base] * temp2Im + y.i[iy - y.base] * temp2Re);
                 }
             } else {
-                ap.i[apkk] = 0;
+                ap.i[kk - ap.base] = 0;
             }
             jx += incx;
             jy += incy;
