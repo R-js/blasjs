@@ -23,6 +23,7 @@ const {
     chbmv,
     chemv,
     cher,
+    cher2,
     chpr2
   }
 } = blas;
@@ -498,6 +499,61 @@ describe('blas level 2 single/double complex', function n() {
 
           //console.log(aP, sx, sy, n, incx, incy, uplo)
           const call = () => chpr2(uplo, n, alpha, sx, incx, sy, incy, aP);
+          //call();
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+  describe('cher2', () => {
+    describe('data tests', () => {
+      const { cher2: testData } = fixture;
+      each(testData)(({
+        input: {
+          //CHPR2(UPLO,N,ALPHA,X,INCX,Y,INCY,AP)
+          uplo,
+          n,
+          alpha,
+          incx,
+          incy,
+          lda,
+          x,
+          y,
+          a
+        }, expect, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          cher2(uplo, n, alpha, x, incx, y, incy, a, lda);
+
+          const approx = approximatelyWithPrec(1E-5);
+          multiplexer(a.toArr(), expect.a)(approx);
+        });
+      });
+    });
+
+    describe('test errors', () => {
+      const { cher2Errors: errors } = fixture;
+      each(errors)(({
+        input: {
+          uplo,
+          n,
+          alpha,
+          a,
+          y,
+          x,
+          lda,
+          incx,
+          incy
+        }, desc
+      }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const aM = fortranMatrixComplex64(a)(1, 1);
+          const sx = fortranArrComplex64(x)();
+          const sy = fortranArrComplex64(y)();
+
+          //console.log(aP, sx, sy, n, incx, incy, uplo)
+          const call = () => cher2(uplo, n, alpha, sx, incx, sy, incy, aM, lda);
           //call();
           expect(call).to.throw();
         });

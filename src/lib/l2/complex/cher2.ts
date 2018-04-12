@@ -7,7 +7,15 @@
 *>     Richard Hanson, Sandia National Labs.
 */
 
-import { Complex, errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
+import {
+    Complex,
+    errMissingIm,
+    errWrongArg,
+    FortranArr,
+    isZero,
+    lowerChar,
+    Matrix
+} from '../../f_func';
 
 const { max } = Math;
 /*
@@ -43,12 +51,10 @@ export function cher2(
         throw new Error(errMissingIm('a.i'));
     }
 
-    const ul = String.fromCharCode(uplo.charCodeAt(0) | 0X20);
-
-
+    const ul = lowerChar(uplo);
 
     let info = 0;
-    if (ul !== 'u' && ul !== 'l') {
+    if (!'ul'.includes(ul)) {
         info = 1;
     }
     else if (n < 0) {
@@ -70,49 +76,61 @@ export function cher2(
 
     const { re: AlphaRe, im: AlphaIm } = alpha;
 
-    const alphaIsZero = AlphaRe === 0 && AlphaIm === 0;
+    const alphaIsZero = isZero(alpha);
 
     if (n === 0 || alphaIsZero) return; //nothing to do
 
     let kx = incx > 0 ? 1 : 1 - (n - 1) * incx;
     let ky = incy > 0 ? 1 : 1 - (n - 1) * incy;
-    let jx = kx - x.base;
-    let jy = ky - y.base;
+    let jx = kx;
+    let jy = ky;
 
     if (ul === 'u') {
-        //        Form  A  when A is stored in the upper triangle.
+        // Form  A  when A is stored in the upper triangle.
         for (let j = 1; j <= n; j++) {
-            const coords = a.colOfEx(j);
-            if (!(x.r[jx] === 0 && x.i[jx] === 0)
-                || !(y.r[jy] === 0 && y.i[jy] === 0)
-            ) {
-                let temp1Re = AlphaRe * y.r[jy] + AlphaIm * y.i[jy];
-                let temp1Im = -AlphaRe * y.i[jy] + AlphaIm * y.r[jy];
+            const coorAJ = a.colOfEx(j);
+            const xIsZero = x.r[jx - x.base] === 0 && x.i[jx - x.base] === 0;
+            const yIsZero = y.r[jy - y.base] === 0 && y.i[jy - y.base] === 0;
 
-                let temp2Re = AlphaRe * x.r[jx] - AlphaIm * x.i[jx];
-                let temp2Im = AlphaRe * x.i[jx] + AlphaIm * x.r[jx];
+            if (!xIsZero || !yIsZero) {
+                //console.log(`${jx},${jy}  : ${xIsZero},${yIsZero}`);
+                // TEMP1 = ALPHA*CONJG(Y(JY))
+                let temp1Re = AlphaRe * y.r[jy - y.base] + AlphaIm * y.i[jy - y.base];
+                let temp1Im = -AlphaRe * y.i[jy - y.base] + AlphaIm * y.r[jy - y.base];
 
-                let ix = kx - x.base;
-                let iy = ky - y.base;
+                // TEMP2 = CONJG(ALPHA*X(JX))
+                let temp2Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
+                let temp2Im = -(AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base]);
+
+                //console.log(`${jx},${jy}, (${temp1Re},${temp1Im}),(${temp2Re},${temp2Im})`);
+
+                let ix = kx;
+                let iy = ky;
 
                 for (let i = 1; i <= j - 1; i++) {
-                    a.r[coords + 1] +=
-                        (x.r[ix] * temp1Re - x.i[ix] * temp1Im) +
-                        (y.r[iy] * temp2Re - y.i[iy] * temp2Im);
-                    a.i[coords + 1] +=
-                        (x.r[ix] * temp1Im + x.i[ix] * temp1Re) +
-                        (y.r[iy] * temp2Im + y.i[iy] * temp2Re);
+                    // X(IX)*TEMP1
+                    const re1 = (x.r[ix - x.base] * temp1Re - x.i[ix - x.base] * temp1Im);
+                    const im1 = (x.r[ix - x.base] * temp1Im + x.i[ix - x.base] * temp1Re);
+                    //Y(IY)*TEMP2
+                    const re2 = (y.r[iy - y.base] * temp2Re - y.i[iy - y.base] * temp2Im);
+                    const im2 = (y.r[iy - y.base] * temp2Im + y.i[iy - y.base] * temp2Re);
 
+                    //console.log(`${jx},${jy}, (${re1},${im1}),(${re2},${im2})`);
+                    a.r[coorAJ + i] += re1 + re2;
+                    a.i[coorAJ + i] += im1 + im2;
+                    //console.log(`i:${i},j:${j}, (${re1 + re2},${im1 + im2})`);
                     ix += incx;
                     iy += incy;
                 }//for
-                a.i[coords + j] = 0;
-                a.r[coords + j] +=
-                    (x.r[jx] * temp1Re - x.i[jx] * temp1Im)
-                    +
-                    (y.r[jy] * temp2Re - y.i[jy] * temp2Im)
+                //X(JX)*TEMP1
+                const re1 = x.r[jx - x.base] * temp1Re - x.i[jx - x.base] * temp1Im;
+                //Y(JY)*TEMP2
+                const re2 = y.r[jy - y.base] * temp2Re - y.i[jy - y.base] * temp2Im;
+
+                a.r[coorAJ + j] += re1 + re2;
+                a.i[coorAJ + j] = 0;
             } else {
-                a.i[coords + j] = 0;
+                a.i[coorAJ + j] = 0;
             }
             jx += incx;
             jy += incy;
@@ -123,40 +141,46 @@ export function cher2(
 
         for (let j = 1; j <= n; j++) {
 
-            const coords = a.colOfEx(j);
-            if (
-                !(x.r[jx] === 0 && x.r[jx] === 0)
-                ||
-                !(y.r[jy] === 0 && x.i[jy] === 0)) {
+            const coorAJ = a.colOfEx(j);
+            const xIsZero = x.r[jx - x.base] === 0 && x.i[jx - x.base] === 0;
+            const yIsZero = y.r[jy - y.base] === 0 && y.i[jy - y.base] === 0;
+
+            if (!xIsZero || !yIsZero) {
                 //TEMP1 = ALPHA*CONJG(Y(JY))
-                // (a+ib)*(c-di)= ac -iad + ibc+ bd = (ac+bd) + i(-ad+bc)
-                // (a-ib)*(c+di)= ac+adi -ibc+bd = (ac+bd)+i(ad-bc)
+                // (a+ib)*(c-di)=  (ac+bd) + i(-ad+bc)
+                let temp1Re = AlphaRe * y.r[jy - y.base] + AlphaIm * y.i[jy - y.base];
+                let temp1Im = -AlphaRe * y.i[jy - y.base] + AlphaIm * y.r[jy - y.base];
 
-                let temp1Re = AlphaRe * y.r[jy] + AlphaIm * y.i[jy];
-                let temp1Im = -AlphaRe * y.i[jy] + AlphaIm * y.r[jy];
+                //TEMP2 = DCONJG(ALPHA * X(JX))
+                let temp2Re = AlphaRe * x.r[jx - y.base] - AlphaIm * x.i[jx - x.base];
+                let temp2Im = -(AlphaRe * x.i[jx - y.base] + AlphaIm * x.r[jx - x.base]);
 
-                let temp2Re = AlphaRe * y.r[jy] - AlphaIm * y.i[jy];
-                let temp2Im = -(AlphaRe * y.i[jy] + AlphaIm * y.i[jy]);
+                a.i[coorAJ + j] = 0;
+                a.r[coorAJ + j] +=
+                    // REAL( X(JX)*TEMP1 )
+                    (x.r[jx - x.base] * temp1Re - x.i[jx - x.base] * temp1Im) +
 
-                a.i[coords + j] = 0;
-                a.r[coords + j] +=
-                    (x.r[jx] * temp1Re - x.i[jx] * temp1Im) +
-                    (y.r[jy] * temp2Re - y.i[jy * temp2Im]);
+                    // REAL(  Y(JY)*TEMP2  )
+                    (y.r[jy - y.base] * temp2Re - y.i[jy - y.base] * temp2Im);
                 let ix = jx;
                 let iy = jy;
                 for (let i = j + 1; i <= n; i++) {
                     ix += incx;
                     iy += incy;
-                    a.r[coords + i] +=
-                        (x.r[ix] * temp1Re - x.i[ix] * temp1Im) +
-                        (y.r[iy] * temp2Re - y.i[iy] * temp2Im);
-                    a.i[coords + i] +=
-                        (x.r[ix] * temp1Im + x.i[ix] * temp1Re) +
-                        (y.r[iy] * temp2Im + y.i[iy] * temp2Re);
+                    //X(IX)*TEMP1
+                    const re1 = (x.r[ix - x.base] * temp1Re - x.i[ix - x.base] * temp1Im);
+                    const im1 = (x.r[ix - x.base] * temp1Im + x.i[ix - x.base] * temp1Re);
+
+                    //Y(IY)*TEMP2
+                    const re2 = (y.r[iy - y.base] * temp2Re - y.i[iy - y.base] * temp2Im);
+                    const im2 = (y.r[iy - y.base] * temp2Im + y.i[iy - y.base] * temp2Re);
+
+                    a.r[coorAJ + i] += re1 + re2;
+                    a.i[coorAJ + i] += im1 + im2;
                 }
             }
             else {
-                a.i[coords + j] = 0;
+                a.i[coorAJ + j] = 0;
             }
             jx += incx;
             jy += incy;
