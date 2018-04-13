@@ -24,7 +24,8 @@ const {
     chemv,
     cher,
     cher2,
-    chpr2
+    chpr2,
+    chpmv
   }
 } = blas;
 
@@ -559,5 +560,65 @@ describe('blas level 2 single/double complex', function n() {
         });
       });
     });
+    describe('chpmv', () => {
+      describe('data tests', () => {
+        const { chpmv: testData } = fixture;
+        each(testData)(({
+          input: {
+            //CHPR2(UPLO,N,ALPHA,X,INCX,Y,INCY,AP)
+            uplo,
+            n,
+            alpha,
+            beta,
+            incx,
+            incy,
+            x,
+            y,
+            ap
+          }, expect, desc }, key) => {
+          it(`[${key}]/[${desc}]`, function t() {
+
+            chpmv(uplo, n, alpha, ap, x, incx, beta, y, incy);
+
+            // console.log('y=');
+            // y.toArr().forEach(v => console.log(`    + (${v.re},${v.im}`));
+
+            const approx = approximatelyWithPrec(1E-5);
+            multiplexer(y.toArr(), expect.y)(approx);
+          });
+        });
+      });
+
+      describe('test errors', () => {
+        const { chpmvErrors: errors } = fixture;
+        each(errors)(({
+          input: {
+            uplo,
+            n,
+            alpha,
+            beta,
+            incx,
+            incy,
+            x,
+            y,
+            ap
+          }, desc
+        }, key) => {
+          it(`[${key}]/[${desc}]`, function t() {
+
+            const aP = fortranArrComplex64(ap)();
+            const sx = fortranArrComplex64(x)();
+            const sy = fortranArrComplex64(y)();
+
+            //console.log(aP, sx, sy, n, incx, incy, uplo)
+
+            const call = () => chpmv(uplo, n, alpha, aP, sx, incx, beta, sy, incy);
+            //call();
+            expect(call).to.throw();
+          });
+        });
+      });
+    });
   });
 });
+

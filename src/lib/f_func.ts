@@ -584,3 +584,27 @@ export function render(
     const im = `= ${a}.r[${aix} - ${a}.base]*${b}.i[${bix}-${b}.base] + ${a}.i[${aix} - ${a}.base]*${b}.r[${bix}-${b}.base];`;
     return `${re}\n${im}\n`;
 }
+
+export function mul_rxc(re: number, im: number, c: Complex): Complex {
+    const r = re * c.re - im * c.im;
+    const i = re * c.im + im * c.re;
+    return { re: r, im: i }
+}
+
+export function mul_rxr(re1: number, im1: number, re2: number, im2: number): Complex {
+    const r = re1 * re2 - im1 * im2;
+    const i = re1 * im2 + im1 * re2;
+    return { re: r, im: i }
+}
+
+export function mul_cxr(c: Complex, re: number, im: number): Complex {
+    const r = c.re * re - c.im * im;
+    const i = c.re * im + c.im * re;
+    return { re: r, im: i }
+}
+
+export function mul_cxc(c1: Complex, c2: Complex): Complex {
+    const r = c1.re * c2.re - c1.im * c2.im;
+    const i = c1.re * c2.im + c1.im * c2.re;
+    return { re: r, im: i }
+}
