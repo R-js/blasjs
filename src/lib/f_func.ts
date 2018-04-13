@@ -288,7 +288,7 @@ function packedBandi_fied_Matrix(uplo: 'u' | 'l', k: number, A: Matrix): Fortran
         A.r instanceof Float32Array ? Float32Array : undefined);
     if (createArr === undefined) throw Error('[re] type should be "Float64Array" or "Float32Array"');
 
-    console.log('packedsize:', packedSize);
+
     let re = new createArr(packedSize);
     let im: fpArray | undefined;
     if (A.i) {

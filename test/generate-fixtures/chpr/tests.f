@@ -1,6 +1,6 @@
       PROGRAM test
 
-      EXTERNAL ZHPR2, COPY, ZEROA, COPYMA,FILL
+      EXTERNAL ZHPR, COPY, ZEROA, COPYMA,FILL
       EXTERNAL FILLM, PRNMATR, PRNVEC, CRCMPLX
       EXTERNAL CCPLX, PRNMATRC,PRNVECC
       EXTERNAL COPYCC
@@ -14,9 +14,9 @@
       CHARACTER UPLO
 
       COMPLEX*16 APLO(APSIZE), APUP(APSIZE), AP(APSIZE)
-      COMPLEX*16 ALPHA
+      DOUBLE PRECISION ALPHA
            
-      COMPLEX*16 V6(6), Y(6), X(6) 
+      COMPLEX*16 V6(6), X(6) 
 
       DATA (APUP(I), I =1, APSIZE)/
      +  (1.2629542848807933,-0.42951310949188126),
@@ -76,39 +76,33 @@
       PRINT * , "==CASE 0======="
 
         CALL CCPLX(V6,X,6)
-        CALL CCPLX(V6,Y,6)
         CALL CCPLX(APUP, AP, APSIZE)
        
         UPLO='U'
         INCX=1
-        INCY=1
-        ALPHA = (0.2,0.8)
-
+        ALPHA = 0.2
         X(4) =  (0,0)
         X(2) =  (0,0)
 
-        Y(4) = (0,0)
+       
 
-        CALL ZHPR2(UPLO,N,ALPHA,X,INCX,Y,INCY,AP)
+        CALL ZHPR(UPLO,N,ALPHA,X,INCX,AP)
         CALL PRNVECC(AP, APSIZE)
 
-         PRINT * , "==CASE 1======="
+       PRINT * , "==CASE 1======="
 
         CALL CCPLX(V6,X,6)
-        CALL CCPLX(V6,Y,6)
-        CALL CCPLX(APLO, AP, APSIZE)
+        CALL CCPLX(APUP, AP, APSIZE)
        
         UPLO='L'
         INCX=-1
-        INCY=-1
-        ALPHA = (0.2,0.8)
-
+        ALPHA = 0.2
         X(4) =  (0,0)
         X(2) =  (0,0)
 
-        Y(4) = (0,0)
+       
 
-        CALL ZHPR2(UPLO,N,ALPHA,X,INCX,Y,INCY,AP)
+        CALL ZHPR(UPLO,N,ALPHA,X,INCX,AP)
         CALL PRNVECC(AP, APSIZE)
 
       end
