@@ -6,7 +6,14 @@
 *>     Sven Hammarling, Nag Central Office.
 *>     Richard Hanson, Sandia National Labs.
 */
-import { errMissingIm, errWrongArg, FortranArr, Matrix } from '../../f_func';
+import {
+    errMissingIm,
+    errWrongArg,
+    FortranArr,
+    lowerChar,
+    Matrix,
+    mul_rxr
+} from '../../f_func';
 /*
 *>
 *> CTBMV  performs one of the matrix-vector operations
@@ -39,18 +46,18 @@ export function ctbmv(
     }
 
     // faster then String.toLowerCase()
-    const ul: 'u' | 'l' = String.fromCharCode(uplo.charCodeAt(0) | 0X20) as any;
-    const tr: 'n' | 't' | 'c' = String.fromCharCode(trans.charCodeAt(0) | 0X20) as any;
-    const dg: 'u' | 'n' = String.fromCharCode(diag.charCodeAt(0) | 0X20) as any;
+    const ul = lowerChar(uplo);
+    const tr = lowerChar(trans);
+    const dg = lowerChar(diag);
 
     let info = 0;
-    if (ul !== 'u' && ul !== 'l') {
+    if (!'ul'.includes(ul)) {
         info = 1;
     }
-    else if (tr !== 'n' && tr !== 't' && tr !== 'c') {
+    else if (!'ntc'.includes(tr)) {
         info = 2;
     }
-    else if (dg !== 'u' && dg !== 'n') {
+    else if (!'un'.includes(dg)) {
         info = 3;
     }
     else if (n < 0) {
@@ -79,48 +86,57 @@ export function ctbmv(
     if (tr === 'n') {
         if (ul === 'u') {
             let kplus1 = k + 1;
-            let jx = kx - x.base;
+            let jx = kx;
             for (let j = 1; j <= n; j++) {
-                const xIsZero = x.r[jx] === 0 && x.i[jx] === 0;
+                const xIsZero = x.r[jx - x.base] === 0
+                    && x.i[jx - x.base] === 0;
                 if (!xIsZero) {
-                    let tempRe = x.r[jx];
-                    let tempIm = x.i[jx];
-                    let ix = kx - x.base;
+                    //  TEMP = X(JX)
+                    let tempRe = x.r[jx - x.base];
+                    let tempIm = x.i[jx - x.base];
+                    let ix = kx;
                     let L = kplus1 - j;
-                    const coords = a.colOfEx(j);
+                    const coorAJ = a.colOfEx(j);
                     for (let i = max(1, j - k); i <= j - 1; i++) {
-                        x.r[ix] += tempRe * a.r[coords + L + i] - tempIm * a.i[coords + L + i];
+                        const { re, im } = mul_rxr(tempRe, tempIm, a.r[coorAJ + L + i], a.i[coorAJ + L + i]);
+                        x.r[ix - x.base] += re;
+                        x.i[ix - x.base] += im;
                         ix += incx;
                     }
                     if (nounit) {
-                        x.r[jx] += x.r[jx] * a.r[coords + kplus1] - x.i[jx] * a.i[coords + kplus1];
-                        x.i[jx] += x.r[jx] * a.i[coords + kplus1] + x.i[jx] * a.r[coords + kplus1];
+                        const { re, im } = mul_rxr(x.r[jx - x.base], x.i[jx - x.base], a.r[coorAJ + kplus1], a.i[coorAJ + kplus1]); // * a.r[coorAJ + kplus1] - x.i[jx - x.base] * a.i[coorAJ + kplus1];
+                        x.r[jx - x.base] = re;
+                        x.i[jx - x.base] = im;
                     }
-                    jx += incx;
-                    if (j > k) kx += incx;
                 }
-            }//for
+                jx += incx;
+                if (j > k) kx += incx;
+
+            } //for
         }
-        //ul !== ['u']
+        // ul !== ['u']
         else {
             kx += (n - 1) * incx;
-            let jx = kx - x.base;
+            let jx = kx;
             for (let j = n; j >= 1; j--) {
-                const coords = a.colOfEx(j);
-                const xIsZero = x.r[jx] === 0 && x.i[jx] === 0;
+                const coorAJ = a.colOfEx(j);
+                const xIsZero = x.r[jx - x.base] === 0 && x.i[jx - x.base] === 0;
                 if (!xIsZero) {
-                    let tempRe = x.r[jx];
-                    let tempIm = x.i[jx];
-                    let ix = kx - x.base;
+                    let tempRe = x.r[jx - x.base];
+                    let tempIm = x.i[jx - x.base];
+                    let ix = kx;
                     let L = 1 - j;
                     for (let i = min(n, j + k); i >= j + 1; i--) {
-                        x.r[ix] += tempRe * a.r[coords + L + i] - tempIm * a.i[coords + L + i];
-                        x.i[ix] += tempIm * a.i[coords + L + i] + tempRe * a.r[coords + L + i];
+                        // X(IX) = X(IX) + TEMP*A(L+I,J)
+                        const { re, im } = mul_rxr(tempRe, tempIm, a.r[coorAJ + L + i], a.i[coorAJ + L + i]);
+                        x.r[ix - x.base] += re; //tempRe * a.r[coorAJ + L + i] - tempIm * a.i[coorAJ + L + i];
+                        x.i[ix - x.base] += im; //tempIm * a.i[coorAJ + L + i] + tempRe * a.r[coorAJ + L + i];
                         ix -= incx;
                     }
                     if (nounit) {
-                        x.r[jx] = x.r[jx] * a.r[coords + 1] - x.i[jx] * a.i[coords + 1];
-                        x.i[jx] = x.r[jx] * a.i[coords + 1] + x.i[jx] * a.r[coords + 1];
+                        const { re, im } = mul_rxr(x.r[jx - x.base], x.i[jx - x.base], a.r[coorAJ + 1], a.i[coorAJ + 1]);
+                        x.r[jx - x.base] = re; //x.r[jx - x.base] * a.r[coorAJ + 1] - x.i[jx - x.base] * a.i[coorAJ + 1];
+                        x.i[jx - x.base] = im; //x.r[jx - x.base] * a.i[coorAJ + 1] + x.i[jx - x.base] * a.r[coorAJ + 1];
                     }
                 }
                 jx -= incx;
@@ -128,92 +144,65 @@ export function ctbmv(
             }
         }
     } else {
+        // trans != 'n'    
         if (ul === 'u') {
             let kplus1 = k + 1;
             kx += (n - 1) * incx;
-            let jx = kx - x.base;
+            let jx = kx;
             for (let j = n; j >= 1; j--) {
-                let tempRe = x.r[jx];
-                let tempIm = x.i[jx];
+                let tempRe = x.r[jx - x.base];
+                let tempIm = x.i[jx - x.base];
 
                 kx -= incx;
-                let ix = kx - x.base;
+                let ix = kx;
                 let L = kplus1 - j;
-                const coords = a.colOfEx(j);
+                const coorAJ = a.colOfEx(j);
                 const extrI = max(1, j - k); // evaluate once!
-                if (noconj) {
-                    if (nounit) {
-                        const tr = tempRe * a.r[coords + kplus1] - tempIm * a.i[coords + kplus1];
-                        const ti = tempRe * a.i[coords + kplus1] + tempIm * a.r[coords + kplus1];
-                        tempRe = tr;
-                        tempIm = ti;
-
-                    }
-                    for (let i = j - 1; j >= extrI; i--) {
-                        tempRe += a.r[coords + L + i] * x.r[ix] - a.i[coords + L + i] * a.i[ix];
-                        tempIm += a.r[coords + L + i] * x.i[ix] + a.i[coords + L + i] * x.r[ix];
-                        ix -= incx;
-                    }
+                const sign: 1 | -1 = noconj ? 1 : -1;
+                if (nounit) {
+                    // TEMP*A(1,J)
+                    const { re, im } = mul_rxr(tempRe, tempIm, a.r[coorAJ + kplus1], sign * a.i[coorAJ + kplus1]);
+                    tempRe = re;
+                    tempIm = im;
                 }
-                else {
-                    if (nounit) {
-                        // (a+ib)*(c-id) =(ac-iad+ibc+bd) = (ac+bd)+i(-ad+bc)
-                        tempRe += (tempRe * a.r[coords + kplus1] + tempIm * a.i[coords + kplus1]);
-                        tempIm += (-tempRe * a.i[coords + kplus1] + tempIm * a.r[coords + kplus1]);
-                    }
-
-                    for (let i = j - 1; i >= extrI; i--) {
-                        // (a-ib)*(c+id) = ac+iad-ibc+bd = (ac+bd)+i(ad-bc)
-                        tempRe += a.r[coords + L + i] * x.r[ix] + a.i[coords + L + i] * x.i[ix];
-                        tempIm += a.r[coords + L + i] * x.i[ix] - a.i[coords + L + i] * x.r[ix];
-                        ix -= incx;
-                    }
+                for (let i = j - 1; i >= extrI; i--) {
+                    //A(L+I,J)*X(IX)
+                    const { re, im } = mul_rxr(a.r[coorAJ + L + i], sign * a.i[coorAJ + L + i], x.r[ix - x.base], x.i[ix - x.base]);
+                    tempRe += re;
+                    tempIm += im;
+                    ix -= incx;
                 }
-                x.r[jx] = tempRe;
-                x.i[jx] = tempIm;
+                x.r[jx - x.base] = tempRe;
+                x.i[jx - x.base] = tempIm;
                 jx -= incx;
             }
         }
         else {
-            let jx = kx - x.base;
-            for (let j = 1; j <= n; j--) {
-                let tempRe = x.r[jx];
-                let tempIm = x.i[jx];
+            //upl=lower
+            let jx = kx;
+            for (let j = 1; j <= n; j++) {
+                let tempRe = x.r[jx - x.base];
+                let tempIm = x.i[jx - x.base];
                 kx += incx;
-                let ix = kx - x.base;
+                let ix = kx;
                 const L = 1 - j;
                 const coords = a.colOfEx(j);
-                const extrI = max(n, j + k); // evaluate once!
-                if (noconj) {
-                    if (nounit) {
-                        const tr = tempRe * a.r[coords + 1] - tempIm * a.i[coords + 1];
-                        const ti = tempRe * a.i[coords + 1] + tempIm * a.r[coords + 1];
-                        tempRe = tr;
-                        tempIm = ti;
-                    }
-                    for (let i = j + 1; i <= extrI; i++) {
-                        tempRe += a.r[coords + L + i] * x.r[ix] - a.i[coords + L + i] * x.i[ix];
-                        tempIm += a.r[coords + L + i] * x.i[ix] + a.i[coords + L + i] * x.r[ix];
-                        ix += incx;
-                    }
+                const extrI = min(n, j + k); // evaluate once!
+                const sign = noconj ? 1 : -1;
+                //   IF (NOUNIT) TEMP = TEMP*(N|C)A(1,J)
+                if (nounit) {
+                    const { re, im } = mul_rxr(tempRe, tempIm, a.r[coords + 1], sign * a.i[coords + 1]);
+                    tempRe = re;
+                    tempIm = im;
                 }
-                else {
-                    if (nounit) {
-                        //(a+ib)*(c-id) = (ac+bd) + i(-ad+bc)
-                        const tr = tempRe * a.r[coords + 1] + tempIm * a.i[coords + 1];
-                        const ti = -tempRe * a.i[coords + 1] + tempIm * a.r[coords + 1];
-                        tempRe = tr;
-                        tempIm = ti;
-                    }
-                    for (let i = j + 1; i <= extrI; i++) {
-                        //(a-ib)*(c+id) = ac+iad-ibc+bd = (ac+bd)+i(ad-bc)
-                        tempRe += a.r[coords + L + i] * x.r[ix] + a.i[coords + L + i] * x.i[ix];
-                        tempIm += a.r[coords + L + i] * x.i[ix] - a.i[coords + L + i] * x.r[ix];
-                        ix += incx;
-                    }
+                for (let i = j + 1; i <= extrI; i++) {
+                    const { re, im } = mul_rxr(a.r[coords + L + i], sign * a.i[coords + L + i], x.r[ix - x.base], x.i[ix - x.base]);
+                    tempRe += re;
+                    tempIm += im;
+                    ix += incx;
                 }
-                x.r[jx] = tempRe;
-                x.i[jx] = tempIm;
+                x.r[jx - x.base] = tempRe;
+                x.i[jx - x.base] = tempIm;
                 jx += incx;
             }
         }

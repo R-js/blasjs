@@ -26,7 +26,9 @@ const {
     cher2,
     chpr,
     chpr2,
-    chpmv
+    ctbmv,
+    chpmv,
+
   }
 } = blas;
 
@@ -342,16 +344,10 @@ describe('blas level 2 single/double complex', function n() {
         y
       }, expect, desc }, key) => {
         it(`[${key}]/[${desc}]`, function t() {
-          /* if (key === 'case2') {
-             a.toArr().forEach(cplx => {
-               console.log(`     +  (${cplx.re},${cplx.im}),`);
-             });
-           }*/
+
           chemv(uplo, n, alpha, a, lda, x, incx, beta, y, incy);
 
-          /* y.toArr().forEach(cplx => {
-             console.log(`+  (${cplx.re},${cplx.im}),`);
-           });*/
+
           const approx = approximatelyWithPrec(1E-5);
           multiplexer(y.toArr(), expect.y)(approx);
         });
@@ -404,16 +400,12 @@ describe('blas level 2 single/double complex', function n() {
         it(`[${key}]/[${desc}]`, function t() {
 
           //console.log('before a=');
-          /* a.toArr().forEach(cplx => {
-             console.log(`+  (${cplx.re},${cplx.im}),`);
-           });*/
+
           //console.log('x', x.toArr());
           cher(uplo, n, alpha, x, incx, a, lda);
 
           //console.log('after a=')
-          /* a.toArr().forEach(cplx => {
-             console.log(`+  (${cplx.re},${cplx.im}),`);
-           });*/
+
           const approx = approximatelyWithPrec(1E-5);
           multiplexer(a.toArr(), expect.a)(approx);
         });
@@ -456,22 +448,12 @@ describe('blas level 2 single/double complex', function n() {
         }, expect, desc }, key) => {
         it(`[${key}]/[${desc}]`, function t() {
 
-          /*console.log('before ap=');
-          ap.toArr().forEach(cplx => {
-            console.log(`+  (${cplx.re},${cplx.im}),`);
-          });*/
+
 
           //console.log('before y', y.toArr());
           //console.log('before x', x.toArr());
           chpr(uplo, n, alpha, x, incx, ap);
-          /*console.log('after ap');
-          ap.toArr().forEach(cplx => {
-            console.log(`     +  (${cplx.re},${cplx.im}),`);
-          });*/
-          //console.log('after a=')
-          /*          ap.toArr().forEach(cplx => {
-                      console.log(`+  (${cplx.re},${cplx.im}),`);
-                    });*/
+
           const approx = approximatelyWithPrec(1E-5);
           multiplexer(ap.toArr(), expect.ap)(approx);
         });
@@ -523,20 +505,12 @@ describe('blas level 2 single/double complex', function n() {
         it(`[${key}]/[${desc}]`, function t() {
 
           //console.log('before a=');
-          /* a.toArr().forEach(cplx => {
-             console.log(`+  (${cplx.re},${cplx.im}),`);
-           });*/
-          /*console.log('before ap');
-          ap.toArr().forEach(cplx => {
-            console.log(`     +  (${cplx.re},${cplx.im}),`);
-          });*/
+
           //console.log('before y', y.toArr());
           //console.log('before x', x.toArr());
           chpr2(uplo, n, alpha, x, incx, y, incy, ap);
           //console.log('after a=')
-          /*          ap.toArr().forEach(cplx => {
-                      console.log(`+  (${cplx.re},${cplx.im}),`);
-                    });*/
+
           const approx = approximatelyWithPrec(1E-5);
           multiplexer(ap.toArr(), expect.ap)(approx);
         });
@@ -679,6 +653,64 @@ describe('blas level 2 single/double complex', function n() {
           //console.log(aP, sx, sy, n, incx, incy, uplo)
 
           const call = () => chpmv(uplo, n, alpha, aP, sx, incx, beta, sy, incy);
+          //call();
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+
+  describe('ctbmv', () => {
+    describe('data tests', () => {
+      const { ctbmv: testData } = fixture;
+      each(testData)(({
+        input: {
+          uplo,
+          trans,
+          diag,
+          n,
+          k,
+          lda,
+          incx,
+          a,
+          x
+        }, expect, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          //console.log('x=');
+          //x.toArr().forEach(v => console.log(`    + (${v.re},${v.im})`));
+
+          ctbmv(uplo, trans, diag, n, k, a, lda, x, incx);
+
+          //console.log('x=');
+          //x.toArr().forEach(v => console.log(`    + (${v.re},${v.im})`));
+
+          const approx = approximatelyWithPrec(1E-5);
+          multiplexer(x.toArr(), expect.x)(approx);
+        });
+      });
+    });
+
+    describe('test errors', () => {
+      const { ctbmvErrors: errors } = fixture;
+      each(errors)(({
+        input: {
+          uplo,
+          trans,
+          diag,
+          n,
+          k,
+          lda,
+          incx,
+          a,
+          x
+        }, desc
+      }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const aM = fortranMatrixComplex64(a)(1, 1);
+          const sx = fortranArrComplex64(x)();
+          const call = () => ctbmv(uplo, trans, diag, n, k, aM, lda, sx, incx);
           //call();
           expect(call).to.throw();
         });
