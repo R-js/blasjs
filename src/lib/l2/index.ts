@@ -86,6 +86,7 @@ export const level2 = {
     ctbmv,
     ctbsv,
     ctpsv,
+    ctpmv,
     ctrmv,
     ctrsv,
     //complex double

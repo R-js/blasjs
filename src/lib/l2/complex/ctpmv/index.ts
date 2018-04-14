@@ -18,9 +18,20 @@
 *> upper or lower triangular matrix, supplied in packed form.
 */
 
-import { errMissingIm, errWrongArg, FortranArr } from '../../../f_func';
+import {
+    errMissingIm,
+    errWrongArg,
+    FortranArr,
+    FortranArrEComplex,
+    lowerChar
+} from '../../../f_func';
 
+import { normLower } from './norm-lower';
+import { normUpper } from './norm-upper';
+import { transLower } from './trans-lower';
+import { transUpper } from './trans-upper';
 
+// SUBROUTINE CTPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
 export function ctpmv(
     uplo: 'u' | 'l',
     trans: 'n' | 't' | 'c',
@@ -41,18 +52,18 @@ export function ctpmv(
 
 
     // faster then String.toLowerCase()
-    const ul: 'u' | 'l' = String.fromCharCode(uplo.charCodeAt(0) | 0X20) as any;
-    const tr: 'n' | 't' | 'c' = String.fromCharCode(trans.charCodeAt(0) | 0X20) as any;
-    const dg: 'u' | 'n' = String.fromCharCode(diag.charCodeAt(0) | 0X20) as any;
+    const ul = lowerChar(uplo);
+    const tr = lowerChar(trans);
+    const dg = lowerChar(diag);
 
     let info = 0;
-    if (ul !== 'u' && ul !== 'l') {
+    if (!'ul'.includes(ul)) {
         info = 1;
     }
-    else if (tr !== 'n' && tr !== 't' && tr !== 'c') {
+    else if (!'ntc'.includes(tr)) {
         info = 2;
     }
-    else if (dg !== 'u' && dg !== 'n') {
+    else if (!'un'.includes(dg)) {
         info = 3;
     }
     else if (n < 0) {
@@ -71,158 +82,49 @@ export function ctpmv(
     const noconj = tr === 't';
     const nounit = dg === 'n';
 
-    let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
-
     //*     Start the operations. In this version the elements of AP are
     //*     accessed sequentially with one pass through AP.
+    let kx = incx > 0 ? 1 : 1 - (n - 1) * incx;
 
     if (tr === 'n') {
-        //  Form  x:= A*x.
         if (ul === 'u') {
-            let kk = 1;
-            let jx = kx - x.base;
-            for (let j = 1; j <= n; j++) {
-                const xIsZero = x.r[jx] === 0 && x.i[jx] === 0;
-                if (xIsZero) {
-                    let tempRe = x.r[jx];
-                    let tempIm = x.i[jx];
-                    let ix = kx - x.base;
-                    for (let k = kk; k <= kk + j - 2; k++) {
-                        const apk = k - ap.base;
-                        x.r[ix] += tempRe * ap.r[apk] - tempIm * ap.i[apk];
-                        x.i[ix] += tempRe * ap.i[apk] + tempIm * ap.r[apk];
-                        ix += incx;
-                    }
-                    if (nounit) {
-                        const apk2 = kk + j - 1 - ap.base;
-                        x.r[jx] = x.r[jx] * ap.r[apk2] - x.i[jx] * ap.i[apk2];
-                        x.i[jx] = x.r[jx] * ap.i[apk2] + x.i[jx] * ap.r[apk2];
-                    }
-                }
-                jx += incx;
-                kk += j;
-            }
+            return normUpper(
+                kx,
+                nounit,
+                <FortranArrEComplex>x,
+                incx,
+                <FortranArrEComplex>ap,
+                n
+            );
         }
-        else {
-            let kk = n * (n + 1) / 2;
-            let kx = (n - 1) * incx;
-            let jx = kx - x.base;
-            for (let j = n; j >= 1; j--) {
-                const xIsZero = x.r[jx] === 0 && x.i[jx] === 0;
-                if (!xIsZero) {
-                    let tempRe = x.r[jx];
-                    let tempIm = x.i[jx];
-                    let ix = kx - x.base;
-                    for (let k = kk; k >= kk - (n - (j + 1)); k--) {
-                        const apk = k - ap.base;
-                        x.r[ix] += tempRe * ap.r[apk] - tempIm * ap.i[apk];
-                        x.i[ix] += tempRe * ap.i[apk] + tempIm * ap.r[apk];
-                        ix -= incx;
-                    }
-                    if (nounit) {
-                        const apk2 = kk - n + j - ap.base;
-                        x.r[jx] = x.r[jx] * ap.r[apk2] - x.i[jx] * ap.i[apk2];
-                        x.i[jx] = x.r[jx] * ap.i[apk2] + x.i[jx] * ap.r[apk2];
-                    }
-                }
-                jx -= incx;
-                kk -= (n - j + 1);
-            }
-        }
+        return normLower(
+            kx,
+            nounit,
+            <FortranArrEComplex>x,
+            incx,
+            <FortranArrEComplex>ap,
+            n
+        );
     }
-    else {
-        //Form  x := A**T*x  or  x := A**H*x.
-        if (ul === 'u') {
-            let kk = n * (n + 1) / 2;
-            let jx = kx + (n - 1) * incx - x.base;
-            for (let j = n; j >= 1; j--) {
-                let tempRe = x.r[jx];
-                let tempIm = x.i[jx];
-                let ix = jx;
-                if (noconj) {
-                    if (nounit) {
-                        const apk = kk - ap.base;
-                        const tr = tempRe * ap.r[apk] - tempIm * ap.i[apk];
-                        const ti = tempRe * ap.i[apk] + tempIm * ap.r[apk];
-                        tempRe = tr;
-                        tempIm = ti;
 
-                    }
-                    for (let k = kk - 1; k >= kk - j + 1; k--) {
-                        ix -= incx;
-                        const apk = k - ap.base;
-                        tempRe += ap.r[apk] * x.r[ix] - ap.i[apk] * x.i[ix];
-                        tempIm += ap.r[apk] * x.i[ix] + ap.i[apk] * x.r[ix];
-                    }
-                }
-                else {
-                    if (nounit) {
-                        //(a+ib)*(c-id) = (ac+bd)+i(-ad+bc)
-                        const apk2 = kk - ap.base;
-                        const tr = tempRe * ap.r[apk2] - tempIm * ap.i[apk2];
-                        const ti = tempRe * ap.i[apk2] + tempIm * ap.i[apk2];
-                        tempRe = tr;
-                        tempIm = ti;
-                    }
-                    for (let k = kk - 1; k >= kk - j + 1; k--) {
-                        ix -= incx;
-                        const apk = k - ap.base;
-                        //(a-ib)*(c+id) = (ac+bd)+i(ad-bc)
-                        tempRe += ap.r[apk] * x.r[ix] - ap.i[apk] * x.i[ix];
-                        tempIm += ap.r[apk] * x.i[ix] + ap.i[apk] * x.r[ix];
-                    }
-                }
-                x.r[jx] = tempRe;
-                x.i[jx] = tempIm;
-                jx -= incx;
-                kk -= j;
-            }
-        }
-        else {
-            let kk = 1;
-            let jx = kx - x.base;
-            for (let j = 1; j <= n; j++) {
-                let tempRe = x.r[jx];
-                let tempIm = x.i[jx];
-                let ix = jx;
-                if (noconj) {
-                    if (nounit) {
-                        const apkk = kk - ap.base;
-                        const tr = tempRe * ap.r[apkk] - tempIm * ap.i[apkk];
-                        const ti = tempRe * ap.i[apkk] + tempIm * ap.r[apkk];
-                        tempRe = tr;
-                        tempIm = ti;
-                    }
-                    for (let k = kk + 1; kk + n - j; k++) {
-                        ix += incx;
-                        const apk = k - ap.base;
-                        tempRe = ap.r[apk] * x.r[ix] - ap.i[apk] * x.i[ix];
-                        tempIm = ap.r[apk] * x.i[ix] + ap.i[apk] * x.r[ix];
-                    }
-                }
-                else {
-                    if (nounit) {
-                        const tr = tempRe;
-                        const ti = tempIm;
-                        const apkk = kk - ap.base;
-                        //(a+ib)*(c-id) = (ac+bd)+i(-ad+bc)
-                        tempRe = tr * ap.r[apkk] + ti * ap.i[apkk];
-                        tempIm = -tr * ap.i[apkk] + ti * ap.r[apkk];
-                    }
-                    for (let k = kk + 1; k <= kk + n - j; k++) {
-                        ix += incx;
-                        //(a-ib)*(c+id) =(ac+bd)+i(ad-bc)
-                        const apk = k - ap.base;
-                        tempRe += ap.r[apk] * x.r[ix] - ap.i[apk] * x.i[ix];
-                        tempIm += ap.r[apk] * x.i[ix] + ap.i[apk] * x.r[ix];
-                    }
-                }
-                x.r[jx] = tempRe;
-                x.i[jx] = tempIm;
-                jx += incx;
-                kk += n - j + 1;
-            }
-        }
+    if (ul === 'u') {
+        return transUpper(
+            kx,
+            noconj,
+            nounit,
+            <FortranArrEComplex>x,
+            incx,
+            <FortranArrEComplex>ap,
+            n);
     }
+
+    return transLower(
+        kx,
+        noconj,
+        nounit,
+        <FortranArrEComplex>x,
+        incx,
+        <FortranArrEComplex>ap,
+        n);
 }
 

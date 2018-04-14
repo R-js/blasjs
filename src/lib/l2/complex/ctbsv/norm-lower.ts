@@ -5,7 +5,6 @@ const { min } = Math;
 export function normLower(
     x: FortranArrEComplex,
     incx: number,
-    kx: number,
     a: MatrixEComplex,
     nounit: boolean,
     n: number,
@@ -14,6 +13,8 @@ export function normLower(
     /*if (!x.i || !a.i) {
         return;
     }*/
+
+    let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
 
     let jx = kx;
     for (let j = 1; j <= n; j++) {

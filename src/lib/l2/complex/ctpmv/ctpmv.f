@@ -209,7 +209,7 @@
 *
       IF (INCX.LE.0) THEN
           KX = 1 - (N-1)*INCX
-      ELSE IF (INCX.NE.1) THEN
+      ELSE 
           KX = 1
       END IF
 *

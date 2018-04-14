@@ -5,15 +5,14 @@ export function transLower(
     noconj: boolean,
     x: FortranArrEComplex,
     incx: number,
-    kx1: number,
     a: MatrixEComplex,
     nounit: boolean,
     n: number,
     k: number): void {
 
-   
 
-    let kx = kx1 + (n - 1) * incx;
+    let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
+    kx += (n - 1) * incx;
     let jx = kx;
 
     for (let j = n; j >= 1; j--) {

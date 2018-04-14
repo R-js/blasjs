@@ -6,12 +6,12 @@ export function transUpper(
     noconj: boolean,
     x: FortranArrEComplex,
     incx: number,
-    kx: number,
     a: MatrixEComplex,
     nounit: boolean,
     n: number,
     k: number) {
 
+    let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
     let kplus1 = k + 1;
     let jx = kx;
 
