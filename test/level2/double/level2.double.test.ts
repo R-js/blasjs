@@ -30,7 +30,8 @@ const {
     stpsv,
     stpmv,
     strmv,
-    strsv
+    strsv,
+
   }
 } = blas;
 

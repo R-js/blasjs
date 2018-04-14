@@ -6,9 +6,7 @@ import {
     isOne,
     isZero,
     lowerChar,
-    mul_cxc,
     mul_cxr,
-    mul_rxc,
     mul_rxr
 } from '../../f_func';
 

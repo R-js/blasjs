@@ -10,6 +10,10 @@ export function isZero(v: Complex) {
     return v.im === 0 && v.re === 0;
 }
 
+export function isZeroE(re: number, im: number) {
+    return re === 0 && im === 0;
+}
+
 export function isOne(v: Complex) {
     return v.re === 1 && v.im === 0;
 }
@@ -41,6 +45,18 @@ export type FortranArr = {
     toArr: () => Complex[] | number[];
 
 };
+
+export type FortranArrEComplex = {
+    base: number,
+    r: fpArray,
+    i: fpArray,
+    s: FortranSetterGetter,
+    assertComplex: (msg: string) => void | never;
+    toArr: () => Complex[] | number[];
+
+};
+
+
 
 export function isComplex(a): a is Complex {
     return (
@@ -251,6 +267,10 @@ export interface Matrix {
     toArr(): Complex[] | number[];
 }
 
+export interface MatrixEComplex extends Matrix {
+    readonly i: fpArray;
+}
+
 
 function bandifyMatrix(uplo: 'u' | 'l', k: number, A: Matrix): Matrix {
     const rowSize = (k + 1);
@@ -296,7 +316,7 @@ function packedBandi_fied_Matrix(uplo: 'u' | 'l', k: number, A: Matrix): Fortran
     }
     let cursor = 0;
     for (let j = 1; j <= colSize; j++) {
-        const m = uplo === 'u' ? k + 1 - j : 1 - j;
+        //const m = uplo === 'u' ? k + 1 - j : 1 - j;
         const coorJ = A.colOfEx(j);
         //const base = (j - 1) * rowSize - 1;
         const start = uplo === 'u' ? max(1, j - k) : j;
@@ -585,26 +605,34 @@ export function render(
     return `${re}\n${im}\n`;
 }
 
-export function mul_rxc(re: number, im: number, c: Complex): Complex {
-    const r = re * c.re - im * c.im;
-    const i = re * c.im + im * c.re;
-    return { re: r, im: i }
+export function mul_rxc(re1: number, im1: number, c: Complex): Complex {
+    const re = re1 * c.re - im1 * c.im;
+    const im = re1 * c.im + im1 * c.re;
+    return { re, im };
 }
 
 export function mul_rxr(re1: number, im1: number, re2: number, im2: number): Complex {
-    const r = re1 * re2 - im1 * im2;
-    const i = re1 * im2 + im1 * re2;
-    return { re: r, im: i }
+    const re = re1 * re2 - im1 * im2;
+    const im = re1 * im2 + im1 * re2;
+    return { re, im }
 }
 
-export function mul_cxr(c: Complex, re: number, im: number): Complex {
-    const r = c.re * re - c.im * im;
-    const i = c.re * im + c.im * re;
-    return { re: r, im: i }
+export function mul_cxr(c: Complex, re1: number, im1: number): Complex {
+    const re = c.re * re1 - c.im * im1;
+    const im = c.re * im1 + c.im * re1;
+    return { re, im };
 }
 
 export function mul_cxc(c1: Complex, c2: Complex): Complex {
-    const r = c1.re * c2.re - c1.im * c2.im;
-    const i = c1.re * c2.im + c1.im * c2.re;
-    return { re: r, im: i }
+    const re = c1.re * c2.re - c1.im * c2.im;
+    const im = c1.re * c2.im + c1.im * c2.re;
+    return { re, im };
+}
+
+export function div_rxr(re1: number, im1: number, re2: number, im2: number): Complex {
+    // (a+ib)/c+id) = (ac+bd)/(c*c +d*d) + i(-ad+bc)/(c*c+d*d)
+    const norm = re2 * re2 + im2 * im2;
+    let re = (re1 * re2 + im1 * im2) / norm;
+    let im = (-re1 * im2 + im1 * re2) / norm;
+    return { re, im };
 }
