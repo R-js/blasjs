@@ -29,7 +29,8 @@ const {
     chpr2,
     ctbmv,
     ctbsv,
-    ctpmv
+    ctpmv,
+    ctpsv
   }
 } = blas;
 
@@ -790,13 +791,8 @@ describe('blas level 2 single/double complex', function n() {
           x
         }, expect, desc }, key) => {
         it(`[${key}]/[${desc}]`, function t() {
-
           //console.log('a=');
-
-
           ctpmv(uplo, trans, diag, n, ap, x, incx);
-
-
           const approx = approximatelyWithPrec(1E-5);
           multiplexer(x.toArr(), expect.x)(approx);
         });
@@ -821,6 +817,58 @@ describe('blas level 2 single/double complex', function n() {
           const aP = fortranArrComplex64(ap)();
           const sx = fortranArrComplex64(x)();
           const call = () => ctpmv(uplo, trans, diag, n, aP, sx, incx);
+          //call();
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+  describe('ctpsv', () => {
+    describe('data tests', () => {
+      const { ctpsv: testData } = fixture;
+      each(testData)(({
+        //CTPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
+        input: {
+          uplo,
+          trans,
+          diag,
+          n,
+          incx,
+          ap,
+          x
+        }, expect, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          //console.log('a=');
+
+
+          ctpsv(uplo, trans, diag, n, ap, x, incx);
+
+
+          const approx = approximatelyWithPrec(1E-5);
+          multiplexer(x.toArr(), expect.x)(approx);
+        });
+      });
+    });
+
+    describe('test errors', () => {
+      const { ctpsvErrors: errors } = fixture;
+      each(errors)(({
+        input: {
+          uplo,
+          trans,
+          diag,
+          n,
+          incx,
+          ap,
+          x
+        }, desc
+      }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const aP = fortranArrComplex64(ap)();
+          const sx = fortranArrComplex64(x)();
+          const call = () => ctpsv(uplo, trans, diag, n, aP, sx, incx);
           //call();
           expect(call).to.throw();
         });
