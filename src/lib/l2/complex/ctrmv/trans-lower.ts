@@ -26,7 +26,6 @@ export function transLower(
                 const ti = tempRe * a.i[coords + j] + tempIm * a.r[coords + j];
                 tempRe = tr;
                 tempIm = ti;
-
             }
             for (let i = j + 1; i <= n; i++) {
                 ix += incx;
@@ -43,9 +42,9 @@ export function transLower(
             }
             for (let i = j + 1; i <= n; i++) {
                 ix += incx;
-                //(a+ib)*(c-id) = (ac+bd)+i(-ad+bc)
+                //(a-ib)*(c+id) = (ac+bd)+i(ad-bc)
                 tempRe += a.r[coords + i] * x.r[ix] + a.i[coords + i] * x.i[ix];
-                tempIm += -a.r[coords + i] * x.i[ix] + a.i[coords + i] * x.r[ix];
+                tempIm += a.r[coords + i] * x.i[ix] - a.i[coords + i] * x.r[ix];
             }
         }
         x.r[jx] = tempRe;
