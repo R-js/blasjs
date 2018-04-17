@@ -5,7 +5,7 @@ import {
     fortranMatrixComplex64,
     Matrix,
     muxCmplx
-} from '../../../src/lib/f_func';
+} from '../src/lib/f_func';
 
 const { max, min } = Math;
 
@@ -239,4 +239,22 @@ export function matrix_nxm(lda: number, n: number, m: number = lda) {
     }
     //console.log({ nrex: cursor, nre, nim })
     return fortranMatrixComplex64(muxCmplx(nre, nim))(lda, n)
+}
+
+export function diagonal_nxn(n: number): Matrix {
+    const re = new Array(n * n);
+    const im = new Array(n * n);
+
+    for (let j = 1; j <= n; j++) {
+        for (let i = 1; i <= n; i++) {
+            if (i === j) {
+                re[(j - 1) * n - 1 + i] = 1;
+                im[(j - 1) * n - 1 + i] = 0;
+                continue;
+            }
+            re[(j - 1) * n - 1 + i] = 0;
+            im[(j - 1) * n - 1 + i] = 0;
+        }
+    }
+    return fortranMatrixComplex64(muxCmplx(re, im))(n, n);
 }

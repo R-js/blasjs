@@ -1,4 +1,4 @@
-*> \brief \b CGEMM
+*> \brief \b ZGEMM
 *
 *  =========== DOCUMENTATION ===========
 *
@@ -8,15 +8,15 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE CGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+*       SUBROUTINE ZGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
 *
 *       .. Scalar Arguments ..
-*       COMPLEX ALPHA,BETA
+*       COMPLEX*16 ALPHA,BETA
 *       INTEGER K,LDA,LDB,LDC,M,N
 *       CHARACTER TRANSA,TRANSB
 *       ..
 *       .. Array Arguments ..
-*       COMPLEX A(LDA,*),B(LDB,*),C(LDC,*)
+*       COMPLEX*16 A(LDA,*),B(LDB,*),C(LDC,*)
 *       ..
 *
 *
@@ -25,7 +25,7 @@
 *>
 *> \verbatim
 *>
-*> CGEMM  performs one of the matrix-matrix operations
+*> ZGEMM  performs one of the matrix-matrix operations
 *>
 *>    C := alpha*op( A )*op( B ) + beta*C,
 *>
@@ -91,13 +91,13 @@
 *>
 *> \param[in] ALPHA
 *> \verbatim
-*>          ALPHA is COMPLEX
+*>          ALPHA is COMPLEX*16
 *>           On entry, ALPHA specifies the scalar alpha.
 *> \endverbatim
 *>
 *> \param[in] A
 *> \verbatim
-*>          A is COMPLEX array, dimension ( LDA, ka ), where ka is
+*>          A is COMPLEX*16 array, dimension ( LDA, ka ), where ka is
 *>           k  when  TRANSA = 'N' or 'n',  and is  m  otherwise.
 *>           Before entry with  TRANSA = 'N' or 'n',  the leading  m by k
 *>           part of the array  A  must contain the matrix  A,  otherwise
@@ -116,7 +116,7 @@
 *>
 *> \param[in] B
 *> \verbatim
-*>          B is COMPLEX array, dimension ( LDB, kb ), where kb is
+*>          B is COMPLEX*16 array, dimension ( LDB, kb ), where kb is
 *>           n  when  TRANSB = 'N' or 'n',  and is  k  otherwise.
 *>           Before entry with  TRANSB = 'N' or 'n',  the leading  k by n
 *>           part of the array  B  must contain the matrix  B,  otherwise
@@ -135,14 +135,14 @@
 *>
 *> \param[in] BETA
 *> \verbatim
-*>          BETA is COMPLEX
+*>          BETA is COMPLEX*16
 *>           On entry,  BETA  specifies the scalar  beta.  When  BETA  is
 *>           supplied as zero then C need not be set on input.
 *> \endverbatim
 *>
 *> \param[in,out] C
 *> \verbatim
-*>          C is COMPLEX array, dimension ( LDC, N )
+*>          C is COMPLEX*16 array, dimension ( LDC, N )
 *>           Before entry, the leading  m by n  part of the array  C must
 *>           contain the matrix  C,  except when  beta  is zero, in which
 *>           case C need not be set on entry.
@@ -168,7 +168,7 @@
 *
 *> \date December 2016
 *
-*> \ingroup complex_blas_level3
+*> \ingroup complex16_blas_level3
 *
 *> \par Further Details:
 *  =====================
@@ -185,7 +185,7 @@
 *> \endverbatim
 *>
 *  =====================================================================
-      SUBROUTINE CGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+      SUBROUTINE ZGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
 *
 *  -- Reference BLAS level3 routine (version 3.7.0) --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -193,12 +193,12 @@
 *     December 2016
 *
 *     .. Scalar Arguments ..
-      COMPLEX ALPHA,BETA
+      COMPLEX*16 ALPHA,BETA
       INTEGER K,LDA,LDB,LDC,M,N
       CHARACTER TRANSA,TRANSB
 *     ..
 *     .. Array Arguments ..
-      COMPLEX A(LDA,*),B(LDB,*),C(LDC,*)
+      COMPLEX*16 A(LDA,*),B(LDB,*),C(LDC,*)
 *     ..
 *
 *  =====================================================================
@@ -211,18 +211,18 @@
       EXTERNAL XERBLA
 *     ..
 *     .. Intrinsic Functions ..
-      INTRINSIC CONJG,MAX
+      INTRINSIC DCONJG,MAX
 *     ..
 *     .. Local Scalars ..
-      COMPLEX TEMP
+      COMPLEX*16 TEMP
       INTEGER I,INFO,J,L,NCOLA,NROWA,NROWB
       LOGICAL CONJA,CONJB,NOTA,NOTB
 *     ..
 *     .. Parameters ..
-      COMPLEX ONE
-      PARAMETER (ONE= (1.0E+0,0.0E+0))
-      COMPLEX ZERO
-      PARAMETER (ZERO= (0.0E+0,0.0E+0))
+      COMPLEX*16 ONE
+      PARAMETER (ONE= (1.0D+0,0.0D+0))
+      COMPLEX*16 ZERO
+      PARAMETER (ZERO= (0.0D+0,0.0D+0))
 *     ..
 *
 *     Set  NOTA  and  NOTB  as  true if  A  and  B  respectively are not
@@ -271,7 +271,7 @@
           INFO = 13
       END IF
       IF (INFO.NE.0) THEN
-          CALL XERBLA('CGEMM ',INFO)
+          CALL XERBLA('ZGEMM ',INFO)
           RETURN
       END IF
 *
@@ -282,6 +282,7 @@
 *
 *     And when  alpha.eq.zero.
 *
+    
       IF (ALPHA.EQ.ZERO) THEN
           IF (BETA.EQ.ZERO) THEN
               DO 20 J = 1,N
@@ -296,6 +297,7 @@
    30             CONTINUE
    40         CONTINUE
           END IF
+         
           RETURN
       END IF
 *
@@ -305,7 +307,7 @@
           IF (NOTA) THEN
 *
 *           Form  C := alpha*A*B + beta*C.
-*             [AB]
+*
               DO 90 J = 1,N
                   IF (BETA.EQ.ZERO) THEN
                       DO 50 I = 1,M
@@ -314,24 +316,29 @@
                   ELSE IF (BETA.NE.ONE) THEN
                       DO 60 I = 1,M
                           C(I,J) = BETA*C(I,J)
+c                 PRINT *, J, I, C(I,J)         
    60                 CONTINUE
                   END IF
+              
                   DO 80 L = 1,K
                       TEMP = ALPHA*B(L,J)
+c           PRINT *, J, L,"-",TEMP 
                       DO 70 I = 1,M
+      PRINT *, J, L,I,"-",TEMP*A(I,L),"-", C(I,J)   
                           C(I,J) = C(I,J) + TEMP*A(I,L)
+
    70                 CONTINUE
    80             CONTINUE
    90         CONTINUE
           ELSE IF (CONJA) THEN
-*           [conjAB]
+*
 *           Form  C := alpha*A**H*B + beta*C.
 *
               DO 120 J = 1,N
                   DO 110 I = 1,M
                       TEMP = ZERO
                       DO 100 L = 1,K
-                          TEMP = TEMP + CONJG(A(L,I))*B(L,J)
+                          TEMP = TEMP + DCONJG(A(L,I))*B(L,J)
   100                 CONTINUE
                       IF (BETA.EQ.ZERO) THEN
                           C(I,J) = ALPHA*TEMP
@@ -341,7 +348,7 @@
   110             CONTINUE
   120         CONTINUE
           ELSE
-*           [transAB]
+*
 *           Form  C := alpha*A**T*B + beta*C
 *
               DO 150 J = 1,N
@@ -360,7 +367,7 @@
           END IF
       ELSE IF (NOTA) THEN
           IF (CONJB) THEN
-*           [AconjB]
+*
 *           Form  C := alpha*A*B**H + beta*C.
 *
               DO 200 J = 1,N
@@ -374,14 +381,14 @@
   170                 CONTINUE
                   END IF
                   DO 190 L = 1,K
-                      TEMP = ALPHA*CONJG(B(J,L))
+                      TEMP = ALPHA*DCONJG(B(J,L))
                       DO 180 I = 1,M
                           C(I,J) = C(I,J) + TEMP*A(I,L)
   180                 CONTINUE
   190             CONTINUE
   200         CONTINUE
           ELSE
-*           [AtransB]
+*
 *           Form  C := alpha*A*B**T + beta*C
 *
               DO 250 J = 1,N
@@ -404,14 +411,14 @@
           END IF
       ELSE IF (CONJA) THEN
           IF (CONJB) THEN
-*           [ConjA, ConjB]
+*
 *           Form  C := alpha*A**H*B**H + beta*C.
 *
               DO 280 J = 1,N
                   DO 270 I = 1,M
                       TEMP = ZERO
                       DO 260 L = 1,K
-                          TEMP = TEMP + CONJG(A(L,I))*CONJG(B(J,L))
+                          TEMP = TEMP + DCONJG(A(L,I))*DCONJG(B(J,L))
   260                 CONTINUE
                       IF (BETA.EQ.ZERO) THEN
                           C(I,J) = ALPHA*TEMP
@@ -421,14 +428,14 @@
   270             CONTINUE
   280         CONTINUE
           ELSE
-*           ConjATrasnB
+*
 *           Form  C := alpha*A**H*B**T + beta*C
 *
               DO 310 J = 1,N
                   DO 300 I = 1,M
                       TEMP = ZERO
                       DO 290 L = 1,K
-                          TEMP = TEMP + CONJG(A(L,I))*B(J,L)
+                          TEMP = TEMP + DCONJG(A(L,I))*B(J,L)
   290                 CONTINUE
                       IF (BETA.EQ.ZERO) THEN
                           C(I,J) = ALPHA*TEMP
@@ -439,15 +446,16 @@
   310         CONTINUE
           END IF
       ELSE
+         
           IF (CONJB) THEN
-*           [transAConjB]
+*
 *           Form  C := alpha*A**T*B**H + beta*C
 *
               DO 340 J = 1,N
                   DO 330 I = 1,M
                       TEMP = ZERO
                       DO 320 L = 1,K
-                          TEMP = TEMP + A(L,I)*CONJG(B(J,L))
+                          TEMP = TEMP + A(L,I)*DCONJG(B(J,L))
   320                 CONTINUE
                       IF (BETA.EQ.ZERO) THEN
                           C(I,J) = ALPHA*TEMP
@@ -457,7 +465,7 @@
   330             CONTINUE
   340         CONTINUE
           ELSE
-*           [transAtransB]
+*
 *           Form  C := alpha*A**T*B**T + beta*C
 *
               DO 370 J = 1,N
@@ -478,6 +486,6 @@
 *
       RETURN
 *
-*     End of CGEMM .
+*     End of ZGEMM .
 *
       END

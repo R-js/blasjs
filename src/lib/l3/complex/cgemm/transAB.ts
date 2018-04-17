@@ -1,21 +1,18 @@
-import { Complex, errMissingIm, Matrix } from '../../../f_func';
+import { Complex, MatrixEComplex } from '../../../f_func';
 
 //Form  C := alpha*A**T*B + beta*C
 
-export function transAB(beta: Complex, alpha: Complex, a: Matrix, b: Matrix, c: Matrix, n: number, m: number, k: number): void {
-
-    const betaIsZero = beta.re === 0 && beta.im === 0;
-
-
-    if (c.i === undefined) {
-        throw new Error(errMissingIm('c.i'));
-    }
-    if (b.i === undefined) {
-        throw new Error(errMissingIm('b.i'));
-    }
-    if (a.i === undefined) {
-        throw new Error(errMissingIm('a.i'));
-    }
+export function transAB(
+    betaIsZero: boolean,
+    betaIsOne: boolean,
+    beta: Complex,
+    alpha: Complex,
+    a: MatrixEComplex,
+    b: MatrixEComplex,
+    c: MatrixEComplex,
+    n: number,
+    m: number,
+    k: number): void {
 
     // Form  C := alpha*A**T*B + beta*C
     //DO 150 J = 1,N

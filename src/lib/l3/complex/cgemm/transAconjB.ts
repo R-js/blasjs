@@ -1,4 +1,4 @@
-import { Complex, errMissingIm, Matrix } from '../../../f_func';
+import { Complex, MatrixEComplex } from '../../../f_func';
 
 // //Form  C := alpha*A**T*B**H + beta*C
 
@@ -18,19 +18,17 @@ import { Complex, errMissingIm, Matrix } from '../../../f_func';
   330             CONTINUE
   340         CONTINUE
 */
-export function transAconjB(beta: Complex, alpha: Complex, a: Matrix, b: Matrix, c: Matrix, n: number, m: number, k: number): void {
-
-    const betaIsZero = beta.re === 0 && beta.im === 0;
-
-    if (c.i === undefined) {
-        throw new Error(errMissingIm('c.i'));
-    }
-    if (b.i === undefined) {
-        throw new Error(errMissingIm('b.i'));
-    }
-    if (a.i === undefined) {
-        throw new Error(errMissingIm('a.i'));
-    }
+export function transAconjB(
+    betaIsZero: boolean,
+    betaIsOne: boolean,
+    beta: Complex,
+    alpha: Complex,
+    a: MatrixEComplex,
+    b: MatrixEComplex,
+    c: MatrixEComplex,
+    n: number,
+    m: number,
+    k: number): void {
 
     //DO 340 J = 1,N
     for (let j = 1; j <= n; j++) {

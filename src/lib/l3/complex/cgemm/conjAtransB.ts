@@ -1,4 +1,4 @@
-import { Complex, errMissingIm, Matrix } from '../../../f_func';
+import { Complex, MatrixEComplex } from '../../../f_func';
 /*
 Form  C := alpha*A**H*B**T + beta*C
 *
@@ -16,19 +16,19 @@ Form  C := alpha*A**H*B**T + beta*C
   300             CONTINUE
   310         CONTINUE
 */
-export function conjAtransB(beta: Complex, alpha: Complex, a: Matrix, b: Matrix, c: Matrix, n: number, m: number, k: number): void {
+export function conjAtransB(
+    betaIsZero: boolean,
+    betaIsOne: boolean,
+    beta: Complex,
+    alpha: Complex,
+    a: MatrixEComplex,
+    b: MatrixEComplex,
+    c: MatrixEComplex,
+    n: number,
+    m: number,
+    k: number): void {
 
-    const betaIsZero = beta.re === 0 && beta.im === 0;
 
-    if (c.i === undefined) {
-        throw new Error(errMissingIm('c.i'));
-    }
-    if (b.i === undefined) {
-        throw new Error(errMissingIm('b.i'));
-    }
-    if (a.i === undefined) {
-        throw new Error(errMissingIm('a.i'));
-    }
     // DO 310 J = 1,N
     for (let j = 1; j <= n; j++) {
         const coorCJ = c.colOfEx(j);

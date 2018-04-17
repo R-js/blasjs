@@ -1,5 +1,15 @@
-import { complex, fortranArrComplex64 as arr64, fortranMatrixComplex64 } from '../../../src/lib/f_func';
-import { bandmatrix_nxm_ku_kl, matrix_nxm, vector } from './matrices';
+import {
+    complex,
+    fortranArrComplex64 as arr64,
+    fortranMatrixComplex64
+}
+    from '../../../src/lib/f_func';
+
+import {
+    bandmatrix_nxm_ku_kl,
+    matrix_nxm,
+    vector
+} from '../../matrices';
 
 const pI = Infinity;
 const nI = -Infinity;

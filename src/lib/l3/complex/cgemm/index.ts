@@ -19,7 +19,14 @@
 *> an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
 */
 
-import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../../f_func';
+import {
+    Complex,
+    errMissingIm,
+    errWrongArg,
+    lowerChar,
+    Matrix,
+    MatrixEComplex
+} from '../../../f_func';
 
 import { AB } from './AB';
 import { AconjB } from './AconjB';
@@ -71,6 +78,8 @@ export function cgemm(
 
     //* Test the input parameters.
 
+
+
     let info = 0;
     if (!'ntc'.includes(trA)) {
         info = 1;
@@ -106,13 +115,17 @@ export function cgemm(
 
     // Quick return if possible.
 
-    if (m === 0 || n === 0 || ((alphaIsZero || k === 0) && betaIsOne)) {
+    if (m === 0 || n === 0 || (
+        (alphaIsZero || k === 0)
+        && betaIsOne)) {
         return;
     }
 
     // And when  alpha.eq.zero.
     if (alphaIsZero) {
+        console.log('alpha is zero')
         if (betaIsZero) {//fast shortcut
+
             for (let j = 1; j <= n; j++) {
                 c.setCol(j, 1, m, 0);
             }
@@ -129,41 +142,70 @@ export function cgemm(
         return;
     }
 
+    let proc: (
+        bIsZero: boolean,
+        bIsOne: boolean,
+        beta: Complex,
+        alpha: Complex,
+        a: MatrixEComplex,
+        b: MatrixEComplex,
+        c: MatrixEComplex,
+        n: number,
+        m: number,
+        k: number) => void;
+
     //    Start the operations.
     switch (true) {
         case (trA === 'n' && trB === 'n'):
             //Form  C := alpha*A*B + beta*C.
-            return AB(beta, alpha, a, b, c, n, m, k);
+            console.log('AB');
+            proc = AB;
+            break;
         case (trA === 'n' && trB === 'c'):
             //Form  C := alpha*A*B**H + beta*C.
-            return AconjB(beta, alpha, a, b, c, n, m, k);
+            proc = AconjB;
+            break;
         case (trA === 'n' && trB === 't'):
             //Form  C := alpha*A*B**T + beta*C
-            return AtransB(beta, alpha, a, b, c, n, m, k);
-
-
+            proc = AtransB;
+            break;
         case (trA === 'c' && trB === 'n'):
             // Form  C := alpha*A**H*B + beta*C.   
-            return conjAB(beta, alpha, a, b, c, n, m, k);
+            proc = conjAB;
+            break;
         case (trA === 'c' && trB === 'c'):
             //  Form  C := alpha*A**H*B**H + beta*C. 
-            return conjAconjB(beta, alpha, a, b, c, n, m, k);
+            proc = conjAconjB;
+            break;
         case (trA === 'c' && trB === 't'):
             //  Form  C := alpha*A**H*B**T + beta*C 
-            return conjAtransB(beta, alpha, a, b, c, n, m, k);
-
-
+            proc = conjAtransB;
+            break;
         case (trA === 't' && trB === 'n'):
             //Form  C := alpha*A**T*B + beta*C  
-            return transAB(beta, alpha, a, b, c, n, m, k);
+            proc = transAB;
+            break;
         case (trA === 't' && trB === 'c'):
             //Form  C := alpha*A**T*B**H + beta*C
-            return transAconjB(beta, alpha, a, b, c, n, m, k);
+            proc = transAconjB;
+            break;
         case (trA === 't' && trB === 't'):
             //  //  Form  C := alpha*A**T*B**T + beta*C
-            return transAtransB(beta, alpha, a, b, c, n, m, k);
+            proc = transAtransB;
         default:
             throw new Error('unreachable code');
     }
-
+    console.log('name', proc.name);
+    return proc(
+        betaIsZero,
+        betaIsOne,
+        beta,
+        alpha,
+        <MatrixEComplex>a,
+        <MatrixEComplex>b,
+        <MatrixEComplex>c,
+        n,
+        m,
+        k);
 }
+
