@@ -439,6 +439,7 @@
   310         CONTINUE
           END IF
       ELSE
+c      transA..
           IF (CONJB) THEN
 *           [transAConjB]
 *           Form  C := alpha*A**T*B**H + beta*C

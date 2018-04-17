@@ -25,7 +25,8 @@ import {
     errWrongArg,
     lowerChar,
     Matrix,
-    MatrixEComplex
+    MatrixEComplex,
+    mul_cxr
 } from '../../../f_func';
 
 import { AB } from './AB';
@@ -134,8 +135,9 @@ export function cgemm(
             for (let j = 1; j <= n; j++) {
                 const coorCJ = c.colOfEx(j);
                 for (let i = 1; i <= m; i++) {
-                    c.r[coorCJ + i] = beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
-                    c.i[coorCJ + i] = beta.re * c.i[coorCJ + i] + beta.re * c.r[coorCJ + i];
+                    const { re, im } = mul_cxr(beta, c.r[coorCJ + i], c.i[coorCJ + i]);
+                    c.r[coorCJ + i] = re;
+                    c.i[coorCJ + i] = im;
                 }
             }
         }
@@ -192,6 +194,7 @@ export function cgemm(
         case (trA === 't' && trB === 't'):
             //  //  Form  C := alpha*A**T*B**T + beta*C
             proc = transAtransB;
+            break;
         default:
             throw new Error('unreachable code');
     }

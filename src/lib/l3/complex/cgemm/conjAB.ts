@@ -1,4 +1,4 @@
-import { Complex, MatrixEComplex } from '../../../f_func';
+import { Complex, MatrixEComplex, mul_cxr, mul_rxr } from '../../../f_func';
 
 
 //Form  C := alpha*A**H*B + beta*C.
@@ -26,8 +26,14 @@ export function conjAB(
             for (let l = 1; l <= k; l++) {
                 // TEMP = TEMP + CONJG(A(L,I))*B(L,J)
                 //(a-ib)*(c+id) = a*c+bd + i(ad-bc)
-                tempRe += a.r[coorAI + l] * b.r[coorBJ + l] + a.i[coorAI + l] * b.i[coorBJ + l];
-                tempIm += a.r[coorAI + l] * b.i[coorBJ + l] - a.i[coorAI + l] * b.r[coorBJ + l];
+                const { re, im } = mul_rxr(
+                    a.r[coorAI + l],
+                    -a.i[coorAI + l],
+                    b.r[coorBJ + l],
+                    b.i[coorBJ + l]
+                );
+                tempRe += re;
+                tempIm += im;
             }
 
             /* 
@@ -39,16 +45,25 @@ export function conjAB(
             */
 
             // C(I,J) = ALPHA*TEMP
-            c.r[coorCJ + i] = alpha.re * tempRe - alpha.im * tempIm;
-            c.i[coorCJ + i] = alpha.re * tempIm + alpha.im * tempRe;
+            let { re, im } = mul_cxr(
+                alpha,
+                tempRe,
+                tempIm
+            );
 
             if (!betaIsZero) {
                 // C(I,J) = ALPHA*TEMP + beta*C(I,J)
-                const re = beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
-                const im = beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
-                c.r[coorCJ + i] += re;
-                c.i[coorCJ + i] += im;
+                const { re: re1, im: im1 } = mul_cxr(
+                    beta,
+                    c.r[coorCJ + i],
+                    c.i[coorCJ + i]
+                );
+                re += re1;
+                im += im1;
             }
+            c.r[coorCJ + i] = re;
+            c.i[coorCJ + i] = im;
+
         }
     }
 }

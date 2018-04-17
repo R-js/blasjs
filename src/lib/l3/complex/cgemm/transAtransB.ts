@@ -1,4 +1,4 @@
-import { Complex, MatrixEComplex } from '../../../f_func';
+import { Complex, MatrixEComplex, mul_cxr, mul_rxr } from '../../../f_func';
 
 // Form  C := alpha*A**T*B**T + beta*C
 
@@ -26,10 +26,17 @@ export function transAtransB(
             //DO 350 L = 1, K
             for (let l = 1; l <= k; l++) {
                 const coorBL = b.colOfEx(l);
+
                 //TEMP = TEMP + A(L, I) * B(J, L)
                 //(a+ib)*(c+id) = ac-bd + i(ad+bc)
-                tempRe += a.r[coorAI + l] * b.r[coorBL + j] - a.i[coorAI + l] * b.i[coorBL + j];
-                tempIm += a.r[coorAI + l] * b.i[coorBL + j] + a.i[coorAI + l] * b.r[coorBL + j];
+                const { re, im } = mul_rxr(
+                    a.r[coorAI + l],
+                    a.i[coorAI + l],
+                    b.r[coorBL + j],
+                    b.i[coorBL + j]
+                );
+                tempRe += re;
+                tempIm += im;
             }
             /*
             IF (BETA.EQ.ZERO) THEN
@@ -39,15 +46,23 @@ export function transAtransB(
             END IF
             */
             // C(I,J) = ALPHA*TEMP
-            c.r[coorCJ + i] = alpha.re * tempRe - alpha.im * tempIm;
-            c.i[coorCJ + i] = alpha.re * tempIm + alpha.im * tempRe;
+            let { re, im } = mul_cxr(
+                alpha,
+                tempRe,
+                tempIm
+            );
             if (!betaIsZero) {
                 // C(I,J) = ALPHA*TEMP + beta*C(I,J)
-                const re = beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
-                const im = beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
-                c.r[coorCJ + i] += re;
-                c.i[coorCJ + i] += im;
+                const { re: re1, im: im1 } = mul_cxr(
+                    beta,
+                    c.r[coorCJ + i],
+                    c.i[coorCJ + i]
+                );
+                re += re1;
+                im += im1;
             }
+            c.r[coorCJ + i] = re;
+            c.i[coorCJ + i] = im;
         }
     }
 }

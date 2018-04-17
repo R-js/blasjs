@@ -223,6 +223,385 @@ c
 
         CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
         CALL PRNMATRC(C, 8, 8, 8)
+
+           PRINT * , "==CASE 6======="
+       
+        
+       CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='T'
+        TRANSB='C'
+        ALPHA=(0.3,-0.7)
+        BETA=(0.2,0.8)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+     
+           PRINT * , "==CASE 7======="
+         CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='T'
+        TRANSB='C'
+        ALPHA=(0.3,-0.7)
+        BETA=(0,0)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+            
+         PRINT * , "==CASE 8======="
+       
+        
+       CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='T'
+        TRANSB='N'
+        ALPHA=(0.3,-0.7)
+        BETA=(0.2,0.8)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+         PRINT * , "==CASE 9======="
+       
+        
+       CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='T'
+        TRANSB='N'
+        ALPHA=(0.3,-0.7)
+        BETA=(0,0)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+           PRINT * , "==CASE 10======="
+       
+        
+       CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='N'
+        TRANSB='T'
+        ALPHA=(0.3,-0.7)
+        BETA=(1,0)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+         PRINT * , "==CASE 11======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='N'
+        TRANSB='T'
+        ALPHA=(0.3,-0.7)
+        BETA=(0,0)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+         PRINT * , "==CASE 12======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='N'
+        TRANSB='T'
+        ALPHA=(0.3,-0.7)
+        BETA=(0.2,0.8)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+          PRINT * , "==CASE 13======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='C'
+        TRANSB='N'
+        ALPHA=(0.3,-0.7)
+        BETA=(0.2,0.8)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+         PRINT * , "==CASE 14======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='C'
+        TRANSB='N'
+        ALPHA=(0.3,-0.7)
+        BETA=(0,0)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+          PRINT * , "==CASE 15======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='T'
+        TRANSB='T'
+        ALPHA=(0.3,-0.7)
+        BETA=(0.2,0.8)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+          PRINT * , "==CASE 16======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='T'
+        TRANSB='T'
+        ALPHA=(0.3,-0.7)
+        BETA=(0,0)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+         PRINT * , "==CASE 17======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='C'
+        TRANSB='C'
+        ALPHA=(0.3,-0.7)
+        BETA=(0.2,0.8)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+
+         PRINT * , "==CASE 18======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='C'
+        TRANSB='C'
+        ALPHA=(0.3,-0.7)
+        BETA=(0,0)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+         PRINT * , "==CASE 19======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='C'
+        TRANSB='T'
+        ALPHA=(0.3,-0.7)
+        BETA=(0.2,0.8)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+        PRINT * , "==CASE 20======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='C'
+        TRANSB='T'
+        ALPHA=(0.3,-0.7)
+        BETA=(0,0)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+         PRINT * , "==CASE 21======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='C'
+        TRANSB='T'
+        ALPHA=(0,0)
+        BETA=(1,0)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+         PRINT * , "==CASE 22======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='C'
+        TRANSB='T'
+        ALPHA=(0,0)
+        BETA=(0.2,0.2)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+
+         PRINT * , "==CASE 23======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='C'
+        TRANSB='T'
+        ALPHA=(0,0)
+        BETA=(0,0)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
+             
+             PRINT * , "==CASE 24======="
+       
+        
+        CALL CRCMPLX(AC,A, LDA,N)
+        CALL CRCMPLX(AC,B, LDA,N)
+        CALL CRCMPLX(AC,C, LDA,N)
+
+             
+        TRANSA='C'
+        TRANSB='T'
+        ALPHA=(0,0)
+        BETA=(0.2,0)
+
+        NN=8
+        MM=6
+        KK=4     
+
+        CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+        CALL PRNMATRC(C, 8, 8, 8)
     
       end
 
