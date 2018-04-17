@@ -31,7 +31,8 @@ const {
     ctbsv,
     ctpmv,
     ctpsv,
-    ctrmv
+    ctrmv,
+    ctrsv
   }
 } = blas;
 
@@ -921,6 +922,57 @@ describe('blas level 2 single/double complex', function n() {
           const aM = fortranMatrixComplex64(a)(1, 1);
           const sx = fortranArrComplex64(x)();
           const call = () => ctrmv(uplo, trans, diag, n, aM, lda, sx, incx);
+          //call();
+          expect(call).to.throw();
+        });
+      });
+    });
+  });
+  describe('ctrsv', () => {
+    describe('data tests', () => {
+      const { ctrsv: testData } = fixture;
+      each(testData)(({
+        //CTPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
+        input: {
+          uplo,
+          trans,
+          diag,
+          n,
+          incx,
+          lda,
+          a,
+          x
+        }, expect, desc }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+          /*if (key === 'case2') {
+            a.toArr().forEach(c => console.log(`     +(${c.re},${c.im})`));
+          */
+          ctrsv(uplo, trans, diag, n, a, lda, x, incx);
+
+          const approx = approximatelyWithPrec(1E-5);
+          multiplexer(x.toArr(), expect.x)(approx);
+        });
+      });
+    });
+    describe('test errors', () => {
+      const { ctrsvErrors: errors } = fixture;
+      each(errors)(({
+        input: {
+          uplo,
+          trans,
+          diag,
+          n,
+          incx,
+          lda,
+          a,
+          x
+        }, desc
+      }, key) => {
+        it(`[${key}]/[${desc}]`, function t() {
+
+          const aM = fortranMatrixComplex64(a)(1, 1);
+          const sx = fortranArrComplex64(x)();
+          const call = () => ctrsv(uplo, trans, diag, n, aM, lda, sx, incx);
           //call();
           expect(call).to.throw();
         });

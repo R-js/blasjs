@@ -5583,5 +5583,472 @@ export const fixture = {
             }
         },
     },
+    // SUBROUTINE CTRSV(UPLO,TRANS,DIAG,N,A,LDA,X,INCX)
+    ctrsv: {
+        case0: {
+            desc: 'tr="n", ul="u", di="n", incx=1, n=6, a={*}, x={*}',
+            input: {
+                trans: 'n',
+                uplo: 'u',
+                diag: 'n',
+                n: 6,
+                incx: 1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setLower(0),
+                x: (() => {
+                    let v = vector(6);
+                    v.s(6)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                x: [// copied from fortran
+                    complex(-3.3851017924301425, -1.3820753807292496),
+                    complex(-1.3324989852266680, 0.67573580100024855),
+                    complex(-2.0061115606914002, 0.30873159135263567),
+                    complex(0.53366394452817878, 0.69694725868851992),
+                    complex(3.3264201117576032E-002, -0.76983395647848252),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                ]
+            }
+        },
+        case1: {
+            desc: 'tr="n", ul="u", di="u", incx=1, n=6, a={*}, x={*}',
+            input: {
+                trans: 'n',
+                uplo: 'u',
+                diag: 'u',
+                n: 6,
+                incx: 1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setLower(0),
+                x: (() => {
+                    let v = vector(6);
+                    v.s(6)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                x: [// copied from fortran
+                    complex(0.15547987558715703, -2.1970472032566155),
+                    complex(-0.64651555475774991, -0.84393783126494526),
+                    complex(0.41271091050372538, -1.3369077805429912),
+                    complex(0.38779544173476843, 0.38706108295362363),
+                    complex(0.14377148449420929, 0.99698686599731445),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                ]
+            }
+        },
+        case2: {
+            desc: 'tr="n", ul="l", di="n", incx=1, n=6, a={*}, x={*}',
+            input: {
+                trans: 'n',
+                uplo: 'l',
+                diag: 'n',
+                n: 6,
+                incx: 1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                x: (() => {
+                    let v = vector(6);
+                    v.s(1)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                x: [
+                    // copied from fortran
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.20114145280773280, -5.1337030960433162E-002),
+                    complex(-0.58779672483646239, 1.4444342253366556),
+                    complex(-0.59996084429980345, 1.8923968370248347),
+                    complex(2.3943121537219199, 1.2601259090017753),
+                    complex(-1.1716441125457138, 2.4468331626047548),
+                    //
+                ]
+            }
+        },
+        case3: {
+            desc: 'tr="n", ul="l", di="u", incx=1, n=6, a={*}, x={*}',
+            input: {
+                trans: 'n',
+                uplo: 'l',
+                diag: 'u',
+                n: 6,
+                incx: 1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                x: (() => {
+                    let v = vector(6);
+                    v.s(1)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                x: [// copied from fortran
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(-0.11916876584291458, -0.21951562166213989),
+                    complex(0.89736221505014213, -0.55306139391414555),
+                    complex(0.74985303977344109, -2.4958541378702988),
+                    complex(3.2482401623515491, 3.4359461997861374),
+                    complex(-6.1115892109325278, 5.4105978948754974),
+                ]
+            }
+        },
+        case4: {
+            desc: 'tr="t", ul="u", di="n", incx=1, n=6, a={*}, x={*}',
+            input: {
+                trans: 't',
+                uplo: 'u',
+                diag: 'n',
+                n: 6,
+                incx: 1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setLower(0),
+                x: (() => {
+                    let v = vector(6);
+                    v.s(1)(0, 0);
+                    // v.s(3)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                x: [//copied from fortran
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.20114145280773280, -5.1337030960433162E-002),
+                    complex(-0.11347507554592454, 1.7911796556818167),
+                    complex(0.17118012099267396, 0.41319272538503060),
+                    complex(0.11383486554884616, 0.27127658857574360),
+                    complex(0.13250679287302938, 0.40677081363532691),
+                ]
+            }
+        },
+        case5: {
+            desc: 'tr="t", ul="u", di="u", incx=1, n=6, a={*}, x={*}',
+            input: {
+                trans: 't',
+                uplo: 'u',
+                diag: 'u',
+                n: 6,
+                incx: 1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setLower(0),
+                x: (() => {
+                    let v = vector(6);
+                    v.s(1)(0, 0);
+                    // v.s(3)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                x: [//copied from fortran
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(-0.11916876584291458, -0.21951562166213989),
+                    complex(0.57121960654775372, -0.45663636873620916),
+                    complex(1.0247114696420028, -0.62076677198172869),
+                    complex(1.0568841164395277, 1.9635907758261411),
+                    complex(0.37156836221836176, -2.7223246591641685),
+                ]
+            }
+        },
+        case6: {
+            desc: 'tr="t", ul="l", di="n", incx=1, n=6, a={*}, x={*}',
+            input: {
+                trans: 't',
+                uplo: 'l',
+                diag: 'n',
+                n: 6,
+                incx: 1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                x: (() => {
+                    let v = vector(6);
+                    v.s(6)(0, 0);
+                    // v.s(3)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                x: [//copied from fortran
+                    complex(2.5983253692194772, -15.102300459040050),
+                    complex(6.3141701681529163, -6.9203837691759773),
+                    complex(-3.7488703711821940, 6.4167258382816481),
+                    complex(0.27337260555960724, 0.88409421189284909),
+                    complex(3.3264201117576032E-002, -0.76983395647848252),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                ]
+            }
+        },
+        case7: {
+            desc: 'tr="t", ul="l", di="u", incx=1, n=6, a={*}, x={*}',
+            input: {
+                trans: 't',
+                uplo: 'l',
+                diag: 'u',
+                n: 6,
+                incx: 1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                x: (() => {
+                    let v = vector(6);
+                    v.s(6)(0, 0);
+                    // v.s(3)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                x: [//copied from fortran
+                    complex(-0.42363350716824644, -2.2093867649350898),
+                    complex(2.2225892101670914, -1.7538965376185174),
+                    complex(-1.1422197242316745, -0.27970358425951164),
+                    complex(-0.17800786756748099, -0.37024297626310343),
+                    complex(0.14377148449420929, 0.99698686599731445),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                ]
+            }
+        },
+        case8: {
+            desc: 'tr="c", ul="u", di="n", incx=1, n=6, a={*}, x={*}',
+            input: {
+                trans: 'c',
+                uplo: 'u',
+                diag: 'n',
+                n: 6,
+                incx: 1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setLower(0),
+                x: (() => {
+                    let v = vector(6);
+                    v.s(1)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                x: [
+                    //copied from fortran
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(-0.15262265513448822, 0.14071140652106690),
+                    complex(-1.4443838535530182, -0.39906073251810770),
+                    complex(-4.6332350725494867E-002, -0.20224298804899468),
+                    complex(-1.4838666079245511, -0.94099706199515598),
+                    complex(0.39843405102446616, -0.29059808376945545),
+                    //
+                ]
+            }
+        },
+        case9: {
+            desc: 'tr="c", ul="u", di="u", incx=1, n=6, a={*}, x={*}',
+            input: {
+                trans: 'c',
+                uplo: 'u',
+                diag: 'u',
+                n: 6,
+                incx: 1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setLower(0),
+                x: (() => {
+                    let v = vector(6);
+                    v.s(1)(0, 0);
+                    // v.s(3)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                x: [//copied from fortran
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(-0.11916876584291458, -0.21951562166213989),
+                    complex(0.68806222327377164, -0.52006689057181177),
+                    complex(1.1537416954878212, -0.99972441484002239),
+                    complex(-0.82757703535350080, 7.3583568030202828E-002),
+                    complex(1.5551601886103397, -1.4986169107249498),
+                ]
+            }
+        },
+        case10: {
+            desc: 'tr="c", ul="l", di="n", incx=1, n=6, a={*}, x={*}',
+            input: {
+                trans: 'c',
+                uplo: 'l',
+                diag: 'n',
+                n: 6,
+                incx: 1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                x: (() => {
+                    let v = vector(6);
+                    v.s(6)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                x: [//copied from fortran
+                    complex(1.4997211511167985, 1.6317882003200239),
+                    complex(0.66507043863638171, -0.28918592454053232),
+                    complex(-0.57313915841867680, -0.55599486430937639),
+                    complex(1.2909233609283014E-002, -9.3569865927350199E-002),
+                    complex(-0.24941512573253091, -0.72906990246418102),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                ]
+            }
+        },
+        case11: {
+            desc: 'tr="c", ul="l", di="u", incx=1, n=6, a={*}, x={*}',
+            input: {
+                trans: 'c',
+                uplo: 'l',
+                diag: 'u',
+                n: 6,
+                incx: -1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                x: (() => {
+                    let v = vector(6);
+                    v.s(6)(0, 0);
+                    // v.s(3)(0, 0);
+                    return v;
+                })()
+            },
+            expect: {
+                x: [//copied from fortran
+                    complex(-0.64901006221771240, 0.77214217185974121),
+                    complex(1.0115355777646271, 0.66930834493988645),
+                    complex(1.6199462693950109, -2.6460116567259719),
+                    complex(7.9681750368777013, 2.1980136848408875),
+                    complex(-8.2087922632419357, -2.9159109438871607),
+                    complex(-7.9036649818434919, -8.2778612243653438),
+                ]
+            }
+        },
+        case12: {
+            desc: 'trivial (n=0)',
+            input: {
+                trans: 'c',
+                uplo: 'l',
+                diag: 'u',
+                n: 0,
+                incx: 1,
+                lda: 6,
+                a: matrix_nxm(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                x: vector(6)
+            },
+            expect: {
+                x: [//copied from fortran
+                    complex(-0.64901006221771240, 0.77214217185974121),
+                    complex(-0.11916876584291458, -0.21951562166213989),
+                    complex(0.66413569450378418, -0.42481029033660889),
+                    complex(1.1009690761566162, -0.41898009181022644),
+                    complex(0.14377148449420929, 0.99698686599731445),
+                    complex(-0.11775359511375427, -0.27577802538871765),
+                ]
+            }
+        },
+    },
+    ctrsvErrors: {
+        case0: {
+            desc: 'x has no imaginary part',
+            input: {
+                uplo: 'l',
+                trans: 't',
+                diag: 'u',
+                n: 6,
+                lda: 6,
+                incx: 1,
+                x: [0],
+                a: [complex(0, 0)],
+            }
+        },
+        case1: {
+            desc: 'a has no imaginary part',
+            input: {
+                uplo: 'l',
+                trans: 't',
+                diag: 'u',
+                n: 6,
+                incx: 1,
+                lda: 6,
+                x: [complex(0, 0)],
+                a: [0],
+            }
+        },
+        case2: {
+            desc: 'uplo!="ul"',
+            input: {
+                uplo: 'x',
+                trans: 't',
+                diag: 'u',
+                n: 6,
+                lda: 6,
+                incx: 1,
+                x: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case3: {
+            desc: 'trans!="ntc"',
+            input: {
+                uplo: 'u',
+                trans: 'x',
+                diag: 'u',
+                lda: 6,
+                n: 6,
+                incx: 1,
+                x: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case4: {
+            desc: 'diag!="un"',
+            input: {
+                uplo: 'u',
+                trans: 't',
+                diag: 'x',
+                n: 6,
+                lda: 6,
+                incx: 1,
+                x: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case5: {
+            desc: 'n<0"',
+            input: {
+                uplo: 'u',
+                trans: 't',
+                diag: 'n',
+                n: -6,
+                incx: 1,
+                lda: 6,
+                x: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case6: {
+            desc: 'incx=0',
+            input: {
+                uplo: 'u',
+                trans: 't',
+                diag: 'n',
+                n: 6,
+                lda: 6,
+                incx: 0,
+                x: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+        case7: {
+            desc: 'lda<n',
+            input: {
+                uplo: 'u',
+                trans: 't',
+                diag: 'n',
+                n: 6,
+                lda: 5,
+                incx: 0,
+                x: [complex(0, 0)],
+                a: [complex(0, 0)],
+            }
+        },
+
+    },
 }
 
