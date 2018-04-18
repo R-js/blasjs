@@ -198,7 +198,7 @@ export function cgemm(
         default:
             throw new Error('unreachable code');
     }
-    console.log('name', proc.name);
+    //console.log('name', proc.name);
     return proc(
         betaIsZero,
         betaIsOne,
