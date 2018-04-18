@@ -1,4 +1,4 @@
-import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../f_func';
+
 
 /*
 *>  -- Written on 8-February-1989.
@@ -22,6 +22,16 @@ import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../f_f
 *> C are m by n matrices.
 */
 
+import {
+    Complex,
+    errMissingIm,
+    errWrongArg,
+    isOne,
+    isZero,
+    lowerChar,
+    Matrix
+} from '../../f_func';
+
 const { max } = Math;
 
 export function chemm(
@@ -41,9 +51,9 @@ export function chemm(
     const si = lowerChar(side);
     const ul = lowerChar(uplo);
 
-    const alphaIsZero = alpha.re === 0 && alpha.im === 0;
-    const betaIsOne = beta.re === 1 && beta.im === 0;
-    const betaIsZero = beta.re === 0 && beta.im === 0;
+    const alphaIsZero = isZero(alpha);
+    const betaIsOne = isOne(beta);
+    const betaIsZero = isZero(beta);
 
     if (a.i === undefined) {
         throw new Error(errMissingIm('a.i'));

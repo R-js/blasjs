@@ -500,3 +500,11 @@ ZTRSM - solving triangular matrix with multiple right hand sides
 
 [caxpy]: http://www.netlib.org/lapack/explore-html/da/df6/group__complex__blas__level1_ga9605cb98791e2038fd89aaef63a31be1.html
 
+Some notes on Matrix symbols
+
+https://fsymbols.com/generators/overline/
+
+A̅ᵗ   Conjugate transpose
+B̅    Conjugate
+
+A̅ᵗ ∙ B̅  
