@@ -219,7 +219,7 @@ export function bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 4, ku = 4): Mat
     return fortranMatrixComplex64(muxCmplx(nre, nim))(lda, n);
 }
 
-export function matrix_nxm(lda: number, n: number, m: number = lda) {
+export function matrix_mxn(lda: number, n: number, m: number = lda) {
 
     if (lda < m) {
         throw new Error(`lda<m, ${lda}<${m}`);

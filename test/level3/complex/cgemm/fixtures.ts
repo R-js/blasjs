@@ -7,9 +7,8 @@ import {
 
 
 import {
-    bandmatrix_nxm_ku_kl,
     diagonal_nxn,
-    matrix_nxm,
+    matrix_mxn,
     vector
 } from '../../../matrices';
 
@@ -28,8 +27,6 @@ export const fixture = {
         case0: {
             desc: 'trA="n", trB="n" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k=4, alpha(0.3,-0.7), beta(0.2,0.8)',
             input: {
-
-
                 trA: 'n',
                 trB: 'n',
                 m: 6, // A(M,K), C(M,N)
@@ -40,10 +37,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0.2, 0.8),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -129,10 +126,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0, 0),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -218,10 +215,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(1, 0),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -307,10 +304,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0.2, 0.8),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -394,10 +391,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0, 0),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -482,10 +479,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(1, 0),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -569,10 +566,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0.2, 0.8),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -656,10 +653,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0, 0),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -743,10 +740,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0.2, 0.8),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -830,10 +827,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0, 0),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -917,10 +914,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(1, 0),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -1004,10 +1001,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0, 0),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -1091,10 +1088,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0.2, 0.8),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -1178,10 +1175,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0.2, 0.8),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -1265,10 +1262,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0, 0),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -1352,10 +1349,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0.2, 0.8),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -1439,10 +1436,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0, 0),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -1526,10 +1523,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0.2, 0.8),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -1613,10 +1610,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0, 0),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -1700,10 +1697,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0.2, 0.8),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -1787,10 +1784,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0, 0),
                 alpha: complex(0.3, -0.7),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -1874,10 +1871,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(1, 0),
                 alpha: complex(0, 0),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -1961,10 +1958,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0.2, 0.2),
                 alpha: complex(0, 0),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -2048,10 +2045,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0, 0),
                 alpha: complex(0, 0),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [
@@ -2135,10 +2132,10 @@ export const fixture = {
                 ldc: 8, // ldc >= M
                 beta: complex(0.2, 0),
                 alpha: complex(0, 0),
-                //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
-                a: matrix_nxm(8, 8),
-                b: matrix_nxm(8, 8),
-                c: matrix_nxm(8, 8),
+                //bandmatrix_mxn_ku_kl(n = 6, m = 6, lda = m, kl = 3, ku = 2)
+                a: matrix_mxn(8, 8),
+                b: matrix_mxn(8, 8),
+                c: matrix_mxn(8, 8),
             },
             expect: {
                 c: [

@@ -58,8 +58,6 @@ describe('blas level 3 single/double complex', function n() {
           /* c.toArr().forEach(
              cpx => console.log(`     +(${cpx.re},\t${cpx.im})`)
            );*/
-
-
           const approx = approximatelyWithPrec(1E-5);
           multiplexer(c.toArr(), expect.c)(approx);
         });
