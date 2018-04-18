@@ -24,7 +24,7 @@ export const fixture = {
     // CGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
     cgemm: {
         case0: {
-            desc: 'trA="n", trB="n" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0.2,0.8)',
+            desc: 'trA="n", trB="n" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k=4, alpha(0.3,-0.7), beta(0.2,0.8)',
             input: {
 
 
@@ -202,7 +202,7 @@ export const fixture = {
             },
         },
         case2: {
-            desc: 'trA="n", trB="n" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(1,0)',
+            desc: 'trA="n", trB="n" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k=4, alpha(0.3,-0.7), beta(1,0)',
             input: {
 
 
@@ -291,7 +291,7 @@ export const fixture = {
             },
         },
         case3: {
-            desc: 'trA="n", trB="c" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0.2,0.8)',
+            desc: 'trA="n", trB="c" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k=4, alpha(0.3,-0.7), beta(0.2,0.8)',
             input: {
 
 
@@ -380,7 +380,7 @@ export const fixture = {
             },
         },
         case4: {
-            desc: 'trA="n", trB="c" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0,0)',
+            desc: 'trA="n", trB="c" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k="4", alpha(0.3,-0.7), beta(0,0)',
             input: {
                 trA: 'n',
                 trB: 'c',
@@ -468,7 +468,7 @@ export const fixture = {
             },
         },
         case5: {
-            desc: 'trA="n", trB="c" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(1, 0)',
+            desc: 'trA="n", trB="c",s m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k=4, alpha(0.3,-0.7), beta(1, 0)',
             input: {
                 trA: 'n',
                 trB: 'c',
@@ -555,11 +555,11 @@ export const fixture = {
             },
         },
         case6: {
-            desc: 'trA="t", trB="c" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0.2,0.8)',
+            desc: 'trA="t", trB="c" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k=4, alpha(0.3,-0.7), beta(0.2,0.8)',
             input: {
                 trA: 't',
                 trB: 'c',
-                m: 6, // A(M,K), C(M,N)
+                m: 6, // sA(M,K), C(M,N)
                 n: 8, // B(K,N), A(M,K)
                 k: 4,
                 lda: 8, // lda >= M
@@ -1164,7 +1164,7 @@ export const fixture = {
             },
         },
         case13: {
-            desc: 'trA="c", trB="n" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0.2,0.8)',
+            desc: 'trA="c", trB="n",alpha(0.3,-0.7), beta(0.2,0.8), m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, ',
             input: {
                 trA: 'c',
                 trB: 'n',
@@ -1251,7 +1251,7 @@ export const fixture = {
             },
         },
         case14: {
-            desc: 'trA="c", trB="n" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0,0)',
+            desc: 'trA="c", trB="n",alpha(0.3,-0.7), beta(0,0), m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0,0)',
             input: {
                 trA: 'c',
                 trB: 'n',
@@ -1338,7 +1338,7 @@ export const fixture = {
             },
         },
         case15: {
-            desc: 'trA="t", trB="t" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0.2,0.8)',
+            desc: 'trA="t", trB="t",alpha(0.3,-0.7), beta(0.2,0.8), m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0.2,0.8)',
             input: {
                 trA: 't',
                 trB: 't',
@@ -1425,7 +1425,7 @@ export const fixture = {
             },
         },
         case16: {
-            desc: 'trA="t", trB="t" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0,0)',
+            desc: 'trA="t", trB="t",alpha(0.3,-0.7), beta(0,0), m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k',
             input: {
                 trA: 't',
                 trB: 't',
@@ -1512,7 +1512,7 @@ export const fixture = {
             },
         },
         case17: {
-            desc: 'trA="c", trB="c" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0.2,0.8)',
+            desc: 'trA="c", trB="c",alpha(0.3,-0.7), beta(0.2,0.8), m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k',
             input: {
                 trA: 'c',
                 trB: 'c',
@@ -1599,7 +1599,7 @@ export const fixture = {
             },
         },
         case18: {
-            desc: 'trA="c", trB="c" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0,0)',
+            desc: 'trA="c", trB="c", alpha(0.3,-0.7), beta(0,0), m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k',
             input: {
                 trA: 'c',
                 trB: 'c',
@@ -1686,7 +1686,7 @@ export const fixture = {
             },
         },
         case19: {
-            desc: 'trA="c", trB="t" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0.2,0.8)',
+            desc: 'trA="c", trB="t", alpha(0.3,-0.7), beta(0.2,0.8), m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k',
             input: {
                 trA: 'c',
                 trB: 't',
@@ -1773,7 +1773,7 @@ export const fixture = {
             },
         },
         case20: {
-            desc: 'trA="c", trB="t" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0.3,-0.7), beta(0,0)',
+            desc: 'trA="c", trB="t", alpha(0.3,-0.7), beta(0,0), m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k',
             input: {
                 trA: 'c',
                 trB: 't',
@@ -1860,7 +1860,7 @@ export const fixture = {
             },
         },
         case21: {
-            desc: 'trA="c", trB="t" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0,0), beta(1,0)',
+            desc: 'trA="c", trB="t", alpha(0,0), beta(1,0), m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k',
             input: {
                 trA: 'c',
                 trB: 't',
@@ -1947,7 +1947,7 @@ export const fixture = {
             },
         },
         case22: {
-            desc: 'trA="c", trB="t" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0,0), beta(1,0)',
+            desc: 'trA="c", trB="t", alpha(0,0), beta(0.2,0.2), m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k',
             input: {
                 trA: 'c',
                 trB: 't',
@@ -2034,7 +2034,7 @@ export const fixture = {
             },
         },
         case23: {
-            desc: 'trA="c", trB="t" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0,0), beta(1,0)',
+            desc: 'trA="c", trB="t", alpha(0,0), beta(0,0) m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k',
             input: {
                 trA: 'c',
                 trB: 't',
@@ -2121,7 +2121,7 @@ export const fixture = {
             },
         },
         case24: {
-            desc: 'trA="c", trB="t" m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k, alpha(0,0), beta(1,0)',
+            desc: 'trA="c", trB="t", alpha(0,0), beta(0.2,0), m_a=m_c=m=6, n_b=n_c=n=8, n_a=m_b=k,',
             input: {
                 trA: 'c',
                 trB: 't',
