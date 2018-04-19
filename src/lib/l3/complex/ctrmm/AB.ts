@@ -53,27 +53,38 @@ export function AB(
     }
     else {
         for (let j = 1; j <= n; j++) {
+            const coorBJ = b.colOfEx(j);
             for (let k = m; k >= 1; k--) {
-                const coorAK = a.colOfEx(j);
-                const coorBJ = b.colOfEx(j);
+                const coorAK = a.colOfEx(k);
                 const bIsZero = b.r[coorBJ + k] === 0 && b.i[coorBJ + k] === 0;
                 if (!bIsZero) {
+
                     let tempRe = alpha.re * b.r[coorBJ + k] - alpha.im * b.i[coorBJ + k];
-                    let tempIm = alpha.re * b.r[coorBJ + k] + alpha.im * b.i[coorBJ + k];
+                    let tempIm = alpha.re * b.i[coorBJ + k] + alpha.im * b.r[coorBJ + k];
                     b.r[coorBJ + k] = tempRe;
                     b.i[coorBJ + k] = tempIm;
+                    //                    console.log(`${j},${k},\t${tempRe},${tempIm}`);
                     //IF (NOUNIT) B(K,J) = B(K,J)*A(K,K)
                     if (nounit) {
-                        let re = b.r[coorBJ + k] * a.r[coorAK + k] - b.i[coorBJ + k] * a.i[coorAK + k];
-                        let im = b.r[coorBJ + k] * a.i[coorAK + k] + b.i[coorBJ + k] * a.i[coorAK + k];
-                        b.r[coorBJ + k] = re;
-                        b.i[coorBJ + k] = im;
+                        /*const { re, im } = mul_rxr(
+                            b.r[coorBJ + k],
+                            b.i[coorBJ + k],
+                            a.r[coorAK + k],
+                            a.i[coorAK + k]
+                        );*/
+                        const re1 = b.r[coorBJ + k] * a.r[coorAK + k] - b.i[coorBJ + k] * a.i[coorAK + k];
+                        const im1 = b.r[coorBJ + k] * a.i[coorAK + k] + b.i[coorBJ + k] * a.r[coorAK + k];
+                        //     console.log(`${j},${k},\t${a.r[coorAK + k]},${a.i[coorAK + k]}`);
+                        b.r[coorBJ + k] = re1;
+                        b.i[coorBJ + k] = im1;
                     }
+                    //console.log(`${j},${k},\t${b.r[coorBJ + k]},${b.i[coorBJ + k]}`);
                     for (let i = k + 1; i <= m; i++) {
-                        //TEMP*A(I,K)
+                        //TEMP * A(I,K)
                         let re = tempRe * a.r[coorAK + i] - tempIm * a.i[coorAK + i];
                         let im = tempRe * a.i[coorAK + i] + tempIm * a.r[coorAK + i];
                         //B(I,J) = B(I,J) + TEMP*A(I,K)
+                        //console.log(`${j},${k},${i}\t${re},${im}`);
                         b.r[coorBJ + i] += re;
                         b.i[coorBJ + i] += im;
                     }

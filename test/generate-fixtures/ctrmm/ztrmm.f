@@ -294,8 +294,11 @@
                       DO 70 K = M,1,-1
                           IF (B(K,J).NE.ZERO) THEN
                               TEMP = ALPHA*B(K,J)
+                   
                               B(K,J) = TEMP
+                            
                               IF (NOUNIT) B(K,J) = B(K,J)*A(K,K)
+                                print *, J,K, A(K,K)  
                               DO 60 I = K + 1,M
                                   B(I,J) = B(I,J) + TEMP*A(I,K)
    60                         CONTINUE

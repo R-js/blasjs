@@ -50,9 +50,9 @@ describe('blas level 3 single/double complex', function n() {
       }, key) => {
         it(`[${key}]/[${desc}]`, function t() {
           console.log('a-->');
-          a.toArr().forEach(cplx => {
+          /*a.toArr().forEach(cplx => {
             console.log(`     + (${cplx.re},${cplx.im}),`);
-          });
+          });*/
           ctrmm(side, uplo, transA, diag, m, n, alpha, a, lda, b, ldb);
           const approx = approximatelyWithPrec(1E-5);
           multiplexer(b.toArr(), expect.b)(approx);
