@@ -53,9 +53,9 @@ describe('blas level 3 single/double complex', function n() {
           a.toArr().forEach(cplx => {
             console.log(`     + (${cplx.re},${cplx.im}),`);
           });
-          //ctrmm(side, uplo, transA, diag, m, n, alpha, a, lda, b, ldb);
-          //const approx = approximatelyWithPrec(1E-5);
-          //multiplexer(b.toArr(), expect.b)(approx);
+          ctrmm(side, uplo, transA, diag, m, n, alpha, a, lda, b, ldb);
+          const approx = approximatelyWithPrec(1E-5);
+          multiplexer(b.toArr(), expect.b)(approx);
         });
       });
     }); //https://www.youtube.com/watch?v=-XZb3--n4D4

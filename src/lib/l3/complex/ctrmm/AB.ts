@@ -1,36 +1,55 @@
-import { Complex, errMissingIm, Matrix } from '../../../f_func';
+import {
+    Complex,
+    MatrixEComplex,
+    mul_cxr,
+    mul_rxr
+} from '../../../f_func';
 
 
-export function AB(nounit: boolean, upper: boolean, n: number, m: number, a: Matrix, b: Matrix, alpha: Complex): void {
-
-    if (a.i === undefined) {
-        throw new Error(errMissingIm('a.i'));
-    }
-    if (b.i === undefined) {
-        throw new Error(errMissingIm('b.i'));
-    }
+export function AB(
+    nounit: boolean,
+    upper: boolean,
+    noconj: boolean,
+    n: number,
+    m: number,
+    a: MatrixEComplex,
+    b: MatrixEComplex,
+    alpha: Complex): void {
 
     if (upper) {
         for (let j = 1; j <= n; j++) {
             const coorBJ = b.colOfEx(j);
             for (let k = 1; k <= m; k++) {
-                const coorAK = a.colOfEx(k);
-                let tempRe = alpha.re * b.r[coorBJ + k] - alpha.im * b.i[coorBJ + k];
-                let tempIm = alpha.re * b.i[coorBJ + k] + alpha.im * b.r[coorBJ + k];
-                for (let i = 1; i <= k - 1; i++) {
-                    b.r[coorBJ + i] += tempRe * a.r[coorAK + i] - tempIm * a.i[coorAK + i];
-                    b.i[coorBJ + i] += tempRe * a.i[coorAK + i] + tempIm * a.i[coorAK + i];
-                }
-                if (nounit) {
-                    let re = tempRe * a.r[coorAK + k] - tempIm * a.i[coorAK + k];
-                    let im = tempRe * a.i[coorAK + k] + tempIm * a.r[coorAK + k];
-                    tempRe = re;
-                    tempIm = im;
-                }
-                b.r[coorBJ + k] = tempRe;
-                b.i[coorBJ + k] = tempIm;
-            }
-        }
+                const bIsZero = b.r[coorBJ + k] === 0 && b.i[coorBJ + k] === 0;
+                if (!bIsZero) {
+                    // TEMP = ALPHA*B(K,J)
+                    const coorAK = a.colOfEx(k);
+                    const { re, im } = mul_cxr(alpha, b.r[coorBJ + k], b.i[coorBJ + k]);
+                    let tempRe = re;
+                    let tempIm = im;
+
+                    for (let i = 1; i <= k - 1; i++) {
+                        //TEMP*A(I,K)
+                        const { re, im } = mul_rxr(tempRe, tempIm, a.r[coorAK + i], a.i[coorAK + i]);
+                        //B(I,J) = B(I,J) + ...
+                        // console.log(`${j},${k},${i},\t (${re},${im})`);
+                        b.r[coorBJ + i] += re;
+                        b.i[coorBJ + i] += im;
+                        //                console.log(`${j},${k},${i},\t (${b.r[coorBJ + i]},${b.i[coorBJ + i]})`);
+
+                    }
+                    if (nounit) {
+                        //TEMP = TEMP*A(K,K)
+                        const { re, im } = mul_rxr(tempRe, tempIm, a.r[coorAK + k], a.i[coorAK + k]);
+                        tempRe = re;
+                        tempIm = im;
+                    }
+                    //B(K,J) = TEMP
+                    b.r[coorBJ + k] = tempRe;
+                    b.i[coorBJ + k] = tempIm;
+                }//if b[*]!=zero
+            }//for k
+        }//for j
     }
     else {
         for (let j = 1; j <= n; j++) {

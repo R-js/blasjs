@@ -1,16 +1,19 @@
 
-import { Complex, errMissingIm, Matrix } from '../../../f_func';
+import { Complex, MatrixEComplex } from '../../../f_func';
 
 // Form  B := alpha*B*A.
 
-export function BA(nounit: boolean, upper: boolean, n: number, m: number, a: Matrix, b: Matrix, alpha: Complex): void {
+export function BA(
+    nounit: boolean,
+    upper: boolean,
+    noconj: boolean,
+    n: number,
+    m: number,
+    a: MatrixEComplex,
+    b: MatrixEComplex,
+    alpha: Complex): void {
 
-    if (a.i === undefined) {
-        throw new Error(errMissingIm('a.i'));
-    }
-    if (b.i === undefined) {
-        throw new Error(errMissingIm('b.i'));
-    }
+
 
     if (upper) {
         for (let j = n; j >= 1; j--) {

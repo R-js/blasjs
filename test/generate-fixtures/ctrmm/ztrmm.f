@@ -279,8 +279,10 @@
                       DO 40 K = 1,M
                           IF (B(K,J).NE.ZERO) THEN
                               TEMP = ALPHA*B(K,J)
+      
                               DO 30 I = 1,K - 1
                                   B(I,J) = B(I,J) + TEMP*A(I,K)
+      
    30                         CONTINUE
                               IF (NOUNIT) TEMP = TEMP*A(K,K)
                               B(K,J) = TEMP

@@ -7,7 +7,15 @@
 *>     Sven Hammarling, Numerical Algorithms Group Ltd.
 */
 
-import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../../f_func';
+import {
+    Complex,
+    errMissingIm,
+    errWrongArg,
+    lowerChar,
+    Matrix,
+    MatrixEComplex
+
+} from '../../../f_func';
 
 import { AB } from './AB';
 import { AtranB, AtranB as AconjB } from './AtranB';
@@ -71,7 +79,7 @@ export function ctrmm(
     else if (!'ntc'.includes(trA)) {
         info = 3;
     }
-    else if ('un'.includes(di)) {
+    else if (!'un'.includes(di)) {
         info = 4;
     }
     else if (m < 0) {
@@ -103,29 +111,37 @@ export function ctrmm(
         return;
     }
 
+    let proc: (
+        nounit: boolean,
+        upper: boolean,
+        noconj: boolean,
+        n: number,
+        m: number,
+        a: MatrixEComplex,
+        b: MatrixEComplex,
+        alpha: Complex) => void;
+
     //     Start the operations.
     if (si === 'l' && trA === 'n') {
-        //Form  B := alpha*A*B.
-        return AB(nounit, upper, n, m, a, b, alpha);
-    }
-    if (si === 'l' && trA === 't') {
+        proc = AB;
+
+    } else if (si === 'l' && trA === 't') {
         //Form  B := alpha*A**T*B   or   B := alpha*A**H*B.
-        return AtranB(nounit, upper, noconj, n, m, a, b, alpha)
-    }
-    if (si === 'l' && trA === 'c') {
+        proc = AtranB;
+    } else if (si === 'l' && trA === 'c') {
         //B := alpha*A**H*B.
-        return AconjB(nounit, upper, noconj, n, m, a, b, alpha)
-    }
-    if (si === 'r' && trA === 'n') {
+        proc = AconjB;
+    } else if (si === 'r' && trA === 'n') {
         // Form  B := alpha*B*A.
-        return BA(nounit, upper, n, m, a, b, alpha);
-    }
-    if (si === 'r' && trA === 't') {
+        proc = BA;
+    } else if (si === 'r' && trA === 't') {
         //Form  B := alpha*B*A**T 
-        return BtranA(nounit, upper, noconj, n, m, a, b, alpha);
+        proc = BtranA;
+
+    } else { /*if (si === 'r' && trA === 'c') {*/
+        proc = BconjA;
     }
-    if (si === 'r' && trA === 'c') {
-        // B := alpha*B*A**H.
-        return BconjA(nounit, upper, noconj, n, m, a, b, alpha);
-    }
+
+    proc(nounit, upper, noconj, n, m, <MatrixEComplex>a, <MatrixEComplex>b, alpha);
+
 }

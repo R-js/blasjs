@@ -1,6 +1,6 @@
 
 
-import { Complex, errMissingIm, Matrix } from '../../../f_func';
+import { Complex, MatrixEComplex } from '../../../f_func';
 
 
 export function AtranB(
@@ -9,16 +9,11 @@ export function AtranB(
     noconj: boolean,
     n: number,
     m: number,
-    a: Matrix,
-    b: Matrix,
+    a: MatrixEComplex,
+    b: MatrixEComplex,
     alpha: Complex): void {
 
-    if (a.i === undefined) {
-        throw new Error(errMissingIm('a.i'));
-    }
-    if (b.i === undefined) {
-        throw new Error(errMissingIm('b.i'));
-    }
+
 
     if (upper) {
         for (let j = 1; j <= n; j++) {

@@ -30,7 +30,7 @@ c     put Upper and lower matrix in the same 6x6 structure
 c     at times we will snap 6x6 or 4x4 because the routine skips over elements it doenst use
 c  
         DATA ((M6X6(I,J),I=1,6),J=1,6)/
-     + (1.2629542848807933,0.9921603654457979),
+     + (0,0),
      + (-0.3262333607056494,-0.42951310949188126),
      + (1.3297992629225006,1.2383041008533804),
      + (1.2724293214294047,-0.2793462818542693),
@@ -91,9 +91,10 @@ c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
         N=6
         LDB=6
         LDA=6
+        alpha = (0.2,0.8)
         
         CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
-        CALL PRNMATRC(A, N, N)
+        CALL PRNMATRC(B, N, N)
       end
 
 
