@@ -398,13 +398,18 @@ c                                 PRINT *, K,J,"", TEMP
                   DO 280 K = 1,N
                       DO 260 J = 1,K - 1
                           IF (A(J,K).NE.ZERO) THEN
+                          
                               IF (NOCONJ) THEN
                                   TEMP = ALPHA*A(J,K)
+                  
                               ELSE
                                   TEMP = ALPHA*DCONJG(A(J,K))
                               END IF
+c                            PRINT *, TEMP 
                               DO 250 I = 1,M
                                   B(I,J) = B(I,J) + TEMP*B(I,K)
+                          PRINT *, K,J,I, B(I,J)
+
   250                         CONTINUE
                           END IF
   260                 CONTINUE

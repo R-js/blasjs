@@ -21,18 +21,21 @@ export function BtranA(
                 const coorBJ = b.colOfEx(j);
                 const aIsZero = a.r[coorAK + j] === 0 && a.i[coorAK + j] === 0;
                 if (!aIsZero) {
+                    //console.log(`${k},${j}`);
                     let ajkRe = a.r[coorAK + j];
                     let ajkIm = noconj ? a.i[coorAK + j] : -a.i[coorAK + j];
                     //TEMP = ALPHA*A(J,K)
                     //TEMP = ALPHA*CONJG(A(J,K))
                     let tempRe = alpha.re * ajkRe - alpha.im * ajkIm;
                     let tempIm = alpha.re * ajkIm + alpha.im * ajkRe;
+                    //console.log(`${k},${j},\t(${tempRe},${tempIm})`);
                     for (let i = 1; i <= m; i++) {
                         // B(I,J) = B(I,J) + TEMP*B(I,K)
                         let re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
-                        let im = tempRe * b.i[coorBK + i] + tempIm * b.i[coorBK + i];
+                        let im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
                         b.r[coorBJ + i] += re;
                         b.i[coorBJ + i] += im;
+                        // console.log(`${k},${j},${i}\t${re},${im}`);
                     }
                 }
             }//j

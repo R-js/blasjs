@@ -325,6 +325,516 @@ c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
         
         CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
         CALL PRNMATRC(B, N, N)
+
+          PRINT * , "==CASE 8======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+        A(1,2) = (0,0)
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'R'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'U'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'T'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'N'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+          PRINT * , "==CASE 9======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+        A(1,2) = (0,0)
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'R'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'U'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'C'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'N'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+        PRINT * , "==CASE 10======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'R'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'U'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'C'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'U'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+          PRINT * , "==CASE 11======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'R'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'L'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'T'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'N'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+           PRINT * , "==CASE 12======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+        A(6,5) = 0
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'R'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'L'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'T'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'U'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+              PRINT * , "==CASE 13======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+        A(6,5) = 0
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'R'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'L'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'C'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'U'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+             PRINT * , "==CASE 14======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+        A(6,5) = 0
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'R'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'L'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'C'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'N'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+               PRINT * , "==CASE 15======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+      
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'R'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'L'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'C'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'U'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (1,0)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+                 PRINT * , "==CASE 16======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+      
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'R'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'U'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'C'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'U'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (1,0)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+                PRINT * , "==CASE 17======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+      
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'L'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'U'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'T'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'N'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+                  PRINT * , "==CASE 18======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+      
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'L'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'U'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'C'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'N'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+                     PRINT * , "==CASE 19======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+      
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'L'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'U'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'C'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'U'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+                        PRINT * , "==CASE 20======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+      
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'L'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'L'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'C'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'U'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+         PRINT * , "==CASE 21======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+      
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'L'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'L'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'T'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'N'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+          PRINT * , "==CASE 22======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+      
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'L'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'L'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'c'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'N'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+           PRINT * , "==CASE 23======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+      
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'L'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'L'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'c'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'N'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=4  
+        N=6
+        LDB=6
+        LDA=6
+        alpha = (0,0)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
+            PRINT * , "==CASE 24======="
+       
+c       FULL COPY
+        CALL CRCMPLX(M6X6, A, 6,6)
+        CALL CRCMPLX(M6X6, B, 6,6)
+      
+c        
+        
+c       B IS ALWAYS, MXN matrix, regardless if it is left or right multiplied
+c            
+c       IF SIDE = "L" A IS MXM matrix , 4x4
+c       IF SIDE = "R" A iS NXN matrix , 6x6
+        SIDE = 'L'
+c       A IS UPPER OR LOWER TRIANGULAR MATRIX of (kxk)        
+        UPLO = 'L'
+
+c       [N]O (TRANSLATION or CONJUGATION of A, note!! A is k x k matrix so!!!)        
+        TRANSA = 'c'
+c       DIAGONALS ARE NOT UNIT  
+        DIAG = 'N'
+c       IF SIDE=L, A= (mxm) otherwise M,N,ALPHA,A,LDA,B,LDB
+        M=0  
+        N=1
+        LDB=6
+        LDA=6
+        alpha = (0.2,0.8)
+        
+        CALL ZTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, N, N)
+
       end
 
 
