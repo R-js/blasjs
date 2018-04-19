@@ -183,7 +183,7 @@ c
 
         CALL ZGEMM(TRANSA,TRANSB,MM,NN,KK,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
         CALL PRNMATRC(C, 8, 8, 8)
-
+        return
          PRINT * , "==CASE 4======="
        
         

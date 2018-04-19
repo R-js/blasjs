@@ -49,7 +49,7 @@ describe('blas level 3 single/double complex', function n() {
         }, expect, desc
       }, key) => {
         it(`[${key}]/[${desc}]`, function t() {
-          console.log('a-->');
+          //console.log('a-->');
           /*a.toArr().forEach(cplx => {
             console.log(`     + (${cplx.re},${cplx.im}),`);
           });*/

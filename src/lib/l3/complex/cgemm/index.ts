@@ -124,7 +124,7 @@ export function cgemm(
 
     // And when  alpha.eq.zero.
     if (alphaIsZero) {
-        console.log('alpha is zero')
+        //console.log('alpha is zero')
         if (betaIsZero) {//fast shortcut
 
             for (let j = 1; j <= n; j++) {
@@ -160,7 +160,7 @@ export function cgemm(
     switch (true) {
         case (trA === 'n' && trB === 'n'):
             //Form  C := alpha*A*B + beta*C.
-            console.log('AB');
+            //console.log('AB');
             proc = AB;
             break;
         case (trA === 'n' && trB === 'c'):
