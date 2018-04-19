@@ -41,15 +41,19 @@ export function BA(
                 const coorBK = b.colOfEx(k);
                 const aIsZero = a.r[coorAJ + k] === 0 && a.i[coorAJ + k] === 0;
                 if (!aIsZero) {
+
                     //TEMP = ALPHA * A(K, J)
                     let tempRe = alpha.re * a.r[coorAJ + k] - alpha.im * a.i[coorAJ + k];
                     let tempIm = alpha.re * a.i[coorAJ + k] + alpha.im * a.r[coorAJ + k];
+                    // console.log(`${k},${j}\t${tempRe},${tempIm}`);
                     for (let i = 1; i <= m; i++) {
                         // B(I, J) = B(I, J) + TEMP * B(I, K)
                         let re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
                         let im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
+                        // console.log(`${k},${i}, ${j}\t${re},${im}`);
                         b.r[coorBJ + i] += re;
                         b.i[coorBJ + i] += im;
+                        //     console.log(`${k},${i}, ${j}\t${b.r[coorBJ + i]},${b.i[coorBJ + i]}`);
                     }
                 }
             }//k

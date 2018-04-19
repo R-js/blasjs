@@ -3,7 +3,7 @@
 import { Complex, MatrixEComplex } from '../../../f_func';
 
 
-export function AtranB(
+export function tranAB(
     nounit: boolean,
     upper: boolean,
     noconj: boolean,

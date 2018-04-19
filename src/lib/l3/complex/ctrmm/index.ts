@@ -18,9 +18,9 @@ import {
 } from '../../../f_func';
 
 import { AB } from './AB';
-import { AtranB, AtranB as AconjB } from './AtranB';
 import { BA } from './BA';
 import { BtranA, BtranA as BconjA } from './BtranA';
+import { tranAB, tranAB as conjAB } from './tranAB';
 
 const { max } = Math;
 
@@ -127,10 +127,10 @@ export function ctrmm(
 
     } else if (si === 'l' && trA === 't') {
         //Form  B := alpha*A**T*B   or   B := alpha*A**H*B.
-        proc = AtranB;
+        proc = tranAB;
     } else if (si === 'l' && trA === 'c') {
         //B := alpha*A**H*B.
-        proc = AconjB;
+        proc = conjAB;
     } else if (si === 'r' && trA === 'n') {
         // Form  B := alpha*B*A.
         proc = BA;

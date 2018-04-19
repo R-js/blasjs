@@ -362,9 +362,13 @@
   170                 CONTINUE
                       DO 190 K = 1,J - 1
                           IF (A(K,J).NE.ZERO) THEN
+                   
                               TEMP = ALPHA*A(K,J)
+c                                 PRINT *, K,J,"", TEMP
                               DO 180 I = 1,M
+                               
                                   B(I,J) = B(I,J) + TEMP*B(I,K)
+                        PRINT *, K,I,J,"", B(I,J) 
   180                         CONTINUE
                           END IF
   190                 CONTINUE
