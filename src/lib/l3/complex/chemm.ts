@@ -288,7 +288,6 @@ export function chemm(
                 );
                 let temp1Re = re;
                 let temp1Im = im;
-
                 /*
                 DO 150 I = 1,M
                     C(I,J) = C(I,J) + TEMP1*B(I,K)

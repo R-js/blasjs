@@ -61,7 +61,7 @@ export function ctrsm(
     const nounit = diag === 'n';
     const upper = ul === 'u';
 
-    const alphaIsZero = alpha.re === 0 && alpha.im === 0;
+    const alphaIsZero = (alpha.re === 0 && alpha.im === 0);
 
     let info = 0;
 

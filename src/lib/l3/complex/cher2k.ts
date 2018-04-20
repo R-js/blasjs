@@ -1,4 +1,10 @@
-import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../f_func';
+import {
+    Complex,
+    errMissingIm,
+    errWrongArg,
+    lowerChar,
+    Matrix
+} from '../../f_func';
 
 /*
 *>  -- Jacob Bogers, Javascript Port, 03/2018, jkfbogers@gmail.com
@@ -14,11 +20,11 @@ import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../f_f
 *>
 *> CHER2K  performs one of the hermitian rank 2k operations
 *>
-*>    C := alpha*A*B**H + conjg( alpha )*B*A**H + beta*C,
+*>    C := alpha*A*B**H + conjg( alpha )*B*A**H + beta*C
 *>
 *> or
 *>
-*>    C := alpha*A**H*B + conjg( alpha )*B**H*A + beta*C,
+*>    C := alpha*A**H*B + conjg( alpha )*B**H*A + beta*C
 *>
 *> where  alpha and beta  are scalars with  beta  real,  C is an  n by n
 *> hermitian matrix and  A and B  are  n by k matrices in the first case
@@ -61,10 +67,10 @@ export function cher2k(
 
     let info = 0;
 
-    if ('ul'.includes(ul)) {
+    if (!'ul'.includes(ul)) {
         info = 1;
     }
-    else if ('nc'.includes(tr)) {
+    else if (!'nc'.includes(tr)) {
         info = 2;
     }
     else if (n < 0) {
@@ -105,31 +111,33 @@ export function cher2k(
                 const coorCJ = c.colOfEx(j);
                 if (beta === 0) {
                     c.setCol(j, 1, j, 0);
+                    continue;
                 }
-                else {
+                if (beta !== 1) {
                     for (let i = 1; i <= j - 1; i++) {
                         c.r[coorCJ + i] *= beta;
                         c.i[coorCJ + i] *= beta;
                     }
-                    c.r[coorCJ + j] = beta;
-                    c.i[coorCJ + j] = 0;
+                    c.r[coorCJ + j] *= beta;
                 }
+                c.r[coorCJ + j] = 0;
             }
         }
         else {
             for (let j = 1; j <= n; j++) {
                 if (beta === 0) {
                     c.setCol(j, j, n, 0);
+                    continue;
                 }
-                else {
-                    const coorCJ = c.colOfEx(j);
+                const coorCJ = c.colOfEx(j);
+                if (beta !== 1) {
                     c.r[coorCJ + j] *= beta;
-                    c.i[coorCJ + j] = 0;
                     for (let i = j + 1; j <= n; i++) {
                         c.r[coorCJ + i] *= beta;
-                        c.r[coorCJ + i] *= beta;
+                        c.i[coorCJ + i] *= beta;
                     }
                 }
+                c.i[coorCJ + j] = 0;
             }
         }
         return;
@@ -159,9 +167,11 @@ export function cher2k(
                 for (let l = 1; l <= k; l++) {
                     const coorAL = a.colOfEx(l);
                     const coorBL = b.colOfEx(l);
-                    const aIsZero = a.r[coorAL + j] === 0 && a.i[coorAL + j];
-                    const bisZero = b.r[coorBL + j] === 0 && b.i[coorBL + j];
-                    if (!aIsZero || !bisZero) {
+                    const aIsZero = a.r[coorAL + j] === 0 && a.i[coorAL + j] === 0;
+                    const bIsZero = b.r[coorBL + j] === 0 && b.i[coorBL + j] === 0;
+                    // console.log(`A(${j},${l})=(${a.r[coorAL + j]},${a.i[coorAL + j]})\tB(${j},${l})=(${b.r[coorBL + j]},${b.i[coorBL + j]})`);
+                    // console.log(`isAZero=${aIsZero}, isBZero=${bIsZero}`);
+                    if (!aIsZero || !bIsZero) {
                         //TEMP1 = ALPHA * CONJG(B(J, L))
                         //(a+ib)*(c-id) = (ac+bd)+i(-ad+bc)
                         //
@@ -196,13 +206,15 @@ export function cher2k(
                 else if (beta !== 1) {
                     for (let i = j + 1; i <= n; i++) {
                         c.r[coorCJ + i] *= beta;
+                        c.i[coorCJ + i] *= beta;
                     }
                     c.r[coorCJ + j] *= beta;
                     c.i[coorCJ + j] = 0;
                 }
-                else {//beta =1
+                else {
                     c.i[coorCJ + j] = 0;
                 }
+
                 for (let l = 1; l <= k; l++) {
                     const coorAL = a.colOfEx(l);
                     const coorBL = b.colOfEx(l);
@@ -212,19 +224,27 @@ export function cher2k(
                         //TEMP1 = ALPHA * CONJG(B(J, L))
                         //(a+ib)*(c-id) = (ac+bd)+i(-ad+bc)
                         let temp1Re = alpha.re * b.r[coorBL + j] + alpha.im * b.i[coorBL + j];
-                        let temp1Im = -alpha.re * b.i[coorBL + j] + alpha.im * b.i[coorBL + j];
-
+                        let temp1Im = -alpha.re * b.i[coorBL + j] + alpha.im * b.r[coorBL + j];
+                        // TEMP2 = DCONJG(ALPHA*A(J,L))
                         let temp2Re = alpha.re * a.r[coorAL + j] - alpha.im * a.i[coorAL + j];
-                        let temp2Im = -(alpha.re * a.i[coorAL + j] + alpha.im * a.i[coorAL + j]);
-                        for (let i = j; i <= n; i++) {
+                        let temp2Im = -(alpha.re * a.i[coorAL + j] + alpha.im * a.r[coorAL + j]);
+                        //console.log(`${l}, (${temp1Re},${temp1Im}),(${temp2Re},${temp2Im})`);
+                        for (let i = j + 1; i <= n; i++) {
                             //DO 160 I = J + 1, N, note we use starting i=j (because of cleanup after)
                             // A(I, L) * TEMP1
-                            c.r[coorCJ + i] += a.r[coorAL + i] * temp1Re - a.i[coorAL + i] * temp1Im;
-                            c.i[coorCJ + i] += a.r[coorAL + i] * temp1Im + a.i[coorAL + i] * temp1Re;
-                            // B(I, L) * TEMP2
-                            c.r[coorCJ + i] += b.r[coorBL + i] * temp2Re - b.i[coorBL + i] * temp2Re;
-                            c.i[coorCJ + i] += b.r[coorBL + i] * temp2Im + b.i[coorBL + i] * temp2Im;
+                            const re1 = a.r[coorAL + i] * temp1Re - a.i[coorAL + i] * temp1Im;
+                            const im1 = a.r[coorAL + i] * temp1Im + a.i[coorAL + i] * temp1Re;
+
+                            const re2 = b.r[coorBL + i] * temp2Re - b.i[coorBL + i] * temp2Im;
+                            const im2 = b.r[coorBL + i] * temp2Im + b.i[coorBL + i] * temp2Re;
+
+                            c.r[coorCJ + i] += re1 + re2;
+                            c.i[coorCJ + i] += im1 + im2;
+                            //console.log(`${i},${j}, (${c.r[coorCJ + i]},${c.i[coorCJ + i]})`);
                         }
+                        const re1 = a.r[coorAL + j] * temp1Re - a.i[coorAL + j] * temp1Im;
+                        const re2 = b.r[coorBL + j] * temp2Re - b.i[coorBL + j] * temp2Im;
+                        c.r[coorCJ + j] += re1 + re2;
                         c.i[coorCJ + j] = 0;
                     }
                 }//for (k)
