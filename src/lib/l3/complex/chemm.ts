@@ -29,7 +29,9 @@ import {
     isOne,
     isZero,
     lowerChar,
-    Matrix
+    Matrix,
+    mul_cxr,
+    mul_rxr
 } from '../../f_func';
 
 const { max } = Math;
@@ -92,18 +94,17 @@ export function chemm(
     else if (ldc < max(1, m)) {
         info = 12;
     }
-
     if (info !== 0) {
         throw new Error(errWrongArg('chemm', info));
     }
-
     // Quick return if possible.
 
     if (m === 0 || n === 0 || (alphaIsZero && betaIsOne)) return;
 
     // And when  alpha.eq.zero.
     if (alphaIsZero) {
-        if (betaIsOne) {
+        if (betaIsZero) {
+            //performance
             for (let j = 1; j <= n; j++) {
                 c.setCol(j, 1, m, 0);
             }
@@ -119,6 +120,7 @@ export function chemm(
                 }
             }
         }
+        return;
     }
     //Start the operations.
     if (si === 'l') {
@@ -126,8 +128,9 @@ export function chemm(
         if (upper) {
             for (let j = 1; j <= n; j++) {
                 const coorBJ = b.colOfEx(j);
-                const coorCJ = b.colOfEx(j);
+                const coorCJ = c.colOfEx(j);
                 for (let i = 1; i <= m; i++) {
+                    // console.log(`* ${i}, ${j}   (${b.r[coorBJ + i]}, ${b.i[coorBJ + i]}`);
                     const coorAI = a.colOfEx(i);
                     let temp1Re = alpha.re * b.r[coorBJ + i] - alpha.im * b.i[coorBJ + i];
                     let temp1Im = alpha.re * b.i[coorBJ + i] + alpha.im * b.r[coorBJ + i];
@@ -136,12 +139,15 @@ export function chemm(
                     for (let k = 1; k <= i - 1; k++) {
                         c.r[k + coorCJ] += temp1Re * a.r[coorAI + k] - temp1Im * a.i[coorAI + k];
                         c.i[k + coorCJ] += temp1Re * a.i[coorAI + k] + temp1Im * a.r[coorAI + k];
-
+                        //TEMP2 = TEMP2 + B(K,J)*DCONJG(A(K,I))
                         //(a+ib)*(c-id)=(ac+bd)+i(-ad+bc)
-
-                        temp2Re += b.r[coorBJ + k] * a.r[coorAI + k] + b.i[coorBJ + k] * a.i[coorAI + k];
-                        temp2Im += b.r[coorBJ + k] * a.i[coorAI + k] + b.i[coorBJ + k] * a.r[coorAI + k];
+                        const re1 = b.r[coorBJ + k] * a.r[coorAI + k] + b.i[coorBJ + k] * a.i[coorAI + k];
+                        const im1 = - b.r[coorBJ + k] * a.i[coorAI + k] + b.i[coorBJ + k] * a.r[coorAI + k];
+                        //console.log(` ${k}, ${j}   (${b.r[coorBJ + k]}, ${b.i[coorBJ + k]}`);
+                        temp2Re += re1;
+                        temp2Im += im1;
                     }
+
                     /*IF(BETA.EQ.ZERO) THEN
                     C(I, J) = TEMP1 * REAL(A(I, I)) + ALPHA * TEMP2
                     ELSE
@@ -171,16 +177,16 @@ export function chemm(
                     let temp1Im = alpha.re * b.i[coorBJ + i] + alpha.im * b.r[coorBJ + i];
                     let temp2Re = 0;
                     let temp2Im = 0;
-                    for (let k = i + 1; k >= m; k--) {
+                    for (let k = i + 1; k <= m; k++) {
                         //C(K, J) = C(K, J) + TEMP1 * A(K, I)
                         c.r[k + coorCJ] += temp1Re * a.r[coorAI + k] - temp1Im * a.i[coorAI + k];
                         c.i[k + coorCJ] += temp1Re * a.i[coorAI + k] + temp1Im * a.r[coorAI + k];
 
                         //TEMP2 = TEMP2 + B(K, J) * CONJG(A(K, I))
-                        //(a+ib)*(c-id) = (ac+bd)+i(-ad+bc) 
                         temp2Re += b.r[coorBJ + k] * a.r[coorAI + k] + b.i[coorBJ + k] * a.i[coorAI + k];
-                        temp2Im += -b.r[coorBJ + k] * a.i[coorAI + k] + b.i[coorBJ + k] * a.r[coorBJ + k];
+                        temp2Im += -b.r[coorBJ + k] * a.i[coorAI + k] + b.i[coorBJ + k] * a.r[coorAI + k];
                     }
+
 
                     /*
                      IF (BETA.EQ.ZERO) THEN
@@ -190,8 +196,10 @@ export function chemm(
                       END IF
                     */
 
-                    let re = temp1Re * a.r[coorAI + i] + (alpha.re * temp2Re - alpha.im * temp2Im);
-                    let im = temp1Re * a.r[coorAI + i] + (alpha.re * temp2Im + alpha.im * temp2Re);
+
+                    let re = temp1Re * a.r[coorAI + i] - 0 + (alpha.re * temp2Re - alpha.im * temp2Im);
+                    let im = 0 + temp1Im * a.r[coorAI + i] + (alpha.re * temp2Im + alpha.im * temp2Re);
+                    //console.log({ re, im });
                     if (!betaIsZero) {
                         re += beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
                         im += beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
@@ -203,7 +211,7 @@ export function chemm(
         }
     }
     else {
-        //Form  C := alpha*B*A + beta*C.
+        // Form  C := alpha*B*A + beta*C.
 
         for (let j = 1; j <= n; j++) {
             const coorAJ = a.colOfEx(j);
@@ -234,6 +242,7 @@ export function chemm(
             //DO 140 K = 1,J - 1
             for (let k = 1; k <= j - 1; k++) {
                 const coorBK = b.colOfEx(k);
+                const coorAK = a.colOfEx(k);
                 /*
                  IF (UPPER) THEN
                     TEMP1 = ALPHA*A(K,J)
@@ -243,13 +252,13 @@ export function chemm(
                 END IF
                 */
                 //
-                const ac = alpha.re * a.r[coorAJ + k];
-                const bd = alpha.im * a.i[coorAJ + k];
-                const ad = alpha.re * a.i[coorAJ + k];
-                const bc = alpha.im * a.r[coorAJ + k];
-                //
-                let temp1Re = ac + (upper ? -bd : bd);
-                let temp1Im = (upper ? ad : -ad) + bc;
+                const { re, im } = mul_cxr(
+                    alpha,
+                    upper ? a.r[coorAJ + k] : a.r[coorAK + j],
+                    upper ? a.i[coorAJ + k] : -a.i[coorAK + j]
+                );
+                let temp1Re = re;
+                let temp1Im = im;
                 /*
                 DO 130 I = 1,M
                     C(I,J) = C(I,J) + TEMP1*B(I,K)
@@ -263,6 +272,7 @@ export function chemm(
             //DO 160 K = J + 1,N
             for (let k = j + 1; k <= n; k++) {
                 const coorBK = b.colOfEx(k);
+                const coorAK = a.colOfEx(k);
                 /*
                  IF (UPPER) THEN
                     //(a+ib)*(c-id)=(ac+bd)+i(-ad+bc)
@@ -271,13 +281,13 @@ export function chemm(
                     TEMP1 = ALPHA*A(K,J)
                 END IF
                 */
-                const ac = alpha.re * a.r[coorAJ + k];
-                const bd = alpha.im * a.i[coorAJ + k];
-                const ad = alpha.re * a.i[coorAJ + k];
-                const bc = alpha.im * a.r[coorAJ + k];
-                //
-                let temp1Re = ac + (upper ? bd : -bd);
-                let temp1Im = (upper ? -ad : ad) + bc;
+                const { re, im } = mul_cxr(
+                    alpha,
+                    upper ? a.r[coorAK + j] : a.r[coorAJ + k],
+                    upper ? -a.i[coorAK + j] : a.i[coorAJ + k]
+                );
+                let temp1Re = re;
+                let temp1Im = im;
 
                 /*
                 DO 150 I = 1,M

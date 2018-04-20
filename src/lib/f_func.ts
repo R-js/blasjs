@@ -376,7 +376,8 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
             //  colOf: (col) => (col - colBase) * nrRows,
             colOfEx: (col) => (col - colBase) * lda - rowBase,
             setCol(col: number, rowStart: number, rowEnd: number, value: number): void {
-                const coords = this.colOfEx(col);
+                // dont use colOf (avoid extra function)
+                const coords = (col - this.colBase) * lda - rowBase;
                 this.r.fill(value, coords + rowStart, coords + rowEnd + 1);
                 if (this.i) {
                     this.i.fill(value, coords + rowStart, coords + rowEnd + 1);
