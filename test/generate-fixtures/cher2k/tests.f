@@ -278,6 +278,48 @@ c SUBROUTINE ZHER2K(UPLO,TRANS,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
         TRANS='N'
       
         ALPHA = (0.2, 0.8)
+        BETA = 0
+        
+        N=5
+        K=4
+
+        LDA=6
+        LDB=6
+        LDC=6
+       
+        CALL ZHER2K(UPLO,TRANS,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC) 
+        CALL PRNMATRC(C, 6, 6)
+
+         PRINT *, "==CASE 9=="
+        CALL CCOPYMA(M6X6, A, 6,6)
+        CALL CCOPYMA(M6X6, B, 6,6)
+        CALL CCOPYMA(M6X6, C, 6,6)
+        
+        UPLO='U' 
+        TRANS='C'
+      
+        ALPHA = (0.2, 0.8)
+        BETA = 0
+        
+        N=5
+        K=4
+
+        LDA=6
+        LDB=6
+        LDC=6
+       
+        CALL ZHER2K(UPLO,TRANS,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC) 
+        CALL PRNMATRC(C, 6, 6)
+
+          PRINT *, "==CASE 10=="
+        CALL CCOPYMA(M6X6, A, 6,6)
+        CALL CCOPYMA(M6X6, B, 6,6)
+        CALL CCOPYMA(M6X6, C, 6,6)
+        
+        UPLO='L' 
+        TRANS='C'
+      
+        ALPHA = (0.2, 0.8)
         BETA = 0.5
         
         N=5
@@ -289,7 +331,114 @@ c SUBROUTINE ZHER2K(UPLO,TRANS,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
        
         CALL ZHER2K(UPLO,TRANS,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC) 
         CALL PRNMATRC(C, 6, 6)
-   
+
+              PRINT *, "==CASE 11=="
+        CALL CCOPYMA(M6X6, A, 6,6)
+        CALL CCOPYMA(M6X6, B, 6,6)
+        CALL CCOPYMA(M6X6, C, 6,6)
+        
+        UPLO='L' 
+        TRANS='C'
+      
+        ALPHA = (0, 0)
+        BETA = 1
+        
+        N=5
+        K=4
+
+        LDA=6
+        LDB=6
+        LDC=6
+       
+        CALL ZHER2K(UPLO,TRANS,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC) 
+        CALL PRNMATRC(C, 6, 6)
+             
+               PRINT *, "==CASE 12=="
+        CALL CCOPYMA(M6X6, A, 6,6)
+        CALL CCOPYMA(M6X6, B, 6,6)
+        CALL CCOPYMA(M6X6, C, 6,6)
+        
+        UPLO='U' 
+        TRANS='C'
+      
+        ALPHA = (0, 0)
+        BETA = 0.8
+        
+        N=5
+        K=4
+
+        LDA=6
+        LDB=6
+        LDC=6
+       
+        CALL ZHER2K(UPLO,TRANS,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC) 
+        CALL PRNMATRC(C, 6, 6)
+
+                PRINT *, "==CASE 13=="
+        CALL CCOPYMA(M6X6, A, 6,6)
+        CALL CCOPYMA(M6X6, B, 6,6)
+        CALL CCOPYMA(M6X6, C, 6,6)
+        
+        UPLO='U' 
+        TRANS='C'
+      
+        ALPHA = (0, 0)
+        BETA = 0
+        
+        N=5
+        K=4
+
+        LDA=6
+        LDB=6
+        LDC=6
+       
+        CALL ZHER2K(UPLO,TRANS,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC) 
+        CALL PRNMATRC(C, 6, 6)
+
+
+                PRINT *, "==CASE 14=="
+        CALL CCOPYMA(M6X6, A, 6,6)
+        CALL CCOPYMA(M6X6, B, 6,6)
+        CALL CCOPYMA(M6X6, C, 6,6)
+        
+        UPLO='L' 
+        TRANS='C'
+      
+        ALPHA = (0, 0)
+        BETA = 0.8
+        
+        N=5
+        K=4
+
+        LDA=6
+        LDB=6
+        LDC=6
+       
+        CALL ZHER2K(UPLO,TRANS,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC) 
+        CALL PRNMATRC(C, 6, 6)
+
+           PRINT *, "==CASE 15=="
+        CALL CCOPYMA(M6X6, A, 6,6)
+        CALL CCOPYMA(M6X6, B, 6,6)
+        CALL CCOPYMA(M6X6, C, 6,6)
+        
+        UPLO='L' 
+        TRANS='C'
+      
+        ALPHA = (0, 0)
+        BETA = 0
+        
+        N=5
+        K=4
+
+        LDA=6
+        LDB=6
+        LDC=6
+       
+        CALL ZHER2K(UPLO,TRANS,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC) 
+        CALL PRNMATRC(C, 6, 6)
+
+     
       end
 
 

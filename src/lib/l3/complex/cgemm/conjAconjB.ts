@@ -15,7 +15,7 @@ export function conjAconjB(
 
     //DO 280 J = 1,N
     for (let j = 1; j <= n; j++) {
-        const coorBJ = b.colOfEx(j);
+        //const coorBJ = b.colOfEx(j);
         const coorCJ = c.colOfEx(j);
         //DO 270 I = 1,M
         for (let i = 1; i <= m; i++) {

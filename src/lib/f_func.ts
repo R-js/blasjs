@@ -478,7 +478,7 @@ export function xerbla(fn: string, idx: number) {
 }
 
 export function lowerChar<T extends string>(c: T): T {
-    return String.fromCharCode(c.charCodeAt(0) | 0X20) as any;
+    return String.fromCharCode((c || ' ').charCodeAt(0) | 0X20) as any;
 }
 
 export const map = iter();

@@ -26,7 +26,6 @@ export const fixture = {
         case0: {
             desc: 'uplo="l", trans="n", n=5, k=6, alpha=(0.2,0.8), beta=(0.3)',
             input: {
-                debug: false,
                 //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
                 uplo: 'u',
                 trans: 'n',
@@ -100,7 +99,6 @@ export const fixture = {
         case1: {
             desc: 'uplo="l", trans="n", n=5, k=4, alpha=(0.2,0.8), beta=0, a(1,1)=0',
             input: {
-                debug: false,
                 //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
                 uplo: 'u',
                 trans: 'n',
@@ -174,7 +172,6 @@ export const fixture = {
         case2: {
             desc: 'uplo="l", trans="n", n=5, k=4, alpha=(0.2,0.8), beta=0, b(1,1)=0',
             input: {
-                debug: false,
                 //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
                 uplo: 'u',
                 trans: 'n',
@@ -248,7 +245,6 @@ export const fixture = {
         case3: {
             desc: 'uplo="l", trans="n", n=5, k=4, alpha=(0.2,0.8), beta=0, a(1,1)=0 v b(1,1)=0',
             input: {
-                debug: false,
                 //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
                 uplo: 'u',
                 trans: 'n',
@@ -322,7 +318,6 @@ export const fixture = {
         case4: {
             desc: 'uplo="l", trans="n", n=5, k=4, alpha=(0.2,0.8), beta=1, a(1,1)=0 v b(1,1)=0',
             input: {
-                debug: false,
                 //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
                 uplo: 'u',
                 trans: 'n',
@@ -396,7 +391,6 @@ export const fixture = {
         case5: {
             desc: 'uplo="l", trans="n", n=5, k=4, alpha=(0.2,0.8), beta=1, a(1,1)=0 v b(1,1)=0',
             input: {
-                debug: false,
                 //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
                 uplo: 'l',
                 trans: 'n',
@@ -470,7 +464,7 @@ export const fixture = {
         case6: {
             desc: 'uplo="l", trans="n", n=5, k=4, alpha=(0.2,0.8), beta=0, a(1,1)=0 v b(1,1)=0',
             input: {
-                cmd: '',
+                //cmd: '',
                 //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
                 uplo: 'l',
                 trans: 'n',
@@ -544,7 +538,7 @@ export const fixture = {
         case7: {
             desc: 'uplo="l", trans="n", n=5, k=4, alpha=(0.2,0.8), beta=0.5, a(1,1)=0 v b(1,1)=0',
             input: {
-                cmd: '',
+                //cmd: '',
                 //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
                 uplo: 'l',
                 trans: 'n',
@@ -616,177 +610,743 @@ export const fixture = {
                 ]
             },
         },
+        case8: {
+            desc: 'uplo="l", trans="n", n=5, k=4, alpha=(0.2,0.8), beta=0, a(1,1)=0 v b(1,1)=0',
+            input: {
+                //cmd: '',
+                //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
+                uplo: 'l',
+                trans: 'n',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0.2, 0.8),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
+                a: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(), // only uses 4x4!!
+                b: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(),
+                c: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    //m.r[0] = 0;
+                    //m.i[0] = 0;
+                    return m;
+                })(),
+            },
+            expect: {
+                c: [
+                    complex(2.3395745377104555, 0.0000000000000000),
+                    complex(-0.23904306353599897, 0.38527767539008539),
+                    complex(1.5499317619775281, 0.61030106552499741),
+                    complex(-3.5119502185009782E-002, 0.47329141696789950),
+                    complex(1.6755206054435083, -0.14669212776134405),
+                    complex(-1.5399500131607056, 0.56074607372283936),
+                    complex(-0.92856705188751221, -0.45278397202491760),
+                    complex(1.1198417497625819, 0.0000000000000000),
+                    complex(0.18597724644402175, -0.13914165833399272),
+                    complex(-0.16907159032896413, 1.2348811617422519),
+                    complex(-0.46540957116130022, 1.1081177222021112),
+                    complex(-0.79900926351547241, 1.1565370559692383),
+                    complex(-1.1476570367813110, 0.83204710483551025),
+                    complex(-0.28946158289909363, -0.22732868790626526),
+                    complex(2.1022252342348491, 0.0000000000000000),
+                    complex(0.96275725625355346, 0.35673571528200110),
+                    complex(1.4870086981201609, 0.93708248306429232),
+                    complex(-0.89192110300064087, -0.79533910751342773),
+                    complex(0.43568331003189087, -5.4877474904060364E-002),
+                    complex(-1.2375384569168091, 0.25014132261276245),
+                    complex(-0.22426788508892059, 0.61824327707290649),
+                    complex(3.6393697204873954, 0.0000000000000000),
+                    complex(1.1799295830137675, -0.92797911610027772),
+                    complex(0.80418950319290161, -1.2636144161224365),
+                    complex(-5.7106774300336838E-002, 0.35872888565063477),
+                    complex(0.50360798835754395, -1.1045478284358978E-002),
+                    complex(1.0857694149017334, -0.94064915180206299),
+                    complex(-0.69095385074615479, -0.11582532525062561),
+                    complex(6.9112116413057718, 0.0000000000000000),
+                    complex(4.6726170927286148E-002, 0.24226348102092743),
+                    complex(-0.23570655286312103, -1.4250984191894531),
+                    complex(-0.54288828372955322, 0.36594113707542419),
+                    complex(-0.43331032991409302, 0.24841265380382538),
+                    complex(-0.64947164058685303, 6.5288178622722626E-002),
+                    complex(0.72675073146820068, 1.9156390801072121E-002),
+                    complex(1.1519117355346680, 0.25733837485313416),
+
+                ]
+            },
+        },
+        case9: {
+            desc: 'uplo="l", trans="c", n=5, k=4, alpha=(0.2,0.8), beta=0, a(1,1)=0 v b(1,1)=0',
+            input: {
+                //cmd: '',
+                //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
+                uplo: 'u',
+                trans: 'c',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0.2, 0.8),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
+                a: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(), // only uses 4x4!!
+                b: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(),
+                c: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    //m.r[0] = 0;
+                    //m.i[0] = 0;
+                    return m;
+                })(),
+            },
+            expect: {
+                c: [
+                    complex(3.1476878135503865, 0.0000000000000000),
+                    complex(-0.32623335719108582, -0.42951309680938721),
+                    complex(1.3297992944717407, 1.2383041381835938),
+                    complex(1.2724293470382690, -0.27934628725051880),
+                    complex(0.41464143991470337, 1.7579030990600586),
+                    complex(-1.5399500131607056, 0.56074607372283936),
+                    complex(0.29469241706829941, -0.69361000427875985),
+                    complex(4.0500669722552383, 0.0000000000000000),
+                    complex(-5.7671726681292057E-003, -1.1665705442428589),
+                    complex(2.4046533107757568, -1.0655906200408936),
+                    complex(0.76359343528747559, -1.5637820959091187),
+                    complex(-0.79900926351547241, 1.1565370559692383),
+                    complex(-0.36742658827363606, 0.90779156317481691),
+                    complex(2.6609646250468799E-002, -1.2644121466149967),
+                    complex(1.0465961268435413, 0.0000000000000000),
+                    complex(-0.41151082515716553, -0.37670272588729858),
+                    complex(0.25222346186637878, 2.4413645267486572),
+                    complex(-0.89192110300064087, -0.79533910751342773),
+                    complex(0.71514447317466534, -5.1637874258017025E-002),
+                    complex(5.9362659176806609E-002, -0.45332789330975831),
+                    complex(-4.1181120977291652E-002, -0.22614482992219803),
+                    complex(0.95666032954611491, 0.0000000000000000),
+                    complex(0.13333636522293091, -2.2239003181457520),
+                    complex(0.80418950319290161, -1.2636144161224365),
+                    complex(-0.17741805067471494, -0.88246217293517693),
+                    complex(-0.27825711791551100, 0.12823037359207640),
+                    complex(-1.0599872384057019E-002, -0.18665144771536654),
+                    complex(-0.69455433956435164, -0.23297790106179717),
+                    complex(1.1760957713458100, 0.0000000000000000),
+                    complex(4.6726170927286148E-002, 0.24226348102092743),
+                    complex(-0.23570655286312103, -1.4250984191894531),
+                    complex(-0.54288828372955322, 0.36594113707542419),
+                    complex(-0.43331032991409302, 0.24841265380382538),
+                    complex(-0.64947164058685303, 6.5288178622722626E-002),
+                    complex(0.72675073146820068, 1.9156390801072121E-002),
+                    complex(1.1519117355346680, 0.25733837485313416),
+                ]
+            },
+        },
+        case10: {
+            desc: 'uplo="l", trans="c", n=5, k=4, alpha=(0.2,0.8), beta=0.5, a(1,1)=0 v b(1,1)=0',
+            input: {
+                //cmd: '',
+                //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
+                uplo: 'l',
+                trans: 'c',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0.2, 0.8),  // B = alpha * A * B
+                beta: 0.5,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
+                a: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(), // only uses 4x4!!
+                b: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(),
+                c: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    //m.r[0] = 0;
+                    //m.i[0] = 0;
+                    return m;
+                })(),
+            },
+            expect: {
+                c: [
+                    complex(3.7791649310888387, 0.0000000000000000),
+                    complex(0.13157573847275650, 0.47885345587406630),
+                    complex(0.29747305896223430, -0.28863949408302003),
+                    complex(1.3513591466938000, -8.8035269367242375E-002),
+                    complex(2.9902669282636740E-002, 1.7614137224652062),
+                    complex(-1.5399500131607056, 0.56074607372283936),
+                    complex(-0.92856705188751221, -0.45278397202491760),
+                    complex(3.9027067517037475, 0.0000000000000000),
+                    complex(2.3726059916404196E-002, 0.68112687449356724),
+                    complex(1.2616893145646850, -7.9467416710688465E-002),
+                    complex(0.10353959972822679, -0.91012142154663556),
+                    complex(-0.79900926351547241, 1.1565370559692383),
+                    complex(-1.1476570367813110, 0.83204710483551025),
+                    complex(-0.28946158289909363, -0.22732868790626526),
+                    complex(0.89698857276543920, 0.0000000000000000),
+                    complex(-0.24693653355587442, 3.7793466978548740E-002),
+                    complex(0.11551185854913237, 1.4073337110896953),
+                    complex(-0.89192110300064087, -0.79533910751342773),
+                    complex(0.43568331003189087, -5.4877474904060364E-002),
+                    complex(-1.2375384569168091, 0.25014132261276245),
+                    complex(-0.22426788508892059, 0.61824327707290649),
+                    complex(1.1453581593886824, 0.0000000000000000),
+                    complex(-0.62788615695288619, -0.87897225801107881),
+                    complex(0.80418950319290161, -1.2636144161224365),
+                    complex(-5.7106774300336838E-002, 0.35872888565063477),
+                    complex(0.50360798835754395, -1.1045478284358978E-002),
+                    complex(1.0857694149017334, -0.94064915180206299),
+                    complex(-0.69095385074615479, -0.11582532525062561),
+                    complex(0.53379611924620063, 0.0000000000000000),
+                    complex(4.6726170927286148E-002, 0.24226348102092743),
+                    complex(-0.23570655286312103, -1.4250984191894531),
+                    complex(-0.54288828372955322, 0.36594113707542419),
+                    complex(-0.43331032991409302, 0.24841265380382538),
+                    complex(-0.64947164058685303, 6.5288178622722626E-002),
+                    complex(0.72675073146820068, 1.9156390801072121E-002),
+                    complex(1.1519117355346680, 0.25733837485313416),
+                ]
+            },
+        },
+        case11: {
+            desc: '(trivial) alpha=(0,0); beta=1',
+            input: {
+                //cmd: '',
+                //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
+                uplo: 'l',
+                trans: 'c',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 1,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
+                a: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(), // only uses 4x4!!
+                b: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(),
+                c: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    //m.r[0] = 0;
+                    //m.i[0] = 0;
+                    return m;
+                })(),
+            },
+            expect: {
+                c: matrix_mxn(6, 6).toArr()
+            },
+        },
+        case12: {
+            desc: 'near trivial, alpha=(0,0), beta =0.8, uplo="u"',
+            input: {
+                //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
+                uplo: 'u',
+                trans: 'c',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0.8,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
+                a: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(), // only uses 4x4!!
+                b: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(),
+                c: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    //m.r[0] = 0;
+                    //m.i[0] = 0;
+                    return m;
+                })(),
+            },
+            expect: {
+                c: [
+
+                    complex(1.0103634031171111, 0.0000000000000000),
+                    complex(-0.32623335719108582, -0.42951309680938721),
+                    complex(1.3297992944717407, 1.2383041381835938),
+                    complex(1.2724293470382690, -0.27934628725051880),
+                    complex(0.41464143991470337, 1.7579030990600586),
+                    complex(-1.5399500131607056, 0.56074607372283936),
+                    complex(-0.74285365257939162, -0.36222718301753964),
+                    complex(-0.23577635639572669, 0.0000000000000000),
+                    complex(-5.7671726681292057E-003, -1.1665705442428589),
+                    complex(2.4046533107757568, -1.0655906200408936),
+                    complex(0.76359343528747559, -1.5637820959091187),
+                    complex(-0.79900926351547241, 1.1565370559692383),
+                    complex(-0.91812564310618683, 0.66563769378718263),
+                    complex(-0.23156926976992587, -0.18186295303498135),
+                    complex(-0.23937209009188543, 0.0000000000000000),
+                    complex(-0.41151082515716553, -0.37670272588729858),
+                    complex(0.25222346186637878, 2.4413645267486572),
+                    complex(-0.89192110300064087, -0.79533910751342773),
+                    complex(0.34854665321926248, -4.3901980577438771E-002),
+                    complex(-0.99003078028605529, 0.20011306107212690),
+                    complex(-0.17941431074461800, 0.49459462902835938),
+                    complex(0.30191653224701476, 0.0000000000000000),
+                    complex(0.13333636522293091, -2.2239003181457520),
+                    complex(0.80418950319290161, -1.2636144161224365),
+                    complex(-4.5685420121035270E-002, 0.28698311279688937),
+                    complex(0.40288639668951021, -8.8363827591595445E-003),
+                    complex(0.86861554486476678, -0.75251933265506210),
+                    complex(-0.55276308883373559, -9.2660261581245962E-002),
+                    complex(-1.0276794586729920, 0.0000000000000000),
+                    complex(4.6726170927286148E-002, 0.24226348102092743),
+                    complex(-0.23570655286312103, -1.4250984191894531),
+                    complex(-0.54288828372955322, 0.36594113707542419),
+                    complex(-0.43331032991409302, 0.24841265380382538),
+                    complex(-0.64947164058685303, 6.5288178622722626E-002),
+                    complex(0.72675073146820068, 1.9156390801072121E-002),
+                    complex(1.1519117355346680, 0.25733837485313416),
+                ]
+            },
+        },
+        case13: {
+            desc: 'near trivial, alpha=(0,0), beta= 0, uplo="u"',
+            input: {
+                //cmd: '',
+                //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
+                uplo: 'u',
+                trans: 'c',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
+                a: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(), // only uses 4x4!!
+                b: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(),
+                c: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    //m.r[0] = 0;
+                    //m.i[0] = 0;
+                    return m;
+                })(),
+            },
+            expect: {
+                c: [
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(-0.32623335719108582, -0.42951309680938721),
+                    complex(1.3297992944717407, 1.2383041381835938),
+                    complex(1.2724293470382690, -0.27934628725051880),
+                    complex(0.41464143991470337, 1.7579030990600586),
+                    complex(-1.5399500131607056, 0.56074607372283936),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(-5.7671726681292057E-003, -1.1665705442428589),
+                    complex(2.4046533107757568, -1.0655906200408936),
+                    complex(0.76359343528747559, -1.5637820959091187),
+                    complex(-0.79900926351547241, 1.1565370559692383),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(-0.41151082515716553, -0.37670272588729858),
+                    complex(0.25222346186637878, 2.4413645267486572),
+                    complex(-0.89192110300064087, -0.79533910751342773),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.13333636522293091, -2.2239003181457520),
+                    complex(0.80418950319290161, -1.2636144161224365),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(4.6726170927286148E-002, 0.24226348102092743),
+                    complex(-0.23570655286312103, -1.4250984191894531),
+                    complex(-0.54288828372955322, 0.36594113707542419),
+                    complex(-0.43331032991409302, 0.24841265380382538),
+                    complex(-0.64947164058685303, 6.5288178622722626E-002),
+                    complex(0.72675073146820068, 1.9156390801072121E-002),
+                    complex(1.1519117355346680, 0.25733837485313416),
+                ]
+            },
+        },
+        case14: {
+            desc: 'near trivial, alpha=(0,0), beta =0.8, uplo="l"',
+            input: {
+                //cmd: '',
+                //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
+                uplo: 'l',
+                trans: 'c',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0.8,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
+                a: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(), // only uses 4x4!!
+                b: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(),
+                c: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    //m.r[0] = 0;
+                    //m.i[0] = 0;
+                    return m;
+                })(),
+            },
+            expect: {
+                c: [
+                    complex(1.0103634031171111, 0.0000000000000000),
+                    complex(-0.26098668964187333, -0.34361048256770488),
+                    complex(1.0638394514298355, 0.99064332530861066),
+                    complex(1.0179434927991551, -0.22347703313048228),
+                    complex(0.33171315687467384, 1.4063225002038848),
+                    complex(-1.5399500131607056, 0.56074607372283936),
+                    complex(-0.92856705188751221, -0.45278397202491760),
+                    complex(-0.23577635639572669, 0.0000000000000000),
+                    complex(-4.6137382032534202E-003, -0.93325644930089169),
+                    complex(1.9237226772863067, -0.85247250873554492),
+                    complex(0.61087475733272356, -1.2510256953690302),
+                    complex(-0.79900926351547241, 1.1565370559692383),
+                    complex(-1.1476570367813110, 0.83204710483551025),
+                    complex(-0.28946158289909363, -0.22732868790626526),
+                    complex(-0.23937209009188543, 0.0000000000000000),
+                    complex(-0.32920866503132373, -0.30136218520048530),
+                    complex(0.20177877249984100, 1.9530916505022589),
+                    complex(-0.89192110300064087, -0.79533910751342773),
+                    complex(0.43568331003189087, -5.4877474904060364E-002),
+                    complex(-1.2375384569168091, 0.25014132261276245),
+                    complex(-0.22426788508892059, 0.61824327707290649),
+                    complex(0.30191653224701476, 0.0000000000000000),
+                    complex(0.10666909376783806, -1.7791202810275593),
+                    complex(0.80418950319290161, -1.2636144161224365),
+                    complex(-5.7106774300336838E-002, 0.35872888565063477),
+                    complex(0.50360798835754395, -1.1045478284358978E-002),
+                    complex(1.0857694149017334, -0.94064915180206299),
+                    complex(-0.69095385074615479, -0.11582532525062561),
+                    complex(-1.0276794586729920, 0.0000000000000000),
+                    complex(4.6726170927286148E-002, 0.24226348102092743),
+                    complex(-0.23570655286312103, -1.4250984191894531),
+                    complex(-0.54288828372955322, 0.36594113707542419),
+                    complex(-0.43331032991409302, 0.24841265380382538),
+                    complex(-0.64947164058685303, 6.5288178622722626E-002),
+                    complex(0.72675073146820068, 1.9156390801072121E-002),
+                    complex(1.1519117355346680, 0.25733837485313416),
+                ]
+            },
+        },
+        case15: {
+            desc: 'near trivial, alpha=(0,0), beta= 0, uplo="l"',
+            input: {
+                ////cmd: '',
+                //(UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA, C, LDC
+                uplo: 'l',
+                trans: 'c',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
+                a: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(), // only uses 4x4!!
+                b: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    // m.r[0] = 0;
+                    // m.i[0] = 0;
+                    return m;
+                })(),
+                c: (() => {
+                    const m = matrix_mxn(6, 6); //m*
+                    //m.r[0] = 0;
+                    //m.i[0] = 0;
+                    return m;
+                })(),
+            },
+            expect: {
+                c: [
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(-1.5399500131607056, 0.56074607372283936),
+                    complex(-0.92856705188751221, -0.45278397202491760),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(-0.79900926351547241, 1.1565370559692383),
+                    complex(-1.1476570367813110, 0.83204710483551025),
+                    complex(-0.28946158289909363, -0.22732868790626526),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(-0.89192110300064087, -0.79533910751342773),
+                    complex(0.43568331003189087, -5.4877474904060364E-002),
+                    complex(-1.2375384569168091, 0.25014132261276245),
+                    complex(-0.22426788508892059, 0.61824327707290649),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(0.80418950319290161, -1.2636144161224365),
+                    complex(-5.7106774300336838E-002, 0.35872888565063477),
+                    complex(0.50360798835754395, -1.1045478284358978E-002),
+                    complex(1.0857694149017334, -0.94064915180206299),
+                    complex(-0.69095385074615479, -0.11582532525062561),
+                    complex(0.0000000000000000, 0.0000000000000000),
+                    complex(4.6726170927286148E-002, 0.24226348102092743),
+                    complex(-0.23570655286312103, -1.4250984191894531),
+                    complex(-0.54288828372955322, 0.36594113707542419),
+                    complex(-0.43331032991409302, 0.24841265380382538),
+                    complex(-0.64947164058685303, 6.5288178622722626E-002),
+                    complex(0.72675073146820068, 1.9156390801072121E-002),
+                    complex(1.1519117355346680, 0.25733837485313416),
+                ]
+            },
+        },
     },
     cher2kErrors: {
         case0: {
             desc: 'a has no imaginary part',
             input: {
-                side: 'l', //A*B
-                uplo: 'u',
-                transA: 'n',
-                diag: 'n',
-                m: 4, // A = m*m marrix , lda >= m
-                n: 6, // rows in B
-                lda: 6, //NBupper 4x4 of A is referenced
-                ldb: 4,
-                alpha: complex(0.2, 0.8),  // B = alpha * A * B
+                uplo: 'l',
+                trans: 'c',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
                 //dummies, its not a data test
                 a: [0],
-                b: [complex(0, 0)]
+                b: [complex(0, 0)],
+                c: [complex(0, 0)]
+            }
+        },
+        case1: {
+            desc: 'b has no imaginary part',
+            input: {
+                uplo: 'l',
+                trans: 'c',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
+                //dummies, its not a data test
+                a: [complex(0, 0)],
+                b: [0],
+                c: [complex(0, 0)]
             }
         },
         case2: {
-            desc: 'b has no imaginary part',
+            desc: 'c has no imaginary part',
             input: {
-                side: 'l', //A*B
-                uplo: 'u',
-                transA: 'n',
-                diag: 'n',
-                m: 4, // A = m*m marrix , lda >= m
-                n: 6, // rows in B
-                lda: 6, //NBupper 4x4 of A is referenced
-                ldb: 4,
-                alpha: complex(0.2, 0.8),  // B = alpha * A * B
+                uplo: 'l',
+                trans: 'c',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
                 //dummies, its not a data test
                 a: [complex(0, 0)],
-                b: [0]
+                b: [complex(0, 0)],
+                c: [0]
             }
         },
         case3: {
-            desc: 'sid!="lr"',
+            desc: 'uplo!="ul"',
             input: {
-                side: 'x', //A*B
-                uplo: 'u',
-                transA: 'n',
-                diag: 'n',
-                m: 4, // A = m*m marrix , lda >= m
-                n: 6, // rows in B
-                lda: 6, //NBupper 4x4 of A is referenced
-                ldb: 4,
-                alpha: complex(0.2, 0.8),  // B = alpha * A * B
+                uplo: 'x',
+                trans: 'c',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
                 //dummies, its not a data test
                 a: [complex(0, 0)],
-                b: [complex(0, 0)]
+                b: [complex(0, 0)],
+                c: [complex(0, 0)]
             }
         },
         case4: {
-            desc: 'uplo!="ul"',
+            desc: 'trans!="cn"',
             input: {
-                side: 'l', //A*B
-                uplo: 'x',
-                transA: 'n',
-                diag: 'n',
-                m: 4, // A = m*m marrix , lda >= m
-                n: 6, // rows in B
-                lda: 6, //NBupper 4x4 of A is referenced
-                ldb: 4,
-                alpha: complex(0.2, 0.8),  // B = alpha * A * B
+                uplo: 'l',
+                trans: 'x',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
                 //dummies, its not a data test
                 a: [complex(0, 0)],
-                b: [complex(0, 0)]
+                b: [complex(0, 0)],
+                c: [complex(0, 0)]
             }
         },
         case5: {
-            desc: 'transA!="ntc"',
+            desc: 'n<0',
             input: {
-                side: 'l', //A*B
-                uplo: 'u',
-                transA: 'x',
-                diag: 'u',
-                m: 4, // A = m*m marrix , lda >= m
-                n: 6, // rows in B
-                lda: 6, //NBupper 4x4 of A is referenced
-                ldb: 4,
-                alpha: complex(0.2, 0.8),  // B = alpha * A * B
+                uplo: 'l',
+                trans: 'c',
+                n: -5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
                 //dummies, its not a data test
                 a: [complex(0, 0)],
-                b: [complex(0, 0)]
+                b: [complex(0, 0)],
+                c: [complex(0, 0)]
             }
         },
         case6: {
-            desc: 'diag!="un"',
+            desc: 'k<0',
             input: {
-                side: 'l', //A*B
-                uplo: 'u',
-                transA: 't',
-                diag: 'x',
-                m: 4, // A = m*m marrix , lda >= m
-                n: 6, // rows in B
-                lda: 6, //NBupper 4x4 of A is referenced
-                ldb: 4,
-                alpha: complex(0.2, 0.8),  // B = alpha * A * B
+                uplo: 'l',
+                trans: 'c',
+                n: 5, // A = m*m marrix , lda >= m
+                k: -4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
                 //dummies, its not a data test
                 a: [complex(0, 0)],
-                b: [complex(0, 0)]
+                b: [complex(0, 0)],
+                c: [complex(0, 0)]
             }
         },
         case7: {
-            desc: 'm<0',
+            desc: 'lda < max(1, nrowA)',
             input: {
-                side: 'l', //A*B
-                uplo: 'u',
-                transA: 'n',
-                diag: 'n',
-                m: -4, // A = m*m marrix , lda >= m
-                n: 6, // rows in B
-                lda: 6, //NBupper 4x4 of A is referenced
-                ldb: 4,
-                alpha: complex(0.2, 0.8),  // B = alpha * A * B
+                uplo: 'l',
+                trans: 'n',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0,
+                lda: 4, //physical storage
+                ldb: 6, // physical storage
+                ldc: 6, // physical storage 
                 //dummies, its not a data test
                 a: [complex(0, 0)],
-                b: [complex(0, 0)]
+                b: [complex(0, 0)],
+                c: [complex(0, 0)]
             }
         },
         case8: {
-            desc: 'n<0',
+            desc: 'ldc < max(1, n)',
             input: {
-                side: 'l', //A*B
-                uplo: 'u',
-                transA: 'n',
-                diag: 'n',
-                m: 4, // A = m*m marrix , lda >= m
-                n: -6, // rows in B
-                lda: 6, //NBupper 4x4 of A is referenced
-                ldb: 4,
-                alpha: complex(0.2, 0.8),  // B = alpha * A * B
+                uplo: 'l',
+                trans: 'n',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 6, // physical storage
+                ldc: 4, // physical storage 
+                //dummies, its not a data test
                 //dummies, its not a data test
                 a: [complex(0, 0)],
-                b: [complex(0, 0)]
+                b: [complex(0, 0)],
+                c: [complex(0, 0)]
             }
         },
         case9: {
-            desc: 'lda< max(1,nrowA)',
+            desc: 'ldb < max(1, nrowA)',
             input: {
-                side: 'l', //A*B
-                uplo: 'u',
-                transA: 'n',
-                diag: 'n',
-                m: 4, // A = m*m marrix , lda >= m
-                n: 6, // rows in B
-                lda: 3, //NBupper 4x4 of A is referenced
-                ldb: 4,
-                alpha: complex(0.2, 0.8),  // B = alpha * A * B
-                //dummies, its not a data test
+                uplo: 'l',
+                trans: 'n',
+                n: 5, // A = m*m marrix , lda >= m
+                k: 4, // columns
+                alpha: complex(0, 0),  // B = alpha * A * B
+                beta: 0,
+                lda: 6, //physical storage
+                ldb: 4, // physical storage
+                ldc: 6, // physical storage 
                 a: [complex(0, 0)],
-                b: [complex(0, 0)]
+                b: [complex(0, 0)],
+                c: [complex(0, 0)]
             }
-        },
-        case10: {
-            desc: 'ldb< max(1,m)',
-            input: {
-                side: 'l', //A*B
-                uplo: 'u',
-                transA: 'n',
-                diag: 'n',
-                m: 4, // A = m*m marrix , lda >= m
-                n: 6, // rows in B
-                lda: 6, //NBupper 4x4 of A is referenced
-                ldb: 3,
-                alpha: complex(0.2, 0.8),  // B = alpha * A * B
-                //dummies, its not a data test
-                a: [complex(0, 0)],
-                b: [complex(0, 0)]
-            },
         },
     },
 }

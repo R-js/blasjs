@@ -106,39 +106,25 @@ export function cher2k(
 
     //* And when  alpha.eq.zero.
     if (alphaIsZero) {
-        if (upper) {
-            for (let j = 1; j <= n; j++) {
-                const coorCJ = c.colOfEx(j);
-                if (beta === 0) {
-                    c.setCol(j, 1, j, 0);
-                    continue;
-                }
-                if (beta !== 1) {
-                    for (let i = 1; i <= j - 1; i++) {
-                        c.r[coorCJ + i] *= beta;
-                        c.i[coorCJ + i] *= beta;
-                    }
-                    c.r[coorCJ + j] *= beta;
-                }
-                c.r[coorCJ + j] = 0;
+        for (let j = 1; j <= n; j++) {
+            const f1 = upper ? 1 : j;
+            const f2 = upper ? j : n;
+            if (beta === 0) {
+                c.setCol(j, f1, f2, 0);
+                continue;
             }
-        }
-        else {
-            for (let j = 1; j <= n; j++) {
-                if (beta === 0) {
-                    c.setCol(j, j, n, 0);
-                    continue;
-                }
-                const coorCJ = c.colOfEx(j);
-                if (beta !== 1) {
-                    c.r[coorCJ + j] *= beta;
-                    for (let i = j + 1; j <= n; i++) {
-                        c.r[coorCJ + i] *= beta;
-                        c.i[coorCJ + i] *= beta;
-                    }
-                }
-                c.i[coorCJ + j] = 0;
+            const coorCJ = c.colOfEx(j);
+            const start = upper ? 1 : j + 1;
+            const stop = upper ? j - 1 : n;
+            //this test is non necessary the combination
+            // alpha===(0,0) && beta === 1 leads to early abort (see couple upper code)
+
+            for (let i = start; i <= stop; i++) {
+                c.r[coorCJ + i] *= beta;
+                c.i[coorCJ + i] *= beta;
             }
+            c.r[coorCJ + j] *= beta;
+            c.i[coorCJ + j] = 0;
         }
         return;
     }
@@ -214,7 +200,7 @@ export function cher2k(
                 else {
                     c.i[coorCJ + j] = 0;
                 }
-
+                //
                 for (let l = 1; l <= k; l++) {
                     const coorAL = a.colOfEx(l);
                     const coorBL = b.colOfEx(l);
@@ -278,19 +264,33 @@ export function cher2k(
                     //(a-ib)*(c+id) = (ac+bd)+i(ad-bc)
                     temp2Re += b.r[coorBI + l] * a.r[coorAJ + l] + b.i[coorBI + l] * a.i[coorAJ + l];
                     temp2Im += b.r[coorBI + l] * a.i[coorAJ + l] - b.i[coorBI + l] * a.r[coorAJ + l];
+                    //console.log(`(${j},${i},${l}),\t(${temp1Re},${temp1Im})\t(${temp2Re},${temp2Im})`);
                 }
+                //console.log(`(${j},${i}),\t(${temp1Re},${temp1Im})\t(${temp2Re},${temp2Im})`);
                 // done more efficiently then in fortran
                 // (ALPHA*TEMP1+CONJG(ALPHA)*TEMP2)
+                const re1 = (alpha.re * temp1Re - alpha.im * temp1Im);
+                const im1 = (i === j) ? 0 : (alpha.re * temp1Im + alpha.im * temp1Re);
 
-                let re = (alpha.re * temp1Re - alpha.im * temp1Im) + (alpha.re * temp2Re + alpha.im * temp2Im);
-                let im = (i === j) ? 0 : (alpha.re * temp1Im + alpha.im * temp1Re) + (alpha.re * temp2Im - alpha.im * temp2Re);
+                const re2 = (alpha.re * temp2Re + alpha.im * temp2Im);
+                const im2 = (i === j) ? 0 : (alpha.re * temp2Im - alpha.im * temp2Re);
 
-                if (beta !== 0) {
-                    re += beta * c.r[coorCJ + i];
-                    im += (i === j) ? 0 : beta * c.i[coorCJ + i];
+                const re = re1 + re2;
+                const im = im1 + im2;
+
+                if (beta === 0) {
+                    c.r[coorCJ + i] = re;
+                    c.i[coorCJ + i] = im;
                 }
-                c.r[coorCJ + i] = re;
-                c.i[coorCJ + i] = im;
+                else {
+                    c.r[coorCJ + i] = beta * c.r[coorCJ + i] + re;
+                    if (i === j) {
+                        c.i[coorCJ + i] = 0;
+                    }
+                    else {
+                        c.i[coorCJ + i] = beta * c.i[coorCJ + i] + im;
+                    }
+                }
             }
         }
     }//tr === 'c'

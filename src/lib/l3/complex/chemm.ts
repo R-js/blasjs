@@ -31,7 +31,7 @@ import {
     lowerChar,
     Matrix,
     mul_cxr,
-    mul_rxr
+    //mul_rxr
 } from '../../f_func';
 
 const { max } = Math;

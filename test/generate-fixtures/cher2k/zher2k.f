@@ -388,7 +388,10 @@ c       PRINT *,I,J, C(I,J)
                       DO 190 L = 1,K
                           TEMP1 = TEMP1 + DCONJG(A(L,I))*B(L,J)
                           TEMP2 = TEMP2 + DCONJG(B(L,I))*A(L,J)
-  190                 CONTINUE
+  
+        
+190                 CONTINUE
+c            PRINT *,J,I TEMP1,TEMP2
                       IF (I.EQ.J) THEN
                           IF (BETA.EQ.DBLE(ZERO)) THEN
                               C(J,J) = DBLE(ALPHA*TEMP1+
