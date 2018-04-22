@@ -312,7 +312,6 @@
   120             CONTINUE
   130         CONTINUE
           ELSE
-c             lower
               DO 180 J = 1,N
                   IF (BETA.EQ.ZERO) THEN
                       DO 140 I = J,N
@@ -370,7 +369,7 @@ c             lower
                   DO 230 L = 1,K
                       RTEMP = RTEMP + DCONJG(A(L,J))*A(L,J)
   230             CONTINUE
-           
+        
                   IF (BETA.EQ.ZERO) THEN
                       C(J,J) = ALPHA*RTEMP
                   ELSE

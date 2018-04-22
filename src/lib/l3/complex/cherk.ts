@@ -10,7 +10,12 @@
 *>     Ed Anderson, Cray Research Inc.
 */
 
-import { errMissingIm, errWrongArg, lowerChar, Matrix } from '../../f_func';
+import {
+    errMissingIm,
+    errWrongArg,
+    lowerChar,
+    Matrix
+} from '../../f_func';
 const { max } = Math;
 
 /*
@@ -103,35 +108,46 @@ export function cherk(
 
     if (tr === 'n') {
         // Form  C := alpha*A*A**H + beta*C.
+        // upper is weaved into the process
         for (let j = 1; j <= n; j++) {
-            const start = upper ? 1 : j;
-            const stop = upper ? j : n;
+            const fs = upper ? 1 : j;
+            const fe = upper ? j : n;
+            const start = upper ? 1 : j + 1;
+            const stop = upper ? j - 1 : n;
             const coorCJ = c.colOfEx(j);
-
-            if (beta !== 1) {
+            if (beta === 0) {
+                c.setCol(j, fs, fe, 0);
+            }
+            else if (beta !== 1) {
                 for (let i = start; i <= stop; i++) {
-                    c.r[coorCJ + i] = beta === 0 ? 0 : beta * c.r[coorCJ + i];
-                    c.i[coorCJ + i] = (beta === 0 || i === j) ? 0 : beta * c.i[coorCJ + i]
+                    c.r[coorCJ + i] = beta * c.r[coorCJ + i];
+                    c.i[coorCJ + i] = beta * c.i[coorCJ + i];
                 }
+                c.r[coorCJ + j] = beta * c.r[coorCJ + j];
+                c.i[coorCJ + j] = 0;
             }
             else {
                 c.i[coorCJ + j] = 0;
             }
             for (let l = 1; l <= k; l++) {
                 const coorAL = a.colOfEx(l);
-
                 const aIsZero = a.r[coorAL + j] === 0 && a.i[coorAL + j] === 0;
                 if (!aIsZero) {
+                    // TEMP = ALPHA*DCONJG(A(J,L))
                     let tempRe = alpha * a.r[coorAL + j];
-                    let tempIm = alpha * a.i[coorAL + j];
+                    let tempIm = -alpha * a.i[coorAL + j];
                     for (let i = start; i <= stop; i++) {
-                        c.r[coorCJ + i] = c.r[coorCJ + i] + (tempRe * a.r[coorAL + i] - tempIm * a.i[coorAL + i])
-                        c.i[coorCJ + i] = i === j ? 0 : (tempRe * a.i[coorAL + i] + tempIm * a.r[coorAL + i]);
+                        //  C(I,J) = C(I,J) + TEMP*A(I,L)
+                        c.r[coorCJ + i] += (tempRe * a.r[coorAL + i] - tempIm * a.i[coorAL + i])
+                        c.i[coorCJ + i] += (tempRe * a.i[coorAL + i] + tempIm * a.r[coorAL + i]);
                     }
-                }
-            }
-        }
+                    c.r[coorCJ + j] += (tempRe * a.r[coorAL + j] - tempIm * a.i[coorAL + j])
+                    c.i[coorCJ + j] = 0;
+                }//if
+            }//forl
+        }//forj
     }
+    //tr === "c"
     else {
         // Form  C := alpha*A**H*A + beta*C.
         if (upper) {
@@ -174,7 +190,7 @@ export function cherk(
                 if (beta !== 0) {
                     //[ALPHA*RTEMP] + BETA*REAL(C(J,J))
                     re += beta * c.r[coorCJ + j];
-                    im += beta * c.i[coorCJ + j];
+                    //im += beta* c.i[coorCJ + j];
                 }
                 c.r[coorCJ + j] = re;
                 c.i[coorCJ + j] = im;
@@ -184,7 +200,7 @@ export function cherk(
         else {
             for (let j = 1; j <= n; j++) {
                 let rTempRe = 0;
-                let rTempIm = 0;
+
                 const coorAJ = a.colOfEx(j);
                 const coorCJ = c.colOfEx(j);
                 for (let l = 1; l <= k; l++) {
@@ -194,19 +210,20 @@ export function cherk(
                     const ar = a.r[ajl];
                     const ai = a.i[ajl];
                     rTempRe += ar * ar + ai * ai;
-                    rTempIm += ar * ai - ar * ai;
+                    //   rTempIm += ar * ai - ai * ar;
                 }
+                //console.log(`${j}\t${rTempRe}`)
                 //ALPHA*RTEMP
                 let re = alpha * rTempRe;
-                let im = alpha * rTempIm;
+                //let im = alpha * rTempIm;
                 if (beta !== 0) {
                     re += beta * c.r[coorAJ + j];
-                    im += beta * c.i[coorAJ + j];
+                    //im += beta * c.i[coorAJ + j];
                 }
                 c.r[coorAJ + j] = re;
-                c.i[coorAJ + j] = im;
+                c.i[coorAJ + j] = 0;
 
-                for (let i = j + 1; j <= n; j++) {
+                for (let i = j + 1; i <= n; i++) {
                     const coorAI = a.colOfEx(i);
                     let tempRe = 0;
                     let tempIm = 0;
@@ -216,7 +233,7 @@ export function cherk(
                         const alj = coorAJ + l;
                         const ali = coorAI + l;
                         tempRe += a.r[ali] * a.r[alj] + a.i[ali] * a.i[alj];
-                        tempIm += a.i[ali] * a.r[alj] - a.i[ali] * a.r[alj];
+                        tempIm += a.r[ali] * a.i[alj] - a.i[ali] * a.r[alj];
                     }
                     //ALPHA*TEMP
                     let re = alpha * tempRe;
