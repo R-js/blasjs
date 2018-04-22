@@ -6,7 +6,15 @@
 *>     Sven Hammarling, Numerical Algorithms Group Ltd.
 */
 
-import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../f_func';
+import {
+    Complex,
+    errMissingIm,
+    errWrongArg,
+    lowerChar,
+    Matrix,
+    mul_cxr,
+    mul_rxr
+} from '../../f_func';
 
 /*
 *>
@@ -63,7 +71,7 @@ export function csymm(
     if (!'lr'.includes(si)) {
         info = 1;
     }
-    else if ('ul'.includes(ul)) {
+    else if (!'ul'.includes(ul)) {
         info = 2;
     }
     else if (m < 0) {
@@ -95,7 +103,8 @@ export function csymm(
     //And when  alpha.eq.zero.
 
     if (alphaIsZero) {
-        if (!betaIsZero) {
+        if (betaIsZero) {
+            // console.log('Setting all to zero!!');
             for (let j = 1; j <= n; j++) {
                 c.setCol(j, 1, m, 0);
             }
@@ -161,28 +170,68 @@ export function csymm(
                 for (let i = m; i >= 1; i--) {
                     const coorAI = a.colOfEx(i);
                     //TEMP1 = ALPHA * B(I, J)
-                    let temp1Re = alpha.re * b.r[coorBJ + i] - alpha.im * b.i[coorBJ + i];
-                    let temp1Im = alpha.re * b.i[coorBJ + i] - alpha.im * b.r[coorBJ + i];
+                    //let temp1Re = alpha.re * b.r[coorBJ + i] - alpha.im * b.i[coorBJ + i];
+                    //let temp1Im = alpha.re * b.i[coorBJ + i] + alpha.im * b.r[coorBJ + i];
+                    const { re, im } = mul_cxr(
+                        alpha,
+                        b.r[coorBJ + i],
+                        b.i[coorBJ + i]
+                    );
+                    let temp1Re = re;
+                    let temp1Im = im;
                     let temp2Re = 0;
                     let temp2Im = 0;
-                    for (let k = i + 1; k >= m; k++) {
+                    for (let k = i + 1; k <= m; k++) {
                         // C(K,J) = C(K,J) + TEMP1*A(K,I)
-                        c.r[coorCJ + k] += temp1Re * a.r[coorAI + k] - temp1Im * a.i[coorAI + k];
-                        c.i[coorCJ + k] += temp1Re * a.i[coorAI + k] + temp1Im * a.r[coorAI + k];
+                        const { re, im } = mul_rxr(
+                            temp1Re,
+                            temp1Im,
+                            a.r[coorAI + k],
+                            a.i[coorAI + k]
+                        );
+
+                        c.r[coorCJ + k] += re; //temp1Re * a.r[coorAI + k] - temp1Im * a.i[coorAI + k];
+                        c.i[coorCJ + k] += im; //temp1Re * a.i[coorAI + k] + temp1Im * a.r[coorAI + k];
                         // TEMP2 = TEMP2 + B(K,J)*A(K,I)
-                        temp2Re += b.r[coorBJ + k] * a.r[coorAI + k] - b.i[coorBJ + k] * a.i[coorAI + k];
-                        temp2Im += b.r[coorBJ + k] * a.i[coorAI + k] + b.r[coorBJ + k] * a.r[coorAI + k];
+                        const { re: re1, im: im1 } = mul_rxr(
+                            b.r[coorBJ + k],
+                            b.i[coorBJ + k],
+                            a.r[coorAI + k],
+                            a.i[coorAI + k]
+                        );
+                        temp2Re += re1; //b.r[coorBJ + k] * a.r[coorAI + k] - b.i[coorBJ + k] * a.i[coorAI + k];
+                        temp2Im += im1; //b.r[coorBJ + k] * a.i[coorAI + k] + b.i[coorBJ + k] * a.r[coorAI + k];
                     }
                     //TEMP1*A(I,I) + ALPHA*TEMP2
-                    let re = (temp1Re * a.r[coorAI + i] - temp1Im * a.i[coorAI + i]) + (alpha.re * temp2Re - alpha.im * temp2Im);
-                    let im = (temp1Re * a.i[coorAI + i] + temp1Re * a.r[coorAI + i]) + (alpha.re * temp2Im + alpha.im * temp2Re);
+                    const { re: re2, im: im2 } = mul_rxr(
+                        temp1Re,
+                        temp1Im,
+                        a.r[coorAI + i],
+                        a.i[coorAI + i]
+                    );
+                    const { re: re3, im: im3 } = mul_cxr(
+                        alpha,
+                        temp2Re,
+                        temp2Im
+                    );
+                    let re0 = re2 + re3;
+                    let im0 = im2 + im3;
+                    //let re = (temp1Re * a.r[coorAI + i] - temp1Im * a.i[coorAI + i]) + (alpha.re * temp2Re - alpha.im * temp2Im);
+                    //let im = (temp1Re * a.i[coorAI + i] + temp1Im * a.r[coorAI + i]) + (alpha.re * temp2Im + alpha.im * temp2Re);
                     //BETA * C(I, J) 
                     if (!betaIsZero) {
-                        re += beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
-                        im += beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
+                        const { re, im } = mul_cxr(
+                            beta,
+                            c.r[coorCJ + i],
+                            c.i[coorCJ + i]
+                        );
+                        re0 += re;
+                        im0 += im;
+                        //  re += beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
+                        //  im += beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
                     }
-                    c.r[coorCJ + i] = re;
-                    c.i[coorCJ + i] = im;
+                    c.r[coorCJ + i] = re0;
+                    c.i[coorCJ + i] = im0;
                 }//for(i)
             }//for(j)
         }//upper
@@ -194,14 +243,14 @@ export function csymm(
             const coorAJ = a.colOfEx(j);
             const coorBJ = b.colOfEx(j);
             const coorCJ = c.colOfEx(j);
-
+            //TEMP1 = ALPHA*A(J,J)
             let temp1Re = alpha.re * a.r[coorCJ + j] - alpha.im * a.i[coorCJ + j];
             let temp1Im = alpha.re * a.i[coorCJ + j] + alpha.im * a.r[coorCJ + j];
-
             for (let i = 1; i <= m; i++) {
                 //TEMP1*B(I,J)
                 let re = temp1Re * b.r[coorBJ + i] - temp1Im * b.i[coorBJ + i];
                 let im = temp1Re * b.i[coorBJ + i] + temp1Im * b.r[coorBJ + i];
+                //console.log(`${i},${j}\t(${re},${im})`);
                 if (!betaIsZero) {
                     //BETA*C(I,J)
                     re += beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];

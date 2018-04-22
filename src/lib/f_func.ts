@@ -566,7 +566,7 @@ export function multiplexer(...rest: (any | any[])[]) {
             continue;
         }
         if (arg instanceof Object) {
-            analyzed.push(arg);
+            analyzed.push([arg]);
             continue;
             //throw new Error('Sorry, looping over properties not yet supported');
         }
