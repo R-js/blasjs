@@ -1,4 +1,4 @@
-import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../f_func';
+import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix, mul_cxr } from '../../f_func';
 
 /*
 *>
@@ -117,12 +117,14 @@ export function csyr2k(
             const coorCJ = c.colOfEx(j);
             const start = upper ? 1 : j;
             const stop = upper ? j : n;
-            for (let i = start; i <= stop; i++) {
-                //BETA*C(I,J)
-                let re = beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
-                let im = beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
-                c.r[coorCJ + i] = betaIsZero ? 0 : !betaIsOne ? re : c.r[coorCJ + i];
-                c.i[coorCJ + i] = betaIsZero ? 0 : !betaIsOne ? im : c.r[coorCJ + i];
+            if (betaIsZero) {
+                c.setCol(j, start, stop, 0);
+            }
+            else if (!betaIsOne) {
+                for (let i = start; i <= stop; i++) {
+                    c.r[coorCJ + i] = beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
+                    c.i[coorCJ + i] = beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
+                }
             }
             for (let l = 1; l <= k; l++) {
                 const coorAL = a.colOfEx(l);
@@ -134,8 +136,9 @@ export function csyr2k(
                     let temp1Re = alpha.re * b.r[coorBL + j] - alpha.im * b.i[coorBL + j]
                     let temp1Im = alpha.re * b.i[coorBL + j] + alpha.im * b.r[coorBL + j];
                     // TEMP2 = ALPHA * A(J, L)
-                    let temp2Re = alpha.re * a.r[coorBL + l] + alpha.im * a.i[coorBL + j];
-                    let temp2Im = alpha.re * a.i[coorBL + l] + alpha.im * a.r[coorBL + j];
+                    let temp2Re = alpha.re * a.r[coorBL + j] - alpha.im * a.i[coorBL + j];
+                    let temp2Im = alpha.re * a.i[coorBL + j] + alpha.im * a.r[coorBL + j];
+
                     for (let i = start; i <= stop; i++) {
                         //A(I, L) * TEMP1
                         let at1Re = a.r[coorAL + i] * temp1Re - a.i[coorAL + i] * temp1Im;
@@ -169,15 +172,19 @@ export function csyr2k(
                 let temp2Im = 0;
                 for (let l = 1; l <= k; l++) {
                     //TEMP1 = TEMP1 + A(L,I)*B(L,J)
-                    temp1Re += a.r[coorAI + l] * b.r[coorBJ + l] - a.i[coorAI + l] * b.i[coorAI + l];
+                    temp1Re += a.r[coorAI + l] * b.r[coorBJ + l] - a.i[coorAI + l] * b.i[coorBJ + l];
                     temp1Im += a.r[coorAI + l] * b.i[coorBJ + l] + a.i[coorAI + l] * b.r[coorBJ + l];
                     //TEMP2 = TEMP2 + B(L,I)*A(L,J)
                     temp2Re += b.r[coorBI + l] * a.r[coorAJ + l] - b.i[coorBI + l] * a.i[coorAJ + l];
                     temp2Im += b.r[coorBI + l] * a.i[coorAJ + l] + b.i[coorBI + l] * a.r[coorAJ + l];
                 }
-                let re = (alpha.re * temp1Re - alpha.im * temp1Im) + (alpha.re * temp2Re - alpha.im * temp2Im);
-                let im = (alpha.re * temp1Im + alpha.im * temp1Re) + (alpha.re * temp2Im + alpha.im * temp2Re);
-                if (betaIsZero) {
+                //console.log(`j:${j},i:${i},\t(${temp2Re},${temp2Im})`);
+                //ALPHA*TEMP1 + ALPHA*TEMP2
+                let re = alpha.re * (temp1Re + temp2Re) - alpha.im * (temp1Im + temp2Im);
+                let im = alpha.re * (temp1Im + temp2Im) + alpha.im * (temp1Re + temp2Re);
+                //console.log(`j:${j},i:${i},\t(${re},${im})`);
+
+                if (!betaIsZero) {
                     re += beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
                     im += beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
                 }
