@@ -106,7 +106,7 @@ export const fixture = {
             },
         },
         case4: {
-            desc: 'trivial, alpha=0+i0 and beta=0+i0',
+            desc: '(near trivial), alpha=0+i0, beta=0+i0',
             input: {
                 // SUBROUTINE CHEMM(SIDE,UPLO,M,N,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
                 // SIDE = 'L' or 'l', C := alpha*A*B + beta*C,
@@ -135,7 +135,7 @@ export const fixture = {
                     for (let i = 1; i <= 6; i++) {
                         m.setCol(i, 1, 4, 0);
                     }
-                    return m;
+                    return m.toArr();
                 })()
             },
         },
