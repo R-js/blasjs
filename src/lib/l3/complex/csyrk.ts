@@ -50,8 +50,8 @@ export function csyrk(
     const alphaIsZero = alpha.re === 0 && alpha.im === 0;
     const betaIsOne = beta.re === 1 && beta.im === 0;
     const betaIsZero = beta.re === 0 && beta.im === 0;
-    const upper = ul === 'u';
 
+    const upper = ul === 'u';
     const nrowA = tr === 'n' ? n : k;
 
     let info = 0;
@@ -70,7 +70,7 @@ export function csyrk(
     else if (lda < max(1, nrowA)) {
         info = 7;
     }
-    else if (lda < max(1, n)) {
+    else if (ldc < max(1, n)) {
         info = 10;
     }
     if (info !== 0) {
@@ -80,31 +80,45 @@ export function csyrk(
     //  Quick return if possible.
     if (n === 0 || ((alphaIsZero || k === 0) && betaIsOne)) return;
 
-    //And when  alpha.eq.zero.
+    //  And when  alpha.eq.zero.
 
     if (alphaIsZero) {
         for (let j = 1; j <= n; j++) {
-            const coorCJ = c.colOfEx(j);
             const start = upper ? 1 : j;
             const stop = upper ? j : n;
-            for (let i = start; i <= stop; i++) {
-                c.r[coorCJ + i] = betaIsZero ? 0 : (betaIsOne ? c.r[coorCJ + i] : beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i]);
-                c.i[coorCJ + i] = betaIsZero ? 0 : (betaIsOne ? c.r[coorCJ + i] : beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i]);
+            if (betaIsZero) {
+                c.setCol(j, start, stop, 0);
+            }
+            else {
+                const coorCJ = c.colOfEx(j);
+                for (let i = start; i <= stop; i++) {
+                    const re = beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
+                    const im = beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
+                    c.r[coorCJ + i] = re;
+                    c.i[coorCJ + i] = im;
+                }
             }
         }
         return;
     }
 
-    //*     Start the operations.
+    // Start the operations.
     if (tr === 'n') {
         // Form  C := alpha*A*A**T + beta*C.
         for (let j = 1; j <= n; j++) {
             const coorCJ = c.colOfEx(j);
             const start = upper ? 1 : j;
             const stop = upper ? j : n;
-            for (let i = start; i <= stop; i++) {
-                c.r[coorCJ + i] = betaIsZero ? 0 : (betaIsOne ? c.r[coorCJ + i] : beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i]);
-                c.i[coorCJ + i] = betaIsZero ? 0 : (betaIsOne ? c.i[coorCJ + i] : beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i])
+            if (betaIsZero) {
+                c.setCol(j, start, stop, 0);
+            }
+            else if (!betaIsOne) {
+                for (let i = start; i <= stop; i++) {
+                    const re = beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
+                    const im = beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
+                    c.r[coorCJ + i] = re;
+                    c.i[coorCJ + i] = im;
+                }
             }
             for (let l = 1; l <= k; l++) {
                 const coorAL = a.colOfEx(l);
@@ -122,7 +136,6 @@ export function csyrk(
     }
     else {
         //  Form  C := alpha*A**T*A + beta*C.
-
         for (let j = 1; j <= n; j++) {
             const coorAJ = a.colOfEx(j);
             const coorCJ = c.colOfEx(j);
@@ -139,7 +152,7 @@ export function csyrk(
                 //ALPHA*TEMP
                 let re = alpha.re * tempRe - alpha.im * tempIm;
                 let im = alpha.re * tempIm + alpha.im * tempRe;
-                if (betaIsZero) {
+                if (!betaIsZero) {
                     re += beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
                     im += beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
                 }
