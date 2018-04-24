@@ -74,7 +74,7 @@ export function ctrsm(
     else if (!'ntc'.includes(trA)) {
         info = 3;
     }
-    else if ('un'.includes(di)) {
+    else if (!'un'.includes(di)) {
         info = 4;
     }
     else if (m < 0) {
