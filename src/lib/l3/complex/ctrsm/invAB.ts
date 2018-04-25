@@ -1,34 +1,35 @@
-import { Complex, errMissingIm, Matrix } from '../../../f_func';
+import {
+    Complex,
+    div_rxr,
+    MatrixEComplex,
+    mul_cxr,
+    mul_rxr
+} from '../../../f_func';
 //Form  B := alpha*inv( A )*B.
 
 export function invAB(
     nounit: boolean,
     upper: boolean,
+    alphaIsOne: boolean,
+    alphaIsZero: boolean,
+    noconj: boolean,
     n: number,
     m: number,
-    a: Matrix,
-    b: Matrix,
+    a: MatrixEComplex,
+    b: MatrixEComplex,
     alpha: Complex): void {
-
-
-    if (a.i === undefined) {
-        throw new Error(errMissingIm('a.i'));
-    }
-    if (b.i === undefined) {
-        throw new Error(errMissingIm('b.i'));
-    }
-
-    const alphaIsOne = alpha.re === 1 && alpha.im === 0;
 
     if (upper) {
         for (let j = 1; j <= n; j++) {
             const coorBJ = b.colOfEx(j);
             if (!alphaIsOne) {
                 for (let i = 1; i <= m; i++) {
-                    const re = alpha.re * b.r[coorBJ + i] - alpha.im * b.i[coorBJ + i];
-                    const im = alpha.re * b.i[coorBJ + i] + alpha.im * b.r[coorBJ + i];
+                    //const re = alpha.re * b.r[coorBJ + i] - alpha.im * b.i[coorBJ + i];
+                    //const im = alpha.re * b.i[coorBJ + i] + alpha.im * b.r[coorBJ + i];
+                    const { re, im } = mul_cxr(alpha, b.r[coorBJ + i], b.i[coorBJ + i]);
                     b.r[coorBJ + i] = re;
                     b.i[coorBJ + i] = im;
+                    //console.log(`${j},${i}\t(${re},${im})`)
                 }
             }
             for (let k = m; k >= 1; k--) {
@@ -36,37 +37,27 @@ export function invAB(
                 const isBZero = b.r[coorBJ + k] === 0 && b.i[coorBJ + k] === 0;
                 if (!isBZero) {
                     if (nounit) {
-                        //B(K,J) = B(K,J)/A(K,K)
-                        // TEMP = ONE/A(J,J)
-                        //(a+ib)/(c+id)
-                        // re= (ac+bd)/(c*c+d*d)
-                        // im =(bc-ad)/(c*c+d*d)
-                        const _a = b.r[coorBJ + k];
-                        const _b = b.i[coorBJ + k];
-                        const _c = a.r[coorAK + k];
-                        const _d = a.i[coorAK + k];
-                        const n = _c * _c + _d * _d;
-
-                        const re = (_a * _c + _b * _d) / n;
-                        const im = (_b * _c - _a * _d) / n;
-
+                        const { re, im } = div_rxr(
+                            b.r[coorBJ + k],
+                            b.i[coorBJ + k],
+                            a.r[coorAK + k],
+                            a.i[coorAK + k]
+                        );
                         b.r[coorBJ + k] = re;
                         b.i[coorBJ + k] = im;
+                        //       console.log(`*${j},${k}\t(${b.r[coorBJ + k]},${b.i[coorBJ + k]})`);
                     }
                     for (let i = 1; i <= k - 1; i++) {
-                        // B(I,J) = B(I,J) - B(K,J)*A(I,K)
-                        const _a = b.r[coorBJ + k];
-                        const _b = b.i[coorBJ + k];
-                        const _c = a.r[coorAK + i];
-                        const _d = a.i[coorAK + i];
-                        const n = _c * _c + _d * _d;
-
-                        const re = (_a * _c + _b * _d) / n;
-                        const im = (_b * _c - _a * _d) / n;
-                        b.r[coorBJ + k] -= re;
-                        b.i[coorBJ + k] -= im;
-                    }
-                }
+                        const { re, im } = mul_rxr(
+                            b.r[coorBJ + k],
+                            b.i[coorBJ + k],
+                            a.r[coorAK + i],
+                            a.i[coorAK + i]
+                        );
+                        b.r[coorBJ + i] -= re;
+                        b.i[coorBJ + i] -= im;
+                    }//for(i)
+                }//if b(k,j)!=0
             }//k
         }//j
     }//upper
@@ -75,6 +66,11 @@ export function invAB(
             const coorBJ = b.colOfEx(j);
             if (!alphaIsOne) {
                 for (let i = 1; i <= m; i++) {
+                    /*const { re, im } = mul_cxr(
+                         alpha,
+                         b.r[coorBJ + i],
+                         b.i[coorBJ + i]
+                     );*/
                     const re = alpha.re * b.r[coorBJ + i] - alpha.im * b.i[coorBJ + i];
                     const im = alpha.re * b.i[coorBJ + i] + alpha.im * b.r[coorBJ + i];
                     b.r[coorBJ + i] = re;
@@ -86,26 +82,26 @@ export function invAB(
                 const coorAK = a.colOfEx(k);
                 if (!bIsZero) {
                     if (nounit) {
-                        //B(K,J) = B(K,J)/A(K,K)
-                        // TEMP = ONE/A(J,J)
-                        // (a+ib)/(c+id)
-                        // re= (ac+bd)/(c*c+d*d)
-                        // im =(bc-ad)/(c*c+d*d)
-                        const _a = b.r[coorBJ + k];
-                        const _b = b.i[coorBJ + k];
-                        const _c = a.r[coorAK + k];
-                        const _d = a.i[coorAK + k];
-                        const n = _a * _a + _b * _b;
-                        const re = (_a * _c + _b * _d) / n;
-                        const im = (_b * _c - _a * _d) / n;
+                        const { re, im } = div_rxr(
+                            b.r[coorBJ + k],
+                            b.i[coorBJ + k],
+                            a.r[coorAK + k],
+                            a.i[coorAK + k]
+                        );
                         b.r[coorBJ + k] = re;
                         b.i[coorBJ + k] = im;
                     }
-                    for (let i = k + 1; k <= m; i++) {
+                    for (let i = k + 1; i <= m; i++) {
+                        /*const { re, im } = mul_rxr(
+                            b.r[coorBJ + k],
+                            b.i[coorBJ + k],
+                            a.r[coorAK + i],
+                            a.i[coorAK + i]
+                        );*/
                         const re = b.r[coorBJ + k] * a.r[coorAK + i] - b.i[coorBJ + k] * a.i[coorAK + i];
                         const im = b.r[coorBJ + k] * a.i[coorAK + i] + b.i[coorBJ + k] * a.r[coorAK + i];
                         b.r[coorBJ + i] -= re;
-                        b.i[coorBJ + k] -= im;
+                        b.i[coorBJ + i] -= im;
                     }
                 }//bNoZero
             }//k

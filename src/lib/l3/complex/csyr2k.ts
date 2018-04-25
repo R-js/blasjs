@@ -1,4 +1,4 @@
-import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix, mul_cxr } from '../../f_func';
+import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../f_func';
 
 /*
 *>

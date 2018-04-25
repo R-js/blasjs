@@ -5,6 +5,7 @@
                       IF (ALPHA.NE.ONE) THEN
                           DO 30 I = 1,M
                               B(I,J) = ALPHA*B(I,J)
+               PRINT *, J,I, B(I,J)               
    30                     CONTINUE
                       END IF
                       DO 50 K = M,1,-1

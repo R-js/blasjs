@@ -8,7 +8,15 @@
 *>     Sven Hammarling, Numerical Algorithms Group Ltd.
 */
 
-import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../../f_func';
+import {
+    Complex,
+    errMissingIm,
+    errWrongArg,
+    lowerChar,
+    Matrix,
+    MatrixEComplex
+} from '../../../f_func';
+
 import { BinvA } from './BinvA';
 import { BinvTranConjA } from './BinvTranConjA';
 import { invAB } from './invAB';
@@ -43,6 +51,7 @@ export function ctrsm(
     b: Matrix,
     ldb: number): void {
 
+
     if (a.i === undefined) {
         throw new Error(errMissingIm('a.i'));
     }
@@ -62,6 +71,7 @@ export function ctrsm(
     const upper = ul === 'u';
 
     const alphaIsZero = (alpha.re === 0 && alpha.im === 0);
+    const alphaIsOne = (alpha.re === 1 && alpha.im === 0);
 
     let info = 0;
 
@@ -109,28 +119,70 @@ export function ctrsm(
     // start operations
 
     if (si === 'l' && trA === 'n') {
-        //Form  B := alpha*inv( A )*B.
-        //invA*B
-        return invAB(nounit, upper, n, m, a, b, alpha);
+        return invAB(
+            nounit,
+            upper,
+            alphaIsOne,
+            alphaIsZero,
+            noconj,
+            n,
+            m,
+            <MatrixEComplex>a,
+            <MatrixEComplex>b,
+            alpha
+        );
     }
 
     if (si === 'l' && trA !== 'n') {
         //Form  B := alpha*inv( A**T )*B
         //or    B := alpha*inv( A**H )*B.
-        invTranConjAB(nounit, upper, noconj, n, m, a, b, alpha);
+        return invTranConjAB(
+            nounit,
+            upper,
+            alphaIsOne,
+            alphaIsZero,
+            noconj,
+            n,
+            m,
+            <MatrixEComplex>a,
+            <MatrixEComplex>b,
+            alpha
+        );
     }
 
     if (si === 'r' && trA === 'n') {
         //   Form  B := alpha*B*inv( A ).
         //BinvA
-        return BinvA(nounit, upper, n, m, a, b, alpha);
+        return BinvA(
+            nounit,
+            upper,
+            alphaIsOne,
+            alphaIsZero,
+            noconj,
+            n,
+            m,
+            <MatrixEComplex>a,
+            <MatrixEComplex>b,
+            alpha
+        );
     }
 
     if (si === 'r' && trA !== 'n') {
         //Form  B := alpha*B*inv( A**T )
         // or    B := alpha*B*inv( A**H ).
         //BinvTranConjA
-        return BinvTranConjA(nounit, upper, noconj, n, m, a, b, alpha);
+        return BinvTranConjA(
+            nounit,
+            upper,
+            alphaIsOne,
+            alphaIsZero,
+            noconj,
+            n,
+            m,
+            <MatrixEComplex>a,
+            <MatrixEComplex>b,
+            alpha
+        );
     }
 
     throw new Error('unreachable code');

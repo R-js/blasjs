@@ -29,7 +29,6 @@ export function AB(
                 const im = beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
                 c.r[coorCJ + i] = re;
                 c.i[coorCJ + i] = im;
-
             }
         }
         //DO 80 L = 1,K

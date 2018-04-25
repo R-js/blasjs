@@ -217,9 +217,9 @@
       COMPLEX*16 ZERO
       PARAMETER (ZERO= (0.0D+0,0.0D+0))
 *     ..
-*
+*     ..
 *     Test the input parameters.
-*
+*     ..
       LSIDE = LSAME(SIDE,'L')
       IF (LSIDE) THEN
           NROWA = M
@@ -282,11 +282,16 @@
                       IF (ALPHA.NE.ONE) THEN
                           DO 30 I = 1,M
                               B(I,J) = ALPHA*B(I,J)
+c            PRINT *, J,I, B(I,J)             
    30                     CONTINUE
                       END IF
                       DO 50 K = M,1,-1
                           IF (B(K,J).NE.ZERO) THEN
-                              IF (NOUNIT) B(K,J) = B(K,J)/A(K,K)
+                              IF (NOUNIT) THEN
+                            PRINT *, J,K, B(K,J)    
+                                B(K,J) = B(K,J)/A(K,K)
+                              
+                              END IF  
                               DO 40 I = 1,K - 1
                                   B(I,J) = B(I,J) - B(K,J)*A(I,K)
    40                         CONTINUE
@@ -354,6 +359,7 @@
               END IF
           END IF
       ELSE
+c     SIDE = "R" 
           IF (LSAME(TRANSA,'N')) THEN
 *
 *           Form  B := alpha*B*inv( A ).
@@ -380,6 +386,7 @@
                       END IF
   230             CONTINUE
               ELSE
+c             side="r", transA="n", uplo="l"
                   DO 280 J = N,1,-1
                       IF (ALPHA.NE.ONE) THEN
                           DO 240 I = 1,M
@@ -387,6 +394,7 @@
   240                     CONTINUE
                       END IF
                       DO 260 K = J + 1,N
+c        PRINT *, K,J
                           IF (A(K,J).NE.ZERO) THEN
                               DO 250 I = 1,M
                                   B(I,J) = B(I,J) - A(K,J)*B(I,K)

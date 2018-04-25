@@ -1,4 +1,4 @@
-import { Complex, errMissingIm, Matrix } from '../../../f_func';
+import { Complex, MatrixEComplex } from '../../../f_func';
 
 /*
 Form  B := alpha*B*inv( A**T )
@@ -8,22 +8,14 @@ or    B := alpha*B*inv( A**H ).
 export function BinvTranConjA(
     nounit: boolean,
     upper: boolean,
+    alphaIsOne: boolean,
+    alphaIsZero: boolean,
     noconj: boolean,
     n: number,
     m: number,
-    a: Matrix,
-    b: Matrix,
+    a: MatrixEComplex,
+    b: MatrixEComplex,
     alpha: Complex): void {
-
-
-    if (a.i === undefined) {
-        throw new Error(errMissingIm('a.i'));
-    }
-    if (b.i === undefined) {
-        throw new Error(errMissingIm('b.i'));
-    }
-
-    const alphaIsOne = alpha.re === 1 && alpha.im === 0;
 
     if (upper) {
         for (let k = n; k >= 1; k--) {
