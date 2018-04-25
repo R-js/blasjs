@@ -167,24 +167,24 @@ export function ctrsm(
         );
     }
 
-    if (si === 'r' && trA !== 'n') {
-        //Form  B := alpha*B*inv( A**T )
-        // or    B := alpha*B*inv( A**H ).
-        //BinvTranConjA
-        return BinvTranConjA(
-            nounit,
-            upper,
-            alphaIsOne,
-            alphaIsZero,
-            noconj,
-            n,
-            m,
-            <MatrixEComplex>a,
-            <MatrixEComplex>b,
-            alpha
-        );
-    }
+    /* if (si === 'r' && trA !== 'n') {*/
+    //Form  B := alpha*B*inv( A**T )
+    // or    B := alpha*B*inv( A**H ).
+    //BinvTranConjA
+    return BinvTranConjA(
+        nounit,
+        upper,
+        alphaIsOne,
+        alphaIsZero,
+        noconj,
+        n,
+        m,
+        <MatrixEComplex>a,
+        <MatrixEComplex>b,
+        alpha
+    );
+    //}
 
-    throw new Error('unreachable code');
+    //throw new Error('unreachable code');
 
 }
