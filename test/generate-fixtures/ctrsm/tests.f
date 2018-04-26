@@ -385,6 +385,148 @@ c     op( A )*X = alpha*B,   or   X*op( A ) = alpha*B,
         
         CALL ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
         CALL PRNMATRC(B, 6, 6)
+
+        PRINT *, "==CASE 16=="
+
+*    SUBROUTINE ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+         CALL CCOPYMA(M6X6, A, 6,6)
+         CALL CCOPYMA(M6X6, B, 6,6)
+         A(1,6)=0
+        
+         SIDE="R"
+         UPLO="U"
+         TRANSA="T"
+         DIAG="N"
+      
+         ALPHA = (1,0)
+        
+         N=6
+         M=4
+
+        LDA=6
+        LDB=6
+        
+        CALL ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, 6, 6)
+
+        PRINT *, "==CASE 17=="
+
+*    SUBROUTINE ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+         CALL CCOPYMA(M6X6, A, 6,6)
+         CALL CCOPYMA(M6X6, B, 6,6)
+         A(1,6)=0
+        
+         SIDE="R"
+         UPLO="U"
+         TRANSA="C"
+         DIAG="N"
+      
+         ALPHA = (0.5,0.5)
+        
+         N=6
+         M=4
+
+        LDA=6
+        LDB=6
+        
+        CALL ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, 6, 6)
+
+          PRINT *, "==CASE 18=="
+
+*    SUBROUTINE ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+         CALL CCOPYMA(M6X6, A, 6,6)
+         CALL CCOPYMA(M6X6, B, 6,6)
+         A(1,6)=0
+        
+         SIDE="R"
+         UPLO="U"
+         TRANSA="C"
+         DIAG="U"
+      
+         ALPHA = (0.5,0.5)
+        
+         N=6
+         M=4
+
+        LDA=6
+        LDB=6
+        
+        CALL ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, 6, 6)
+          PRINT *, "==CASE 19=="
+
+*    SUBROUTINE ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+         CALL CCOPYMA(M6X6, A, 6,6)
+         CALL CCOPYMA(M6X6, B, 6,6)
+         A(1,6)=0
+        
+         SIDE="R"
+         UPLO="L"
+         TRANSA="C"
+         DIAG="U"
+      
+         ALPHA = (0.5,0.5)
+        
+         N=6
+         M=4  
+
+        LDA=6
+        LDB=6
+        
+        CALL ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, 6, 6)
+           PRINT *, "==CASE 20=="
+
+*    SUBROUTINE ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+         CALL CCOPYMA(M6X6, A, 6,6)
+         CALL CCOPYMA(M6X6, B, 6,6)
+         A(2,1)=0
+        
+         SIDE="R"
+         UPLO="L"
+         TRANSA="C"
+         DIAG="N"
+      
+         ALPHA = (0.5,0.5)
+        
+         N=6
+         M=4
+
+        LDA=6
+        LDB=6
+        
+        CALL ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, 6, 6)
+           PRINT *, "==CASE 21=="
+
+*    SUBROUTINE ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+         CALL CCOPYMA(M6X6, A, 6,6)
+         CALL CCOPYMA(M6X6, B, 6,6)
+         A(2,1)=0
+        
+         SIDE="R"
+         UPLO="L"
+         TRANSA="T"
+         DIAG="N"
+      
+         ALPHA = (1,0)
+        
+         N=6
+         M=4
+
+        LDA=6
+        LDB=6
+        
+        CALL ZTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+        CALL PRNMATRC(B, 6, 6)
+            
       end
 
          SUBROUTINE CCOPYMA(AC,A,N,LDA)

@@ -288,7 +288,7 @@ c            PRINT *, J,I, B(I,J)
                       DO 50 K = M,1,-1
                           IF (B(K,J).NE.ZERO) THEN
                               IF (NOUNIT) THEN
-                            PRINT *, J,K, B(K,J)    
+c                            PRINT *, J,K, B(K,J)    
                                 B(K,J) = B(K,J)/A(K,K)
                               
                               END IF  
@@ -413,7 +413,7 @@ c        PRINT *, K,J
 *
 *           Form  B := alpha*B*inv( A**T )
 *           or    B := alpha*B*inv( A**H ).
-*
+*          transA!='n'
               IF (UPPER) THEN
                   DO 330 K = N,1,-1
                       IF (NOUNIT) THEN
@@ -422,8 +422,10 @@ c        PRINT *, K,J
                           ELSE
                               TEMP = ONE/DCONJG(A(K,K))
                           END IF
+c           PRINT *, K, TEMP
                           DO 290 I = 1,M
                               B(I,K) = TEMP*B(I,K)
+c       PRINT *, I,K, B(I,K)                       
   290                     CONTINUE
                       END IF
                       DO 310 J = 1,K - 1
@@ -433,8 +435,10 @@ c        PRINT *, K,J
                               ELSE
                                   TEMP = DCONJG(A(J,K))
                               END IF
+c               PRINT *, K,J, TEMP                
                               DO 300 I = 1,M
                                   B(I,J) = B(I,J) - TEMP*B(I,K)
+c                PRINT *, I,J,B(I,J)
   300                         CONTINUE
                           END IF
   310                 CONTINUE
