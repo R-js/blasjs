@@ -190,11 +190,11 @@ describe('blas level 2 single/double precision', function n() {
           const aM = fortranMatrixComplex64(muxCmplx(a))(lda, n);
           const sx = fortranArrComplex64(muxCmplx(x))();
           const sy = fortranArrComplex64(muxCmplx(y))();
-          const eA = fortranMatrixComplex64(muxCmplx(expect.a))(m, n);
+          //const eA = fortranMatrixComplex64(muxCmplx(expect.a))(m, n);
 
           sger(m, n, alpha, sx, incx, sy, incy, aM, lda);
           //console.log({ a: aM.slice(1, m, 1, n).r });
-          multiplexer(Array.from(aM.slice(1, m, 1, n).r), eA.r)(approximatelyWithPrec(1E-7));
+          multiplexer(aM.slice(1, m, 1, n).toArr(), expect.a)(approximatelyWithPrec(1E-7));
 
         });
       });

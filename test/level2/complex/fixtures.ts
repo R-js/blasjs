@@ -1830,7 +1830,7 @@ export const fixture = {
                     let v = vector(6);
                     v.s(4)(0, 0);
                     v.s(2)(0, 0);
-                    return v;
+                    return v.toArr();
                 })()
             }
         },
@@ -1858,7 +1858,7 @@ export const fixture = {
                     let v = vector(6);
                     v.s(4)(0, 0);
                     v.s(2)(0, 0);
-                    return v;
+                    return v.toArr();
                 })()
             }
         },
@@ -3164,7 +3164,7 @@ export const fixture = {
                 })()
             },
             expect: {
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0).packedUpper()
+                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0).packedUpper().toArr()
             }
         },
     },
