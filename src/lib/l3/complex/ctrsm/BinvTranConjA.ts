@@ -1,4 +1,4 @@
-import { Complex, div_rxr, MatrixEComplex, mul_cxr, mul_rxr } from '../../../f_func';
+import { Complex, div_rxr, MatrixEComplex } from '../../../f_func';
 
 /*
 Form  B := alpha*B*inv( A**T )
