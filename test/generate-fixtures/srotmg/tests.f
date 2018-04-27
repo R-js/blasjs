@@ -54,6 +54,23 @@ c
         CALL PRNVEC(DPARAM,5)
 
 
+        PRINT * , "==CASE 8======="
+
+     
+        CALL COPY(DCPARAM,DPARAM,5)
+
+    
+        DD1 = 16777216
+        DD2 = 33554432
+        DX1 = 3.0
+        DY1 = 2.0
+
+        CALL DROTMG(DD1,DD2,DX1,DY1,DPARAM)
+     
+        PRINT *,"X="
+        PRINT *, "DD1",DD1, "DD2",DD2, "DX1",DX1, "DY1", DY1
+        CALL PRNVEC(DPARAM,5)
+
       end
 
 

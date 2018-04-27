@@ -532,13 +532,6 @@ export const fixture = {
         },
     },
     sdot: {
-        /*sdot(
-                n: number,
-                sx: FortranArr, 
-                incx: number, 
-                sy: FortranArr,
-                incy: number
-            ): number */
         case0: {
             desc: 'n=4, sx={4}, sy={4}, incx=1, incy=1',
             input: {
@@ -631,12 +624,6 @@ export const fixture = {
         }
     },
     sdsdot: {
-        /*  n: number,
-            sb: number,
-            sx: FortranArr,
-            incx: number,
-            sy: FortranArr,
-            incy: number */
         case0: {
             desc: 'n=4, sx={4}, sy={4}, incx=1, incy=1',
             input: {
@@ -758,15 +745,6 @@ export const fixture = {
         },
     },
     srot: {
-        /*
-      n: number,
-      sx: FortranArr,
-      incx: number,
-      sy: FortranArr,
-      incy: number,
-      c: number,
-      s: number
-      */
         case0: {
             desc: 'n=4, x={2},y={2} incx=1, incy=1',
             input: {
@@ -1130,17 +1108,6 @@ export const fixture = {
                 sparam: [0, 0, 0, 0, 0]
             },
             output: {
-                /*
-                DD1  0.81818181818181812      DD2  0.40909090909090906     
-                DX1   8.9518229166666674E-004 DY1   2.0000000000000000
-                 [
-                  -1.0000000000000000      ,
-                   2.4414062500000000E-004 ,
-                  -2.4414062500000000E-004 ,
-                   1.0000000000000000      ,
-                   2.4414062500000000E-004 ,
-                 ]*/
-
                 sd1: 0.81818181818181812,
                 sd2: 0.40909090909090906,
                 sx1: 8.9518229166666674E-004,
@@ -1179,7 +1146,7 @@ export const fixture = {
                 sd2: 1.0588235294117647,
                 sx1: 5.6666666666666661,
                 sy1: 2,
-                sparam: [-1, 1, -2730, 1.3333333333333333, 4096]
+                sparam: [-1, 1, -2730.6666666666665, 1.3333333333333333, 4096]
             }
         },
         case9: {

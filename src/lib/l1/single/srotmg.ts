@@ -111,7 +111,10 @@ export function srotmg(p: {
     sparam: FortranArr
 }): void {
 
-    let SD1 = p.sd1, SD2 = p.sd2, SX1 = p.sx1, SY1 = p.sy1;
+    let SD1 = p.sd1;
+    let SD2 = p.sd2;
+    let SX1 = p.sx1;
+    let SY1 = p.sy1;
 
     //locals
     const GAM = 2 << 11; // 4096
@@ -120,10 +123,21 @@ export function srotmg(p: {
     const ONE = 1;
     const RGAMSQ = 1 / (2 << 23); //5.960464477539063e-8
 
-    let SFLAG, SH11, SH12, SH21, SH22, SP1, SP2, SQ1,
-        SQ2, STEMP, SU, TWO = 2, ZERO = 0;
+    let SFLAG;
+    let SH11;
+    let SH12;
+    let SH21;
+    let SH22;
+    let SP1;
+    let SP2;
+    let SQ1;
+    let SQ2;
+    let STEMP;
+    let SU;
+    const TWO = 2;
+    const ZERO = 0;
 
-    let pb = p.sparam.base;
+    const pb = p.sparam.base;
 
     if (SD1 < ZERO) {
         //

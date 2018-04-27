@@ -351,8 +351,8 @@ describe('blas level 2 single/double complex', function n() {
 
           chemv(uplo, n, alpha, a, lda, x, incx, beta, y, incy);
 
-          console.log(`y.arr:`, y.toArr())
-          console.log(`expect.y`, expect.y);
+          //console.log(`y.arr:`, y.toArr())
+          //console.log(`expect.y`, expect.y);
           const approx = approximatelyWithPrec(1E-5);
           multiplexer(y.toArr(), expect.y)(approx);
         });
@@ -463,517 +463,29 @@ describe('blas level 2 single/double complex', function n() {
           multiplexer(ap.toArr(), expect.ap)(approx);
         });
       });
-
-
-      describe('test errors', () => {
-        const { chprErrors: errors } = fixture;
-        each(errors)(({
-          input: {
-            uplo,
-            n,
-            alpha,
-            ap,
-            x,
-            incx
-          }, desc
-        }, key) => {
-          it(`[${key}]/[${desc}]`, function t() {
-
-            const aP = fortranArrComplex64(ap)();
-            const sx = fortranArrComplex64(x)();
-
-
-            //console.log(aP, sx, sy, n, incx, incy, uplo)
-            const call = () => chpr(uplo, n, alpha, sx, incx, aP);
-            //call();
-            expect(call).to.throw();
-          });
-        });
-      });
     });
-  });
-  describe('chpr2', () => {
-    describe('data tests', () => {
-      const { chpr2: testData } = fixture;
-      each(testData)(({
-        input: {
-          //CHPR2(UPLO,N,ALPHA,X,INCX,Y,INCY,AP)
-          uplo,
-          n,
-          alpha,
-          x,
-          incx,
-          y,
-          incy,
-          ap
-        }, expect, desc }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
 
-          //console.log('before a=');
-
-          //console.log('before y', y.toArr());
-          //console.log('before x', x.toArr());
-          chpr2(uplo, n, alpha, x, incx, y, incy, ap);
-          //console.log('after a=')
-
-          const approx = approximatelyWithPrec(1E-5);
-          multiplexer(ap.toArr(), expect.ap)(approx);
-        });
-      });
-    });
 
     describe('test errors', () => {
-      const { chpr2Errors: errors } = fixture;
+      const { chprErrors: errors } = fixture;
       each(errors)(({
         input: {
           uplo,
           n,
           alpha,
           ap,
-          y,
           x,
-          incx,
-          incy
+          incx
         }, desc
       }, key) => {
         it(`[${key}]/[${desc}]`, function t() {
 
           const aP = fortranArrComplex64(ap)();
           const sx = fortranArrComplex64(x)();
-          const sy = fortranArrComplex64(y)();
+
 
           //console.log(aP, sx, sy, n, incx, incy, uplo)
-          const call = () => chpr2(uplo, n, alpha, sx, incx, sy, incy, aP);
-          //call();
-          expect(call).to.throw();
-        });
-      });
-    });
-  });
-  describe('cher2', () => {
-    describe('data tests', () => {
-      const { cher2: testData } = fixture;
-      each(testData)(({
-        input: {
-          //CHPR2(UPLO,N,ALPHA,X,INCX,Y,INCY,AP)
-          uplo,
-          n,
-          alpha,
-          incx,
-          incy,
-          lda,
-          x,
-          y,
-          a
-        }, expect, desc }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          cher2(uplo, n, alpha, x, incx, y, incy, a, lda);
-
-          const approx = approximatelyWithPrec(1E-5);
-          multiplexer(a.toArr(), expect.a)(approx);
-        });
-      });
-    });
-
-    describe('test errors', () => {
-      const { cher2Errors: errors } = fixture;
-      each(errors)(({
-        input: {
-          uplo,
-          n,
-          alpha,
-          a,
-          y,
-          x,
-          lda,
-          incx,
-          incy
-        }, desc
-      }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          const aM = fortranMatrixComplex64(a)(1, 1);
-          const sx = fortranArrComplex64(x)();
-          const sy = fortranArrComplex64(y)();
-
-          //console.log(aP, sx, sy, n, incx, incy, uplo)
-          const call = () => cher2(uplo, n, alpha, sx, incx, sy, incy, aM, lda);
-          //call();
-          expect(call).to.throw();
-        });
-      });
-    });
-  });
-  describe('chpmv', () => {
-    describe('data tests', () => {
-      const { chpmv: testData } = fixture;
-      each(testData)(({
-        input: {
-          //CHPR2(UPLO,N,ALPHA,X,INCX,Y,INCY,AP)
-          uplo,
-          n,
-          alpha,
-          beta,
-          incx,
-          incy,
-          x,
-          y,
-          ap
-        }, expect, desc }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          chpmv(uplo, n, alpha, ap, x, incx, beta, y, incy);
-
-          // console.log('y=');
-          // y.toArr().forEach(v => console.log(`    + (${v.re},${v.im}`));
-
-          const approx = approximatelyWithPrec(1E-5);
-          multiplexer(y.toArr(), expect.y)(approx);
-        });
-      });
-    });
-
-    describe('test errors', () => {
-      const { chpmvErrors: errors } = fixture;
-      each(errors)(({
-        input: {
-          uplo,
-          n,
-          alpha,
-          beta,
-          incx,
-          incy,
-          x,
-          y,
-          ap
-        }, desc
-      }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          const aP = fortranArrComplex64(ap)();
-          const sx = fortranArrComplex64(x)();
-          const sy = fortranArrComplex64(y)();
-
-          //console.log(aP, sx, sy, n, incx, incy, uplo)
-
-          const call = () => chpmv(uplo, n, alpha, aP, sx, incx, beta, sy, incy);
-          //call();
-          expect(call).to.throw();
-        });
-      });
-    });
-  });
-
-  describe('ctbmv', () => {
-    describe('data tests', () => {
-      const { ctbmv: testData } = fixture;
-      each(testData)(({
-        input: {
-          uplo,
-          trans,
-          diag,
-          n,
-          k,
-          lda,
-          incx,
-          a,
-          x
-        }, expect, desc }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          //console.log('x=');
-          //x.toArr().forEach(v => console.log(`    + (${v.re},${v.im})`));
-
-          ctbmv(uplo, trans, diag, n, k, a, lda, x, incx);
-
-          //console.log('x=');
-          //x.toArr().forEach(v => console.log(`    + (${v.re},${v.im})`));
-
-          const approx = approximatelyWithPrec(1E-5);
-          multiplexer(x.toArr(), expect.x)(approx);
-        });
-      });
-    });
-
-    describe('test errors', () => {
-      const { ctbmvErrors: errors } = fixture;
-      each(errors)(({
-        input: {
-          uplo,
-          trans,
-          diag,
-          n,
-          k,
-          lda,
-          incx,
-          a,
-          x
-        }, desc
-      }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          const aM = fortranMatrixComplex64(a)(1, 1);
-          const sx = fortranArrComplex64(x)();
-          const call = () => ctbmv(uplo, trans, diag, n, k, aM, lda, sx, incx);
-          //call();
-          expect(call).to.throw();
-        });
-      });
-    });
-  });
-  describe('ctbsv', () => {
-    describe('data tests', () => {
-      const { ctbsv: testData } = fixture;
-      each(testData)(({
-        input: {
-          uplo,
-          trans,
-          diag,
-          n,
-          k,
-          lda,
-          incx,
-          a,
-          x
-        }, expect, desc }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          //console.log('a=');
-          //a.toArr().forEach(v => console.log(`    + (${v.re},${v.im})`));
-
-          ctbsv(uplo, trans, diag, n, k, a, lda, x, incx);
-
-          //console.log('b=');
-          //x.toArr().forEach(v => console.log(`    + (${v.re},${v.im})`));
-
-          const approx = approximatelyWithPrec(1E-5);
-          multiplexer(x.toArr(), expect.x)(approx);
-        });
-      });
-    });
-
-    describe('test errors', () => {
-      const { ctbsvErrors: errors } = fixture;
-      each(errors)(({
-        input: {
-          uplo,
-          trans,
-          diag,
-          n,
-          k,
-          lda,
-          incx,
-          a,
-          x
-        }, desc
-      }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          const aM = fortranMatrixComplex64(a)(1, 1);
-          const sx = fortranArrComplex64(x)();
-          const call = () => ctbsv(uplo, trans, diag, n, k, aM, lda, sx, incx);
-          //call();
-          expect(call).to.throw();
-        });
-      });
-    });
-  });
-  describe('ctpmv', () => {
-    describe('data tests', () => {
-      const { ctpmv: testData } = fixture;
-      each(testData)(({
-        //CTPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
-        input: {
-          uplo,
-          trans,
-          diag,
-          n,
-          incx,
-          ap,
-          x
-        }, expect, desc }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-          //console.log('a=');
-          ctpmv(uplo, trans, diag, n, ap, x, incx);
-          const approx = approximatelyWithPrec(1E-5);
-          multiplexer(x.toArr(), expect.x)(approx);
-        });
-      });
-    });
-
-    describe('test errors', () => {
-      const { ctpmvErrors: errors } = fixture;
-      each(errors)(({
-        input: {
-          uplo,
-          trans,
-          diag,
-          n,
-          incx,
-          ap,
-          x
-        }, desc
-      }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          const aP = fortranArrComplex64(ap)();
-          const sx = fortranArrComplex64(x)();
-          const call = () => ctpmv(uplo, trans, diag, n, aP, sx, incx);
-          //call();
-          expect(call).to.throw();
-        });
-      });
-    });
-  });
-  describe('ctpsv', () => {
-    describe('data tests', () => {
-      const { ctpsv: testData } = fixture;
-      each(testData)(({
-        //CTPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
-        input: {
-          uplo,
-          trans,
-          diag,
-          n,
-          incx,
-          ap,
-          x
-        }, expect, desc }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          //console.log('a=');
-
-
-          ctpsv(uplo, trans, diag, n, ap, x, incx);
-
-
-          const approx = approximatelyWithPrec(1E-5);
-          multiplexer(x.toArr(), expect.x)(approx);
-        });
-      });
-    });
-
-    describe('test errors', () => {
-      const { ctpsvErrors: errors } = fixture;
-      each(errors)(({
-        input: {
-          uplo,
-          trans,
-          diag,
-          n,
-          incx,
-          ap,
-          x
-        }, desc
-      }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          const aP = fortranArrComplex64(ap)();
-          const sx = fortranArrComplex64(x)();
-          const call = () => ctpsv(uplo, trans, diag, n, aP, sx, incx);
-          //call();
-          expect(call).to.throw();
-        });
-      });
-    });
-  });
-  describe('ctrmv', () => {
-    describe('data tests', () => {
-      const { ctrmv: testData } = fixture;
-      each(testData)(({
-        //CTPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
-        input: {
-          uplo,
-          trans,
-          diag,
-          n,
-          incx,
-          lda,
-          a,
-          x
-        }, expect, desc }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-          /*if (key === 'case2') {
-            a.toArr().forEach(c => console.log(`     +(${c.re},${c.im})`));
-          */
-          ctrmv(uplo, trans, diag, n, a, lda, x, incx);
-
-          const approx = approximatelyWithPrec(1E-5);
-          multiplexer(x.toArr(), expect.x)(approx);
-        });
-      });
-    });
-    describe('test errors', () => {
-      const { ctrmvErrors: errors } = fixture;
-      each(errors)(({
-        input: {
-          uplo,
-          trans,
-          diag,
-          n,
-          incx,
-          lda,
-          a,
-          x
-        }, desc
-      }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          const aM = fortranMatrixComplex64(a)(1, 1);
-          const sx = fortranArrComplex64(x)();
-          const call = () => ctrmv(uplo, trans, diag, n, aM, lda, sx, incx);
-          //call();
-          expect(call).to.throw();
-        });
-      });
-    });
-  });
-  describe('ctrsv', () => {
-    describe('data tests', () => {
-      const { ctrsv: testData } = fixture;
-      each(testData)(({
-        //CTPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
-        input: {
-          uplo,
-          trans,
-          diag,
-          n,
-          incx,
-          lda,
-          a,
-          x
-        }, expect, desc }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-          /*if (key === 'case2') {
-            a.toArr().forEach(c => console.log(`     +(${c.re},${c.im})`));
-          */
-          ctrsv(uplo, trans, diag, n, a, lda, x, incx);
-
-          const approx = approximatelyWithPrec(1E-5);
-          multiplexer(x.toArr(), expect.x)(approx);
-        });
-      });
-    });
-    describe('test errors', () => {
-      const { ctrsvErrors: errors } = fixture;
-      each(errors)(({
-        input: {
-          uplo,
-          trans,
-          diag,
-          n,
-          incx,
-          lda,
-          a,
-          x
-        }, desc
-      }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
-
-          const aM = fortranMatrixComplex64(a)(1, 1);
-          const sx = fortranArrComplex64(x)();
-          const call = () => ctrsv(uplo, trans, diag, n, aM, lda, sx, incx);
+          const call = () => chpr(uplo, n, alpha, sx, incx, aP);
           //call();
           expect(call).to.throw();
         });
@@ -981,5 +493,494 @@ describe('blas level 2 single/double complex', function n() {
     });
   });
 });
+describe('chpr2', () => {
+  describe('data tests', () => {
+    const { chpr2: testData } = fixture;
+    each(testData)(({
+      input: {
+        //CHPR2(UPLO,N,ALPHA,X,INCX,Y,INCY,AP)
+        uplo,
+        n,
+        alpha,
+        x,
+        incx,
+        y,
+        incy,
+        ap
+      }, expect, desc }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        //console.log('before a=');
+
+        //console.log('before y', y.toArr());
+        //console.log('before x', x.toArr());
+        chpr2(uplo, n, alpha, x, incx, y, incy, ap);
+        //console.log('after a=')
+
+        const approx = approximatelyWithPrec(1E-5);
+        multiplexer(ap.toArr(), expect.ap)(approx);
+      });
+    });
+  });
+
+  describe('test errors', () => {
+    const { chpr2Errors: errors } = fixture;
+    each(errors)(({
+      input: {
+        uplo,
+        n,
+        alpha,
+        ap,
+        y,
+        x,
+        incx,
+        incy
+      }, desc
+    }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        const aP = fortranArrComplex64(ap)();
+        const sx = fortranArrComplex64(x)();
+        const sy = fortranArrComplex64(y)();
+
+        //console.log(aP, sx, sy, n, incx, incy, uplo)
+        const call = () => chpr2(uplo, n, alpha, sx, incx, sy, incy, aP);
+        //call();
+        expect(call).to.throw();
+      });
+    });
+  });
+});
+describe('cher2', () => {
+  describe('data tests', () => {
+    const { cher2: testData } = fixture;
+    each(testData)(({
+      input: {
+        //CHPR2(UPLO,N,ALPHA,X,INCX,Y,INCY,AP)
+        uplo,
+        n,
+        alpha,
+        incx,
+        incy,
+        lda,
+        x,
+        y,
+        a
+      }, expect, desc }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        cher2(uplo, n, alpha, x, incx, y, incy, a, lda);
+
+        const approx = approximatelyWithPrec(1E-5);
+        multiplexer(a.toArr(), expect.a)(approx);
+      });
+    });
+  });
+
+  describe('test errors', () => {
+    const { cher2Errors: errors } = fixture;
+    each(errors)(({
+      input: {
+        uplo,
+        n,
+        alpha,
+        a,
+        y,
+        x,
+        lda,
+        incx,
+        incy
+      }, desc
+    }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        const aM = fortranMatrixComplex64(a)(1, 1);
+        const sx = fortranArrComplex64(x)();
+        const sy = fortranArrComplex64(y)();
+
+        //console.log(aP, sx, sy, n, incx, incy, uplo)
+        const call = () => cher2(uplo, n, alpha, sx, incx, sy, incy, aM, lda);
+        //call();
+        expect(call).to.throw();
+      });
+    });
+  });
+});
+describe('chpmv', () => {
+  describe('data tests', () => {
+    const { chpmv: testData } = fixture;
+    each(testData)(({
+      input: {
+        //CHPR2(UPLO,N,ALPHA,X,INCX,Y,INCY,AP)
+        uplo,
+        n,
+        alpha,
+        beta,
+        incx,
+        incy,
+        x,
+        y,
+        ap
+      }, expect, desc }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        chpmv(uplo, n, alpha, ap, x, incx, beta, y, incy);
+
+        // console.log('y=');
+        // y.toArr().forEach(v => console.log(`    + (${v.re},${v.im}`));
+
+        const approx = approximatelyWithPrec(1E-5);
+        multiplexer(y.toArr(), expect.y)(approx);
+      });
+    });
+  });
+
+  describe('test errors', () => {
+    const { chpmvErrors: errors } = fixture;
+    each(errors)(({
+      input: {
+        uplo,
+        n,
+        alpha,
+        beta,
+        incx,
+        incy,
+        x,
+        y,
+        ap
+      }, desc
+    }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        const aP = fortranArrComplex64(ap)();
+        const sx = fortranArrComplex64(x)();
+        const sy = fortranArrComplex64(y)();
+
+        //console.log(aP, sx, sy, n, incx, incy, uplo)
+
+        const call = () => chpmv(uplo, n, alpha, aP, sx, incx, beta, sy, incy);
+        //call();
+        expect(call).to.throw();
+      });
+    });
+  });
+});
+
+describe('ctbmv', () => {
+  describe('data tests', () => {
+    const { ctbmv: testData } = fixture;
+    each(testData)(({
+      input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        k,
+        lda,
+        incx,
+        a,
+        x
+      }, expect, desc }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        //console.log('x=');
+        //x.toArr().forEach(v => console.log(`    + (${v.re},${v.im})`));
+
+        ctbmv(uplo, trans, diag, n, k, a, lda, x, incx);
+
+        //console.log('x=');
+        //x.toArr().forEach(v => console.log(`    + (${v.re},${v.im})`));
+
+        const approx = approximatelyWithPrec(1E-5);
+        multiplexer(x.toArr(), expect.x)(approx);
+      });
+    });
+  });
+
+  describe('test errors', () => {
+    const { ctbmvErrors: errors } = fixture;
+    each(errors)(({
+      input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        k,
+        lda,
+        incx,
+        a,
+        x
+      }, desc
+    }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        const aM = fortranMatrixComplex64(a)(1, 1);
+        const sx = fortranArrComplex64(x)();
+        const call = () => ctbmv(uplo, trans, diag, n, k, aM, lda, sx, incx);
+        //call();
+        expect(call).to.throw();
+      });
+    });
+  });
+});
+describe('ctbsv', () => {
+  describe('data tests', () => {
+    const { ctbsv: testData } = fixture;
+    each(testData)(({
+      input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        k,
+        lda,
+        incx,
+        a,
+        x
+      }, expect, desc }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        //console.log('a=');
+        //a.toArr().forEach(v => console.log(`    + (${v.re},${v.im})`));
+
+        ctbsv(uplo, trans, diag, n, k, a, lda, x, incx);
+
+        //console.log('b=');
+        //x.toArr().forEach(v => console.log(`    + (${v.re},${v.im})`));
+
+        const approx = approximatelyWithPrec(1E-5);
+        multiplexer(x.toArr(), expect.x)(approx);
+      });
+    });
+  });
+
+  describe('test errors', () => {
+    const { ctbsvErrors: errors } = fixture;
+    each(errors)(({
+      input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        k,
+        lda,
+        incx,
+        a,
+        x
+      }, desc
+    }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        const aM = fortranMatrixComplex64(a)(1, 1);
+        const sx = fortranArrComplex64(x)();
+        const call = () => ctbsv(uplo, trans, diag, n, k, aM, lda, sx, incx);
+        //call();
+        expect(call).to.throw();
+      });
+    });
+  });
+});
+describe('ctpmv', () => {
+  describe('data tests', () => {
+    const { ctpmv: testData } = fixture;
+    each(testData)(({
+      //CTPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
+      input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        incx,
+        ap,
+        x
+      }, expect, desc }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+        //console.log('a=');
+        ctpmv(uplo, trans, diag, n, ap, x, incx);
+        const approx = approximatelyWithPrec(1E-5);
+        multiplexer(x.toArr(), expect.x)(approx);
+      });
+    });
+  });
+
+  describe('test errors', () => {
+    const { ctpmvErrors: errors } = fixture;
+    each(errors)(({
+      input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        incx,
+        ap,
+        x
+      }, desc
+    }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        const aP = fortranArrComplex64(ap)();
+        const sx = fortranArrComplex64(x)();
+        const call = () => ctpmv(uplo, trans, diag, n, aP, sx, incx);
+        //call();
+        expect(call).to.throw();
+      });
+    });
+  });
+});
+describe('ctpsv', () => {
+  describe('data tests', () => {
+    const { ctpsv: testData } = fixture;
+    each(testData)(({
+      //CTPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
+      input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        incx,
+        ap,
+        x
+      }, expect, desc }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        //console.log('a=');
+
+
+        ctpsv(uplo, trans, diag, n, ap, x, incx);
+
+
+        const approx = approximatelyWithPrec(1E-5);
+        multiplexer(x.toArr(), expect.x)(approx);
+      });
+    });
+  });
+
+  describe('test errors', () => {
+    const { ctpsvErrors: errors } = fixture;
+    each(errors)(({
+      input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        incx,
+        ap,
+        x
+      }, desc
+    }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        const aP = fortranArrComplex64(ap)();
+        const sx = fortranArrComplex64(x)();
+        const call = () => ctpsv(uplo, trans, diag, n, aP, sx, incx);
+        //call();
+        expect(call).to.throw();
+      });
+    });
+  });
+});
+describe('ctrmv', () => {
+  describe('data tests', () => {
+    const { ctrmv: testData } = fixture;
+    each(testData)(({
+      //CTPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
+      input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        incx,
+        lda,
+        a,
+        x
+      }, expect, desc }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+        /*if (key === 'case2') {
+          a.toArr().forEach(c => console.log(`     +(${c.re},${c.im})`));
+        */
+        ctrmv(uplo, trans, diag, n, a, lda, x, incx);
+
+        const approx = approximatelyWithPrec(1E-5);
+        multiplexer(x.toArr(), expect.x)(approx);
+      });
+    });
+  });
+  describe('test errors', () => {
+    const { ctrmvErrors: errors } = fixture;
+    each(errors)(({
+      input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        incx,
+        lda,
+        a,
+        x
+      }, desc
+    }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        const aM = fortranMatrixComplex64(a)(1, 1);
+        const sx = fortranArrComplex64(x)();
+        const call = () => ctrmv(uplo, trans, diag, n, aM, lda, sx, incx);
+        //call();
+        expect(call).to.throw();
+      });
+    });
+  });
+});
+describe('ctrsv', () => {
+  describe('data tests', () => {
+    const { ctrsv: testData } = fixture;
+    each(testData)(({
+      //CTPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
+      input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        incx,
+        lda,
+        a,
+        x
+      }, expect, desc }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+        /*if (key === 'case2') {
+          a.toArr().forEach(c => console.log(`     +(${c.re},${c.im})`));
+        */
+        ctrsv(uplo, trans, diag, n, a, lda, x, incx);
+
+        const approx = approximatelyWithPrec(1E-5);
+        multiplexer(x.toArr(), expect.x)(approx);
+      });
+    });
+  });
+  describe('test errors', () => {
+    const { ctrsvErrors: errors } = fixture;
+    each(errors)(({
+      input: {
+        uplo,
+        trans,
+        diag,
+        n,
+        incx,
+        lda,
+        a,
+        x
+      }, desc
+    }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
+
+        const aM = fortranMatrixComplex64(a)(1, 1);
+        const sx = fortranArrComplex64(x)();
+        const call = () => ctrsv(uplo, trans, diag, n, aM, lda, sx, incx);
+        //call();
+        expect(call).to.throw();
+      });
+    });
+  });
+});
+
 
 

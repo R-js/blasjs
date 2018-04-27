@@ -210,12 +210,6 @@ describe('blas level 1 single/double precision', function n() {
           srotm(n, x, incx, y, incy, spar);
           multiplexer(x.toArr(), expect.x)(approximately);
           multiplexer(y.toArr(), expect.y)(approximately);
-          /*console.log({
-            x: x.toArr(),
-            y: y.toArr(),
-            ex: expect.x,
-            ey: expect.y
-          });*/
         });
       });
     });
@@ -228,13 +222,16 @@ describe('blas level 1 single/double precision', function n() {
       each(testData)(({ input, output: expect, desc }, key) => {
 
         it(`[${key}]/[${desc}]`, function t() {
-          input.sparam = fortranArrComplex64(muxCmplx(input.sparam))();
 
-          srotmg(input);
-          const { sd1, sd2, sx1, sy1, sparam } = input;
+          const cInp = Object.assign({}, input);
+          cInp.sparam = fortranArrComplex64(muxCmplx(cInp.sparam))();
           const { sd1: esd1, sd2: esd2, sx1: esx1, sy1: esy1, sparam: esparam } = expect;
-          multiplexer([sd1, sd2, sx1, sy1], [esd1, esd2, esx1, esy1])(approximately);
-          multiplexer(sparam.toArr(), esparam)(approximately);
+          srotmg(cInp);
+
+          multiplexer(
+            [cInp.sd1, cInp.sd2, cInp.sx1, cInp.sy1],
+            [esd1, esd2, esx1, esy1])(approximately);
+          multiplexer(cInp.sparam.toArr(), esparam)(approximately);
         });
       });
     });
