@@ -264,6 +264,8 @@ export interface Matrix {
     lowerBand(value: number): Matrix;
     packedUpper(value?: number): FortranArr;
     packedLower(value?: number): FortranArr;
+    real(): Matrix;
+    imaginary(): Matrix;
     toArr(): Complex[] | number[];
 }
 
@@ -446,9 +448,100 @@ function mimicFMatrix(r: fpArray, i?: fpArray) {
                     }
                 }
                 return this;
+            },
+            real() {
+                let reC: fpArray;
+                reC = this.r.slice();
+                return mimicFMatrix(reC)(this.nrCols, this.colSize);
+            },
+            imaginary() {
+                let imC: fpArray;
+                if (!this.i) {
+                    imC = new Float64Array(this.nrCols * this.colSize);
+                    imC.fill(0);
+                }
+                else {
+                    imC = this.i.slice(); //copy
+                }
+                return mimicFMatrix(imC)(this.nrCols, this.colSize);
             }
         });
     }
+}
+
+export function real(data: number | number[] | Complex | Complex[]): number[] | number {
+
+    if (data === null) {
+        throw new Error('"null" inserted as argument');
+    }
+
+    if (data === undefined) {
+        throw new Error('"undefined inserted as argument');
+    }
+
+    if (typeof data === 'object' && 're' in data) {
+        return data.re;
+    }
+    if (typeof data === 'number') {
+        return data;
+    }
+    if (data instanceof Array) {
+        const copy: number[] = new Array<number>(data.length);
+        for (let i = 0; i < data.length; i++) {
+            const c = data[i];
+            if (typeof c === 'number') {
+                copy[i] = c;
+                continue;
+            }
+            if (c === undefined || c === null) {
+                copy[i] = c;
+                continue;
+            }
+            if ('re' in c) {
+                copy[i] = c['re'];
+                continue;
+            }
+            copy[i] = NaN;
+
+        }
+        return copy;
+    }
+    throw new Error('should not be here');
+}
+
+export function imaginary(data: number | number[] | Complex | Complex[]): number[] | number {
+
+    if (data === null) {
+        throw new Error('"null" inserted as argument');
+    }
+
+    if (data === undefined) {
+        throw new Error('"undefined inserted as argument');
+    }
+
+    if (typeof data === 'object' && 'im' in data) {
+        return data.im;
+    }
+
+    if (typeof data === 'number') {
+        return 0;
+    }
+
+    if (data instanceof Array) {
+        const copy: number[] = new Array<number>(data.length);
+        for (let i = 0; i <= data.length; i++) {
+            if (typeof data[i] === 'number') {
+                copy[i] = 0;
+            } else if ('im' in (data[i] as any)) {
+                copy[i] = data[i]['im'];
+            }
+            else {
+                copy[i] = NaN;
+            }
+        }
+        return copy;
+    }
+    throw new Error('should not be here');
 }
 
 export function fortranMatrixComplex32(...rest: (Complex | Complex[])[]):

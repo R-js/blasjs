@@ -348,11 +348,7 @@ describe('blas level 2 single/double complex', function n() {
         y
       }, expect, desc }, key) => {
         it(`[${key}]/[${desc}]`, function t() {
-
           chemv(uplo, n, alpha, a, lda, x, incx, beta, y, incy);
-
-          //console.log(`y.arr:`, y.toArr())
-          //console.log(`expect.y`, expect.y);
           const approx = approximatelyWithPrec(1E-5);
           multiplexer(y.toArr(), expect.y)(approx);
         });

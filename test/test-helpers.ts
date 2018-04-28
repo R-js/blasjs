@@ -25,6 +25,7 @@ export function approximately(act: number | Complex, exp: number | Complex, prec
             assert.isNaN(exp);
             break;
         case isFinite(act):
+            //console.log(act, exp, prec);
             assert.approximately(act, <number>exp, prec, 'numbers are NOT close');
             break;
         case !isFinite(act):

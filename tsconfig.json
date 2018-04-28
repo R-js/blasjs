@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "strictPropertyInitialization": false, 
+        "strictPropertyInitialization": false,
         "noImplicitAny": false,
         "noLib": false,
         "noUnusedLocals": true,
@@ -23,7 +23,7 @@
         "target": "es2016",
         "moduleResolution": "node",
         "outDir": "dist",
-        "rootDir": "./",
+        "rootDir": "",
         "sourceMap": true,
         "strict": true
     },

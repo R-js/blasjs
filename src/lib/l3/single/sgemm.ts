@@ -1,4 +1,4 @@
-import { errWrongArg, Matrix } from '../../f_func';
+import { errWrongArg, lowerChar, Matrix } from '../../f_func';
 
 /*  -- Jacob Bogers, 03/2008, JS port, jkfbogers@gmail.cmom
 *>  -- Written on 8-February-1989.
@@ -26,8 +26,8 @@ export function sgemm(
     ldc: number): void {
 
     // faster then String.toLowerCase()
-    const trA: 'n' | 't' | 'c' = String.fromCharCode(transA.charCodeAt(0) | 0X20) as any;
-    const trB: 'n' | 't' | 'c' = String.fromCharCode(transB.charCodeAt(0) | 0X20) as any;
+    const trA = lowerChar(transA);
+    const trB = lowerChar(transB);
 
     const notA = trA === 'n';
     const notB = trB === 'n';
@@ -36,15 +36,15 @@ export function sgemm(
     //ncolA is never used, I checked in the original F-code
     // also checked online http://www.netlib.org/lapack/explore-html/db/dc9/group__single__blas__level3_gafe51bacb54592ff5de056acabd83c260.html#gafe51bacb54592ff5de056acabd83c260
     // ncolA is not used
-    //const ncolA = notA ? k : n;
+    // const ncolA = notA ? k : n;
 
     const nrowB = notB ? k : n;
 
     let info = 0;
-    if (!notA && trA !== 'c' && trA !== 't') {
+    if (!'ntc'.includes(trA)) {
         info = 1;
     }
-    else if (!notB && trB !== 'c' && trB !== 't') {
+    else if (!'ntc'.includes(trB)) {
         info = 2;
     }
     else if (m < 0) {
@@ -62,7 +62,7 @@ export function sgemm(
     else if (ldb < max(1, nrowB)) {
         info = 10;
     }
-    else if (ldb < max(1, m)) {
+    else if (ldc < max(1, m)) {
         info = 13;
     }
     // ok?
@@ -80,11 +80,18 @@ export function sgemm(
 
     if (alpha === 0) {
         if (beta === 0) {
-            c.r.fill(0); //fast
+            for (let j = 1; j <= n; j++) {
+                c.setCol(j, 1, m, 0);
+            }
         }
         else {
             // I have to typecast it this way for TS compiler not to nag!!
-            (c.r as Float32Array).set((c.r as Float32Array).map(v => v * beta), 0);
+            for (let j = 1; j <= n; j++) {
+                const coorCJ = c.colOfEx(j);
+                for (let i = 1; i <= m; i++) {
+                    c.r[coorCJ + i] *= beta;
+                }
+            }
         }
         return;
     }
