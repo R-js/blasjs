@@ -104,7 +104,209 @@ c
       LDC=6
 
       CALL DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
-      CALL PRNMATR(C, 6, 6) 
+      CALL PRNMATR(C, 6, 6)
+
+
+                  PRINT *, "=====CASE 5======="
+
+                  TRANSA = "N"
+                  TRANSB = "N"
+                  M = 4
+                  N = 6
+                  K = 3
+                  ALPHA = 0.3
+                  BETA=-1.2
+
+                  CALL COPYMA(M6X6, A, 6, 6)
+                  CALL COPYMA(M6X6, B, 6, 6)
+                  CALL COPYMA(M6X6, C, 6, 6)
+                  LDA=6
+                  LDB=6
+                  LDC=6
+
+       CALL DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+                  CALL PRNMATR(C, 6, 6)
+
+      PRINT *, "=====CASE 6======="
+
+                  TRANSA = "N"
+                  TRANSB = "N"
+                  M = 4
+                  N = 6
+                  K = 3
+                  ALPHA = 0.3
+                  BETA=0
+
+                  CALL COPYMA(M6X6, A, 6, 6)
+                  CALL COPYMA(M6X6, B, 6, 6)
+                  CALL COPYMA(M6X6, C, 6, 6)
+                  LDA=6
+                  LDB=6
+                  LDC=6
+
+            CALL DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+                  CALL PRNMATR(C, 6, 6)
+
+                  PRINT *, "=====CASE 7======="
+
+                  TRANSA = "N"
+                  TRANSB = "N"
+                  M = 4
+                  N = 6
+                  K = 3
+                  ALPHA = 0.3
+                  BETA=1
+
+                  CALL COPYMA(M6X6, A, 6, 6)
+                  CALL COPYMA(M6X6, B, 6, 6)
+                  CALL COPYMA(M6X6, C, 6, 6)
+                  LDA=6
+                  LDB=6
+                  LDC=6
+
+       CALL DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+                  CALL PRNMATR(C, 6, 6)
+
+
+                  PRINT *, "=====CASE 8======="
+
+                  TRANSA = "C"
+                  TRANSB = "N"
+                  M = 4
+                  N = 6
+                  K = 3
+                  ALPHA = 0.3
+                  BETA=1
+
+                  CALL COPYMA(M6X6, A, 6, 6)
+                  CALL COPYMA(M6X6, B, 6, 6)
+                  CALL COPYMA(M6X6, C, 6, 6)
+                  LDA=6
+                  LDB=6
+                  LDC=6
+
+       CALL DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+                  CALL PRNMATR(C, 6, 6)
+
+                      PRINT *, "=====CASE 9======="
+
+                  TRANSA = "C"
+                  TRANSB = "N"
+                  M = 4
+                  N = 6
+                  K = 3
+                  ALPHA = 0.3
+                  BETA=0
+
+                  CALL COPYMA(M6X6, A, 6, 6)
+                  CALL COPYMA(M6X6, B, 6, 6)
+                  CALL COPYMA(M6X6, C, 6, 6)
+                  LDA=6
+                  LDB=6
+                  LDC=6
+
+       CALL DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+                  CALL PRNMATR(C, 6, 6)
+
+                      PRINT *, "=====CASE 10======="
+
+                  TRANSA = "N"
+                  TRANSB = "C"
+                  M = 4
+                  N = 6
+                  K = 3
+                  ALPHA = 0.3
+                  BETA=0
+
+                  CALL COPYMA(M6X6, A, 6, 6)
+                  CALL COPYMA(M6X6, B, 6, 6)
+                  CALL COPYMA(M6X6, C, 6, 6)
+                  LDA=6
+                  LDB=6
+                  LDC=6
+
+       CALL DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+                  CALL PRNMATR(C, 6, 6)
+
+                     PRINT *, "=====CASE 11======="
+
+                  TRANSA = "N"
+                  TRANSB = "C"
+                  M = 4
+                  N = 6
+                  K = 3
+                  ALPHA = 0.3
+                  BETA=1
+
+                  CALL COPYMA(M6X6, A, 6, 6)
+                  CALL COPYMA(M6X6, B, 6, 6)
+                  CALL COPYMA(M6X6, C, 6, 6)
+                  LDA=6
+                  LDB=6
+                  LDC=6
+
+       CALL DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+                  CALL PRNMATR(C, 6, 6)
+
+                   PRINT *, "=====CASE 12======="
+
+                  TRANSA = "N"
+                  TRANSB = "C"
+                  M = 4
+                  N = 6
+                  K = 3
+                  ALPHA = 0.3
+                  BETA = 0.5
+
+                  CALL COPYMA(M6X6, A, 6, 6)
+                  CALL COPYMA(M6X6, B, 6, 6)
+                  CALL COPYMA(M6X6, C, 6, 6)
+                  LDA=6
+                  LDB=6
+                  LDC=6
+
+       CALL DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+                  CALL PRNMATR(C, 6, 6)
+
+                     PRINT *, "=====CASE 13======="
+
+                  TRANSA = "C"
+                  TRANSB = "C"
+                  M = 4
+                  N = 6
+                  K = 3
+                  ALPHA = 0.3
+                  BETA = 0.5
+
+                  CALL COPYMA(M6X6, A, 6, 6)
+                  CALL COPYMA(M6X6, B, 6, 6)
+                  CALL COPYMA(M6X6, C, 6, 6)
+                  LDA=6
+                  LDB=6
+                  LDC=6
+
+       CALL DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+                  CALL PRNMATR(C, 6, 6)
+
+                     PRINT *, "=====CASE 14======="
+
+                  TRANSA = "C"
+                  TRANSB = "C"
+                  M = 4
+                  N = 6
+                  K = 3
+                  ALPHA = 0.3
+                  BETA = 0
+
+                  CALL COPYMA(M6X6, A, 6, 6)
+                  CALL COPYMA(M6X6, B, 6, 6)
+                  CALL COPYMA(M6X6, C, 6, 6)
+                  LDA=6
+                  LDB=6
+                  LDC=6
+
+       CALL DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+                  CALL PRNMATR(C, 6, 6)
 
 *> DGEMM  performs one of the matrix-matrix operations
 *>

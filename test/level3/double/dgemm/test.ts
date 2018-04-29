@@ -54,12 +54,12 @@ describe('blas level 3 single/double complex', function n() {
         it(`[${key}]/[${desc}]`, function t() {
           dgemm(trA, trB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc);
           if (cmd === 'debug') {
-             console.log(`c actual:\n ${c.toArr().join(',\n')}\n\n`);
-             console.log(`c expected:\n${(<Array<number>>real(expect.c)).join(',\n')}`);
-             const r = real(expect.c);
-             const d = c.toArr().map((v, i) => v - r[i]);
-             console.log(d);
-           
+            console.log(`c actual:\n ${c.toArr().join(',\n')}\n\n`);
+            console.log(`c expected:\n${(<Array<number>>real(expect.c)).join(',\n')}`);
+            const r = real(expect.c);
+            const d = c.toArr().map((v, i) => v - r[i]);
+            console.log(d);
+
           }
           const approx = approximatelyWithPrec(1E-5);
           multiplexer(c.toArr(), real(expect.c))(approx);
@@ -67,7 +67,7 @@ describe('blas level 3 single/double complex', function n() {
       });
     });
 
-    describe.skip('test errors', () => {
+    describe('test errors', () => {
       const { dgemmErrors: errors } = fixture;
       each(errors)(({ input: {
         trA,

@@ -101,40 +101,43 @@ export function sgemm(
         if (notA) {
             //Form  C := alpha*A*B + beta*C.
             for (let j = 1; j <= n; j++) {
+                const coorCJ = c.colOfEx(j);
+                const coorBJ = b.colOfEx(j);
                 if (beta === 0) {
-                    c.r.fill(0);
+                    c.setCol(j, 1, m, 0);
                 }
                 else if (beta !== 1) {
-                    (c.r as Float32Array).set((c.r as Float32Array).map(v => v * beta), 0);
-                }
-                const coorB = b.colOfEx(j);
-                const coorC = c.colOfEx(j);
-                for (let L = 1; L <= k; L++) {
-                    let temp = alpha * b.r[coorB + L];
-                    const coorA = a.colOfEx(L);
                     for (let i = 1; i <= m; i++) {
-                        c.r[coorC + i] += temp * a.r[coorA + i]
+                        c.r[coorCJ + i] *= beta;
+                    }
+                }
+                for (let l = 1; l <= k; l++) {
+                    let temp = alpha * b.r[coorBJ + l];
+                    const coorAL = a.colOfEx(l);
+                    for (let i = 1; i <= m; i++) {
+                        c.r[coorCJ + i] += temp * a.r[coorAL + i]
                     }
                 }
             }
 
         }
         else {
+            //transA !== 'n'
             //     Form  C := alpha*A**T*B + beta*C
             for (let j = 1; j <= n; j++) {
-                const coorB = b.colOfEx(j);
-                const coorC = c.colOfEx(j);
+                const coorBJ = b.colOfEx(j);
+                const coorCJ = c.colOfEx(j);
                 for (let i = 1; i <= m; i++) {
                     let temp = 0;
                     const coorA = a.colOfEx(i);
                     for (let L = 1; L <= k; L++) {
-                        temp += a.r[L + coorA] * b.r[coorB + L];
+                        temp += a.r[L + coorA] * b.r[coorBJ + L];
                     }
                     if (beta === 0) {
-                        c.r[coorC + i] = alpha * temp;
+                        c.r[coorCJ + i] = alpha * temp;
                     }
                     else {
-                        c.r[coorC + i] = alpha * temp + beta * c.r[coorC + i];
+                        c.r[coorCJ + i] = alpha * temp + beta * c.r[coorCJ + i];
                     }
                 }
             }
@@ -144,18 +147,19 @@ export function sgemm(
         if (notA) {
             // Form  C := alpha*A*B**T + beta*C
             for (let j = 1; j <= n; j++) {
+                const coorCJ = c.colOfEx(j);
                 if (beta === 0) {
-                    c.r.fill(0);
+                    c.setCol(j, 1, m, 0);
                 } else if (beta !== 1) {
-
-                    (c.r as Float32Array).set((c.r as Float32Array).map(v => v * beta), 0);
-                }
-                const coorC = c.colOfEx(j);
-                for (let L = 1; L <= k; L++) {
-                    let temp = alpha * b.r[(L - b.colBase) * b.colSize - b.rowBase + j];
-                    const coorA = a.colOfEx(L);
                     for (let i = 1; i <= m; i++) {
-                        c.r[coorC + i] += temp * a.r[coorA + i];
+                        c.r[coorCJ + i] *= beta;
+                    }
+                }
+                for (let l = 1; l <= k; l++) {
+                    let temp = alpha * b.r[(l - b.colBase) * b.colSize - b.rowBase + j];
+                    const coorAL = a.colOfEx(l);
+                    for (let i = 1; i <= m; i++) {
+                        c.r[coorCJ + i] += temp * a.r[coorAL + i];
                     }
                 }
             }
@@ -170,7 +174,6 @@ export function sgemm(
                         //TODO: write out colOfEx
                         temp += a.r[coorA + L] * b.r[b.colOfEx(L) + j];
                     }
-
                     const coorC = c.colOfEx(j);
                     if (beta === 0) {
                         c.r[coorC + i] = alpha * temp;
