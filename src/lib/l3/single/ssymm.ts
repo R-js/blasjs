@@ -6,7 +6,8 @@
 *>     Sven Hammarling, Numerical Algorithms Group Ltd.
 */
 
-import { errWrongArg, Matrix } from '../../f_func';
+
+import { errWrongArg, lowerChar, Matrix } from '../../f_func';
 /*
 *>
 *> SSYMM  performs one of the matrix-matrix operations
@@ -39,8 +40,8 @@ export function ssymm(
     ldc: number): void {
 
 
-    const si = String.fromCharCode(side.charCodeAt(0) | 0X20);
-    const ul = String.fromCharCode(uplo.charCodeAt(0) | 0X20);
+    const si = lowerChar(side);
+    const ul = lowerChar(uplo);
 
     const nrowA = si === 'l' ? m : n;
 
@@ -71,6 +72,7 @@ export function ssymm(
     if (info !== 0) {
         throw new Error(errWrongArg('ssymm', info));
     }
+
     //*     Quick return if possible.
 
     if (m === 0 || n === 0 ||
@@ -81,15 +83,14 @@ export function ssymm(
     if (alpha === 0) {
         if (beta === 0) {
             for (let j = 1; j <= n; j++) {
-                const coords = c.colOfEx(j);
-                c.r.fill(0, coords + 1, coords + m + 1);
+                c.setCol(j, 1, m, 0);
             }
         }
         else {
             for (let j = 1; j <= n; j++) {
                 const coords = c.colOfEx(j);
                 for (let i = 1; i <= m; i++) {
-                    c.r[coords + i] = beta * c.r[coords + i];
+                    c.r[coords + i] *= beta;
                 }
             }
         }
@@ -100,23 +101,58 @@ export function ssymm(
     if (si === 'l') {
         //Form  C := alpha*A*B + beta*C.
         if (ul === 'u') {
-
+            for (let j = 1; j <= n; j++) {
+                const coorBJ = b.colOfEx(j);
+                const coorCJ = c.colOfEx(j);
+                for (let i = 1; i <= m; i++) {
+                    const coorAI = a.colOfEx(i);
+                    let temp1 = alpha * b.r[coorBJ + i];
+                    let temp2 = 0;
+                    for (let k = 1; k <= i - 1; k++) {
+                        c.r[coorCJ + k] += temp1 * a.r[coorAI + k];
+                        temp2 += b.r[coorBJ + k] * a.r[coorAI + k];
+                    }
+                    //TEMP1*A(I,I) + ALPHA*TEMP2
+                    let re = temp1 * a.r[coorAI + i] + alpha * temp2;
+                    if (beta !== 0) {
+                        re += beta * c.r[coorCJ + i];
+                    }
+                    c.r[coorCJ + i] = re;
+                }
+            }
         }
         else {
-
+            for (let j = 1; j <= n; j++) {
+                const coorBJ = b.colOfEx(j);
+                const coorCJ = b.colOfEx(j);
+                for (let i = m; i >= 1; i--) {
+                    const coorAI = a.colOfEx(i);
+                    const temp1 = alpha * b.r[coorBJ + i];
+                    let temp2 = 0;
+                    for (let k = i + 1; k <= m; k++) {
+                        c.r[coorCJ + k] += temp1 * a.r[coorAI + k];
+                        temp2 += b.r[coorBJ + k] * a.r[coorAI + k];
+                    }
+                    let re = temp1 * a.r[coorAI + i] + alpha * temp2;
+                    if (beta !== 0) {
+                        re += beta * c.r[coorCJ + i];
+                    }
+                    c.r[coorCJ + i] = re;
+                }
+            }
         }
-
     }
     else {
         //  Form  C := alpha*B*A + beta*C.
-        for (let j = 1; j <= 1 - n; j++) {
-
+        for (let j = 1; j <= n; j++) {
+            //throw new Error('hh');
             //pre-calc
+            // console.log(a, b, c);
             const coorAJ = a.colOfEx(j);
             const coorCJ = c.colOfEx(j);
             const coorBJ = b.colOfEx(j);
 
-            let temp1 = alpha * a.r[coorAJ + j];
+            const temp1 = alpha * a.r[coorAJ + j];
             if (beta === 0) {
                 for (let i = 1; i <= m; i++) {
                     c.r[coorCJ + i] = temp1 * b.r[coorBJ + i];
@@ -124,19 +160,24 @@ export function ssymm(
             }
             else {
                 for (let i = 1; i <= m; i++) {
+
                     c.r[coorCJ + i] = beta * c.r[coorCJ + i] + temp1 * b.r[coorBJ + i];
+
                 }
             }
             for (let k = 1; k <= j - 1; k++) {
-                let temp1 = alpha * (ul === 'u' ? a.r[coorAJ + k] : a.r[a.colOfEx(j) + j]);
+                const coorAK = a.colOfEx(k);
                 const coorBK = b.colOfEx(k);
+                let temp1 = alpha * (ul === 'u' ? a.r[coorAJ + k] : a.r[coorAK + j]);
                 for (let i = 1; i <= m; i++) {
                     c.r[coorCJ + i] += temp1 * b.r[coorBK + i];
                 }
             }
-            for (let k = j + 1; j <= n; j++) {
-                let temp1 = alpha * (ul === 'u' ? a.r[a.colOfEx(k) + j] : a.r[coorAJ + k]);
+            for (let k = j + 1; k <= n; k++) {
+                const coorAK = a.colOfEx(k);
                 const coorBK = b.colOfEx(k);
+
+                let temp1 = alpha * (ul === 'u' ? a.r[coorAK + j] : a.r[coorAJ + k]);
                 for (let i = 1; i <= m; i++) {
                     c.r[coorCJ + i] += temp1 * b.r[coorBK + i];
                 }
