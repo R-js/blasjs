@@ -73,39 +73,21 @@ export function ssyr2k(
 
     //  Quick return if possible.
 
-    if (n === 0 || alpha === 0 || (k === 0 && beta === 1)) return;
+    if (n === 0 || ((alpha === 0 || k === 0) && beta === 1)) return;
 
     //*     And when  alpha.eq.zero.
 
     if (alpha === 0) {
-        if (ul === 'u') {
+        for (let j = 1; j <= n; j++) {
+            const start = (ul === 'u') ? 1 : j;
+            const stop = (ul === 'u') ? j : n;
             if (beta === 0) {
-                for (let j = 1; j <= n; j++) {
-                    c.setCol(j, 1, j, 0);
-                }
+                c.setCol(j, start, stop, 0);
             }
             else {
-                for (let j = 1; j <= n; j++) {
-                    const coor = c.colOfEx(j);
-                    for (let i = 1; i <= j; i++) {
-                        c.r[coor + i] *= beta;
-                    }
-                }
-            }
-        }
-        else {
-            //lower half
-            if (beta === 0) {
-                for (let j = 1; j <= n; j++) {
-                    c.setCol(j, j, n, 0);
-                }
-            }
-            else {
-                for (let j = 1; j <= n; j++) {
-                    const coords = c.colOfEx(j);
-                    for (let i = j; i <= n; i++) {
-                        c.r[coords + i] *= beta;
-                    }
+                const coor = c.colOfEx(j);
+                for (let i = start; i <= stop; i++) {
+                    c.r[coor + i] *= beta;
                 }
             }
         }
@@ -126,15 +108,14 @@ export function ssyr2k(
                         c.r[coorCJ + i] *= beta;
                     }
                 }
-                for (let L = 1; L <= k; L++) {
+                for (let l = 1; l <= k; l++) {
+                    const coorAL = a.colOfEx(l)
+                    const coorBL = b.colOfEx(l);
                     if (
-                        (a.r[a.colOfEx(L) + j] !== 0)
+                        (a.r[coorAL + j] !== 0)
                         ||
-                        (b.r[b.colOfEx(L) + j] !== 0)
+                        (b.r[coorBL + j] !== 0)
                     ) {
-                        const coorBL = b.colOfEx(L);
-                        const coorAL = a.colOfEx(L);
-
                         let temp1 = alpha * b.r[coorBL + j];
                         let temp2 = alpha * a.r[coorAL + j];
                         for (let i = 1; i <= j; i++) {
@@ -144,6 +125,7 @@ export function ssyr2k(
                 }
             }
         }
+        //uplu="l"
         else {
             for (let j = 1; j <= n; j++) {
                 const coorCJ = c.colOfEx(j);
@@ -151,8 +133,8 @@ export function ssyr2k(
                 if (beta === 0) {
                     c.setCol(j, j, n, 0);
                 }
-                else {
-                    for (let i = j; j <= n; j++) {
+                else if (beta !== 1) {
+                    for (let i = j; i <= n; i++) {
                         c.r[coorCJ + i] *= beta;
                     }
                 }
@@ -198,7 +180,7 @@ export function ssyr2k(
                 const coorBJ = b.colOfEx(j);
                 const coorAJ = a.colOfEx(j);
                 const coorCJ = c.colOfEx(j);
-                for (let i = j; j >= n; i++) {
+                for (let i = j; i <= n; i++) {
                     let temp1 = 0;
                     let temp2 = 0;
                     const coorAI = a.colOfEx(i);
