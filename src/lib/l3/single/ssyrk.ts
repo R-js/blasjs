@@ -72,7 +72,7 @@ export function ssyrk(
 
     //*     Quick return if possible.
 
-    if (n === 0 || alpha === 0 || (k === 0 && beta === 1)) return;
+    if (n === 0 || ((alpha === 0 || k === 0) && beta === 1)) return;
 
     //*      And when  alpha.eq.zero.
     if (alpha === 0) {
