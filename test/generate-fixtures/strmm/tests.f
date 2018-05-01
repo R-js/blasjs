@@ -365,10 +365,10 @@
       SIDE="R"
       UPLO="L"
       TRANSA="T"
-      DIAG="N"
+      DIAG="U"
       M=4
       N=5
-      ALPHA=0.2
+      ALPHA=1
       LDA=6
       LDB=6
       

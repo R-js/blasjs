@@ -3,4 +3,4 @@
 --recursive
 --require source-map-support/register
 --sort
-test/level3/double/ssyrk/*test.ts
+test/**/*test.ts
