@@ -17,7 +17,7 @@
 *>    op( A ) = A   or   op( A ) = A**T.
 */
 
-import { errWrongArg, Matrix } from '../../f_func';
+import { errWrongArg, lowerChar, Matrix } from '../../f_func';
 
 const { max } = Math;
 
@@ -35,10 +35,10 @@ export function strmm(
     ldb: number
 ): void {
 
-    const si = String.fromCharCode(side.charCodeAt(0) | 0X20);
-    const ul = String.fromCharCode(uplo.charCodeAt(0) | 0X20);
-    const tr = String.fromCharCode(transA.charCodeAt(0) | 0X20);
-    const di = String.fromCharCode(diag.charCodeAt(0) | 0X20);
+    const si = lowerChar(side); //String.fromCharCode(side.charCodeAt(0) | 0X20);
+    const ul = lowerChar(uplo); //String.fromCharCode(uplo.charCodeAt(0) | 0X20);
+    const tr = lowerChar(transA); //(String.fromCharCode(transA.charCodeAt(0) | 0X20);
+    const di = lowerChar(diag); //String.fromCharCode(diag.charCodeAt(0) | 0X20);
 
     const lside = si === 'l';
     const nrowA = lside ? m : n;
@@ -113,15 +113,15 @@ export function strmm(
             else {
                 for (let j = 1; j <= n; j++) {
                     const coorBJ = b.colOfEx(j);
-                    for (let k = m; m >= 1; k--) {
+                    for (let k = m; k >= 1; k--) {
                         const coorAK = a.colOfEx(k);
                         if (b.r[coorBJ + k] !== 0) {
                             let temp = alpha * b.r[coorBJ + k];
-                            b.r[coorBJ + j] = temp;
+                            b.r[coorBJ + k] = temp;
                             if (nounit) {
-                                b.r[coorBJ + k] = b.r[coorBJ + k] * a.r[coorAK + k]
+                                b.r[coorBJ + k] *= a.r[coorAK + k]
                             }
-                            for (let i = k + 1; m; i++) {
+                            for (let i = k + 1; i <= m; i++) {
                                 b.r[coorBJ + i] += temp * a.r[coorAK + i]
                             }
                         }
@@ -173,9 +173,9 @@ export function strmm(
                         temp *= a.r[coorAJ + j];
                     }
                     for (let i = 1; i <= m; i++) {
-                        b.r[coorBJ + i] = temp;
+                        b.r[coorBJ + i] *= temp;
                     }
-                    for (let k = j + 1; k <= n; k++) {
+                    for (let k = 1; k <= j - 1; k++) {
                         const coorBK = b.colOfEx(k);
                         if (a.r[coorAJ + k] !== 0) {
                             temp = alpha * a.r[coorAJ + k];
@@ -186,18 +186,20 @@ export function strmm(
                     }
                 }
             }
+            //lower
             else {
                 for (let j = 1; j <= n; j++) {
                     const coorAJ = a.colOfEx(j);
                     const coorBJ = b.colOfEx(j);
                     let temp = alpha;
-                    if (nounit) temp * a.r[coorAJ + j];
+                    if (nounit) temp *= a.r[coorAJ + j];
+                    //console.log(`${j}\t ${temp}`)
                     for (let i = 1; i <= m; i++) {
-                        b.r[coorBJ + i] += temp * b.r[coorBJ + i];
+                        b.r[coorBJ + i] *= temp;
                     }
                     for (let k = j + 1; k <= n; k++) {
                         const coorBK = b.colOfEx(k);
-                        if (a.r[coorAJ + j] !== 0) {
+                        if (a.r[coorAJ + k] !== 0) {
                             temp = alpha * a.r[coorAJ + k];
 
                             for (let i = 1; i <= m; i++) {
@@ -236,7 +238,7 @@ export function strmm(
                 for (let k = n; k >= 1; k--) {
                     const coorAK = a.colOfEx(k);
                     const coorBK = b.colOfEx(k);
-                    for (let j = k + 1; k <= n; k++) {
+                    for (let j = k + 1; j <= n; j++) {
                         const coorBJ = b.colOfEx(j);
                         if (a.r[coorAK + j] !== 0) {
                             let temp = alpha * a.r[coorAK + j];
