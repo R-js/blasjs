@@ -30,20 +30,19 @@ describe('blas level 3 single/double complex', function n() {
 
   describe('ssyrk', () => {
 
-    describe.skip('data tests', () => {
+    describe('data tests', () => {
       const { ssyrk: testData } = fixture;
       each(testData)(({
-        //DSYR2K(UPLO,TRANS,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC) 
         input: {
           cmd,
-          uplo,
           trans,
-          n,
+          uplo,
           k,
-          alpha,
-          beta,
+          n,
           lda,
           ldc,
+          beta,
+          alpha,
           a,
           c
         }, expect, desc
@@ -66,37 +65,37 @@ describe('blas level 3 single/double complex', function n() {
           const approx = approximatelyWithPrec(1E-5);
           multiplexer(c.toArr(), real(expect.c))(approx);
         });
-      });
     });
+  });
 
-    describe('test errors', () => {
-      const { ssyrkErrors: errors } = fixture;
-      each(errors)(({ input: {
-        cmd,
-        uplo,
-        trans,
-        n,
-        k,
-        alpha,
-        beta,
-        lda,
-        ldc
-      }, desc }, key) => {
-        it(`[${key}]/[${desc}]`, function t() {
+  describe('test errors', () => {
+    const { ssyrkErrors: errors } = fixture;
+    each(errors)(({ input: {
+      cmd,
+      uplo,
+      trans,
+      n,
+      k,
+      alpha,
+      beta,
+      lda,
+      ldc
+    }, desc }, key) => {
+      it(`[${key}]/[${desc}]`, function t() {
 
-          const aM = fortranMatrixComplex64({ re: 0, im: 0 })(1, 1);
+        const aM = fortranMatrixComplex64({ re: 0, im: 0 })(1, 1);
 
-          const cM = fortranMatrixComplex64({ re: 0, im: 0 })(1, 1);
+        const cM = fortranMatrixComplex64({ re: 0, im: 0 })(1, 1);
 
-          const call = () => ssyrk(
-            uplo,
-            trans,
-            n,
-            k, alpha, aM, lda, beta, cM, ldc);
-          //call();
-          expect(call).to.throw();
-        });
+        const call = () => ssyrk(
+          uplo,
+          trans,
+          n,
+          k, alpha, aM, lda, beta, cM, ldc);
+        //call();
+        expect(call).to.throw();
       });
     });
   });
+});
 });

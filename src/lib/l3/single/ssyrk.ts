@@ -76,15 +76,16 @@ export function ssyrk(
 
     //*      And when  alpha.eq.zero.
     if (alpha === 0) {
-
+        // if (beta !== 1) {
         for (let j = 1; j <= n; j++) {
             const coorCJ = c.colOfEx(j);
             const start = ul === 'u' ? 1 : j;
-            const stop = ul === 'u' ? n : j;
+            const stop = ul === 'u' ? j : n;
             for (let i = start; i <= stop; i++) {
-                c.r[coorCJ + i] = beta ? beta * c.r[coorCJ + i] : 0;
+                c.r[coorCJ + i] = beta === 0 ? 0 : beta * c.r[coorCJ + i];
             }
         }
+        // }
         return;
     }
 
@@ -97,8 +98,14 @@ export function ssyrk(
             const coorCJ = c.colOfEx(j);
             const start = ul === 'u' ? 1 : j;
             const stop = ul === 'u' ? j : n;
-            for (let i = start; i <= stop; i++) {
-                c.r[coorCJ + i] = beta === 0 ? 0 : (beta !== 1 ? beta * c.r[coorCJ + i] : c.r[coorCJ + i]);
+            if (beta === 0) {
+                //zap it
+                c.r.fill(0, coorCJ + start, coorCJ + stop + 1);
+            }
+            else if (beta !== 1) {
+                for (let i = start; i <= stop; i++) {
+                    c.r[coorCJ + i] *= beta;
+                }
             }
             for (let l = 1; l <= k; l++) {
                 const coorAL = a.colOfEx(l);
@@ -118,13 +125,20 @@ export function ssyrk(
             const stop = ul === 'u' ? j : n;
             const coorAJ = a.colOfEx(j);
             const coorCJ = c.colOfEx(j);
+            // console.log(`${j},${start},${stop}`);
             for (let i = start; i <= stop; i++) {
                 let temp = 0;
                 const coorAI = a.colOfEx(i);
                 for (let l = 1; l <= k; l++) {
                     temp += a.r[coorAI + l] * a.r[coorAJ + l];
                 }
-                c.r[coorCJ + i] = alpha * temp + (beta === 0 ? 0 : (beta !== 1 ? beta * c.r[coorCJ + i] : c.r[coorCJ + i]))
+                //console.log(`${j},${i}\t${temp}`);
+
+                let re = alpha * temp;
+                if (beta !== 0) {
+                    re += beta * c.r[coorCJ + i];
+                }
+                c.r[coorCJ + i] = re;
             }
         }
     }
