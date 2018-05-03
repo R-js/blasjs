@@ -132,8 +132,8 @@ export function strsm(
                             if (nounit) {
                                 b.r[coorBJ + k] /= a.r[coorAK + k];
                             }
-                            console.log(`${j},${k}\t${b.r[coorBJ + k]}`)
-                            for (let i = k + 1; k <= m; k++) {
+                            //console.log(`${j},${k}\t${b.r[coorBJ + k]}`)
+                            for (let i = k + 1; i <= m; i++) {
                                 b.r[coorBJ + i] -= b.r[coorBJ + k] * a.r[coorAK + i];
                             }
                         }

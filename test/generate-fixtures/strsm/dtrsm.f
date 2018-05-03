@@ -302,7 +302,7 @@ c          PRINT *,J,I, B(I,J)
                       DO 90 K = 1,M
                           IF (B(K,J).NE.ZERO) THEN
                               IF (NOUNIT) B(K,J) = B(K,J)/A(K,K)
-                    PRINT *,J,K, B(I,J)  
+c                    PRINT *,J,K, B(I,J)  
                               DO 80 I = K + 1,M
                                   B(I,J) = B(I,J) - B(K,J)*A(I,K)
    80                         CONTINUE
