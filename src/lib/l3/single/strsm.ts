@@ -21,14 +21,14 @@
 *> The matrix X is overwritten on B.
 */
 
-import { errWrongArg, Matrix } from '../../f_func';
+import { errWrongArg, lowerChar, Matrix } from '../../f_func';
 
 const { max } = Math;
 
 export function strsm(
     side: 'l' | 'r',
     uplo: 'u' | 'l',
-    transA: 'n' | 't' | 'c',
+    trans: 'n' | 't' | 'c',
     diag: 'u' | 'n',
     m: number,
     n: number,
@@ -38,10 +38,10 @@ export function strsm(
     b: Matrix,
     ldb: number): void {
 
-    const si = String.fromCharCode(side.charCodeAt(0) | 0X20);
-    const ul = String.fromCharCode(uplo.charCodeAt(0) | 0X20);
-    const tr = String.fromCharCode(transA.charCodeAt(0) | 0X20);
-    const di = String.fromCharCode(diag.charCodeAt(0) | 0X20);
+    const si = lowerChar(side);
+    const ul = lowerChar(uplo);
+    const tr = lowerChar(trans);
+    const di = lowerChar(diag);
 
     const lside = si === 'l';
     const nrowA = lside ? m : n;
@@ -106,7 +106,7 @@ export function strsm(
                     for (let k = m; k >= 1; k--) {
                         const coorAK = a.colOfEx(k);
                         if (b.r[coorBJ + k] !== 0) {
-                            if (nounit) b.r[coorBJ + k] / a.r[coorAK + k];
+                            if (nounit) b.r[coorBJ + k] /= a.r[coorAK + k];
                             for (let i = 1; i <= k - 1; i++) {
                                 b.r[coorBJ + i] -= b.r[coorBJ + k] * a.r[coorAK + i];
                             }
@@ -121,16 +121,18 @@ export function strsm(
                     const coorBJ = b.colOfEx(j);
                     if (alpha !== 1) {
                         for (let i = 1; i <= m; i++) {
-                            b.r[coorBJ + i] = alpha * b.r[coorBJ + i];
+                            b.r[coorBJ + i] *= alpha;
+                            //       console.log(`${j},${i}\t${b.r[coorBJ + i]}`)
                         }
                     }
                     for (let k = 1; k <= m; k++) {
-                        const coorBK = b.colOfEx(k);
+                        //const coorBK = b.colOfEx(k);
                         const coorAK = a.colOfEx(k);
                         if (b.r[coorBJ + k] !== 0) {
                             if (nounit) {
-                                b.r[coorBJ + k] /= a.r[coorBK + k];
+                                b.r[coorBJ + k] /= a.r[coorAK + k];
                             }
+                            console.log(`${j},${k}\t${b.r[coorBJ + k]}`)
                             for (let i = k + 1; k <= m; k++) {
                                 b.r[coorBJ + i] -= b.r[coorBJ + k] * a.r[coorAK + i];
                             }
