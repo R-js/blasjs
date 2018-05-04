@@ -1,6 +1,6 @@
 //intrinsic routines of fortran
 
-const { abs, max, min } = Math;
+const { max, min } = Math;
 
 const { isInteger } = Number;
 
@@ -17,7 +17,7 @@ export function isZeroE(re: number, im: number) {
 export function isOne(v: Complex) {
     return v.re === 1 && v.im === 0;
 }
-
+/*
 export function sign(a: number, b?: number): number {
     if (b === undefined) {
         return a;
@@ -25,7 +25,7 @@ export function sign(a: number, b?: number): number {
     const rc = Math.abs(a);
     return b >= 0 ? rc : -rc;
 }
-
+*/
 //make JS arrays work like fortran ones
 //1. export type
 //2. export array wrapper factory
@@ -41,7 +41,7 @@ export type FortranArr = {
     r: fpArray,
     i?: fpArray,
     s: FortranSetterGetter,
-    assertComplex: (msg: string) => void | never;
+    //assertComplex: (msg: string) => void | never;
     toArr: () => Complex[] | number[];
 
 };
@@ -51,7 +51,7 @@ export type FortranArrEComplex = {
     r: fpArray,
     i: fpArray,
     s: FortranSetterGetter,
-    assertComplex: (msg: string) => void | never;
+    //assertComplex: (msg: string) => void | never;
     toArr: () => Complex[] | number[];
 
 };
@@ -92,11 +92,11 @@ export function mimicFArray(r: fpArray, i?: fpArray) {
                 }
                 return pRe;
             },
-            assertComplex: (msg: string) => {
+            /*assertComplex: (msg: string) => {
                 if (i === undefined) {
                     throw new Error(errMissingIm(msg))
                 }
-            },
+            },*/
             toArr: () => {
                 return multiplexer(Array.from(r), i && Array.from(i))((re, im) => i ? { re, im } : re);
             }
@@ -106,7 +106,7 @@ export function mimicFArray(r: fpArray, i?: fpArray) {
     //    func['buffer'] = arr;
     return func;
 }
-
+/*
 export function scabs1(c: Complex) {
     return abs(c.re) + abs(c.im);
 }
@@ -114,7 +114,7 @@ export function scabs1(c: Complex) {
 export function scabs1A(re: number, im: number): number {
     return abs(re) + abs(im);
 }
-
+*/
 export function complex(re: number = 0, im: number = 0): Complex {
     return { re, im };
 }
@@ -183,19 +183,19 @@ export function fortranArrComplex64(...rest: (Complex | Complex[])[]): (offset?:
 
 
 
-// TODO: REMOVE THIS in next iteration!! explicitly it out  
+/* 
 export const cmult = (reA: number, imA: number, reB: number, imB: number): Complex => {
     //   (a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
     return {
         re: (reA * reB - imA * imB),
         im: (reA * imB + imA * reB)
     };
-}
-
+}*/
+/*
 export const cabs = (reA: number, imA: number) => {
     return Math.sqrt(reA * reA + imA * imA);
 }
-
+*/
 export enum ERROR {
     ERR_MISSING_IMAGINARY = 1,
     ERR_MISSING_REAL = 2,
@@ -213,13 +213,13 @@ const ERROR_UKNOWN = 'Unkown Error code used! [%s]';
 
 export function errorMsg(errNo: ERROR, ...fmt: string[]): string {
 
-    let msg = errors.get(errNo);
-    if (!msg) {
+    let msg = errors.get(errNo) || ERROR_UKNOWN;
+    /*if (!msg) {
         msg = ERROR_UKNOWN;
-    }
-    if (fmt.length === 0) {
+    }*/
+    /*if (fmt.length === 0) {
         return msg;
-    }
+    }*/
     return fmt.reduce((p, v, k) => p.replace('%s', v), msg);
 }
 
@@ -565,11 +565,11 @@ export function fortranMatrixComplex64(...rest: (Complex | Complex[])[]):
     }
     return mimicFMatrix(new Float64Array(collect.reals), i);
 }
-
+/*
 export function xerbla(fn: string, idx: number) {
     return ` ** On entry to ${fn}, parameter number ${idx}, had an illegal value`;
 }
-
+*/
 export function lowerChar<T extends string>(c: T): T {
     return String.fromCharCode((c || ' ').charCodeAt(0) | 0X20) as any;
 }
@@ -658,14 +658,15 @@ export function multiplexer(...rest: (any | any[])[]) {
             analyzed.push(arg);
             continue;
         }
-        if (arg instanceof Object) {
-            analyzed.push([arg]);
-            continue;
-            //throw new Error('Sorry, looping over properties not yet supported');
-        }
         if (arg instanceof Function) {
             throw new Error('Sorry function arguments are not yet supported');
         }
+        //if (arg instanceof Object) {
+        analyzed.push([arg]);
+        continue;
+        //throw new Error('Sorry, looping over properties not yet supported');
+        //}
+
     }//for
     // find the longest array
     const _max = max(...analyzed.map(a => a.length));
@@ -685,7 +686,7 @@ export function multiplexer(...rest: (any | any[])[]) {
         return possibleScalar(rc);
     };
 }
-
+/*
 export function render(
     a: string,
     aix: string,
@@ -698,6 +699,7 @@ export function render(
     const im = `= ${a}.r[${aix} - ${a}.base]*${b}.i[${bix}-${b}.base] + ${a}.i[${aix} - ${a}.base]*${b}.r[${bix}-${b}.base];`;
     return `${re}\n${im}\n`;
 }
+*/
 
 export function mul_rxc(re1: number, im1: number, c: Complex): Complex {
     const re = re1 * c.re - im1 * c.im;
