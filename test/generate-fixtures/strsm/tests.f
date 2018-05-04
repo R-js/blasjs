@@ -236,6 +236,157 @@ c      B(1,1)=0
 
       CALL PRNMATR(B, 6, 6) 
 
+        PRINT *, "=====CASE 11======="
+      SIDE="R"
+      TRANSA="N"
+      UPLO="U"
+      DIAG="N"
+      M=5
+      N=4
+      ALPHA=0.4
+      LDA=6
+      LDB=6
+      
+      CALL COPYMA(M6X6, A, 6, 6)
+      CALL COPYMA(M6X6, B, 6, 6)
+      
+
+      CALL DTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+      CALL PRNMATR(B, 6, 6) 
+      
+       PRINT *, "=====CASE 12======="
+      SIDE="R"
+      TRANSA="N"
+      UPLO="U"
+      DIAG="U"
+      M=5
+      N=4
+      ALPHA=1
+      LDA=6
+      LDB=6
+      
+      CALL COPYMA(M6X6, A, 6, 6)
+      CALL COPYMA(M6X6, B, 6, 6)
+       A(1,2) =0
+
+      CALL DTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+      CALL PRNMATR(B, 6, 6) 
+
+       PRINT *, "=====CASE 13======="
+      SIDE="R"
+      TRANSA="N"
+      UPLO="L"
+      DIAG="N"
+      M=5
+      N=4
+      ALPHA=1
+      LDA=6
+      LDB=6
+      
+      CALL COPYMA(M6X6, A, 6, 6)
+      CALL COPYMA(M6X6, B, 6, 6)
+       A(1,2) =0
+
+      CALL DTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+            CALL PRNMATR(B, 6, 6) 
+            PRINT *, "=====CASE 14======="
+      SIDE="R"
+      TRANSA="N"
+      UPLO="L"
+      DIAG="U"
+      M=5
+      N=4
+      ALPHA=0.4
+      LDA=6
+      LDB=6
+      
+      CALL COPYMA(M6X6, A, 6, 6)
+      CALL COPYMA(M6X6, B, 6, 6)
+       A(4,3) =0
+
+      CALL DTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+      CALL PRNMATR(B, 6, 6) 
+
+       PRINT *, "=====CASE 15======="
+      SIDE="R"
+      TRANSA="T"
+      UPLO="U"
+      DIAG="N"
+      M=5
+      N=4
+      ALPHA=0.4
+      LDA=6
+      LDB=6
+      
+      CALL COPYMA(M6X6, A, 6, 6)
+      CALL COPYMA(M6X6, B, 6, 6)
+       A(1,4) =0
+
+      CALL DTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+      CALL PRNMATR(B, 6, 6) 
+
+       PRINT *, "=====CASE 16======="
+      SIDE="R"
+      TRANSA="T"
+      UPLO="U"
+      DIAG="U"
+      M=5
+      N=4
+      ALPHA=1
+      LDA=6
+      LDB=6
+      
+      CALL COPYMA(M6X6, A, 6, 6)
+      CALL COPYMA(M6X6, B, 6, 6)
+       A(1,4) =0
+
+      CALL DTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+      CALL PRNMATR(B, 6, 6) 
+
+       PRINT *, "=====CASE 17======="
+      SIDE="R"
+      TRANSA="T"
+      UPLO="L"
+      DIAG="N"
+      M=5
+      N=4
+      ALPHA=1
+      LDA=6
+      LDB=6
+      
+      CALL COPYMA(M6X6, A, 6, 6)
+      CALL COPYMA(M6X6, B, 6, 6)
+       A(2,1) =0
+
+      CALL DTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+      CALL PRNMATR(B, 6, 6) 
+
+       PRINT *, "=====CASE 18======="
+      SIDE="R"
+      TRANSA="T"
+      UPLO="L"
+      DIAG="U"
+      M=5
+      N=4
+      ALPHA=.4
+      LDA=6
+      LDB=6
+      
+      CALL COPYMA(M6X6, A, 6, 6)
+      CALL COPYMA(M6X6, B, 6, 6)
+       A(2,1) =0
+
+      CALL DTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+
+      CALL PRNMATR(B, 6, 6) 
+
 
 
       end

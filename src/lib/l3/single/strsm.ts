@@ -198,7 +198,7 @@ export function strsm(
                     if (nounit) {
                         let temp = 1 / a.r[coorAJ + j];
                         for (let i = 1; i <= m; i++) {
-                            b.r[coorBJ + i] = temp * b.r[coorBJ + i];
+                            b.r[coorBJ + i] *= temp;
                         }
                     }
                 }//for
@@ -213,7 +213,7 @@ export function strsm(
                         }
                     }
                     for (let k = j + 1; k <= n; k++) {
-                        const coorBK = b.colOfEx(j);
+                        const coorBK = b.colOfEx(k);
                         if (a.r[coorAJ + k] !== 0) {
                             for (let i = 1; i <= m; i++) {
                                 b.r[coorBJ + i] -= a.r[coorAJ + k] * b.r[coorBK + i];
