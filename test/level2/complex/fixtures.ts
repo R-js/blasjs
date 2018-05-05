@@ -2602,7 +2602,7 @@ export const fixture = {
                 incy: -1,
                 lda: 6,
                 alpha: complex(0.2, 0.8),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2665,7 +2665,7 @@ export const fixture = {
                 incy: -1,
                 lda: 6,
                 alpha: complex(0, 0),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2809,7 +2809,7 @@ export const fixture = {
                 incy: 1,
                 alpha: complex(0.2, -0.8),
                 beta: complex(0.3, -0.7),
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower().packedUpper(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);

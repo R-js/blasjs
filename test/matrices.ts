@@ -2,6 +2,7 @@ import {
     Complex,
     complex,
     fortranArrComplex64,
+    fortranMatrixComplex32,
     fortranMatrixComplex64,
     Matrix,
     muxCmplx
@@ -183,6 +184,7 @@ const data = {
         -0.873262111744435
     ]
 };
+
 export function vector(n = 6) {
     const nre = new Array(n).fill(0);
     const nim = new Array(n).fill(0);
@@ -194,6 +196,7 @@ export function vector(n = 6) {
     }
     return fortranArrComplex64(muxCmplx(nre, nim))();
 }
+
 export function bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 4, ku = 4): Matrix {
     if (lda < m) {
         throw new Error(`lda<m, ${lda}<${m}`);
@@ -215,17 +218,15 @@ export function bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 4, ku = 4): Mat
             nim[(j - 1) * lda + i - 1] = data.im36[cursor++];
         }
     }
-    //console.log({ nre: nre.length })
     return fortranMatrixComplex64(muxCmplx(nre, nim))(lda, n);
 }
 
-export function matrix_mxn(lda: number, n: number, m: number = lda) {
+export function matrix_mxn(lda: number, n: number, m: number = lda, float = 64) {
 
     if (lda < m) {
         throw new Error(`lda<m, ${lda}<${m}`);
     }
 
-    //console.log({ n, m, lda, kl, ku });
     const nre = new Array(n * lda).fill(0);
     const nim = new Array(n * lda).fill(0);
 
@@ -237,11 +238,14 @@ export function matrix_mxn(lda: number, n: number, m: number = lda) {
             nim[(j - 1) * lda + i - 1] = data.im36[cursor++];
         }
     }
-    //console.log({ nrex: cursor, nre, nim })
-    return fortranMatrixComplex64(muxCmplx(nre, nim))(lda, n)
+    //
+    const func = float === 64 ? fortranMatrixComplex64 : fortranMatrixComplex32;
+    //
+    return func(muxCmplx(nre, nim))(lda, n);
 }
 
 export function diagonal_nxn(n: number): Matrix {
+
     const re = new Array(n * n);
     const im = new Array(n * n);
 

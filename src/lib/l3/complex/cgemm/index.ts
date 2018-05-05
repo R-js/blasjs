@@ -131,7 +131,7 @@ export function cgemm(
                 c.setCol(j, 1, m, 0);
             }
         }
-        else if (!betaIsOne) {
+        else {
             for (let j = 1; j <= n; j++) {
                 const coorCJ = c.colOfEx(j);
                 for (let i = 1; i <= m; i++) {
@@ -157,47 +157,37 @@ export function cgemm(
         k: number) => void;
 
     //    Start the operations.
-    switch (true) {
-        case (trA === 'n' && trB === 'n'):
-            //Form  C := alpha*A*B + beta*C.
-            //console.log('AB');
-            proc = AB;
-            break;
-        case (trA === 'n' && trB === 'c'):
-            //Form  C := alpha*A*B**H + beta*C.
-            proc = AconjB;
-            break;
-        case (trA === 'n' && trB === 't'):
-            //Form  C := alpha*A*B**T + beta*C
-            proc = AtransB;
-            break;
-        case (trA === 'c' && trB === 'n'):
-            // Form  C := alpha*A**H*B + beta*C.   
-            proc = conjAB;
-            break;
-        case (trA === 'c' && trB === 'c'):
-            //  Form  C := alpha*A**H*B**H + beta*C. 
-            proc = conjAconjB;
-            break;
-        case (trA === 'c' && trB === 't'):
-            //  Form  C := alpha*A**H*B**T + beta*C 
-            proc = conjAtransB;
-            break;
-        case (trA === 't' && trB === 'n'):
-            //Form  C := alpha*A**T*B + beta*C  
-            proc = transAB;
-            break;
-        case (trA === 't' && trB === 'c'):
-            //Form  C := alpha*A**T*B**H + beta*C
-            proc = transAconjB;
-            break;
-        case (trA === 't' && trB === 't'):
-            //  //  Form  C := alpha*A**T*B**T + beta*C
-            proc = transAtransB;
-            break;
-        default:
-            throw new Error('unreachable code');
+    if (trA === 'n' && trB === 'n') {
+        //Form  C := alpha*A*B + beta*C.
+        //console.log('AB');
+        proc = AB;
+    } else if (trA === 'n' && trB === 'c') {
+        //Form  C := alpha*A*B**H + beta*C.
+        proc = AconjB;
+    } else if (trA === 'n' && trB === 't') {
+        //Form  C := alpha*A*B**T + beta*C
+        proc = AtransB;
+    } else if (trA === 'c' && trB === 'n') {
+        // Form  C := alpha*A**H*B + beta*C.   
+        proc = conjAB;
+    } else if (trA === 'c' && trB === 'c') {
+        //  Form  C := alpha*A**H*B**H + beta*C. 
+        proc = conjAconjB;
+    } else if (trA === 'c' && trB === 't') {
+        //  Form  C := alpha*A**H*B**T + beta*C 
+        proc = conjAtransB;
+    } else if (trA === 't' && trB === 'n') {
+        //Form  C := alpha*A**T*B + beta*C  
+        proc = transAB;
+    } else if (trA === 't' && trB === 'c') {
+        //Form  C := alpha*A**T*B**H + beta*C
+        proc = transAconjB;
+    } else /*if (trA === 't' && trB === 't')*/ {
+        //  //  Form  C := alpha*A**T*B**T + beta*C
+        proc = transAtransB;
     }
+    // throw new Error('unreachable code');
+
     //console.log('name', proc.name);
     return proc(
         betaIsZero,

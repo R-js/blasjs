@@ -6,6 +6,7 @@ export { level1, level2, level3 };
 
 import {
     arrayrify,
+
     complex,
     each,
     fortranArrComplex32,
@@ -15,7 +16,6 @@ import {
     multiplexer,
     muxCmplx,
     numberPrecision
-
 } from './f_func';
 
 export const util = Object.freeze({
@@ -28,9 +28,9 @@ export const util = Object.freeze({
     multiplexer,
     muxCmplx,
     fortranMatrixComplex64,
-    fortranMatrixComplex32
-});
+    fortranMatrixComplex32,
 
+});
 
 /*
 WORKS!!
@@ -61,4 +61,5 @@ firstSuccess([6, 18, 20, 30, 40],
     })
     .then(r => console.log('result', r))
     .catch(err => console.log('all trials failed:', err));
+
 */

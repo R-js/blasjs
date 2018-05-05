@@ -262,8 +262,9 @@ export const fixture = {
                 ldc: 6,
                 a: (() => {
                     const m = matrix_mxn(6, 6); //
-                    m.r[0] = 0;
-                    m.i[0] = 0;
+                    const xy = m.coord(1)(1);
+                    m.r[xy] = 0;
+                    m.i[xy] = 0;
                     return m;
                 })(), // 
                 c: (() => {
