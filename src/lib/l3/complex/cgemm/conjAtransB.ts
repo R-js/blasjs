@@ -1,21 +1,22 @@
-import { Complex, MatrixEComplex, mul_cxr, mul_rxr } from '../../../f_func';
-/*
-Form  C := alpha*A**H*B**T + beta*C
-*
-              DO 310 J = 1,N
-                  DO 300 I = 1,M
-                      TEMP = ZERO
-                      DO 290 L = 1,K
-                          TEMP = TEMP + CONJG(A(L,I))*B(J,L)
-  290                 CONTINUE
-                      IF (BETA.EQ.ZERO) THEN
-                          C(I,J) = ALPHA*TEMP
-                      ELSE
-                          C(I,J) = ALPHA*TEMP + BETA*C(I,J)
-                      END IF
-  300             CONTINUE
-  310         CONTINUE
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+import { Complex, MatrixEComplex, mul_cxr, mul_rxr } from '../../../f_func';
+
 export function conjAtransB(
     betaIsZero: boolean,
     betaIsOne: boolean,

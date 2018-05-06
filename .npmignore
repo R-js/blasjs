@@ -5,6 +5,7 @@ config
 coverage
 nyc.md
 .*
+*.f
 spell.json
 tsconfig.json
 tslint.json

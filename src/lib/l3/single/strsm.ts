@@ -1,24 +1,18 @@
-/**>
- * -- Jacob Bogers, 03/2018, jkfbogers@gmail.com  
- * -- Written on 8-February-1989.
-*>     Jack Dongarra, Argonne National Laboratory.
-*>     Iain Duff, AERE Harwell.
-*>     Jeremy Du Croz, Numerical Algorithms Group Ltd.
-*>     Sven Hammarling, Numerical Algorithms Group Ltd.
-*/
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-/*
-*>
-*> STRSM  solves one of the matrix equations
-*>
-*> op(A) * X = alpha * B, or   X * op(A) = alpha * B,
-*>
-*> where alpha is a scalar, X and B are m by n matrices, A is a unit, or
-*> non - unit, upper or lower triangular matrix  and  op(A)  is one  of
-*>
-*> op(A) = A   or   op(A) = A ** T.
-*>
-*> The matrix X is overwritten on B.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { errWrongArg, lowerChar, Matrix } from '../../f_func';

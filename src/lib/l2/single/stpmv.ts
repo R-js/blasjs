@@ -1,22 +1,20 @@
 import { errWrongArg, FortranArr, lowerChar } from '../../f_func';
 
-/*
-Jacob Bogers, 03/2018, jkfbogers@gmail.com
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
---Written on 22 - October - 1986.
-   Jack Dongarra, Argonne National Lab.
-   Jeremy Du Croz, Nag Central Office.
-   Sven Hammarling, Nag Central Office.
-   Richard Hanson, Sandia National Labs.
-*/
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-/*
- STPMV  performs one of the matrix-vector operations
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    x := A*x,   or   x := A**T*x,
-
- where x is an n element vector and  A is an n by n unit, or non-unit,
- upper or lower triangular matrix, supplied in packed form.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 export function stpmv(

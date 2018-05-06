@@ -1,15 +1,18 @@
-/**
-  Lawson, C. L., (JPL), Hanson, R. J., (SNLA),
-  Kincaid, D. R., (U. of Texas), Krogh, F. T., (JPL)
-  Bogers, J.K.F. blasjs 03/2018 (jkfbogers@gmail.com)
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-  REFERENCES
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-  C. L. Lawson, R. J. Hanson, D. R. Kincaid and F. T.
-  Krogh, Basic linear algebra subprograms for Fortran
-  usage, Algorithm No. 539, Transactions on Mathematical
-  Software 5, 3 (September 1979), pp. 308-323.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 

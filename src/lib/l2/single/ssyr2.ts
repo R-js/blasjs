@@ -1,40 +1,24 @@
-/*
-  Jacob Bogers, JS Port, 03/2018
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-  --Written on 22 - October - 1986.
-    Jack Dongarra, Argonne National Lab.
-    Jeremy Du Croz, Nag Central Office.
-    Sven Hammarling, Nag Central Office.
-    Richard Hanson, Sandia National Labs.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 const { max } = Math;
 
 import { errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
 
-/** 
-SSYR2  performs the symmetric rank 2 operation
-A:= alpha * x * y ** T + alpha * y * x ** T + A,
-
-    where alpha is a scalar, x and y are n element vectors and A is an n
-by n symmetric matrix.
-
- @param a is REAL array, dimension(LDA, N)
-    
-Before entry with  UPLO = 'U' or 'u', the leading n by n
-upper triangular part of the array A must contain the upper
-triangular part of the symmetric matrix and the strictly
-lower triangular part of A is not referenced.
-
-On exit, the upper triangular part of the array A is overwritten by the
-upper triangular part of the updated matrix.
-
-Before entry with UPLO = 'L' or 'l', the leading n by n
-lower triangular part of the array A must contain the lower
-triangular part of the symmetric matrix and the strictly
-upper triangular part of A is not referenced. On exit, the
-lower triangular part of the array A is overwritten by the
-lower triangular part of the updated matrix.
-*/
 export function ssyr2(
     uplo: 'u' | 'l',
     n: number,

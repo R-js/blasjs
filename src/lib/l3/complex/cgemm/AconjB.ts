@@ -1,27 +1,23 @@
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 import { Complex, MatrixEComplex } from '../../../f_func';
 
 
-// Form  C := alpha*A*B**H + beta*C.
-/*
-DO 200 J = 1,N
-    IF (BETA.EQ.ZERO) THEN
-        DO 160 I = 1,M
-            C(I,J) = ZERO
-160                 CONTINUE
-    ELSE IF (BETA.NE.ONE) THEN
-        DO 170 I = 1,M
-            C(I,J) = BETA*C(I,J)
-170                 CONTINUE
-    END IF
-    DO 190 L = 1,K
-        TEMP = ALPHA*CONJG(B(J,L))
-        DO 180 I = 1,M
-            C(I,J) = C(I,J) + TEMP*A(I,L)
-180                 CONTINUE
-190             CONTINUE
-200         CONTINUE
-*/
 
 export function AconjB(
     betaIsZero: boolean,

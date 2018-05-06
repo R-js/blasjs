@@ -1,22 +1,18 @@
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-/*
-   Univ. of Tennessee
-   Univ. of California Berkeley
-   Univ. of Colorado Denver
-   NAG Ltd.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-   SX is REAL array, dimension ( 1 + ( N - 1 )*abs( INCX ) )
-   INCX is INTEGER
-   SY is REAL array, dimension ( 1 + ( N - 1 )*abs( INCY ) )
-   INCY is INTEGER
-
-     SPARAM is REAL array, dimension (5)
-     SPARAM(1)=SFLAG
-     SPARAM(2)=SH11
-     SPARAM(3)=SH21
-     SPARAM(4)=SH12
-     SPARAM(5)=SH22
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 

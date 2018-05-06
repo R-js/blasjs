@@ -1,16 +1,21 @@
-import { errWrongArg, FortranArr, lowerChar } from '../../f_func';
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-/*
-  Jacob Bogers, 03/2008, jkfbogers@gmail.com
-  -- Written on 22-October-1986.
-     Jack Dongarra, Argonne National Lab.
-     Jeremy Du Croz, Nag Central Office.
-     Sven Hammarling, Nag Central Office.
-     Richard Hanson, Sandia National Labs.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-SSPR    performs the symmetric rank 1 operation
-    A := alpha*x*x**T + A,
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+import { errWrongArg, FortranArr, lowerChar } from '../../f_func';
 
 export function sspr(
     uplo: 'u' | 'l',

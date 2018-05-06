@@ -1,26 +1,21 @@
-import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../f_func';
+/* This is a conversion from BLAS to Typescript/Javascript
+Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
-/*
-*>
-*> CSYR2K  performs one of the symmetric rank 2k operations
-*>
-*>    C := alpha*A*B**T + alpha*B*A**T + beta*C,
-*>
-*> or
-*>
-*>    C := alpha*A**T*B + alpha*B**T*A + beta*C,
-*>
-*> where  alpha and beta  are scalars,  C is an  n by n symmetric matrix
-*> and  A and B  are  n by k  matrices  in the  first  case  and  k by n
-*> matrices in the second case.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-*>  -- Jacob Bogers, 03/2018, jkfbogers@gmail.com, Javascript Port
-*>  -- Written on 8-February-1989.
-*>     Jack Dongarra, Argonne National Laboratory.
-*>     Iain Duff, AERE Harwell.
-*>     Jeremy Du Croz, Numerical Algorithms Group Ltd.
-*>     Sven Hammarling, Numerical Algorithms Group Ltd.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../f_func';
 
 const { max } = Math;
 

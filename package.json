@@ -1,7 +1,5 @@
 {
     "author": "Jacob K.F. Bogers",
-    "browser:disabled": "./dist/client/bundle.js",
-    "browser:doc": "https://github.com/defunctzombie/package-browser-field-spec",
     "bugs": {
         "url": "https://github.com/jacobbogers/blasjs/issues"
     },
@@ -76,9 +74,7 @@
     ],
     "license": "GPL-3.0",
     "main": "dist/lib/blas.js",
-    "module:disabled": "",
-    "module:doc": "https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md",
-    "name": "blas.js",
+    "name": "blasjs",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/jacobbogers/blasjs.git"
@@ -101,7 +97,7 @@
         "pre-test": "echo prestest",
         "preinstall": "echo install",
         "prepare": "echo 'prepare'",
-        "prepublish": "tsc",
+        "prepublish": "npm run build:prod",
         "prepublishOnly": "echo prepublishOnly",
         "prerestart": "echo prerestart",
         "preshrinkwrap": "echo preshrinkwrap",
