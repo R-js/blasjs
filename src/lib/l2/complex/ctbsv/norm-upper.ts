@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { div_rxr, FortranArrEComplex, isZeroE, MatrixEComplex, mul_rxr } from '../../../f_func';
+import { div_rxr, FortranArrEComplex, MatrixEComplex, mul_rxr } from '../../../f_func';
 const { max } = Math;
 
 export function normUpper(
