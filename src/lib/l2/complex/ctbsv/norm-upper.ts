@@ -2,14 +2,16 @@ import { div_rxr, FortranArrEComplex, isZeroE, MatrixEComplex, mul_rxr } from '.
 const { max } = Math;
 
 export function normUpper(
+    kx: number,
     x: FortranArrEComplex,
     incx: number,
     a: MatrixEComplex,
+    noconj: boolean,
     nounit: boolean,
     n: number,
     k: number) {
 
-    let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
+
     let kplus1 = k + 1;
     kx += (n - 1) * incx;
     let jx = kx;
@@ -17,7 +19,7 @@ export function normUpper(
     for (let j = n; j >= 1; j--) {
         const coorAJ = a.colOfEx(j);
         kx -= incx;
-        const isXZero = isZeroE(x.r[jx - x.base], x.i[jx - x.base]);
+        const isXZero = x.r[jx - x.base] === 0 && x.i[jx - x.base] === 0;
         const extrI = max(1, j - k);
         if (!isXZero) {
             let ix = kx;

@@ -220,9 +220,9 @@ describe('blas f_func utility functions', function n() {
                     it(`[${key}]/[${desc}]`, function t() {
                         const f32 = fortranArrComplex32(data)();
                         const ans = f32.s(index)(re, im)
-                        console.log(f32.r, f32.i);
+                        //console.log(f32.r, f32.i);
                         const exp = should.o;
-                        console.log(ans, exp);
+                        // console.log(ans, exp);
 
                         expect(ans).to.be.deep.equal(exp);
                     });

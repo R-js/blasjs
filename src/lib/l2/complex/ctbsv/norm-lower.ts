@@ -3,9 +3,11 @@ import { div_rxr, FortranArrEComplex, isZeroE, MatrixEComplex, mul_rxr } from '.
 const { min } = Math;
 
 export function normLower(
+    kx: number,
     x: FortranArrEComplex,
     incx: number,
     a: MatrixEComplex,
+    noconj: boolean,
     nounit: boolean,
     n: number,
     k: number) {
@@ -13,8 +15,6 @@ export function normLower(
     /*if (!x.i || !a.i) {
         return;
     }*/
-
-    let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
 
     let jx = kx;
     for (let j = 1; j <= n; j++) {

@@ -3,15 +3,16 @@ import { div_rxr, FortranArrEComplex, MatrixEComplex, mul_rxr } from '../../../f
 const { max } = Math;
 
 export function transUpper(
-    noconj: boolean,
+    kx: number,
     x: FortranArrEComplex,
     incx: number,
     a: MatrixEComplex,
+    noconj: boolean,
     nounit: boolean,
     n: number,
     k: number) {
 
-    let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
+
     let kplus1 = k + 1;
     let jx = kx;
 

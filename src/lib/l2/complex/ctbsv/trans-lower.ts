@@ -2,16 +2,17 @@ import { div_rxr, FortranArrEComplex, MatrixEComplex, mul_rxr } from '../../../f
 
 const { min } = Math;
 export function transLower(
-    noconj: boolean,
+    kx: number,
     x: FortranArrEComplex,
     incx: number,
     a: MatrixEComplex,
+    noconj: boolean,
     nounit: boolean,
     n: number,
     k: number): void {
 
 
-    let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
+    
     kx += (n - 1) * incx;
     let jx = kx;
 

@@ -202,6 +202,25 @@ c
 
       CALL PRNMATR(C, 6, 6) 
 
+      PRINT *, "=====CASE 10======="
+      
+       UPLO="L"
+       TRANS="T"
+       N=5
+       K=3
+       ALPHA=0.5
+       BETA=0
+       LDA=6
+       LDC=6
+       
+      CALL COPYMA(M6X6, A, 6, 6)
+      CALL COPYMA(M6X6, C, 6, 6)
+      A(1,1)=0
+
+      CALL DSYRK(UPLO,TRANS,N,K,ALPHA,A,LDA,BETA,C,LDC) 
+
+      CALL PRNMATR(C, 6, 6) 
+
     
       end
 

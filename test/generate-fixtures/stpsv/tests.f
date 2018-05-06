@@ -7,8 +7,6 @@ c
       EXTERNAL DTPSV, COPY, ZEROA, COPYMA,FILL
       EXTERNAL FILLM, PRNMATR, PRNVEC
 
-
-
       CHARACTER UPLO, TRANS, DIAG
       
       INTEGER N, K, LDA, INCX, SIZE
@@ -66,7 +64,6 @@ c
      +   -1.068692711254786,
      +   0.197684262345795,
      +   1.053750863028617/
-
      
       DATA     (XC(I),I=1,6)/ 
      + -0.08252376201716412,
@@ -77,39 +74,42 @@ c
      +  0.5503933584550523/
 
       PRINT * , "==CASE 0======="
-     
+
       uplo = 'U'
       trans='N'
       diag='N'
       incx = 1
-     
-            
+                 
       CALL COPY(XC,X,6)
-      CALL COPY(APUPC,AP,SIZE)  
+      CALL COPY(APUPC,AP,SIZE)
+
       X(3)=0
+      X(6)=0
+c      
 c     DTPSV(UPLO,TRANS,DIAG,N,AP,X,INCX)      
+c
       CALL DTPSV(UPLO,TRANS,DIAG,N,AP,X,INCX)
-c 
+c           
       PRINT *,"B="
       CALL PRNVEC(X,N)
 
       PRINT * , "==CASE 1======="
-     
+
       uplo = 'U'
       trans='N'
       diag='U'
       incx = -1
-     
+
             
       CALL COPY(XC,X,6)
       CALL COPY(APUPC,AP,SIZE)  
       X(3)=0
 c     DTPSV(UPLO,TRANS,DIAG,N,AP,X,INCX)      
       CALL DTPSV(UPLO,TRANS,DIAG,N,AP,X,INCX)
-c 
+c           
       PRINT *,"B="
       CALL PRNVEC(X,N)
-
+            
 
       PRINT * , "==CASE 2======="
      

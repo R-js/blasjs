@@ -96,17 +96,37 @@ export function ctbsv(
     const noconj = tr === 't';
     const nounit = dg === 'n';
 
-
+    let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
+    let func: (
+        kx: number,
+        x: FortranArrEComplex,
+        incx: number,
+        a: MatrixEComplex,
+        noconj: boolean,
+        nounit: boolean,
+        n: number,
+        k: number) => void;
 
     if (tr === 'n') {
-        if (ul === 'u') return normUpper(<FortranArrEComplex>x, incx, <MatrixEComplex>a, nounit, n, k);
-        return normLower(<FortranArrEComplex>x, incx, <MatrixEComplex>a, nounit, n, k);
+        if (ul === 'u') {
+            func = normUpper;
+        }
+        else {
+            func = normLower;
+        }
     }
-    // a = transpose or transpose conjugate
-    if (ul === 'u') return transUpper(noconj, <FortranArrEComplex>x, incx, <MatrixEComplex>a, nounit, n, k);
-    return transLower(noconj, <FortranArrEComplex>x, incx, <MatrixEComplex>a, nounit, n, k);
-
+    else {
+        if (ul === 'u') {
+            func = transUpper;
+        }
+        else {
+            func = transLower;
+        }
+    }
+    func(kx, <FortranArrEComplex>x, incx, <MatrixEComplex>a, noconj, nounit, n, k);
 }
+
+
 
 
 

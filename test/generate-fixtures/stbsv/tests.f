@@ -162,6 +162,7 @@ c
       CALL COPY(XC,X,6)
       CALL COPYMA(UPA,A,6,6)  
       X(3)=0
+      X(6)=0
       CALL DTBSV(UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX)
 c 
       PRINT *,"B="
@@ -218,6 +219,7 @@ c
       CALL COPY(XC,X,6)
       CALL COPYMA(LPA,A,6,6)  
       X(3)=0
+      X(1)=0
       CALL DTBSV(UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX)
 c 
       PRINT *,"B="
