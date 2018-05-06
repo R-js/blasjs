@@ -72,7 +72,8 @@ export function strmv(
         if (ul === 'u') {
             let jx = kx - x.base;
             for (let j = 1; j <= n; j++) {
-                if (x[jx] !== 0) {
+                //console.log(`jx:${jx}, x:${x.r[jx]}`);
+                if (x.r[jx] !== 0) {
                     let temp = x.r[jx];
                     let ix = kx - x.base;
                     const coords = a.colOfEx(j);

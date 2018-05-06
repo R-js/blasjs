@@ -1,6 +1,11 @@
 import { assert, expect } from 'chai';
 import * as blas from '../../../src/lib';
-import { approximately, approximatelyWithPrec } from '../../test-helpers';
+
+import {
+  approximately,
+  approximatelyWithPrec
+} from '../../test-helpers';
+
 import { fixture } from './fixtures';
 
 const {
@@ -860,6 +865,7 @@ describe('blas level 2 single/double precision', function n() {
           const sx = fortranArrComplex64(muxCmplx(x))();
 
           //UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX
+          //console.log(sx);
           strmv(uplo, trans, diag, n, A, lda, sx, incx);
           // console.log(sx.toArr())
           const approx = approximatelyWithPrec(1E-5);
@@ -918,7 +924,7 @@ describe('blas level 2 single/double precision', function n() {
           //UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX
           strsv(uplo, trans, diag, n, A, lda, sx, incx);
           // console.log(sx.toArr())
-          const approx = approximatelyWithPrec(1E-5);
+          const approx = approximatelyWithPrec(1E-4);
           multiplexer(
             [sx.r.length, ...sx.toArr()],
             [eX.length, ...eX])((a, b) => {
