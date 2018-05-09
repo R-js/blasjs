@@ -1,17 +1,59 @@
-# BLASjs (Basic Linear Algebra Subprograms)
-Pure Javascript (Typescript) implementation of [BLAS](https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms) (Basic Linear Algebra Subprograms).
+# BLASjs  <span style="font-size:small" ><span style="color:red; font-weight: bold;">B</span>asic <span style="color:red; font-weight: bold;">L</span>inear <span style="color:red; font-weight: bold;">A</span>lgebra <span style="color:red; font-weight: bold;">S</span>ubprograms.</span>
 
-* BLAS cheat sheet in [pdf](http://www.netlib.org/blas/blasqr.pdf).
-* BLAS routines [overview](http://www.netlib.org/blas/#_blas_routines).
-
+This is a 100% Pure Javascript ( TypeScript ) re-write of the reference implementation `Basic Linear Algebra SubPrograms` (BLAS) numerical library found [here][blas-site].
+This is a manual re-write, ["emscripten"](https://kripken.github.io/emscripten-site) was not used.
 
 #### summary
 
+BLASjs contains all the functions (Complex, Real) of the reference implementation capable for `32 bit` and `64 bit` floating point arithmatic:
 
+* 100% code coverage
+* 1003 tests
+* Output off all tests equal to the BLAS Fortran reference implementation.
+* Level 1: all vector-vector operations implemented. 
+* Level 2: all vector-matrix operations implemented.
+* Level 3: all matrix-matrix operations implemented.
+* Helper functions to easy porting of fortran BLAS usage to Javascript.
 
-## Level 1
+#### Node and Web
 
-### SINGLE
+The library is an UMD library, it can be used in a web client
+as in server side node environment.
+
+## Installation
+
+#### node
+
+```bash
+npm i blasjs
+```
+
+#### web
+
+The module directory contains a minimized bundle for use in html `<script>` tag. The library is attached to the `window.BLAS` object after loading.
+
+```html
+<!-- script src="your_server_url/blasjs.min.js"></script -->
+<!-- this example uses unpkg as CDN -->
+<script src="https://unpkg.com/blasjs@latest/dist/lib/blasjs.min.js">
+<script>
+  const blas = window.BLAS; //UMD exposes it as BLAS
+
+  //fetch some level3 matrix-matrix operations
+  const {
+      level3: { zsyrk, ztrmm, ztrsm } //level 3 double precision complex operations
+   } = blas;
+</script>
+```
+
+# Table of Contents
+
+* [Differences with R](#differences-with-r)
+* [*Read this first*: Helper functions](#helper-functions-for-porting-blas-programs)
+* [Level 1](#level-1)
+    * caxpy
+    * 
+
 
 | base functions |
 | -------------- |  |  |  |  |  |
@@ -489,7 +531,12 @@ ZTRSM - solving triangular matrix with multiple right hand sides
 [srotg]: https://en.wikipedia.org/wiki/Givens_rotation
 [givenmodified]: https://www.ibm.com/support/knowledgecenter/en/SSFHY8_5.5.0/com.ibm.cluster.essl.v5r5.essl100.doc/am5gr_srotm.htm
 
-[caxpy]: http://www.netlib.org/lapack/explore-html/da/df6/group__complex__blas__level1_ga9605cb98791e2038fd89aaef63a31be1.html
+[caxpy]:  http://www.netlib.org/lapack/explore-html/da/df6/group__complex__blas__level1_ga9605cb98791e2038fd89aaef63a31be1.html
+
+[blas-site]: http://www.netlib.org/blas/
+[blas-source]: https://github.com/Reference-LAPACK/lapack/tree/master/BLAS
+
+
 
 Some notes on Matrix symbols
 
