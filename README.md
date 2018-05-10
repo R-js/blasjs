@@ -59,14 +59,20 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 * [*Read this first*: Helper functions](#helper-functions-for-working-with-blasjs)
     * [Types](#Types)
         * [fpArray](#fpArray)
-        * [FortranArr](#fortranArr)
-    * [General Helpers]()
+        * [FortranArr](#fortranarr)
+        * [Type Complex](#type-complex)
+        * [Matrix](#matrix)
+    * [General Helpers](#general-helpers)
         * [arrayrify](#arrayrify)
         * [complex](#complex)
         * [each](#each)
         * [map](#map)
         * [muxCmplx](#muxCmplx)
         * [numberPrecision](#numberPrecision)
+    * [Blas array/matrix constructors](#blas-arraymatrix-constructors)
+        * [fortranArrComplex32](#fortranArrComplex32)
+        * [fortranArrComplex64](#fortranArrComplex64)
+        * [](#)
 * [Level 1 Functions](#level-1)
     * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
     * [`sasum`/`dasum` sum of the absolute vector element values]()
@@ -188,7 +194,7 @@ export type fpArray = Float32Array | Float64Array;
 
 ### `FortranArr`
 
-Abstraction of a 1 dimensional single precision (32bit) complex/real FORTRAN array.
+Abstraction of a 1 dimensional single/double precision complex/real FORTRAN array.
 Used by [level 1](#level-1) and [level 2](#level-2) `blasjs` functions.
 `FortranArr`objects should be created by the [`fortranArrComplex32`][float32-array] and [`fortranArrComplex64`][float64-array] helper functions.
 
@@ -213,9 +219,7 @@ fields:
 Usage:
 
 ```javascript
-import * as blas from 'blasjs';
-//typescript types
-import { Complex, fpArray, FortranArr, helper } from 'blasjs';
+const blas = require('blasjs');
 
 const { fortranArrComplex64 } = helper;
 
@@ -226,24 +230,168 @@ const complexDataArr = [
     { re: 2.3, im: 0.6 }
 ];
 
-// create a double precision complex array for blasj
-const sp = fortranArrComplex64(complexArr)(1);
-//
-sp.r[ 1 - sp.base ]
+// Create an object that mimics FORTRAN COMPLEX*16 SP(2:3)
+//    and fill it with above data
+const sp = fortranArrComplex64(complexArr)(2);
+
+// fast! normal JS TypedArray access 
+let re = sp.r[ 2 - sp.base ];
 // 1.8
 
-sp.i[ 2 - sp.base ]
-// 0.6
+let  im = sp.i[ 2 - sp.base ];
+// -0.2
 
-sp.s(2)
-// 
+// not so fast, but easier syntax
+let v = sp.s(2)(); // Terse syntax,
+// { re: 1.8, im: -0.2 }
+
+// sets the value at index 3 to complex: 0.11 - i0.9
+//      and returns the old value: 2.3 + i0.6
+let old = sp.s(3)(0.11, -0.9);
+
+sp.toArr();
+// [ { re:1.8, im: -0.2 },
+//   { re:0.11, im: -0.9 } ]
 ```
 
+_Usage TypeScript:_
 
+```typescript
+import {
+    // pure types 
+    Complex,
+    fpArray,
+    FortranArr,
+    // helper
+    helper
+} from 'blasjs';
+
+const { fortranArrComplex64 } = helper;
+
+const complexArr: Complex[] [
+    { re: 1.8, im: -0.2 },
+    { re: 2.3, im: 0.6 }
+];
+
+// Create an object that mimics FORTRAN COMPLEX*16 SP(2:3)
+//    and fill it with above data
+const sp: FortranArr = fortranArrComplex64(complexArr)(2);
+
+let re = sp.r[ 2 - sp.base ]; //fastest! direct TypedArray access
+// 1.8
+
+let  im = sp.i[ 2 - sp.base ]; //fastest! direct TypedArray access
+// -0.2
+
+// not so fast, but easier syntax
+let v = sp.s(2)(); // Terse syntax,
+// { re: 1.8, im: -0.2 }
+
+// sets the value at index 3 to complex: 0.11 - i0.9
+//      and returns the old value: 2.3 + i0.6
+let old = sp.s(3)(0.11, -0.9);
+// {re: 2.3, im: 0.6 }
+```
+
+### `Type Complex`
+
+Typescript definition of a complex scalar.
+
+_decl_:
+
+```typescript
+declare type Complex = {
+   re: number;
+   im?: number;
+}
+```
+
+Usage:
+
+```typescript
+import { Complex /* pure type */ } from 'blasjs';
+
+const complexArr: Complex[] [
+    { re: 1.8, im: -0.2 },
+    { re: 2.3, im: 0.6 }
+];
+```
+
+### `Matrix`
+
+The `Matrix` object mimics the functionalities of 2 dimensional FORTRAN arrays.
+It provides:
+* As in FORTRAN you can choose array index offsets of the dimension.
+* It will physically map a 2 dimensional array into a single [Float32Array][float32-array] or [Float64Array][float64-array] object.
+
+#### physical storage of Matrix data
+
+The matrix element `A(i,j)`, (row `i` and column `j`) will be mapped to the physical
+position `( j - columnBase )* columnSize + ( i - rowBase )` in the `Float64Array`/`Float32Array`. Example: The elements of a 2x2 matrix A will be stored in this order `[a11, a21, a12, a22]`.
+
+Example: 
+
+```fortran
+  DOUBLE PRECISION A1(2, 5)
+  DOUBLE PRECISION A2(1:2, 1:5)
+  DOUBLE PRECISION A3(-2:2,3:5)
+```
+
+Equivalent using the `Matrix` type 
+
+```javascript
+const blas = require('blasjs');
+
+const { helper: { fortranArrComplex64, fortranArrComplex32} } = blas;
+
+// can use fortranArrComplex32 aswell
+const matrixCurry = fortranArrComplex64(data);
+
+// A1, A2, A3 are of type "Matrix"
+const A1 = matrixCurry(2,5);
+const A2 = matrixCurry(2,5, 'n', 1,1);
+const A3 = matrixCurry(5,3, 'n', -2, 3);
+```
+
+_decl_:
+
+```typescript
+interface Matrix {
+    readonly rowBase: number;
+    readonly colBase: number;
+    readonly nrCols: number;
+    readonly colSize: number;
+    readonly r: fpArray;
+    readonly i?: fpArray;
+    readonly colOfEx: (number) => number;
+
+    coord(col): (row) => number;
+    setCol(col: number, rowStart: number, rowEnd: number, value: number): void;
+    slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
+    setLower(value?: number): Matrix;
+    setUpper(value?: number): Matrix;
+    upperBand(value: number): Matrix;
+    lowerBand(value: number): Matrix;
+    packedUpper(value?: number): FortranArr;
+    packedLower(value?: number): FortranArr;
+    real(): Matrix;
+    imaginary(): Matrix;
+    toArr(): Complex[] | number[];
+}
+```
+
+* `rowBase`:
+
+
+
+
+## General Helpers
+
+Collection of helper function to manipulate common JS array and object types in a functional way.
 
 ### `arrayrify`
 
-Creates a new function capable to accept vectorized input, by wrapping an existing function given as argument.
+Creates a new function from an existing one, to add the ability to accept vectorized input.
 
 _Example_:
 
@@ -432,16 +580,98 @@ _4([0.123456, 0.78901234]);
 //[ 0.1235, 0.789 ]
 ```
 
+## Vector and Matrix constructors
+
+JS Analog for working with single/double precision complex/real Arrays and Matrices. 
+
+### `fortranArrComplex32`
+
+Constructs a [FortranArr](#fortranArr) object using 2 [Float32Array][float32-array] as a single array of complex numbers. If only REAL numbers are
+specified only a single `Float32Array` object will be used.
+
+_decl_:
+
+```typescript
+function fortranArrComplex32(
+    ...rest: (number | number[] | Complex | Complex[])[]
+    ): (offset = 1) => FortranArr;
+```
+
+* `rest`: takes as input an array or a single value of type number or [Complex](#type-complex).
+* `offset`: the Fortran offset (defaults to 1)
+* returns an object of type [FortranArr](#fortranarr)
+
+Usage:
+
+```javascript
+const blas = require('blasjs');
+
+const { fortranArrComplex32 } = helper;
+
+// You can also use the helper "complex" or "muxComplex"
+// to generate JS complex arrays
+const complexDataArr = [
+    { re: 1.8, im: -0.2 },
+    { re: 2.3, im: 0.6 }
+];
+
+// Create an object that mimics FORTRAN COMPLEX*8 SP(1:2)
+//    and fill it with above data
+const sp = fortranArrComplex32(complexArr)();
+```
+
+### `fortranArrComplex64`
+
+Encapsulates two [Float64Array][float64-array] as a single array of complex numbers. If only REAL numbers are
+used only a single `Float64Array` object will be used.
+
+_decl_:
+
+```typescript
+function fortranArrComplex64(
+    ...rest: (number | number[] | Complex | Complex[])[]
+    ): (offset = 1) => FortranArr;
+```
+
+* `rest`: takes as input an array or a single value of type number or [Complex](#type-complex).
+* `offset`: the Fortran offset (defaults to 1)
+* returns an object of type (FortranArr)[#fortranarr]
+
+Usage:
+
+```javascript
+const blas = require('blasjs');
+
+const { fortranArrComplex64 } = helper;
+
+// You can also use the helper "complex" or "muxComplex"
+// to generate JS complex arrays
+const complexDataArr = [
+    { re: 1.8, im: -0.2 },
+    { re: 2.3, im: 0.6 }
+];
+
+// Create an object that mimics FORTRAN COMPLEX*16 SP(1:2)
+//    and fill it with above data
+const sp = fortranArrComplex64(complexArr)();
+```
+
+### `fortranMatrixComplex32`
+
+Constructs an analog for a single precision 2-dimensional FORTRAN array (a matrix).
+
+_decl_
+
+```typescript
+
+```
+
+```
 
 
-* Iterates over object properties and values.
-* Iterates over array elements 
-    fortranArrComplex32,
-    fortranArrComplex64,
-    fortranMatrixComplex32,
-    fortranMatrixComplex64,
+### `fortranMatrixComplex64`
 
-   
+Constructs an analog for a double precision 2-dimensional FORTRAN array (a matrix).
 
 
 
