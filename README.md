@@ -1,14 +1,14 @@
 # BLASjs  (<span style="font-size:small" ><span style="color:red; font-weight: bold;">B</span>asic <span style="color:red; font-weight: bold;">L</span>inear <span style="color:red; font-weight: bold;">A</span>lgebra <span style="color:red; font-weight: bold;">S</span>ubprograms</span>)
 
 This is a 100% Pure Javascript ( TypeScript ) re-write of the reference implementation `Basic Linear Algebra SubPrograms` (BLAS) numerical library found [here][blas-site].
-This is a manual re-write, ["emscripten"](https://kripken.github.io/emscripten-site) was not used.
+This is a full manual re-write, ["emscripten"](https://kripken.github.io/emscripten-site) was not used.
 
 #### summary
 
 BLASjs contains all the functions (Complex, Real) of the reference implementation capable for `32 bit` and `64 bit` floating point arithmatic:
 
-* 100% code coverage
-* 1003 tests
+* :ok_hand: 100% code coverage
+* 1005 tests
 * Output off all tests equal to the BLAS FORTRAN reference implementation.
 * Level 1: all vector-vector operations implemented.
 * Level 2: all vector-matrix operations implemented.
@@ -17,8 +17,8 @@ BLASjs contains all the functions (Complex, Real) of the reference implementatio
 
 #### Node and Web
 
-The library is an UMD library, it can be used in a web client
-as in server side node environment.
+The library js file is an agnostic UMD library, it can be used in a web client
+as-well as in a server side node environment.
 
 ## Installation
 
@@ -26,6 +26,13 @@ as in server side node environment.
 
 ```bash
 npm i blasjs
+```
+
+```javascript
+//node
+   const blas = require('blasjs');
+//or typescript
+   import * as blas from 'blasjs';
 ```
 
 #### web
@@ -39,9 +46,9 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 <script>
   const blas = window.BLAS; //UMD exposes it as BLAS
 
-  //fetch some level3 matrix-matrix operations
+  //fetch some level3 complex 64 bit precision matrix-matrix operations
   const {
-      level3: { zsyrk, ztrmm, ztrsm } //level 3 double precision complex operations
+      level3: { zsyrk, ztrmm, ztrsm }
    } = blas;
 </script>
 ```
@@ -50,6 +57,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 * [Language differences with FORTRAN/BLAS](#language-differences-with-fortranblas)
 * [*Read this first*: Helper functions](#helper-functions-for-working-with-blasjs)
+    * [arrayrify](arrayrify)
 * [Level 1 Functions](#level-1)
     * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
     * [`sasum`/`dasum` sum of the absolute vector element values]()
@@ -125,44 +133,202 @@ these FORTRAN constructs have equivalents in the `blasjs` library.
   const blas = require('blasjs');
 
   const {
-      util:{
+      helper:{
+        /* create complex Object from 2 real numbers */
+        complex,
 
-        complex, // function to create complex Object from to real numbers, 
+        /* create single precision Real/complex arrays, */
+        fortranArrComplex32,
 
-        fortranArrComplex32, // Single precision Real/complex arrays, 
+        /* create double precision Real/Complex arrays */
+        fortranArrComplex64,
 
-        fortranArrComplex64, // Double precision Real/Complex arrays
+        /* create single precision 2 dimensional Real/Complex arrays */
+        fortranMatrixComplex32,
 
-        fortranMatrixComplex32, // Single precision 2 dimensional Real/Complex arrays
-
-        fortranMatrixComplex64, // Double precision 2 dimensional Real/Complex arrays
+        /* Double precision 2 dimensional Real/Complex arrays */
+        fortranMatrixComplex64,
       }
   } = blas;
 ```
 
 These functions are extensively documented in the [helper functions](#helper-functions-for-working-with-blasjs).
-It is recommended you read this introductionary part of the documentation first.
+It is recommended you read this introductory part of the documentation first.
 before anything else.
 
-### helper functions
+# Helper functions
 
-#### arrayrify
-  
-Force any JS scalar or object into an array.
+`blasjs`
+uses "FORTRAN like" complex number 32/64 bit precision multidimensional complex/real data.
+These helper functions have been designed to significantly ease the use of working with these
+data types in JavaScript.
+
+### `arrayrify`
+
+Creates a new function capable to accept vectorized input, by wrapping an existing function given as argument.
+
+_Example_:
 
 ```javascript
+const blas = require('blasjs');
 
+const { helper: { arrayrify } } = blas;
+const PI = Math.PI;
+//
+const sin = arrayrify(Math.sin)
+
+sin([PI/3, PI/4, PI/6]); // returns array aswell
+// [ 0.866025, 0.7071067811, 0.5 ]
+
+sin(PI/3); // returns scalar
+sin( [ PI/3 ] ); // returns scalar
+// 0.866025
+
+sin([]) // edge case
+// undefined
+
+sin() //
+//NaN  same as Math.sin()
 ```
 
-#### complex
-    each,
+### `complex`
+
+Mimics the GNU Fortran extention [complex](https://gcc.gnu.org/onlinedocs/gfortran/COMPLEX.html).
+Creates a JS object that represents a complex scalar number.
+Used by `blasjs` for scalar input arguments.
+
+_Example_:
+```javascript
+const blas = require('blasjs');
+
+const { helper: { complex } } = blas;
+
+const c1 = complex(0.1,0.3);
+//c1 = { re: 0.1, im: 0.3 }
+
+const c2 = complex();
+//c2 = { re: 0, im: 0 }
+
+const c3 = complex(0.5);
+//c3 = { re: 0.5, im:0 }
+```
+
+### `each`
+
+Curried functional analog to `Array.prototype.forEach`, but takes arbitrary input.
+
+_Example_:
+
+```javascript
+const blas = require('blasjs');
+
+const { helper: { each } } = blas;
+
+//Iterates over an object like a map
+const curry1 = each( {  hello: 'world', ts: new Date() })
+curry1( (val, key) => console.log(`${val} ':'  ${key}`)))
+//world : hello
+//2018-05-10T13:57:08.923Z : ts
+
+//Handles array also
+each( ['a','b','c','d'])( (v,idx) =>console.log(v,idx, typeof idx))
+//a 0 number
+//b 1 number
+//c 2 number
+//d 3 number
+
+//Edge cases
+each()(console.log)
+//nothing happens
+
+each(null)(console.log)
+//nothing happens
+
+each([])(console.log)
+//nothing happens
+```
+
+### `map`
+
+Curried functional analog to `Array.prototype.map`, but takes arbitrary input.
+
+:warning: Forces the output to be a an array regardless of the input.
+
+```javascript
+const blas = require('blasjs');
+
+const { helper: { map } } = blas;
+
+//trivial
+map([1,2,3])(v=>v*2);
+//[ 2, 4, 6 ]
+
+//key properties
+map({ a:'A', b:'B' })( (val, key) => key+'='+val);
+//[ 'a=A', 'b=B' ]
+
+map(null)( v => '/'+v);
+//[]
+
+map()( v => '/'+v);
+//[]
+
+map()()
+//[]
+```
+
+### `muxCmplx`
+
+Creates an array of complex numbers from arrayed input.
+The result is always an array type.
+
+```javascript
+const blas = require('blasjs');
+
+const { helper: { muxCmplx } } = blas;
+
+const reals = [ 0.1, -0.2, 0.3, 0.45 ];
+const imaginary = [ 0.1, -0.2, 0.3, 0.45 ];
+
+// normal usage
+muxCmplx(reals, imaginary)
+/*[ { re: 0.1, im: 0.1 },
+    { re: -0.2, im: -0.2 },
+    { re: 0.3, im: 0.3 },
+    { re: 0.45, im: 0.45 } ]*/
+
+//R recycling rule is used
+muxCmplx([1,2], imaginary)
+/*^[ { re: 1, im: 0.1 },
+     { re: 2, im: -0.2 },
+     { re: 1, im: 0.3 },
+     { re: 2, im: 0.45 } ]*/
+
+//dont care about imaginary
+muxCmplx(reals)
+/*[ { re: 0.1, im: undefined },
+    { re: -0.2, im: undefined },
+    { re: 0.3, im: undefined },
+    { re: 0.45, im: undefined } ]*/
+
+muxCmplx() //
+// [ { re: undefined, im: undefined } ]
+
+muxCmplx(1) //
+// [ { re: 1, im: undefined } ]
+
+//3 specify real and imaginary
+muxCmplx(1,-2)//
+//[ { re: 1, im: -2 } ]
+```
+
+* Iterates over object properties and values.
+* Iterates over array elements 
     fortranArrComplex32,
     fortranArrComplex64,
     fortranMatrixComplex32,
     fortranMatrixComplex64,
-    map,
-    multiplexer,
-    muxCmplx,
+
     numberPrecision
 
 

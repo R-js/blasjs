@@ -167,6 +167,7 @@ export const fixture = {
                 o: [{ key: 'name', val: 'jack' }]
             }
         },
+
     },
     coerceToArrayErr: {
         case0: {
@@ -199,6 +200,16 @@ export const fixture = {
             },
             expect: {
                 o: Math.sin(PI / 6)
+            }
+        },
+        case2: {
+            desc: 'test arrayrify empty array input',
+            input: {
+                fn: Math.sin,
+                data: []
+            },
+            expect: {
+                o: undefined
             }
         },
     },

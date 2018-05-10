@@ -611,7 +611,7 @@ export function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R) {
     return function n(x: T | T[], ...rest: any[]): R | R[] {
         const fp = Array.isArray(x) ? x : [x];
         const result = fp.map(p => fn(p, ...rest));
-        return result.length === 1 ? result[0] : result;
+        return result.length === 1 ? result[0] : result.length === 0 ? undefined as any : result;
     };
 }
 

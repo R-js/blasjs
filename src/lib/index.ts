@@ -49,6 +49,8 @@ export const util = Object.freeze({
     numberPrecision
 });
 
+export const helper = util;
+
 /*
 
 WORKS!!
