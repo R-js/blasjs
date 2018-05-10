@@ -98,7 +98,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     * chpr/zhpr
     * chpr2/zhpr2
 
-# language differences between FORTRAN BLAS.
+# Language differences with FORTRAN/BLAS.
 
 FORTRAN language can instrinsicly work with non-zero based multidimensional arrays and complex numbers. Below are some examples from FORTRAN that have no Javascript counterpart. The reference implementation of BLAS functions expect inputs of these types.
 
