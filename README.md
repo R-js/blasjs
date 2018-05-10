@@ -1,4 +1,4 @@
-# BLASjs  <span style="font-size:small" ><span style="color:red; font-weight: bold;">B</span>asic <span style="color:red; font-weight: bold;">L</span>inear <span style="color:red; font-weight: bold;">A</span>lgebra <span style="color:red; font-weight: bold;">S</span>ubprograms.</span>
+# BLASjs  (<span style="font-size:small" ><span style="color:red; font-weight: bold;">B</span>asic <span style="color:red; font-weight: bold;">L</span>inear <span style="color:red; font-weight: bold;">A</span>lgebra <span style="color:red; font-weight: bold;">S</span>ubprograms.</span>)
 
 This is a 100% Pure Javascript ( TypeScript ) re-write of the reference implementation `Basic Linear Algebra SubPrograms` (BLAS) numerical library found [here][blas-site].
 This is a manual re-write, ["emscripten"](https://kripken.github.io/emscripten-site) was not used.
@@ -65,7 +65,6 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     * srotmg/drotmg
     * sscal/dscal/cscal/csscal
     * sswap/dswap/cswap/zswap
-    *
     * cdotu/zdotu
     * scasum/dzasum
 
@@ -124,26 +123,47 @@ these FORTRAN constructs have equivalents in the `blasjs` library.
 
 ```javascript
   const blas = require('blasjs');
-  
+
   const {
       util:{
-        
+
         complex, // function to create complex Object from to real numbers, 
-   
+
         fortranArrComplex32, // Single precision Real/complex arrays, 
-        
+
         fortranArrComplex64, // Double precision Real/Complex arrays
-        
+
         fortranMatrixComplex32, // Single precision 2 dimensional Real/Complex arrays
-       
+
         fortranMatrixComplex64, // Double precision 2 dimensional Real/Complex arrays
       }
   } = blas;
 ```
 
 These functions are extensively documented in the [helper functions](#helper-functions-for-working-with-blasjs).
-It is recommended you read this introductionary part of the documentation first 
+It is recommended you read this introductionary part of the documentation first.
 before anything else.
+
+### helper functions
+
+#### arrayrify
+  
+Force any JS scalar or object into an array.
+
+```javascript
+
+```
+
+#### complex
+    each,
+    fortranArrComplex32,
+    fortranArrComplex64,
+    fortranMatrixComplex32,
+    fortranMatrixComplex64,
+    map,
+    multiplexer,
+    muxCmplx,
+    numberPrecision
 
 
 
