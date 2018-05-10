@@ -577,6 +577,7 @@ export const each = iter(false);
 
 export function numberPrecision(prec: number = 6) {
 
+    let runner: Function;
     function convert(x?: number | any): number {
         // try to loop over the object
         if (typeof x === 'object' && x !== null) {
@@ -593,7 +594,7 @@ export function numberPrecision(prec: number = 6) {
         //dont change the object, whatever it is
         return x;
     }
-    const runner = arrayrify(convert);
+    runner = arrayrify(convert);
     return runner;
 }
 
