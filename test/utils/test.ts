@@ -126,7 +126,6 @@ describe('blas f_func utility functions', function n() {
                 }, expect: should, desc
             }, key) => {
                 it(`[${key}]/[${desc}]`, function t() {
-
                     const ans = coerceToArray(i);
                     expect(ans).to.be.deep.equal(should.o);
                 });

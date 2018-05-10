@@ -23,30 +23,30 @@ export { level1, level2, level3 };
 
 import {
     arrayrify,
-
     complex,
     each,
     fortranArrComplex32,
     fortranArrComplex64,
     fortranMatrixComplex32,
     fortranMatrixComplex64,
+    map,
     multiplexer,
     muxCmplx,
     numberPrecision
 } from './f_func';
 
 export const util = Object.freeze({
-    fortranArrComplex32,
-    fortranArrComplex64,
+    arrayrify,
     complex,
     each,
-    numberPrecision,
-    arrayrify,
+    fortranArrComplex32,
+    fortranArrComplex64,
+    fortranMatrixComplex32,
+    fortranMatrixComplex64,
+    map,
     multiplexer,
     muxCmplx,
-    fortranMatrixComplex64,
-    fortranMatrixComplex32,
-
+    numberPrecision
 });
 
 /*

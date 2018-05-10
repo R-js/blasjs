@@ -103,7 +103,7 @@ export const fixture = {
     },
     coerceToArray: {
         case0: {
-            desc: 'o=9',
+            desc: 'i=9',
             input: {
                 i: 9,
             },
@@ -112,7 +112,7 @@ export const fixture = {
             }
         },
         case1: {
-            desc: 'o=[1,2,3,9]',
+            desc: 'i=[1,2,3,9]',
             input: {
                 i: [1, 2, 3, 9],
             },
@@ -126,7 +126,7 @@ export const fixture = {
             }
         },
         case2: {
-            desc: 'o="hello"',
+            desc: 'i="hello"',
             input: {
                 i: 'hello'
             },
@@ -140,21 +140,36 @@ export const fixture = {
                 ]
             }
         },
+        case3: {
+            desc: 'i=null',
+            input: {
+                i: null, //dud
+            },
+            expect: {
+                o: []
+            }
+        },
+        case4: {
+            desc: 'i={}',
+            input: {
+                i: {}, //dud
+            },
+            expect: {
+                o: []
+            }
+        },
+        case5: {
+            desc: 'i={ name:jack }',
+            input: {
+                i: { name: 'jack' }, //dud
+            },
+            expect: {
+                o: [{ key: 'name', val: 'jack' }]
+            }
+        },
     },
     coerceToArrayErr: {
         case0: {
-            desc: 'o=null',
-            input: {
-                o: null, //dud
-            }
-        },
-        case1: {
-            desc: 'o={}',
-            input: {
-                o: {}, //dud
-            }
-        },
-        case2: {
             desc: 'o=Function',
             input: {
                 o: Function, //dud

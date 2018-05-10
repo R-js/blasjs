@@ -602,7 +602,7 @@ function iter<T>(wantMap = true) {
     return function n(xx: T): { (fn: (x: any, idx?: number | string) => any): any | any[] } {
         const fx: ArrayElt[] = coerceToArray(xx) as any;
         return function k(fn: (x: any, idx?: number | string) => any): any | any[] {
-            return wantMap ? possibleScalar(fx.map(o => fn(o.val, o.key))) : fx.forEach(o => fn(o.val, o.key));
+            return wantMap ? fx.map(o => fn(o.val, o.key)) : fx.forEach(o => fn(o.val, o.key));
         };
     }
 }
@@ -618,7 +618,7 @@ export function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R) {
 
 export function coerceToArray(o: any): { key: string | number, val: any }[] {
     if (o === null || o === undefined) {
-        throw new TypeError('Illegal argument excepton: input needs to NOT be "null" or "undefined".');
+        return []; //throw new TypeError('Illegal argument excepton: input needs to NOT be "null" or "undefined".');
     }
     if (typeof o === 'number') {
         return [{ key: 0, val: o }] as any;
@@ -632,7 +632,7 @@ export function coerceToArray(o: any): { key: string | number, val: any }[] {
     if (typeof o === 'object') {
         const names = Object.getOwnPropertyNames(o);
         if (names.length === 0) {
-            throw new Error('Input argument is an Object with no properties');
+            return []; //throw new Error('Input argument is an Object with no properties');
         }
         return names.map(name => ({ key: name, val: o[name] })) as any;
     }
