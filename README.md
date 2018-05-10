@@ -48,7 +48,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 # Table of Contents
 
-* [Language differences with FORTRAN/BLAS](#language-differences-with-FORTRAN-BLAS)
+* [Language differences with FORTRAN/BLAS](#language-differences-with-fortranblas)
 * [*Read this first*: Helper functions](#helper-functions-for-working-with-blasjs)
 * [Level 1 Functions](#level-1)
     * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
@@ -105,14 +105,14 @@ FORTRAN language can instrinsicly work with non-zero based multidimensional arra
 `FORTRAN complex scalar, complex array, complex Matrix`
 
 ```f77
-c    double precision Complex number
+c // double precision Complex number
      COMPLEX*16 alpha
-c
-c    double precision Complex array with offset 2
+c //
+c // double precision Complex array with offset 2
      COMPLEX*16 vector(2,10)
-c
-c    double precision complex MultiDimensional Array (matrix)
-c    rows 1 to 5 , columns 1 to 10
+c //
+c // double precision complex MultiDimensional Array (matrix)
+c // rows 1 to 5 , columns 1 to 10
      COMPLEX*16 A(1:5,1:10)
 ```
 
