@@ -48,7 +48,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 # Table of Contents
 
-* [Language differences with FORTRAN/BLAS](#language-differences-between-FORTRAN-BLAS-and-Javascript-blasjs)
+* [Language differences with FORTRAN/BLAS](#language-differences-with-FORTRAN-BLAS)
 * [*Read this first*: Helper functions](#helper-functions-for-working-with-blasjs)
 * [Level 1 Functions](#level-1)
     * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
@@ -98,7 +98,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     * chpr/zhpr
     * chpr2/zhpr2
 
-# Language differences between FORTRAN/BLAS and Javascript/blasjs.
+# language differences between FORTRAN BLAS.
 
 FORTRAN language can instrinsicly work with non-zero based multidimensional arrays and complex numbers. Below are some examples from FORTRAN that have no Javascript counterpart. The reference implementation of BLAS functions expect inputs of these types.
 
