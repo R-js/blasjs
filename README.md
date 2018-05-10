@@ -57,7 +57,13 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 * [Language differences with FORTRAN/BLAS](#language-differences-with-fortranblas)
 * [*Read this first*: Helper functions](#helper-functions-for-working-with-blasjs)
-    * [arrayrify](arrayrify)
+    * [arrayrify](#arrayrify)
+    * [complex](#complex)
+    * [each](#each)
+    * [map](#map)
+    * [muxCmplx](#muxCmplx)
+    * [numberPrecision](#numberPrecision)
+    * [FortranArr](#fortranArr)
 * [Level 1 Functions](#level-1)
     * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
     * [`sasum`/`dasum` sum of the absolute vector element values]()
@@ -193,11 +199,12 @@ sin() //
 
 ### `complex`
 
-Mimics the GNU Fortran extention [complex](https://gcc.gnu.org/onlinedocs/gfortran/COMPLEX.html).
+Mimics the GNU Fortran extension [complex](https://gcc.gnu.org/onlinedocs/gfortran/COMPLEX.html).
 Creates a JS object that represents a complex scalar number.
 Used by `blasjs` for scalar input arguments.
 
 _Example_:
+
 ```javascript
 const blas = require('blasjs');
 
@@ -254,6 +261,8 @@ Curried functional analog to `Array.prototype.map`, but takes arbitrary input.
 
 :warning: Forces the output to be a an array regardless of the input.
 
+_Example_:
+
 ```javascript
 const blas = require('blasjs');
 
@@ -281,6 +290,8 @@ map()()
 
 Creates an array of complex numbers from arrayed input.
 The result is always an array type.
+
+_Example_:
 
 ```javascript
 const blas = require('blasjs');
@@ -322,6 +333,51 @@ muxCmplx(1,-2)//
 //[ { re: 1, im: -2 } ]
 ```
 
+#### `numberPrecision`
+
+Enforces significant figure of a number, or on the properties of a JS object (deep search) with numeric values.
+
+_Example_:
+
+```javascript
+const blas = require('blasjs');
+
+const { helper: { numberPrecision } } = blas;
+
+const _4 = numberPrecision(4);
+
+_4(0.123456789);
+//0.1235
+
+_4(123456789)
+//123500000
+
+//enforce significance over properties
+_4( { car: 'Mazda' , aux: { priceUSD: 24.3253E+3, maxWarpSpeed:3.42111E-4 } } );
+//{ car: 'Mazda', aux: { priceUSD: 24330, maxWarpSpeed: 0.0003421 } }
+
+_4([0.123456, 0.78901234]);
+//[ 0.1235, 0.789 ]
+```
+
+#### `FortranArr`
+
+Abstraction of a 1 dimensional single precision (32bit) complex/real FORTRAN array.
+Used by [level 1](#level-1) and [level 2](#level-2) `blasjs` functions.
+`FortranArr`objects should be created by the [`fortranArrComplex32`](#fortranArrComplex32) and [`fortranArrComplex64`](#fortranArrComplex64) helper functions.
+
+_decl_:
+
+```typescript
+export declare type FortranArr = {
+    base: number;
+    r: fpArray; 
+    i?: fpArray;
+    s: FortranSetterGetter;
+    toArr: () => Complex[] | number[];
+};
+```
+
 * Iterates over object properties and values.
 * Iterates over array elements 
     fortranArrComplex32,
@@ -329,7 +385,7 @@ muxCmplx(1,-2)//
     fortranMatrixComplex32,
     fortranMatrixComplex64,
 
-    numberPrecision
+   
 
 
 

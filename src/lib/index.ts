@@ -24,11 +24,14 @@ export { level1, level2, level3 };
 import {
     arrayrify,
     complex,
+    Complex,
     each,
+    FortranArr,
     fortranArrComplex32,
     fortranArrComplex64,
     fortranMatrixComplex32,
     fortranMatrixComplex64,
+    fpArray,
     map,
     multiplexer,
     muxCmplx,
@@ -48,6 +51,8 @@ export const util = Object.freeze({
     muxCmplx,
     numberPrecision
 });
+
+export { Complex, fpArray, FortranArr };
 
 export const helper = util;
 
