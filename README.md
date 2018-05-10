@@ -1,4 +1,4 @@
-# BLASjs  (<span style="font-size:small" ><span style="color:red; font-weight: bold;">B</span>asic <span style="color:red; font-weight: bold;">L</span>inear <span style="color:red; font-weight: bold;">A</span>lgebra <span style="color:red; font-weight: bold;">S</span>ubprograms.</span>)
+# BLASjs  (<span style="font-size:small" ><span style="color:red; font-weight: bold;">B</span>asic <span style="color:red; font-weight: bold;">L</span>inear <span style="color:red; font-weight: bold;">A</span>lgebra <span style="color:red; font-weight: bold;">S</span>ubprograms</span>)
 
 This is a 100% Pure Javascript ( TypeScript ) re-write of the reference implementation `Basic Linear Algebra SubPrograms` (BLAS) numerical library found [here][blas-site].
 This is a manual re-write, ["emscripten"](https://kripken.github.io/emscripten-site) was not used.
@@ -48,7 +48,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 # Table of Contents
 
-* [Language differences with FORTRAN/BLAS](#language-differences-between-FORTRAN/BLAS-and- Javascript/blasjs)
+* [Language differences with FORTRAN/BLAS](#language-differences-between-FORTRAN-BLAS-and-Javascript-blasjs)
 * [*Read this first*: Helper functions](#helper-functions-for-working-with-blasjs)
 * [Level 1 Functions](#level-1)
     * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
