@@ -57,13 +57,16 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 * [Language differences with FORTRAN/BLAS](#language-differences-with-fortranblas)
 * [*Read this first*: Helper functions](#helper-functions-for-working-with-blasjs)
-    * [arrayrify](#arrayrify)
-    * [complex](#complex)
-    * [each](#each)
-    * [map](#map)
-    * [muxCmplx](#muxCmplx)
-    * [numberPrecision](#numberPrecision)
-    * [FortranArr](#fortranArr)
+    * [Types](#Types)
+        * [fpArray](#fpArray)
+        * [FortranArr](#fortranArr)
+    * [General Helpers]()
+        * [arrayrify](#arrayrify)
+        * [complex](#complex)
+        * [each](#each)
+        * [map](#map)
+        * [muxCmplx](#muxCmplx)
+        * [numberPrecision](#numberPrecision)
 * [Level 1 Functions](#level-1)
     * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
     * [`sasum`/`dasum` sum of the absolute vector element values]()
@@ -116,7 +119,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 FORTRAN language can instrinsicly work with non-zero based multidimensional arrays and complex numbers. Below are some examples from FORTRAN that have no Javascript counterpart. The reference implementation of BLAS functions expect inputs of these types.
 
-`FORTRAN complex scalar, complex array, complex Matrix`
+_The FORTRAN complex scalar, complex array and complex "Matrix"_
 
 ```fortran
 !    double precision Complex number
@@ -133,7 +136,7 @@ FORTRAN language can instrinsicly work with non-zero based multidimensional arra
 To work with the concept of non-zero based arrays and complex numbers in JS, 
 these FORTRAN constructs have equivalents in the `blasjs` library.
 
-`blasjs complex scalar, complex array, complex Matrix`
+_The `blasjs` helpers to create complex scalar, complex array and complex "Matrix" objects_
 
 ```javascript
   const blas = require('blasjs');
@@ -168,6 +171,75 @@ before anything else.
 uses "FORTRAN like" complex number 32/64 bit precision multidimensional complex/real data.
 These helper functions have been designed to significantly ease the use of working with these
 data types in JavaScript.
+
+## Types
+
+Typescript types/interfaces to mimic FORTRAN native (complex) multidimensional arrays.
+
+### `fpArray`
+
+Wraps JS types [Float32Array][float32-array] and [Float64Array][float32-array] into a single type.
+
+_decl_:
+
+```typescript
+export type fpArray = Float32Array | Float64Array;
+```
+
+### `FortranArr`
+
+Abstraction of a 1 dimensional single precision (32bit) complex/real FORTRAN array.
+Used by [level 1](#level-1) and [level 2](#level-2) `blasjs` functions.
+`FortranArr`objects should be created by the [`fortranArrComplex32`][float32-array] and [`fortranArrComplex64`][float64-array] helper functions.
+
+_decl_:
+
+```typescript
+export declare type FortranArr = {
+    base: number;
+    r: fpArray; 
+    i?: fpArray;
+    s: (index: number) => (re?: number, im?: number) => number | Complex;
+    toArr: () => Complex[] | number[];
+};
+```
+fields:
+* `base`: fortran by default has a 1-value based array. Mimiced by this property.
+* `r`: See decl [fpArray](#fpArray). The Real part of complex array.
+* `i`: (optional). See decl [fpArray](#fpArray). The Imaginary part of the complex array.
+* `s`: set, get values of the array. Uses FORTRAN style array indexes taking the value of `base` into account.
+* `toArr` generates an JavaScript array from the `r` and `i` (optional) data.
+
+Usage:
+
+```javascript
+import * as blas from 'blasjs';
+//typescript types
+import { Complex, fpArray, FortranArr, helper } from 'blasjs';
+
+const { fortranArrComplex64 } = helper;
+
+// You can also use the helper "complex" or "muxComplex"
+// to generate JS complex arrays
+const complexDataArr = [
+    { re: 1.8, im: -0.2 },
+    { re: 2.3, im: 0.6 }
+];
+
+// create a double precision complex array for blasj
+const sp = fortranArrComplex64(complexArr)(1);
+//
+sp.r[ 1 - sp.base ]
+// 1.8
+
+sp.i[ 2 - sp.base ]
+// 0.6
+
+sp.s(2)
+// 
+```
+
+
 
 ### `arrayrify`
 
@@ -333,7 +405,7 @@ muxCmplx(1,-2)//
 //[ { re: 1, im: -2 } ]
 ```
 
-#### `numberPrecision`
+### `numberPrecision`
 
 Enforces significant figure of a number, or on the properties of a JS object (deep search) with numeric values.
 
@@ -360,23 +432,7 @@ _4([0.123456, 0.78901234]);
 //[ 0.1235, 0.789 ]
 ```
 
-#### `FortranArr`
 
-Abstraction of a 1 dimensional single precision (32bit) complex/real FORTRAN array.
-Used by [level 1](#level-1) and [level 2](#level-2) `blasjs` functions.
-`FortranArr`objects should be created by the [`fortranArrComplex32`](#fortranArrComplex32) and [`fortranArrComplex64`](#fortranArrComplex64) helper functions.
-
-_decl_:
-
-```typescript
-export declare type FortranArr = {
-    base: number;
-    r: fpArray; 
-    i?: fpArray;
-    s: FortranSetterGetter;
-    toArr: () => Complex[] | number[];
-};
-```
 
 * Iterates over object properties and values.
 * Iterates over array elements 
@@ -396,8 +452,9 @@ export declare type FortranArr = {
 
 [blas-site]: http://www.netlib.org/blas/
 [blas-source]: https://github.com/Reference-LAPACK/lapack/tree/master/BLAS
+[float32-array]: [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array]
 
-
+[float64-array]: [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array]
 
 Some notes on Matrix symbols
 

@@ -73,7 +73,7 @@
         "conjugate matrix"
     ],
     "license": "GPL-3.0",
-    "main": "dist/lib/blas.js",
+    "main": "dist/lib/blasjs.js",
     "name": "blasjs",
     "repository": {
         "type": "git",
