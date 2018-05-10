@@ -104,15 +104,15 @@ FORTRAN language can instrinsicly work with non-zero based multidimensional arra
 
 `FORTRAN complex scalar, complex array, complex Matrix`
 
-```f77
-c // double precision Complex number
+```fortran
+!    double precision Complex number
      COMPLEX*16 alpha
-c //
-c // double precision Complex array with offset 2
+!
+!    double precision Complex array with offset 2
      COMPLEX*16 vector(2,10)
-c //
-c // double precision complex MultiDimensional Array (matrix)
-c // rows 1 to 5 , columns 1 to 10
+!
+!    double precision complex MultiDimensional Array (matrix)
+!    rows 1 to 5 , columns 1 to 10
      COMPLEX*16 A(1:5,1:10)
 ```
 
