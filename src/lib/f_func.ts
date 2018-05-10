@@ -272,7 +272,6 @@ export type FortranMatrixSetterGetter = (colSize: number) => (nrCols: number) =>
 export type MatrixType = 'n' | 'b' | 'bu' | 'bl' | 'pl' | 'pu'; //untyped, normal, bandified, bandified-upper, bandified-lower, packed-lower, packed-upper 
 
 export interface Matrix {
-    readonly type: MatrixType;
     readonly rowBase: number;
     readonly colBase: number;
     readonly nrCols: number; // inclusive note!!
@@ -362,7 +361,7 @@ function packedBandi_fied_Matrix(uplo: 'u' | 'l', k: number, A: Matrix): Fortran
 
 export function mimicFMatrix(r: fpArray, i?: fpArray) {
 
-    return function c1(lda: number, nrCols: number, matrixType: MatrixType = 'n', rowBase: number = 1, colBase = 1): Matrix {
+    return function c1(lda: number, nrCols: number, rowBase: number = 1, colBase = 1): Matrix {
 
         // check rows
         if (lda < 0) {
@@ -393,7 +392,6 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
             colSize: lda,
             r,
             i,
-            type: matrixType,
             coord(col) {
                 const tb = (col - colBase) * lda;
                 return row => tb + (row - rowBase)
@@ -536,7 +534,7 @@ export function imaginary(data?: number | number[] | Complex | Complex[]): numbe
 }
 
 export function fortranMatrixComplex32(...rest: (Complex | Complex[])[]):
-    (nrRows: number, nrCols: number, matrixType?: MatrixType, rowBase?: number, colBase?: number) => Matrix {
+    (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix {
 
     const collect = demuxComplex(rest as any);
     let i: Float32Array | undefined;
@@ -547,7 +545,7 @@ export function fortranMatrixComplex32(...rest: (Complex | Complex[])[]):
 }
 
 export function fortranMatrixComplex64(...rest: (Complex | Complex[])[]):
-    (nrRows: number, nrCols: number, matrixType?: MatrixType, rowBase?: number, colBase?: number) => Matrix {
+    (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix {
 
     const collect = demuxComplex(rest as any);
     let i: Float64Array | undefined;

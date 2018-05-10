@@ -400,7 +400,7 @@ describe('blas f_func utility functions', function n() {
                 it(`[${key}]/[${desc}]`, function t() {
                     const fortArr = fortranArrComplex32([complex(0.2, 0.4)])();
 
-                    const call = () => mimicFMatrix(fortArr.r, fortArr.i)(lda, nrCols, 'n', rowBase, colBase);
+                    const call = () => mimicFMatrix(fortArr.r, fortArr.i)(lda, nrCols, rowBase, colBase);
                     //call();
                     expect(call).to.throw();
                 });

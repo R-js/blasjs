@@ -321,35 +321,39 @@ const complexArr: Complex[] [
 
 The `Matrix` object mimics the functionalities of 2 dimensional FORTRAN arrays.
 It provides:
+* Storage for real or complex numbers.
 * As in FORTRAN you can choose array index offsets of the dimension.
-* It will physically map a 2 dimensional array into a single [Float32Array][float32-array] or [Float64Array][float64-array] object.
+* It will physically map a Real matrix into a single [Float32Array][float32-array] or [Float64Array][float64-array] object.
+* It will physically map a Complex matrix into two [Float32Array][float32-array] or [Float64Array][float64-array] object.
 
 #### physical storage of Matrix data
 
 The matrix element `A(i,j)`, (row `i` and column `j`) will be mapped to the physical
-position `( j - columnBase )* columnSize + ( i - rowBase )` in the `Float64Array`/`Float32Array`. Example: The elements of a 2x2 matrix A will be stored in this order `[a11, a21, a12, a22]`.
+position of a `TypedArray` with index `( j - columnBase )* columnSize + ( i - rowBase )`. Example: The elements of a 2x2 matrix A will be stored in this order `[a11, a21, a12, a22]`.
 
-Example: 
+Example:
 
 ```fortran
   DOUBLE PRECISION A1(2, 5)
-  DOUBLE PRECISION A2(1:2, 1:5)
+  DOUBLE PRECISION A2(1:2, 1:5) 
   DOUBLE PRECISION A3(-2:2,3:5)
 ```
 
-Equivalent using the `Matrix` type 
+Equivalent using the `Matrix` type:
 
 ```javascript
 const blas = require('blasjs');
 
 const { helper: { fortranArrComplex64, fortranArrComplex32} } = blas;
 
+const real = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
+const imaginare = [ 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1 ];
 // can use fortranArrComplex32 aswell
 const matrixCurry = fortranArrComplex64(data);
 
 // A1, A2, A3 are of type "Matrix"
 const A1 = matrixCurry(2,5);
-const A2 = matrixCurry(2,5, 'n', 1,1);
+const A2 = matrixCurry(2,5, 'n', 1, 1);
 const A3 = matrixCurry(5,3, 'n', -2, 3);
 ```
 
