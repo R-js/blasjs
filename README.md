@@ -331,12 +331,21 @@ It provides:
 The matrix element `A(i,j)`, (row `i` and column `j`) will be mapped to the physical
 position of a `TypedArray` with index `( j - columnBase )* columnSize + ( i - rowBase )`. Example: The elements of a 2x2 matrix A will be stored in this order `[a11, a21, a12, a22]`.
 
+#### functional construct
+
+The final `Matrix` interface is created in a 2-step process (currying).
+
+* Step 1: Wrap the complex data in a JS `closure`. 
+* Step 2: The final creation of the interface `Matrix` by explicitly specifying the value of the parameters. 
+
+Its is possible for Several different interface `Matrix` to share the underlying data created in `Step 1`.
+
 Example:
 
 ```fortran
-  DOUBLE PRECISION A1(2, 5)
-  DOUBLE PRECISION A2(1:2, 1:5) 
-  DOUBLE PRECISION A3(-2:2,3:5)
+  DOUBLE PRECISION A1( 2, 5 )
+  DOUBLE PRECISION A2( 1:2, 1:5 )
+  DOUBLE PRECISION A3(-1:0, -2:2 )
 ```
 
 Equivalent using the `Matrix` type:
@@ -344,17 +353,30 @@ Equivalent using the `Matrix` type:
 ```javascript
 const blas = require('blasjs');
 
-const { helper: { fortranArrComplex64, fortranArrComplex32} } = blas;
+const {
+    helper: {
+        fortranMatrixComplex32,
+        fortranMatrixComplex64,
+        muxCmplx
+    }
+} = blas;
 
-const real = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
-const imaginare = [ 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1 ];
-// can use fortranArrComplex32 aswell
-const matrixCurry = fortranArrComplex64(data);
+const real = [0.1, 0.2, 0.3, 0.4, 0.5,
+             0.6, 0.7, 0.8, 0.9, 1];
+const imaginare = [ 1, 0.9, 0.8, 0.7, 0.6,
+             0.5, 0.4, 0.3, 0.2, 0.1 ];
+// can use fortranMatrixComplex32 aswell
+const matrixCurry = fortranMatrixComplex64(muxCmplx(real, imaginare));
 
-// A1, A2, A3 are of type "Matrix"
-const A1 = matrixCurry(2,5);
-const A2 = matrixCurry(2,5, 'n', 1, 1);
-const A3 = matrixCurry(5,3, 'n', -2, 3);
+// A1, A2, A3 are of type "Matrix" sharing the same underlying data
+// DOUBLE PRECISION A1( 2, 5 )
+const A1 = matrixCurry(2, 5);
+
+// DOUBLE PRECISION A1( 1:2, 1:5 )
+const A2 = matrixCurry(2, 5, 1, 1);
+
+//DOUBLE PRECISION A1( -1:0, -2:2 )
+const A3 = matrixCurry(2, 5, -1, -2);
 ```
 
 _decl_:
