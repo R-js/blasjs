@@ -184,7 +184,7 @@ Typescript types/interfaces to mimic FORTRAN native (complex) multidimensional a
 
 ### `fpArray`
 
-Wraps JS types [Float32Array][float32-array] and [Float64Array][float32-array] into a single type.
+Wraps JS types [Float32Array][float32-array] and [Float64Array][float64-array] into a single type.
 
 _decl_:
 
@@ -209,7 +209,9 @@ export declare type FortranArr = {
     toArr: () => Complex[] | number[];
 };
 ```
+
 fields:
+
 * `base`: fortran by default has a 1-value based array. Mimiced by this property.
 * `r`: See decl [fpArray](#fpArray). The Real part of complex array.
 * `i`: (optional). See decl [fpArray](#fpArray). The Imaginary part of the complex array.
@@ -258,7 +260,7 @@ _Usage TypeScript:_
 
 ```typescript
 import {
-    // pure types 
+    // pure types
     Complex,
     fpArray,
     FortranArr,
@@ -319,67 +321,219 @@ const complexArr: Complex[] [
 
 ### `Matrix`
 
-The `Matrix` object mimics the functionalities of 2 dimensional FORTRAN arrays.
-It provides:
-* Storage for real or complex numbers.
-* As in FORTRAN you can choose array index offsets of the dimension.
-* It will physically map a Real matrix into a single [Float32Array][float32-array] or [Float64Array][float64-array] object.
-* It will physically map a Complex matrix into two [Float32Array][float32-array] or [Float64Array][float64-array] object.
+The `Matrix` object is the input of many level-2 and level-3 `blasjs` functions.
+`Matrix` is created by the helpers [fortranMatrixComplex32](#fortranMatrixComplex32) and
+[fortranMatrixComplex64](#fortranMatrixComplex64).
+`Matrix` encapsulates objects of [Float32Array][float32-array] or [Float64Array][float64-array], the blasjs.
 
-#### physical storage of Matrix data
+In this section the internals of `Matrix` are explained in detail and how `blasjs` accesses the data in the JS TypesArrays. 
 
-The matrix element `A(i,j)`, (row `i` and column `j`) will be mapped to the physical
-position of a `TypedArray` with index `( j - columnBase )* columnSize + ( i - rowBase )`. Example: The elements of a 2x2 matrix A will be stored in this order `[a11, a21, a12, a22]`.
+#### Float[32/64]Array Complex number storage for Matrix.
 
-#### functional construct
+The `Matrix` object has 2 properties `r` and `i` for respectively real and imaginary parts of matrix elements. These are the actual aforementioned JS TypedArrays. The imaginary property part is optional if it is not defined the Matrix represents solely an array of real elements.
 
-The final `Matrix` interface is created in a 2-step process (currying).
+```typescript
+declare type Matrix = { //Incomplete decleration
+    .
+    r: Float64Array|Float32Array;
+    i: Float64Array|Float32Array;
+    .
+}
+```
 
-* Step 1: Wrap the complex data in a JS `closure`. 
-* Step 2: The final creation of the interface `Matrix` by explicitly specifying the value of the parameters. 
+#### Handling FORTRAN matrices (multidimensional Arrays).
 
-Its is possible for Several different interface `Matrix` to share the underlying data created in `Step 1`.
+Contrary to languages like JavaScript. FORTRAN defines arrays ( aka `DIMENSIONS` in FORTRAN lingo ) as 1 based arrays by default.. This can be changed by specifying a different base in the declaration.
 
-Example:
+Some examples:
 
 ```fortran
-  DOUBLE PRECISION A1( 2, 5 )
-  DOUBLE PRECISION A2( 1:2, 1:5 )
-  DOUBLE PRECISION A3(-1:0, -2:2 )
+       DOUBLE PRECISION A1(4)  ! array indexes 1,2,3,4
+       DOUBLE PRECISION A2(-1:3)  ! array indexes -1,0,2,3 
+       DOUBLE PRECISION A3(0:3) ! Javascript like Array with 4 elements
 ```
 
-Equivalent using the `Matrix` type:
+This expands to 2-dimensional arrays (matrices).
+
+```fortran
+! (default) first index loops from 1 to 4(inclusive), second index loops from 1 to 5(inclusive)
+       DOUBLE PRECISION A1(4,5)
+! first index loops from -2 to 4(inclusive), second index loops from -5 to -7(inclusive)
+       DOUBLE PRECISION A2(-2:4,-5:-7)
+```
+
+The values of the FORTRAN array basis are preserved as `rowBase` (first index) and `colBase` (second index).
+
+```typescript
+declare type Matrix = { //SHOW PARTIAL TYPE
+    .
+    rowBase: number;
+    colBase: number;
+    .
+}
+```
+
+JavaScript doesn't have the notion of `typed 2-dimensional arrays`. The `Matrix` objects handles this by mapping 2 dimensional arrays to single 1-dimensional array, by serializing data on a column-first basis.
+
+For example the elements 2x2 Matrix will be mapped in a TypedArray as:
+
+```bash
+matrix A =
+ *           *
+ | a11  a12  |
+ | a21  a22  |
+ *           *
+
+# Stored in TypedArray as
+At = [a11,a21, a12, a22]
+```
+
+In case of complex values for A, the real part will be stored in `r` and the imaginary part in `i` each in the same column-first manner.
+
+#### performance
+
+Direct access to TypedArrays within the `Matrix` object is the preferable way to get/set matrix data.
+Since BLAS (and therefore `blasjs`) functions access matrices mostly to iterate over matrix row's first . It was decided to story 2 dimensional an a column-first basis.
+
+To help with the calculation of finding/setting an element A(i,j) in `Matrix` the following helper member functions have been added to `Matrix`.
+
+```typescript
+declare type Matrix = { //SHOW PARTIAL TYPE
+    .
+    rowBase: number;
+    colBase: number;
+    nrCols: number;
+    colSize: number;
+    .
+    colOfEx(number): number;
+    coord(col): (row) => number;
+    setCol(col: number, rowStart: number, rowEnd: number, value: number): void;
+    .
+}
+```
+
+Explanation:
+
+* `colSize`: The number of rows in the matrix.
+* `nrCols`: The number of columns in the matrix.
+* `colofEx`: Calculates the physical location of a `column offset` within the `TypedArray`. Taking int account the column base `colBase` and row base `colBase`. The index of  A(i,j) `=  (j - colBase)*colSize + i - rowBase`.
+* `coord`: Curried, emulates non-zero based FORTRAN index values for 2 dimensional Arrays. The index that is iterated over the least (usually) is used as the first to create the curried function.
+* `setCol`: Uses underlying `TypedArray`, `fill` method to set multiple column elements to a single value.
+
+Examples:
+
+This code sample will create a Matrix object encapsulating a 3x3 complex array.
 
 ```javascript
+
 const blas = require('blasjs');
+const { fortranMatrixComplex64, muxComplx } = blas.util;
 
-const {
-    helper: {
-        fortranMatrixComplex32,
-        fortranMatrixComplex64,
-        muxCmplx
-    }
-} = blas;
+/**
+ * Create a Martrix object and fill it with some data
+*/
+const a11 = { re: .2, im: -.11 };
+const a21 = { re: .1, im: -.2 };
+const a31 = { re: .3, im: .9 };
+const a12 = { re: .4, im: .5 };
+const a22 = { re: .9, im: -.34 };
+const a32 = { re: -.2, im: .45 };
+const a13 = { re: -.1, im: .89 };
+const a23 = { re: .43, im: .23 };
+const a33 = { re: .23, im: .56 };
 
-const real = [0.1, 0.2, 0.3, 0.4, 0.5,
-             0.6, 0.7, 0.8, 0.9, 1];
-const imaginare = [ 1, 0.9, 0.8, 0.7, 0.6,
-             0.5, 0.4, 0.3, 0.2, 0.1 ];
-// can use fortranMatrixComplex32 aswell
-const matrixCurry = fortranMatrixComplex64(muxCmplx(real, imaginare));
+const a = fortranMatrixComplex64(muxComplx(
+   a11, a21, a31, a12, a22, a32, a13, a23 a33
+]))(3,3);
+/*
+   The data in Matrix "a" is now stored in 2 TypedArray's.
+*/
 
-// A1, A2, A3 are of type "Matrix" sharing the same underlying data
-// DOUBLE PRECISION A1( 2, 5 )
-const A1 = matrixCurry(2, 5);
+// Get the second column offset
+// formula: "(j - colBase )* colSize - rowBase"
+const column3 = a.colOfEx(3);
+//5
 
-// DOUBLE PRECISION A1( 1:2, 1:5 )
-const A2 = matrixCurry(2, 5, 1, 1);
+a13.re === A.r[column3+1]; // Direct access to the TypedArray in A (real part)
+//true
 
-//DOUBLE PRECISION A1( -1:0, -2:2 )
-const A3 = matrixCurry(2, 5, -1, -2);
+a23.im === A.i[column3+2]; // Direct access to the TypedArray in A (imaginary part)
+//true
+
+// use Fortran like indexes (taking into account "rowBase" and "colBase")
+//
+A.r[ A.coord(2)(1) ] === a12.re
+//true
 ```
 
-_decl_:
+#### Creating new transformed Matrix instances from existing ones
+
+One can create/transform new Matrix instances form existing onces. A copy of all relevant data is made into the new `Matrix` instance.
+
+#### `Matrix.prototype.slice`
+
+Slices a rectangular piece of data out of an matrix into a new `Matrix` instance. **All arguments are FORTRAN-style non-zero based indexes**.
+
+```typescript
+declare type Matrix = { ..
+   slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
+   .. }
+```
+
+* `rowStart`: The row in the matrix to begin slicing.
+* `rowEnd`: The last row to include in the slice.
+* `colStart`: The column in the matrix to begin slicing.
+* `colEnd`: The last column to include in the slice.
+
+_[See Example](#example-new-matrix)_
+
+#### `Matrix.prototype.setLower`
+
+Returns a new Matrix where everything below the matrix diagonal is set to a `value`.
+Sets the real (and imaginary part, if it exist) to said value.
+
+```typescript
+declare type Matrix = { ..
+  setLower(value?: number): Matrix;
+   .. }
+```
+
+_[See Example](#example-new-matrix)_
+
+#### `Matrix.prototype.setUpper`
+
+Returns a new Matrix where everything below the matrix diagonal is set to a `value`.
+Sets the real (and imaginary part, if it exist) to said value.
+
+```typescript
+declare type Matrix = { ..
+  setLower(value?: number): Matrix;
+   .. }
+```
+
+```typescript
+ slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
+    setLower(value?: number): Matrix;
+    setUpper(value?: number): Matrix;
+    upperBand(value: number): Matrix;
+    lowerBand(value: number): Matrix;
+    real(): Matrix;
+    imaginary(): Matrix;
+
+
+```typescript
+declare Matrix {
+    .
+    setLower(value = m): Matrix;
+    setUpper(value = m): Matrix;
+    upperBand(value: number): Matrix;
+    lowerBand(value: number): Matrix;
+    .
+}
+```
+
+
+The full type declaration of `Martrix`:
 
 ```typescript
 interface Matrix {
@@ -390,18 +544,19 @@ interface Matrix {
     readonly r: fpArray;
     readonly i?: fpArray;
     readonly colOfEx: (number) => number;
-
     coord(col): (row) => number;
     setCol(col: number, rowStart: number, rowEnd: number, value: number): void;
+    
     slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
     setLower(value?: number): Matrix;
     setUpper(value?: number): Matrix;
     upperBand(value: number): Matrix;
     lowerBand(value: number): Matrix;
-    packedUpper(value?: number): FortranArr;
-    packedLower(value?: number): FortranArr;
     real(): Matrix;
     imaginary(): Matrix;
+ 
+    packedUpper(value?: number): FortranArr;
+    packedLower(value?: number): FortranArr;
     toArr(): Complex[] | number[];
 }
 ```
@@ -692,13 +847,9 @@ _decl_
 
 ```
 
-```
-
-
 ### `fortranMatrixComplex64`
 
 Constructs an analog for a double precision 2-dimensional FORTRAN array (a matrix).
-
 
 
 [srotg]: https://en.wikipedia.org/wiki/Givens_rotation
