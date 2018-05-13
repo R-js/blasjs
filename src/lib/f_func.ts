@@ -275,7 +275,7 @@ export interface Matrix {
     readonly rowBase: number;
     readonly colBase: number;
     readonly nrCols: number; // inclusive note!!
-    readonly colSize: number;
+    readonly nrRows: number;
     readonly r: fpArray; //[(ncols+1)*(nrows+1)]
     readonly i?: fpArray; //imaginary part of matrix [(ncols+1)*(nrows+1)]
     //readonly colOf: (number) => number;
@@ -389,7 +389,7 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
             rowBase,
             colBase,
             nrCols,
-            colSize: lda,
+            nrRows: lda,
             r,
             i,
             coord(col) {
@@ -398,7 +398,7 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
             },
             //  colOf: (col) => (col - colBase) * nrRows,
             colOfEx: (col) => (col - colBase) * lda - rowBase,
-            setCol(col: number, rowStart: number, rowEnd: number, value: number): void {
+            setCol(col: number, rowStart: number, rowEnd: number, value: number = 0): void {
                 // dont use colOf (avoid extra function)
                 const coords = (col - this.colBase) * lda - rowBase;
                 this.r.fill(value, coords + rowStart, coords + rowEnd + 1);
@@ -421,7 +421,7 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
             toArr(): Complex[] | number[] {
                 const rc: any[] = new Array(lda * nrCols).fill(0);
                 for (let j = 1; j <= nrCols; j++) {
-                    const coor = (j - 1) * this.colSize - 1;
+                    const coor = (j - 1) * this.nrRows - 1;
                     for (let i = 1; i <= lda; i++) {
                         rc[coor + i] = (this.i === undefined) ? this.r[coor + i] : { re: this.r[coor + i], im: this.i[coor + i] };
                     }
@@ -429,16 +429,18 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
                 return rc;
             },
             slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix {
-                const rowSize = (rowEnd - rowStart) + 1;
-                const colSize = (colEnd - colStart) + 1;
+                const _nrRows = (rowEnd - rowStart) + 1;
+                const _nrCols = (colEnd - colStart) + 1;
 
-                let re = new Float64Array(rowSize * colSize);
+                let re = new Float64Array(_nrRows * _nrCols);
                 let im: Float64Array | undefined;
+                //
                 if (this.i) {
-                    im = new Float64Array(rowSize * colSize);
+                    im = new Float64Array(_nrRows * _nrCols);
                 }
+                //
                 for (let j = colStart; j <= colEnd; j++) {
-                    const base = (j - colStart) * rowSize - 1;
+                    const base = (j - colStart) * _nrRows - 1;
                     const coorJ = this.colOfEx(j);
                     for (let i = rowStart; i <= rowEnd; i++) {
                         // console.log(j, coorJ + i, base + i, r[coorJ + i]);
@@ -448,43 +450,47 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
                         }
                     }
                 }
-                return mimicFMatrix(re, im)(rowSize, colSize);
+                return mimicFMatrix(re, im)(_nrRows, _nrCols);
             },
             setLower(value = 0) {
+                const rc = this.r.slice();
+                let ic = this.i ? this.i.slice() : undefined;
                 for (let y = 1; y < nrCols; y++) {
                     const coor = this.colOfEx(y);
-                    this.r.fill(value, coor + y + 1, coor + lda + 1);
-                    if (this.i) {
-                        this.i.fill(value, coor + y + 1, coor + lda + 1);
+                    rc.fill(value, coor + y + 1, coor + lda + 1);
+                    if (ic) {
+                        ic.fill(value, coor + y + 1, coor + lda + 1);
                     }
                 }
-                return this;
+                return mimicFMatrix(rc, ic)(this.nrRows, this.nrCols, this.rowBase, this.colBase);
             },
             setUpper(value = 0) {
+                const rc = this.r.slice();
+                let ic = this.i ? this.i.slice() : undefined;
                 for (let y = 2; y <= nrCols; y++) {
                     const coor = this.colOfEx(y);
-                    r.fill(value, coor + 1, coor + min(y, lda));
-                    if (this.i) {
-                        this.i.fill(value, coor + 1, coor + min(y, lda));
+                    rc.fill(value, coor + 1, coor + min(y, lda));
+                    if (ic) {
+                        ic.fill(value, coor + 1, coor + min(y, lda));
                     }
                 }
-                return this;
+                return mimicFMatrix(rc, ic)(this.nrRows, this.nrCols, this.rowBase, this.colBase);
             },
             real() {
                 let reC: fpArray;
                 reC = this.r.slice();
-                return mimicFMatrix(reC)(this.nrCols, this.colSize);
+                return mimicFMatrix(reC)(this.nrRows, this.nrCols);
             },
             imaginary() {
                 let imC: fpArray;
                 if (!this.i) {
-                    imC = new Float64Array(this.nrCols * this.colSize);
+                    imC = new Float64Array(this.nrRows * this.nrCols);
                     imC.fill(0);
                 }
                 else {
                     imC = this.i.slice(); //copy
                 }
-                return mimicFMatrix(imC)(this.nrCols, this.colSize);
+                return mimicFMatrix(imC)(this.nrRows, this.nrCols);
             }
         });
     }

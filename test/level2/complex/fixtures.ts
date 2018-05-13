@@ -2012,7 +2012,16 @@ export const fixture = {
                 lda: 6,
                 incx: 1,
                 alpha: 0.2, // NOTE: MUST BE REAL
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: (() => {
+                    const m = matrix_mxn(6, 8);
+                    //console.log(m.r);
+                    const m1 = m.slice(1, 6, 1, 6);
+                    //console.log(m1.r);
+                    const m2 = m1.setLower(0);
+                    //console.log(m2.i.length);
+                    //process.exit(1);
+                    return m2;
+                })(),
                 x: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2183,7 +2192,13 @@ export const fixture = {
                 lda: 6,
                 incx: -1,
                 alpha: 1.234, // NOTE: MUST BE REAL
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: (() => {
+                    const m = matrix_mxn(6, 8).slice(1, 6, 1, 6);
+                    const m2 = m.setUpper(0);
+                    // console.log(m2.r); debug
+                    // process.exit(1);
+                    return m2;
+                })(),
                 x: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);

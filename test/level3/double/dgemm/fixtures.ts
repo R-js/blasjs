@@ -484,6 +484,7 @@ export const fixture = {
         case10: {
             desc: 'trA="n", trB="c" m=4, n=6, k=3, alpha(0.3), beta(0)',
             input: {
+                cmd: 'xdebug',
                 trA: 'n',
                 trB: 'c',
                 m: 4, // A(M,K), C(M,N)
@@ -494,7 +495,13 @@ export const fixture = {
                 ldc: 6, // ldc >= M
                 beta: 0,
                 alpha: 0.3,
-                a: matrix_mxn(6, 6).real(),
+                a: (() => {
+                    const m = matrix_mxn(6, 6);
+                    const m2 = m.real();
+                    console.log(m2);
+                    //process.exit(1);
+                    return m2;
+                })(),
                 b: matrix_mxn(6, 6).real(),
                 c: matrix_mxn(6, 6).real(),
             },

@@ -166,7 +166,7 @@ export function sgemm(
                     }
                 }
                 for (let l = 1; l <= k; l++) {
-                    let temp = alpha * b.r[(l - b.colBase) * b.colSize - b.rowBase + j];
+                    let temp = alpha * b.r[(l - b.colBase) * b.nrRows - b.rowBase + j];
                     const coorAL = a.colOfEx(l);
                     for (let i = 1; i <= m; i++) {
                         c.r[coorCJ + i] += temp * a.r[coorAL + i];

@@ -326,14 +326,14 @@ The `Matrix` object is the input of many level-2 and level-3 `blasjs` functions.
 [fortranMatrixComplex64](#fortranMatrixComplex64).
 `Matrix` encapsulates objects of [Float32Array][float32-array] or [Float64Array][float64-array], the blasjs.
 
-In this section the internals of `Matrix` are explained in detail and how `blasjs` accesses the data in the JS TypesArrays. 
+In this section the internals of `Matrix` are explained in detail and how `blasjs` accesses the data in the JS TypesArrays.
 
 #### Float[32/64]Array Complex number storage for Matrix.
 
 The `Matrix` object has 2 properties `r` and `i` for respectively real and imaginary parts of matrix elements. These are the actual aforementioned JS TypedArrays. The imaginary property part is optional if it is not defined the Matrix represents solely an array of real elements.
 
 ```typescript
-declare type Matrix = { //Incomplete decleration
+declare type Matrix = { //Incomplete declaration
     .
     r: Float64Array|Float32Array;
     i: Float64Array|Float32Array;
@@ -403,7 +403,7 @@ declare type Matrix = { //SHOW PARTIAL TYPE
     rowBase: number;
     colBase: number;
     nrCols: number;
-    colSize: number;
+    nrRows: number;
     .
     colOfEx(number): number;
     coord(col): (row) => number;
@@ -414,57 +414,13 @@ declare type Matrix = { //SHOW PARTIAL TYPE
 
 Explanation:
 
-* `colSize`: The number of rows in the matrix.
+* `nrRows`: The number of rows in the matrix.
 * `nrCols`: The number of columns in the matrix.
-* `colofEx`: Calculates the physical location of a `column offset` within the `TypedArray`. Taking int account the column base `colBase` and row base `colBase`. The index of  A(i,j) `=  (j - colBase)*colSize + i - rowBase`.
+* `colofEx`: Calculates the physical location of a `column offset` within the `TypedArray`. Taking int account the column base `colBase` and row base `colBase`. The index of  A(i,j) `=  (j - colBase)*nrRows + i - rowBase`.
 * `coord`: Curried, emulates non-zero based FORTRAN index values for 2 dimensional Arrays. The index that is iterated over the least (usually) is used as the first to create the curried function.
 * `setCol`: Uses underlying `TypedArray`, `fill` method to set multiple column elements to a single value.
 
-Examples:
-
-This code sample will create a Matrix object encapsulating a 3x3 complex array.
-
-```javascript
-
-const blas = require('blasjs');
-const { fortranMatrixComplex64, muxComplx } = blas.util;
-
-/**
- * Create a Martrix object and fill it with some data
-*/
-const a11 = { re: .2, im: -.11 };
-const a21 = { re: .1, im: -.2 };
-const a31 = { re: .3, im: .9 };
-const a12 = { re: .4, im: .5 };
-const a22 = { re: .9, im: -.34 };
-const a32 = { re: -.2, im: .45 };
-const a13 = { re: -.1, im: .89 };
-const a23 = { re: .43, im: .23 };
-const a33 = { re: .23, im: .56 };
-
-const a = fortranMatrixComplex64(muxComplx(
-   a11, a21, a31, a12, a22, a32, a13, a23 a33
-]))(3,3);
-/*
-   The data in Matrix "a" is now stored in 2 TypedArray's.
-*/
-
-// Get the second column offset
-// formula: "(j - colBase )* colSize - rowBase"
-const column3 = a.colOfEx(3);
-//5
-
-a13.re === A.r[column3+1]; // Direct access to the TypedArray in A (real part)
-//true
-
-a23.im === A.i[column3+2]; // Direct access to the TypedArray in A (imaginary part)
-//true
-
-// use Fortran like indexes (taking into account "rowBase" and "colBase")
-//
-A.r[ A.coord(2)(1) ] === a12.re
-//true
-```
+_[See Example](#matrix-examples)_
 
 #### Creating new transformed Matrix instances from existing ones
 
@@ -475,9 +431,11 @@ One can create/transform new Matrix instances form existing onces. A copy of all
 Slices a rectangular piece of data out of an matrix into a new `Matrix` instance. **All arguments are FORTRAN-style non-zero based indexes**.
 
 ```typescript
-declare type Matrix = { ..
+declare type Matrix = { // only "slice" is shown
+   .
    slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
-   .. }
+   .
+}
 ```
 
 * `rowStart`: The row in the matrix to begin slicing.
@@ -485,7 +443,7 @@ declare type Matrix = { ..
 * `colStart`: The column in the matrix to begin slicing.
 * `colEnd`: The last column to include in the slice.
 
-_[See Example](#example-new-matrix)_
+_[See Example](#matrix-examples)_
 
 #### `Matrix.prototype.setLower`
 
@@ -493,78 +451,252 @@ Returns a new Matrix where everything below the matrix diagonal is set to a `val
 Sets the real (and imaginary part, if it exist) to said value.
 
 ```typescript
-declare type Matrix = { ..
-  setLower(value?: number): Matrix;
-   .. }
+declare type Matrix = { // only "setLower" is shown.
+  .
+  setLower(value = 0): Matrix;
+  .
+}
 ```
 
-_[See Example](#example-new-matrix)_
+_[See Example](#matrix-examples)_
 
 #### `Matrix.prototype.setUpper`
 
-Returns a new Matrix where everything below the matrix diagonal is set to a `value`.
+Returns a new Matrix where everything _below_ the matrix diagonal is set to a `value`.
 Sets the real (and imaginary part, if it exist) to said value.
 
 ```typescript
-declare type Matrix = { ..
-  setLower(value?: number): Matrix;
-   .. }
-```
-
-```typescript
- slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
-    setLower(value?: number): Matrix;
-    setUpper(value?: number): Matrix;
-    upperBand(value: number): Matrix;
-    lowerBand(value: number): Matrix;
-    real(): Matrix;
-    imaginary(): Matrix;
-
-
-```typescript
-declare Matrix {
-    .
-    setLower(value = m): Matrix;
-    setUpper(value = m): Matrix;
-    upperBand(value: number): Matrix;
-    lowerBand(value: number): Matrix;
-    .
+declare type Matrix = { //only "setUpper" is shown
+  .
+  setUpper(value = 0): Matrix;
+  .
 }
 ```
 
+_[See Example](#matrix-examples)_
 
-The full type declaration of `Martrix`:
+#### `Matrix.prototype.upperBand`
+
+Returns a new `Matrix` object where the `k` super-diagonals are retained into the new copy.
+The efficient storage format of `BLAS` band matrices is used.
 
 ```typescript
-interface Matrix {
-    readonly rowBase: number;
-    readonly colBase: number;
-    readonly nrCols: number;
-    readonly colSize: number;
-    readonly r: fpArray;
-    readonly i?: fpArray;
-    readonly colOfEx: (number) => number;
-    coord(col): (row) => number;
-    setCol(col: number, rowStart: number, rowEnd: number, value: number): void;
-    
-    slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
-    setLower(value?: number): Matrix;
-    setUpper(value?: number): Matrix;
-    upperBand(value: number): Matrix;
-    lowerBand(value: number): Matrix;
-    real(): Matrix;
-    imaginary(): Matrix;
- 
-    packedUpper(value?: number): FortranArr;
-    packedLower(value?: number): FortranArr;
-    toArr(): Complex[] | number[];
+declare type Matrix = { //only "upperBand" is shown
+  .
+  upperBand(k = nrRows - 1): Matrix;
+  .
 }
 ```
 
-* `rowBase`:
+The default value for `k` is the the maximum size possible for the number of super-diagonals: ( `nrRows-1` )
 
+_[See Example](#matrix-examples)_
 
+#### `Matrix.prototype.lowerBand`
 
+Returns a new `Matrix` object where the `k` sub-diagonals are retained into the new copy.
+The efficient storage format of `BLAS` band matrices is used.
+
+```typescript
+declare type Matrix = { // Only "lowerBand" is shown
+  .
+  lowerBand(k = nrRows-1): Matrix;
+  .
+}
+```
+
+The default value for `k` is the the maximum size possible for the number of sub-diagonals: ( `nrRows-1` )
+
+_[See Example](#matrix-examples)_
+
+#### `Matrix.prototype.real`
+
+Returns a new `Matrix` object where with only real elements (omits the imaginary part during copy).
+
+```typescript
+declare type Matrix = { // Only "real" is shown
+  .
+  real(): Matrix;
+  .
+}
+```
+
+_[See Example](#matrix-examples)_
+
+#### `Matrix.prototype.imaginary`
+
+Returns a new `Matrix` object where with only imaginary part of the element (omits the real part during copy).
+**If there were now imaginary elements **
+
+```typescript
+declare type Matrix = { // Only "imaginary" is shown.
+  .
+  imaginary(): Matrix;
+  .
+}
+```
+
+_[See Example](#matrix-examples)_
+
+#### Packed Matrices
+
+BLAS ( and therefore `blasjs` ) can work with upper/lower-matrices and band-matrices in the most compacted form, aka `packed matrices`.
+With `packed matrices` there are no unused elements in the matrix (no zeros). Packed matrices are instances of [FortranArr](#fortranarr). BLAS reference implementation in FORTRAN uses 1 dimensional arrays as an analog.
+
+#### `Matrix.prototype.packedUpper`
+
+Creates a packed array from a normal/upper Matrix only referencing the diagonal and super-diagonals.
+
+```typescript
+declare type Matrix = { // Only "packedUpper" is shown.
+  .
+  packedUpper(k = nrRows-1): FortranArr;
+  .
+}
+```
+
+_[See Example](#matrix-examples)_
+
+The default value for `k` is the the maximum size possible for the number of super-diagonals: ( `nrRows-1` )
+
+#### `Matrix.prototype.packedLower`
+
+Creates a packed array from a normal/upper Matrix only referencing the diagonal and sub-diagonals.
+
+```typescript
+declare type Matrix = { // Only "packedUpper" is shown.
+  .
+  packedLower(k = nrRows-1): FortranArr;
+  .
+}
+```
+
+_[See Example](#matrix-examples)_
+
+The default value for `k` is the the maximum size possible for the number of sub-diagonals: ( `nrRows-1` )
+
+```typescript
+declare type Matrix = { // Only "packedUpper" is shown.
+  .
+  packedLower(k = nrRows - 1): FortranArr;
+  .
+}
+```
+
+The default value for `k` is the the maximum size possible for the number of sub-diagonals: ( `nrRows - 1` )
+
+#### Convert Matrix object to a JS array
+
+The `Matrix` object can convert the underlying TypedArray(s) to real JavaScript arrays.
+
+#### `Matrix.prototype.toArr`
+
+Creates a normal JS Array with element of type 'number' or of type [Complex](#type-complex)
+
+```typescript
+declare type Matrix = { // Only "toArr" is shown.
+  .
+  toArr(): number[]|Complex[];
+  .
+}
+```
+
+_[See Example](#matrix-examples)_
+
+#### Summary: Full type declaration of Matrix
+
+Putting it all together, here is the full type declaration of `Matrix`:
+
+```typescript
+declare type Matrix = {
+     rowBase: number;
+     colBase: number;
+     nrCols: number;
+     nrRows: number;
+     r: fpArray;
+     i?: fpArray; //optional
+     //
+     // methods
+     //
+     colOfEx(column: number): void;
+     coord(col: number): (row: number): void;
+     setCol(col: number, rowStart: number, rowEnd: number, value: number): void;
+     //
+     slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
+     setLower(value?: number): Matrix;
+     setUpper(value?: number): Matrix;
+     upperBand(k: number): Matrix;
+     lowerBand(k: number): Matrix;
+     real(): Matrix;
+     imaginary(): Matrix;
+     //
+     packedUpper(value?: number): FortranArr;
+     packedLower(value?: number): FortranArr;
+     //
+     toArr(): Complex[] | number[];
+}
+```
+
+#### Matrix Examples
+
+Common usage of the Matrix type.
+
+```javascript
+const blas = require('../blasjs');
+const { fortranMatrixComplex64 } = blas.helper;
+
+// some matrix data 3x3 array  aka a_row_column
+
+const a11 = { re: .2, im: -.11 };
+const a21 = { re: .1, im: -.2 };
+const a31 = { re: .3, im: .9 };
+const a12 = { re: .4, im: .5 };
+const a22 = { re: .9, im: -.34 };
+const a32 = { re: -.2, im: .45 };
+const a13 = { re: -.1, im: .89 };
+const a23 = { re: .43, im: .23 };
+const a33 = { re: .23, im: .56 };
+
+//create Matrix A
+const A = fortranMatrixComplex64([
+    a11, a21, a31, a12, a22, a32, a13, a23, a33
+])(3, 3);
+
+// get the second column
+const columnj = A.colOfEx(3); // formula: (j - colBase )* nrRows
+
+A.r[A.coord(1, 2)] === a12.re // true
+
+A.slice(1, 2,  2, 3);// creates new matrix with elements from A
+/*[
+    a12 a13
+    a22 a23
+]*/
+
+A.setLower(0); // creates new Matrix object from A
+/*[
+    a11 a12 a13
+    0   a22 a23
+    0   0   a33
+]*/
+
+A.setUpper(0); //creates new Matrix object from A
+/*[
+    a11 0   0
+    a21 a22 0
+    a31 a32 a33
+]*/
+
+A.upperBand(1); // banded array storage for BLAS(js)
+/*[
+    0   a13   0
+    a11 a22   0
+    a31 a32 a33
+]*/
+
+rowStart: number, rowEnd: number, colStart: number, colEnd: number)
+
+```
 
 ## General Helpers
 
@@ -635,7 +767,7 @@ const { helper: { each } } = blas;
 //Iterates over an object like a map
 const curry1 = each( {  hello: 'world', ts: new Date() })
 curry1( (val, key) => console.log(`${val} ':'  ${key}`)))
-//world : hello
+//world: hello
 //2018-05-10T13:57:08.923Z : ts
 
 //Handles array also
