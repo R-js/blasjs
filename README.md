@@ -689,13 +689,54 @@ A.setUpper(0); //creates new Matrix object from A
 
 A.upperBand(1); // banded array storage for BLAS(js)
 /*[
-    0   a13   0
-    a11 a22   0
-    a31 a32 a33
+    0   a12   a23
+    a11 a22   a33
 ]*/
 
-rowStart: number, rowEnd: number, colStart: number, colEnd: number)
+A.lowerBand(1); // banded array storage for BLAS(js)
+/*[
+   a11  a22  a33
+   a21  a32  0    
+]*/
 
+const Areal = A.real(); 
+// Areal.i is undefined
+// Areal.r =
+/*[
+    0.2 0.4  -0.1
+    0.1 0.9   0.43
+    0.3 -0.2, 0.23
+]*/
+
+const Aimag = A.imaginary(); 
+// imaginary parts are copied to real side in new Matrix
+// Aimag.i is undefined
+// Aimag.r =
+/*[
+    -0.11   0.5,  0.89
+     -0.2  -0.34  0.23
+      0.9   0.45  0.56
+]*/
+
+A.packedUpper(1) 
+/* [ a11 a12 a22 a23 a 33] */
+
+A.packedLower(1)
+/* [ a11 a21 a22 a32 a33] */
+
+A.toArr(); // returns JavaScript Array
+/*[
+  { re: 0.2, im: -0.11 },
+  { re: 0.1, im: -0.2 },
+  { re: 0.3, im: 0.9 },
+  { re: 0.4, im: 0.5 },
+  { re: 0.9, im: -0.34 },
+  { re: -0.2, im: 0.45 },
+  { re: -0.1, im: 0.89 },
+  { re: 0.43, im: 0.23 },
+  { re: 0.23, im: 0.56 }
+]
+*/
 ```
 
 ## General Helpers
