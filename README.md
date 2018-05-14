@@ -86,9 +86,10 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [muxCmplx](#muxCmplx)
         * [numberPrecision](#numberPrecision)
     * [Vector and Matrix constructors](#vector-and-matrix-constructors)
-        * [fortranArrComplex32](#fortranArrComplex32)
-        * [fortranArrComplex64](#fortranArrComplex64)
-        * [](#)
+        * [fortranArrComplex32](#fortranarrcomplex32)
+        * [fortranArrComplex64](#fortranarrcomplex64)
+        * [fortranMatrixComplex32](#fortranmatrixcomplex32)
+        * [fortranMatrixComplex64](#fortranmatrixcomplex64)
 * [Level 1 Functions](#level-1)
     * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
     * [`sasum`/`dasum` sum of the absolute vector element values]()
@@ -950,80 +951,114 @@ _4([0.123456, 0.78901234]);
 //[ 0.1235, 0.789 ]
 ```
 
-## Vector and Matrix constructors
+## Vector Constructors
 
-JS Analog for working with single/double precision complex/real Arrays and Matrices. 
+These constructors create the `FortranArr` object for working with single/double precision complex/real Arrays and Matrices.
 
 ### `fortranArrComplex32`
 
-Constructs a [FortranArr](#fortranArr) object using 2 [Float32Array][float32-array] as a single array of complex numbers. If only REAL numbers are
-specified only a single `Float32Array` object will be used.
-
-_decl_:
+Constructs a [FortranArr](#fortranArr) object using [Float32Array][float32-array] as the underlying array(s) (plural in the case of complex) elements.
 
 ```typescript
-function fortranArrComplex32(
+declare function fortranArrComplex32(
     ...rest: (number | number[] | Complex | Complex[])[]
     ): (offset = 1) => FortranArr;
 ```
 
-* `rest`: takes as input an array or a single value of type number or [Complex](#type-complex).
-* `offset`: the Fortran offset (defaults to 1)
-* returns an object of type [FortranArr](#fortranarr)
+`Argument list`:
+
+* `rest`: takes as input.
+    * A single numeric value.
+    * A single [`Complex`](#type-complex) object.
+    * An array of [`Complex`](#type-complex) objects.
+    * An array of number values.
+*  `offset`: the Fortran dimension offset (defaults to 1)
 
 Usage:
 
 ```javascript
 const blas = require('blasjs');
 
-const { fortranArrComplex32 } = helper;
+const { fortranArrComplex32 } = blas.helper;
 
-// You can also use the helper "complex" or "muxComplex"
-// to generate JS complex arrays
 const complexDataArr = [
     { re: 1.8, im: -0.2 },
     { re: 2.3, im: 0.6 }
 ];
 
-// Create an object that mimics FORTRAN COMPLEX*8 SP(1:2)
-//    and fill it with above data
-const sp = fortranArrComplex32(complexArr)();
+const realData = [ 0.1, 2, 0.34, .56 ];
+
+const sp1 = fortranArrComplex32(complexDataArr)();
+//sp1.r = [ 1.7999999523162842, 2.299999952316284 ],
+//sp1.i = [ -0.20000000298023224, 0.6000000238418579 ],
+
+const sp2 = fortranArrComplex32(realData)();
+//sp2.r =  [ 0.10000000149011612, 2, 0.3400000035762787, 0.5600000023841858 ]
+//sp2.i = undefined
+
+const sp3 = fortranArrComplex32({re:0.2, im:-0.3})();
+//[ 0.20000000298023224 ]
+//[ -0.30000001192092896 ]
+
+const sp4 = fortranArrComplex32(123)(4);
+/*{ 
+  base: 4,
+  r: Float32Array [ 123 ],
+  i: undefined,
+}*/
 ```
 
 ### `fortranArrComplex64`
 
-Encapsulates two [Float64Array][float64-array] as a single array of complex numbers. If only REAL numbers are
-used only a single `Float64Array` object will be used.
-
-_decl_:
+Constructs a [FortranArr](#fortranArr) object using [Float64Array][float64-array] as the underlying array(s) (plural in the case of complex) elements.
 
 ```typescript
-function fortranArrComplex64(
+declare function fortranArrComplex64(
     ...rest: (number | number[] | Complex | Complex[])[]
     ): (offset = 1) => FortranArr;
 ```
 
-* `rest`: takes as input an array or a single value of type number or [Complex](#type-complex).
-* `offset`: the Fortran offset (defaults to 1)
-* returns an object of type (FortranArr)[#fortranarr]
+`Argument list`:
+
+* `rest`: takes as input.
+    * A single numeric value.
+    * A single [`Complex`](#type-complex) object.
+    * An array of [`Complex`](#type-complex) objects.
+    * An array of number values.
+*  `offset`: the Fortran dimension offset (defaults to 1)
 
 Usage:
 
 ```javascript
 const blas = require('blasjs');
 
-const { fortranArrComplex64 } = helper;
+const { fortranArrComplex64 } = blas.helper;
 
-// You can also use the helper "complex" or "muxComplex"
-// to generate JS complex arrays
 const complexDataArr = [
     { re: 1.8, im: -0.2 },
     { re: 2.3, im: 0.6 }
 ];
 
-// Create an object that mimics FORTRAN COMPLEX*16 SP(1:2)
-//    and fill it with above data
-const sp = fortranArrComplex64(complexArr)();
+const realData = [ 0.1, 2, 0.34, .56 ];
+
+const sdp1 = fortranArrComplex64(complexDataArr)();
+//sp1.r = [ 1.8, 2.3 ],
+//sp1.i = [ -0.2, 0.6 ],
+
+const sdp2 = fortranArrComplex64(realData)();
+//sp2.r =  [ 0.1, 2, 0.34, 0.56 ]
+//sp2.i = undefined
+
+const sp3 = fortranArrComplex64({re:0.2, im:-0.3})();
+//[ 0.2 ]
+//[ -0.3 ]
+
+const sp4 = fortranArrComplex64(123)(4);
+/*{ 
+  base: 4,
+  r: Float32Array [ 123 ],
+  i: undefined,
+}*/
 ```
 
 ### `fortranMatrixComplex32`

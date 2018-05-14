@@ -73,8 +73,6 @@ export type FortranArrEComplex = {
 
 };
 
-
-
 export function isComplex(a): a is Complex {
     return (
         (a !== null) &&
@@ -132,18 +130,11 @@ export function mimicFArray(r: fpArray, i?: fpArray) {
     //    func['buffer'] = arr;
     return func;
 }
-/*
-export function scabs1(c: Complex) {
-    return abs(c.re) + abs(c.im);
-}
 
-export function scabs1A(re: number, im: number): number {
-    return abs(re) + abs(im);
-}
-*/
 export function complex(re: number = 0, im: number = 0): Complex {
     return { re, im };
 }
+
 export function flatten<T>(...rest: (T | T[])[]): T[] {
     let rc: T[] = [];
     for (const itm of rest) {
@@ -209,21 +200,6 @@ export function fortranArrComplex64(...rest: (number | number[] | Complex | Comp
     return mimicFArray(new Float64Array(collect.reals), i);
 }
 
-
-
-/* 
-export const cmult = (reA: number, imA: number, reB: number, imB: number): Complex => {
-    //   (a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-    return {
-        re: (reA * reB - imA * imB),
-        im: (reA * imB + imA * reB)
-    };
-}*/
-/*
-export const cabs = (reA: number, imA: number) => {
-    return Math.sqrt(reA * reA + imA * imA);
-}
-*/
 export enum ERROR {
     ERR_MISSING_IMAGINARY = 1,
     ERR_MISSING_REAL = 2,
@@ -560,11 +536,7 @@ export function fortranMatrixComplex64(...rest: (Complex | Complex[])[]):
     }
     return mimicFMatrix(new Float64Array(collect.reals), i);
 }
-/*
-export function xerbla(fn: string, idx: number) {
-    return ` ** On entry to ${fn}, parameter number ${idx}, had an illegal value`;
-}
-*/
+
 export function lowerChar<T extends string>(c?: T): T {
     if (typeof c !== 'string') {
         return '' as any;
