@@ -92,8 +92,8 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     * [Matrix constructors](#matrix-constructors) 
         * [fortranMatrixComplex32](#fortranmatrixcomplex32)
         * [fortranMatrixComplex64](#fortranmatrixcomplex64)
-        * [Matrix Creation Examples](###-matrix-creation-examples)
-* [Level 1 Functions](#level-1)
+        * [Matrix Creation Examples](#-matrix-creation-examples)
+* [Level 1 Functions](#level-1-functions)
     * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
     * [`sasum`/`dasum` sum of the absolute vector element values]()
     * [`saxpy/daxpy/caxpy/zaxpy` ]
@@ -1003,7 +1003,7 @@ declare function fortranArrComplex64(
 ```javascript
 const blas = require('blasjs');
 
-const { fortranArrComplex64 } = blas.helper;
+const { fortranArrComplex64, fortranArrComplex32 } = blas.helper;
 
 const complexDataArr = [
     { re: 1.8, im: -0.2 },
@@ -1102,6 +1102,164 @@ declare function fortranMatrixComplex64(...rest: (Complex | Complex[])[]):
 
 ### Matrix Creation Examples
 
+```javascript
+const blas = require('blasjs');
+const {
+    fortranMatrixComplex64,
+    fortranMatrixComplex32
+} = blas.helper;
+
+// some matrix data 3x3 array  aka a_row_column
+
+const a11 = { re: .2, im: -.11 };
+const a21 = { re: .1, im: -.2 };
+const a31 = { re: .3, im: .9 };
+const a12 = { re: .4, im: .5 };
+const a22 = { re: .9, im: -.34 };
+const a32 = { re: -.2, im: .45 };
+const a13 = { re: -.1, im: .89 };
+const a23 = { re: .43, im: .23 };
+const a33 = { re: .23, im: .56 };
+
+const {
+    fortranMatrixComplex64,
+    fortranMatrixComplex32
+} = blas.helper;
+
+// Some matrix data 3x3 array  aka a_row_column
+
+const a11 = { re: .2, im: -.11 };
+const a21 = { re: .1, im: -.2 };
+const a31 = { re: .3, im: .9 };
+const a12 = { re: .4, im: .5 };
+const a22 = { re: .9, im: -.34 };
+const a32 = { re: -.2, im: .45 };
+const a13 = { re: -.1, im: .89 };
+const a23 = { re: .43, im: .23 };
+const a33 = { re: .23, im: .56 };
+
+//functional curry to prepare for different mappings of A()
+const A32 = fortranMatrixComplex64([
+    a11, a21, a31, a12, a22, a32, a13, a23, a33
+]);
+
+//matrix 1
+const m1 = A32(3, 3); // 3x3 matrix with rowBase=1, colBase=1
+
+// mimic FORTRAN  "COMPLEX*8  A(-2:1, -3:0)"
+const m2 = A32(3, 3, -2, -3);
+
+//same as FORTRAN default COMPLEX*8 A(3,3) !aka A(1:3,1:3) 
+const m3 = A32(3, 3, 1, 1)
+
+/* double precision */
+/* double precision */
+/* double precision */
+
+const A64 = fortranMatrixComplex64([
+    a11, a21, a31, a12, a22, a32, a13, a23, a33
+]);
+
+// matrix 1 FORTRAN "COMPLEX*16  A(-2:1, -3:0).
+const m1 = A64(3, 3); // 3x3 matrix with rowBase=1, colBase=1
+
+// mimic FORTRAN  "COMPLEX*16  A(-2:1, -3:0)"
+const m2 = A64(3, 3, -2, -3);
+
+// same as FORTRAN default COMPLEX*16 A(3,3) !aka A(1:3,1:3) 
+const m3 = A64(3, 3, 1, 1);
+```
+
+# Level 1 functions
+
+#### summary
+
+Level 1: vector-vector subroutines include:
+
+Subroutine	Description
+SDOT, DDOT	Return the dot product of two vectors
+CDOTC, ZDOTC	Return the complex dot product of two vectors, conjugating the first
+CDOTU, ZDOTU	Return the complex dot product of two vectors
+SAXPY, DAXPY, CAXPY, ZAXPY	Return a constant times a vector plus a vector
+SROTG, DROTG, CROTG, ZROTG	Construct a Givens plane rotation
+SROT, DROT, CSROT, ZDROT	Apply a plane rotation
+SCOPY, DCOPY, CCOPY, ZCOPY	Copy vector X to Y
+SSWAP, DSWAP, CSWAP, ZSWAP	Interchange vectors X and Y
+SNRM2, DNRM2, SCNRM2, DZNRM2	Return the Euclidean norm of the N-vector stored in X() with storage increment INCX
+SASUM, DASUM, SCASUM, DZASUM	Return the sum of absolute values of vector components
+ SSCAL, DSCAL, CSSCAL, CSCAL, ZDSCAL, ZSCAL	Scale a vector by a constant
+ISAMAX, IDAMAX, ICAMAX, IZAMAX	Find the index of element having maximum absolute value
+SDSDOT	Returns the dot product of two vectors plus a constant
+SROTM, DROTM	Apply the modified Givens transformation
+SROTMG, DROTMG	Construct a modified Givens transformation
+
+Level 2: matrix-vector subroutines include:
+
+Subroutine	Description
+SGEMV, DGEMV,CGEMV, ZGEMV	Perform matrix-vector operation with general matrices
+SGBMV, DGBMV, CGBMV, ZGBMV	Perform matrix-vector operations with general banded matrices
+CHEMV, ZHEMV	Perform matrix-vector operations using Hermitian matrices
+CHBMV, ZHBMV	Perform matrix-vector operations using a Hermitian band matrix
+CHPMV,ZHPMV	Perform matrix-vector operations using a packed Hermitian matrix
+SSYMV , DSYMV	Perform matrix-vector operations using a symmetric matrix
+SSBMV , DSBMV	Perform matrix-vector operations using symmetric band matrix
+SSPMV , DSPMV	Perform matrix-vector operations using a packed symmetric matrix
+STRMV, DTRMV, CTRMV, ZTRMV	Perform matrix-vector operations using a triangular matrix
+STBMV, DTBMV, CTBMV, ZTBMV	Perform matrix-vector operations using a triangular band matrix
+STPMV, DTPMV, CTPMV, ZTPMV	Perform matrix-vector operations on a packed triangular matrix
+STRSV, DTRSV, CTRSV, ZTRSV	Solve system of equations
+STBSV, DTBSV, CTBSV, ZTBSV	Solve system of equations
+STPSV, DTPSV, CTPSV, ZTPSV	Solve systems of equations
+SGER, DGER	Perform rank 1 operation
+CGERU, ZGERU	Perform rank 1 operation
+CGERC,ZGERC	Perform rank 1 operation
+CHER, ZHER	Perform Hermitian rank 1 operation
+CHPR,ZHPR	Perform Hermitian rank 1 operation
+CHPR2,ZHPR2	Perform Hermitian rank 2 operation
+SSYR, DSYR	Perform symmetric rank 1 operation
+SSPR, DSPR	Perform symmetric rank 1 operation
+SSYR2 , DSYR2	Perform symmetric rank 2 operation
+SSPR2 ,DSPR2	Perform symmetric rank 2 operation
+
+
+Level 3: matrix-matrix subroutines include:
+
+Subroutine	Description
+SGEMM, DGEMM, CGEMM, ZGEMM	Perform matrix-matrix operations on general matrices
+SSYMM, DSYMM,CSYMM, ZSYMM	Perform matrix-matrix operations on symmetrical matrices
+CHEMM,ZHEMM	Perform matrix-matrix operations on Hermitian matrices
+SSYRK, DSYRK,CSYRK, ZSYRK	Perform symmetric rank k operations
+CHERK, ZHERK	Perform Hermitian rank k operations
+SSYR2K, DSYR2K, CSYR2K, ZSYR2K	Perform symmetric rank 2k operations
+CHER2K,ZHER2K	Perform Hermitian rank 2k operations
+STRMM, DTRMM,CTRMM, ZTRMM,	Perform matrix-matrix operations on triangular matrixes
+STRSM, DTRSM, CTRSM, ZTRSM	Solve certain matrix equations
+
+Greek letter Lower case Unicode Upper case Unicode
+alpha α 03b1 A 0391
+beta  β 03b2 B 0392
+gamma γ 03b3 Γ 0393
+delta δ 03b4 Δ 0394
+epsilon ϵ 03b5 E 0395
+zeta ζ 03b6 Z 0396
+eta η 03b7 H 0397
+theta θ 03b8 Θ 0398
+iota ι 03b9 I 0399
+kappa κ 03ba K 039a
+lambda λ 03bb Λ 039b
+mu μ 03bc M 039c
+nu ν 03bd N 039d
+xi ξ 03be Ξ 039e
+omicron o 03bf O 039f
+pi π 03c0 Π 03a0
+rho ρ 03c1 P 03a1
+sigma σ 03c3 Σ 03a3
+tau τ 03c4 T 03a4
+upsilon υ 03c5 ϒ 03a5
+phi ϕ 03c6 Φ 03a6
+chi χ 03c7 X 03a7
+psi ψ 03c8 Ψ 03a8
+omega ω 03c9 Ω 03a9
 
 
 [srotg]: https://en.wikipedia.org/wiki/Givens_rotation
