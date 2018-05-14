@@ -515,7 +515,7 @@ export function imaginary(data?: number | number[] | Complex | Complex[]): numbe
     return data as any;
 }
 
-export function fortranMatrixComplex32(...rest: (Complex | Complex[])[]):
+export function fortranMatrixComplex32(...rest: (number | number[] | Complex | Complex[])[]):
     (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix {
 
     const collect = demuxComplex(rest as any);
@@ -526,7 +526,7 @@ export function fortranMatrixComplex32(...rest: (Complex | Complex[])[]):
     return mimicFMatrix(new Float32Array(collect.reals), i);
 }
 
-export function fortranMatrixComplex64(...rest: (Complex | Complex[])[]):
+export function fortranMatrixComplex64(...rest: (number | number[] | Complex | Complex[])[]):
     (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix {
 
     const collect = demuxComplex(rest as any);
@@ -590,7 +590,6 @@ export function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R) {
         return result.length === 1 ? result[0] : result.length === 0 ? undefined as any : result;
     };
 }
-
 
 export function coerceToArray(o: any): { key: string | number, val: any }[] {
     if (o === null || o === undefined) {

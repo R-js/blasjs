@@ -64,7 +64,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [Matrix](#matrix)
             * [Float[32/64]Array Complex number storage for Matrix](#float3264array-complex-number-storage-for-matrix)
             * [Handling FORTRAN matrices](#handling-fortran-matrices-multidimensional-arrays)
-            * [Performance](#performance) 
+            * [Performance](#performance)
             * [Creating new transformed Matrix instances from existing ones](#creating-new-transformed-matrix-instances-from-existing-ones)
                 * [Matrix.prototype.setlower](#matrixprototypesetlower)
                 * [Matrix.prototype.setUpper](#matrixprototypesetupper)
@@ -85,11 +85,14 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [map](#map)
         * [muxCmplx](#muxCmplx)
         * [numberPrecision](#numberPrecision)
-    * [Vector and Matrix constructors](#vector-and-matrix-constructors)
+    * [Vector constructors](#vector-constructors)
         * [fortranArrComplex32](#fortranarrcomplex32)
         * [fortranArrComplex64](#fortranarrcomplex64)
+        * [Vector Creation Examples](#vector-creation-examples)
+    * [Matrix constructors](#matrix-constructors) 
         * [fortranMatrixComplex32](#fortranmatrixcomplex32)
         * [fortranMatrixComplex64](#fortranmatrixcomplex64)
+        * [Matrix Creation Examples](###-matrix-creation-examples)
 * [Level 1 Functions](#level-1)
     * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
     * [`sasum`/`dasum` sum of the absolute vector element values]()
@@ -953,7 +956,7 @@ _4([0.123456, 0.78901234]);
 
 ## Vector Constructors
 
-These constructors create the `FortranArr` object for working with single/double precision complex/real Arrays and Matrices.
+These constructors create the `FortranArr` object for working with single/double precision complex/real Arrays.
 
 ### `fortranArrComplex32`
 
@@ -974,12 +977,33 @@ declare function fortranArrComplex32(
     * An array of number values.
 *  `offset`: the Fortran dimension offset (defaults to 1)
 
-Usage:
+See _[Examples](#vector-creation-examples)_
+
+### `fortranArrComplex64`
+
+Constructs a [FortranArr](#fortranArr) object using [Float64Array][float64-array] as the underlying array(s) (plural in the case of complex) elements.
+
+```typescript
+declare function fortranArrComplex64(
+    ...rest: (number | number[] | Complex | Complex[])[]
+    ): (offset = 1) => FortranArr;
+```
+
+`Argument list`:
+
+* `rest`: takes as input.
+    * A single numeric value.
+    * A single [`Complex`](#type-complex) object.
+    * An array of [`Complex`](#type-complex) objects.
+    * An array of number values.
+*  `offset`: the Fortran dimension offset (defaults to 1)
+
+#### Vector creation examples
 
 ```javascript
 const blas = require('blasjs');
 
-const { fortranArrComplex32 } = blas.helper;
+const { fortranArrComplex64 } = blas.helper;
 
 const complexDataArr = [
     { re: 1.8, im: -0.2 },
@@ -1006,40 +1030,6 @@ const sp4 = fortranArrComplex32(123)(4);
   r: Float32Array [ 123 ],
   i: undefined,
 }*/
-```
-
-### `fortranArrComplex64`
-
-Constructs a [FortranArr](#fortranArr) object using [Float64Array][float64-array] as the underlying array(s) (plural in the case of complex) elements.
-
-```typescript
-declare function fortranArrComplex64(
-    ...rest: (number | number[] | Complex | Complex[])[]
-    ): (offset = 1) => FortranArr;
-```
-
-`Argument list`:
-
-* `rest`: takes as input.
-    * A single numeric value.
-    * A single [`Complex`](#type-complex) object.
-    * An array of [`Complex`](#type-complex) objects.
-    * An array of number values.
-*  `offset`: the Fortran dimension offset (defaults to 1)
-
-Usage:
-
-```javascript
-const blas = require('blasjs');
-
-const { fortranArrComplex64 } = blas.helper;
-
-const complexDataArr = [
-    { re: 1.8, im: -0.2 },
-    { re: 2.3, im: 0.6 }
-];
-
-const realData = [ 0.1, 2, 0.34, .56 ];
 
 const sdp1 = fortranArrComplex64(complexDataArr)();
 //sp1.r = [ 1.8, 2.3 ],
@@ -1054,26 +1044,64 @@ const sp3 = fortranArrComplex64({re:0.2, im:-0.3})();
 //[ -0.3 ]
 
 const sp4 = fortranArrComplex64(123)(4);
-/*{ 
+/*{
   base: 4,
   r: Float32Array [ 123 ],
   i: undefined,
 }*/
 ```
 
+## Matrix Constructors
+
+These constructors create the [`Matrix`](#matrix) object for working with single/double precision complex/real Matrices.
+
 ### `fortranMatrixComplex32`
 
-Constructs an analog for a single precision 2-dimensional FORTRAN array (a matrix).
-
-_decl_
+Constructs a [Matrix](#matrix) object using [Float32Array][float32-array] as the underlying array(s) (plural in the case of complex) elements.
 
 ```typescript
-
+declare function fortranMatrixComplex32(...rest: (Complex | Complex[])[]):
+    (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix
 ```
+
+`Argument list`:
+
+* `rest`: takes as input.
+    * A single numeric value.
+    * A single [`Complex`](#type-complex) object.
+    * An array of [`Complex`](#type-complex) objects.
+    * An array of number values.
+*  `nrRows`: where rnRows is equal to `n` in the matrix A(m,n).
+*  `nrCols`: where nrCols is equal to `m` in the matrix A(m,n).
+*  `rowBase`: FORTRAN offset for the first dimension (rows) as explained in [Language differences][language-differences].
+*  `rowBase`: FORTRAN offset for the second dimension (columns) as explained in [Language differences][language-differences].
+
+See _[Examples](#matrix-creation-examples)_
+
 
 ### `fortranMatrixComplex64`
 
-Constructs an analog for a double precision 2-dimensional FORTRAN array (a matrix).
+Constructs a [Matrix](#matrix) object using [Float64Array][float64-array] as the underlying array(s) (plural in the case of complex) elements.
+
+```typescript
+declare function fortranMatrixComplex64(...rest: (Complex | Complex[])[]):
+    (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix
+```
+
+`Argument list`:
+
+* `rest`: takes as input.
+    * A single numeric value.
+    * A single [`Complex`](#type-complex) object.
+    * An array of [`Complex`](#type-complex) objects.
+    * An array of number values.
+*  `nrRows`: where rnRows is equal to `n` in the matrix A(m,n).
+*  `nrCols`: where nrCols is equal to `m` in the matrix A(m,n).
+*  `rowBase`: FORTRAN offset for the first dimension (rows) as explained in [Language differences][language-differences].
+*  `rowBase`: FORTRAN offset for the second dimension (columns) as explained in [Language differences][language-differences].
+
+### Matrix Creation Examples
+
 
 
 [srotg]: https://en.wikipedia.org/wiki/Givens_rotation
@@ -1086,6 +1114,8 @@ Constructs an analog for a double precision 2-dimensional FORTRAN array (a matri
 [float32-array]: [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array]
 
 [float64-array]: [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array]
+
+[language-differences]: [#language-differences-with-fortranblas]
 
 Some notes on Matrix symbols
 
