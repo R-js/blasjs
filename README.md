@@ -92,7 +92,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     * [Matrix constructors](#matrix-constructors) 
         * [fortranMatrixComplex32](#fortranmatrixcomplex32)
         * [fortranMatrixComplex64](#fortranmatrixcomplex64)
-        * [Matrix Creation Examples](#-matrix-creation-examples)
+        * [Matrix Creation Examples](#matrix-creation-examples)
 * [Level 1 Functions](#level-1-functions)
     * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
     * [`sasum`/`dasum` sum of the absolute vector element values]()
