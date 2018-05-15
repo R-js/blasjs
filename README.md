@@ -94,6 +94,9 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [fortranMatrixComplex64](#fortranmatrixcomplex64)
         * [Matrix Creation Examples](#matrix-creation-examples)
 * [Level 1 Functions](#level-1-functions)
+    * [strotg/drotg](#srotgdrotg)
+    * [crotg/zrotg](#crotgzrotg) 
+    * [](#)
     * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
     * [`sasum`/`dasum` sum of the absolute vector element values]()
     * [`saxpy/daxpy/caxpy/zaxpy` ]
@@ -1025,7 +1028,7 @@ const sp3 = fortranArrComplex32({re:0.2, im:-0.3})();
 //[ -0.30000001192092896 ]
 
 const sp4 = fortranArrComplex32(123)(4);
-/*{ 
+/*{
   base: 4,
   r: Float32Array [ 123 ],
   i: undefined,
@@ -1209,17 +1212,34 @@ On output:
 
 ## `crotg`/`zrotg`
 
+Complex analog to the [`srotg`/`drotg`][#srotgdrotg] givens rotation.
+
 ```typescript
 export function crotg(
       ca: Complex, // in
       cb: Complex, // in
       c: { val: number }, // out argument
-      s: Complex // out
+      s: Complex          // out
 ): void;
 ```
 
-Complex analog to the [`srotg`/`drotg`][] givens rotation.
+On Input:
 
+* `ca`: the `a` variable  as described in [wiki][givens-rotation]
+* `cb`: the `b` variable  as described in [wiki][givens-rotation]
+
+On Output:
+
+ * `ca`: `r` variable as described in [wiki][givens-rotation]
+ * `cb`: `z` handy to use to recover `c` and `s`.
+    *  If `z=1`  set  `c=0`  and  `s=1` and `r=0`.
+    *  If `|z|` < 1  set  `c=√(1-z²)`  and  `s=z`
+    *  if `|z|` > 1  set  `c=1/z` and `s=√(1-c²)`
+*  `s`: see [wiki][givens-rotation]
+*  `c`: see [wiki][givens-rotation]
+
+
+CROTG,ZROTG,SROTG,DROTG
 
 
 Subroutine	Description
@@ -1227,7 +1247,7 @@ SDOT, DDOT	Return the dot product of two vectors
 CDOTC, ZDOTC	Return the complex dot product of two vectors, conjugating the first
 CDOTU, ZDOTU	Return the complex dot product of two vectors
 SAXPY, DAXPY, CAXPY, ZAXPY	Return a constant times a vector plus a vector
-SROTG, DROTG, CROTG, ZROTG	Construct a Givens plane rotation
+, , , ZROTG	Construct a Givens plane rotation
 SROT, DROT, CSROT, ZDROT	Apply a plane rotation
 SCOPY, DCOPY, CCOPY, ZCOPY	Copy vector X to Y
 SSWAP, DSWAP, CSWAP, ZSWAP	Interchange vectors X and Y
