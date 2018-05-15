@@ -19,8 +19,8 @@ import { FortranArr } from '../../f_func';
 
 export function sdot(
       n: number,
-      sx: FortranArr, //dimension ( 1 + ( N - 1 )*abs( INCX ) )
-      incx: number, //dimension ( 1 + ( N - 1 )*abs( INCY ) )
+      sx: FortranArr,
+      incx: number,
       sy: FortranArr,
       incy: number): number {
 

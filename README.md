@@ -1170,11 +1170,57 @@ const m2 = A64(3, 3, -2, -3);
 const m3 = A64(3, 3, 1, 1);
 ```
 
-# Level 1 functions
+# Level 1 routines
 
-#### summary
+Routines categorized as `Level 1`  perform scalar, vector and vector-vector operations.
 
-Level 1: vector-vector subroutines include:
+
+## `srotg`/`drotg`
+
+Construct [givens plane rotation][givens-rotation]. In JavaScript, scalar function-arguments are always passed as copies. To mimic FORTRAN `out` variables an object wrapper must be used (See `p` below).
+
+```typescript
+declare function srotg(
+    p: {
+     sa: number,
+     sb: number,
+     c: number,
+     s: number
+   }
+ ): void
+```
+
+On Input:
+
+* `p`: object wrapper to mimic FORTRAN `out` or `in/out` variables.
+    * `sa`: the `a` variable  as described in [wiki][givens-rotation]
+    * `sb`: the `b` variable  as described in [wiki][givens-rotation]
+
+On output:
+
+* `p`: object wrapper to mimic FORTRAN `out` or `in/out` variables.
+    * `sa`: `r` variable as described in [wiki][givens-rotation]
+    * `sb`: `z` handy to use to recover `c` and `s`.
+        *  If `z=1`  set  `c=0`  and  `s=1` and `r=0`.
+        *  If `|z|` < 1  set  `c=√(1-z²)`  and  `s=z`
+        *  if `|z|` > 1  set  `c=1/z` and `s=√(1-c²)`
+    *  `s`: see [wiki][givens-rotation]
+    *  `c`: see [wiki][givens-rotation]
+
+## `crotg`/`zrotg`
+
+```typescript
+export function crotg(
+      ca: Complex, // in
+      cb: Complex, // in
+      c: { val: number }, // out argument
+      s: Complex // out
+): void;
+```
+
+Complex analog to the [`srotg`/`drotg`][] givens rotation.
+
+
 
 Subroutine	Description
 SDOT, DDOT	Return the dot product of two vectors
@@ -1274,6 +1320,7 @@ omega ω 03c9 Ω 03a9
 [float64-array]: [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array]
 
 [language-differences]: [#language-differences-with-fortranblas]
+[givens-rotation]: https://en.wikipedia.org/wiki/Givens_rotation#Stable_calculation
 
 Some notes on Matrix symbols
 
