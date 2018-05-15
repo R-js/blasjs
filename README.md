@@ -108,7 +108,6 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     * srot/drot/zdrot/csrot
     * srotg/drotg/crotg/zrotg
     * srotm/drotm
-    * srotmg/drotmg
     * sscal/dscal/cscal/csscal
     * sswap/dswap/cswap/zswap
     * cdotu/zdotu
@@ -1180,9 +1179,10 @@ Routines categorized as `Level 1`  perform scalar, vector and vector-vector oper
 
 ## `srotg`/`drotg`
 
-Construct [givens plane rotation][givens-rotation]. In JavaScript, scalar function-arguments are always passed as copies. To mimic FORTRAN `out` variables an object wrapper must be used (See `p` below).
+See [blas doc](#http://www.netlib.org/lapack/explore-html/d7/d26/srotg_8f.html). Construct [givens plane rotation][givens-rotation]. In JavaScript, scalar function-arguments are always passed as copies. To mimic FORTRAN `out` variables an object wrapper must be used (See `p` below).
 
 ```typescript
+// function "drotg" has the same call signature.
 declare function srotg(
     p: {
      sa: number,
@@ -1193,58 +1193,106 @@ declare function srotg(
  ): void
 ```
 
-On Input:
-
-* `p`: object wrapper to mimic FORTRAN `out` or `in/out` variables.
-    * `sa`: the `a` variable  as described in [wiki][givens-rotation]
-    * `sb`: the `b` variable  as described in [wiki][givens-rotation]
-
-On output:
-
-* `p`: object wrapper to mimic FORTRAN `out` or `in/out` variables.
-    * `sa`: `r` variable as described in [wiki][givens-rotation]
-    * `sb`: `z` handy to use to recover `c` and `s`.
-        *  If `z=1`  set  `c=0`  and  `s=1` and `r=0`.
-        *  If `|z|` < 1  set  `c=√(1-z²)`  and  `s=z`
-        *  if `|z|` > 1  set  `c=1/z` and `s=√(1-c²)`
-    *  `s`: see [wiki][givens-rotation]
-    *  `c`: see [wiki][givens-rotation]
-
 ## `crotg`/`zrotg`
 
-Complex analog to the [`srotg`/`drotg`][#srotgdrotg] givens rotation.
+See [blas doc](#http://www.netlib.org/lapack/explore-html/dc/dfe/zrotg_8f.html).
+Complex analog to the [srotg/drotg](#srotgdrotg) givens rotation.
+`zrotg` is an alias for `crotg`.
 
 ```typescript
+// function "zrotg" has the same call signature 
 export function crotg(
-      ca: Complex, // in
-      cb: Complex, // in
-      c: { val: number }, // out argument
-      s: Complex          // out
+      ca: Complex,
+      cb: Complex,
+      c: { val: number },
+      s: Complex
 ): void;
 ```
 
-On Input:
+## `srotm`/`drotm`
 
-* `ca`: the `a` variable  as described in [wiki][givens-rotation]
-* `cb`: the `b` variable  as described in [wiki][givens-rotation]
+Apply the modified [givens transformation](#
+http://www.netlib.org/lapack/explore-html/dd/d48/srotmg_8f.html)
 
-On Output:
+`drotm` is an alias for `srotm` as the numeric precision is only determined how the `FortrenArr` object is constructed.
 
- * `ca`: `r` variable as described in [wiki][givens-rotation]
- * `cb`: `z` handy to use to recover `c` and `s`.
-    *  If `z=1`  set  `c=0`  and  `s=1` and `r=0`.
-    *  If `|z|` < 1  set  `c=√(1-z²)`  and  `s=z`
-    *  if `|z|` > 1  set  `c=1/z` and `s=√(1-c²)`
-*  `s`: see [wiki][givens-rotation]
-*  `c`: see [wiki][givens-rotation]
+```typescript
+// function drotm has the same signature
+export function srotm(
+      N: number,
+      SX: FortranArr,
+      INCX: number,
+      SY: FortranArr,
+      INCY: number,
+      SPARAM: FortranArr,
+): void
+```
+
+## `srot`/`drot`/`zdrot`/`csrot`
+
+Applies a plane rotation.
+
+### `srot`/`drot`
+
+The routines `srot` and `drot` are each others alias. **Unlike FORTRAN BLAS** the precision of the routines is **not** embedded in the naming of the routines.
+In `blasjs` the numeric precision ( 32-bit / 64-bit floating ) is determined by how the [`FortanArr`](#fortranarr) object is created.
+
+See [drot doc](#http://www.netlib.org/lapack/explore-html/dc/d23/drot_8f.html).
+See [srot doc](#http://www.netlib.org/lapack/explore-html/db/d6c/srot_8f.html).
+
+```typescript
+// Function "drot" has exactly the same signature
+declare function srot(
+      n: number,
+      sx: FortranArr,
+      incx: number,
+      sy: FortranArr,
+      incy: number,
+      c: number,
+      s: number
+): void
+```
+
+### `zdrot`/`csrot`
+
+Applies a plane rotation with real cosine and complex sine to a pair of complex vectors.
+
+The routines `zdrot` and `csrot` are each others alias. **Unlike FORTRAN BLAS** the precision of the routines is **not** embedded in the nameing of the routines.
+In `blasjs` the numeric precision ( 32-bit / 64-bit floating point ) is determined by how the [`FortanArr`](#fortranarr) object is created.
+
+See [zdrot doc](#http://www.netlib.org/lapack/explore-html/d4/de9/zdrot_8f.html)
+See [csrot doc](#http://www.netlib.org/lapack/explore-html/d1/dbb/csrot_8f.html)
+
+```javascript
+// zdrot routine has exactly the same signature
+declare function csrot(
+      n: number,
+      cx: FortranArr,
+      incx: number,
+      cy: FortranArr,
+      incy: number,
+      c: number,
+      s: number
+): void
+```
+
+## `sdot`/`ddot`/`cdotc`/`zdotc`/`cdotu`/`zdotu`
+
+Return the dot product of two vectors
+
+### `sdot`/`ddot`
+
 
 
 CROTG,ZROTG,SROTG,DROTG
+
+SROTMG, DROTMG
 
 
 Subroutine	Description
 SDOT, DDOT	Return the dot product of two vectors
 CDOTC, ZDOTC	Return the complex dot product of two vectors, conjugating the first
+
 CDOTU, ZDOTU	Return the complex dot product of two vectors
 SAXPY, DAXPY, CAXPY, ZAXPY	Return a constant times a vector plus a vector
 , , , ZROTG	Construct a Givens plane rotation
