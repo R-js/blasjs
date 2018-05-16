@@ -17,7 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Complex, errMissingIm, FortranArr } from '../../f_func';
 
-export function cscal(n: number, ca: Complex, cx: FortranArr, incx: number): void {
+export function cscal(
+      n: number,
+      ca: Complex,
+      cx: FortranArr,
+      incx: number): void {
 
       if (cx.i === undefined) {
             throw new Error(errMissingIm('cx.i'));

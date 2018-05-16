@@ -1282,6 +1282,9 @@ Return the dot product of two vectors
 
 ### `sdot`/`ddot`
 
+### `cdotu`/`zdotu`
+
+### `cdotc`/`zdotc`
 
 
 CROTG,ZROTG,SROTG,DROTG
