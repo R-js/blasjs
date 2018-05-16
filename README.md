@@ -94,13 +94,32 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [fortranMatrixComplex64](#fortranmatrixcomplex64)
         * [Matrix Creation Examples](#matrix-creation-examples)
 * [Level 1 Functions](#level-1-functions)
-    * Euclidean norm of a vector.
-        * `scnrm2`, `dznrm2`, `snrm2`, `dnrm2` 
-    * Construct a Givens plane rotation.
-        * `srotg`, `drotg`, `crotg`,`zrotg`
+    * [Euclidean norm of a vector]()
+        * [`scnrm2`, `dznrm2`, `snrm2`, `dnrm2`]() 
+    * [Construct a Givens plane rotation]
+        * `srotg`, `drotg`, `crotg`, `zrotg`
     * Construct the **modified** Givens rotation matrix `H`
-        * `srotmg`,`drotm`
-    * Apply the modified Givens Transformation 
+        * `srotmg`,`drotmg`
+    * Apply the modified Givens Transformation
+        * `srotm`, `drotm`
+    * Apply plane rotation:
+        * `srot`,`drot`, `csrot`, `zdrot`
+    * Scale a vector by a constant
+        * `sscal`, `dscal`, `cscal`, `zscal`, `csscal`, `zdscal`
+    * Takes the sum of the absolute values of the components of vector.
+        * `sasum`, `dasum`, `scasum`, `dzasum`
+    * Interchanges 2 vectors
+        * `cswap`, `dswap`, `sswap`, `zswap`
+    * Dot product of two complex vectors
+        * `cdotu`, `cdotc`, `zdotu`, `zdotc`
+    * Dot prodcut of two vectors
+        * `sdot`, `ddot`, `sdsdot`, `dsdot`
+    * Finds the index of the first element having maximum absolute value
+
+
+## `scnrm2`, `dznrm2`, `snrm2`, `dnrm2`
+
+## `sscal`, `dscal`, `cscal`, `zscal`, `csscal`, `zdscal`
 
 
 # Language differences with FORTRAN/BLAS.
