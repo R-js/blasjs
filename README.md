@@ -96,7 +96,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 * [Level 1 Functions](#level-1-functions)
     * [Euclidean norm of a vector]()
         * [`scnrm2`, `dznrm2`, `snrm2`, `dnrm2`](#scnrm2-dznrm2-snrm2-dnrm2)
-    * [Construct a Givens plane rotation]
+    * [Construct a Givens plane rotation]()
         * [`srotg`, `drotg`, `crotg`,`zrotg`](#srotg-drotg-crotgzrotg)
     * [Construct the **modified** Givens rotation matrix `H`]()
         * [`srotmg`,`drotmg`](#srotmg-drotmg)
