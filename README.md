@@ -123,9 +123,9 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 
 ## `srotg`, `drotg`, `crotg`,`zrotg`
-## `srotmg`,`drotmg`
+## `srotmg`, `drotmg`
 ## `srotm`, `drotm`
-## `srot`,`drot`, `csrot`, `zdrot`
+## `srot`, `drot`, `csrot`, `zdrot`
 ## `sscal`, `dscal`, `cscal`, `zscal`, `csscal`, `zdscal`
 ## `sasum`, `dasum`, `scasum`, `dzasum`
 ## `cswap`, `dswap`, `sswap`, `zswap`
