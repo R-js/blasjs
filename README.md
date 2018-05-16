@@ -1,6 +1,6 @@
 # BLASjs  (<span style="font-size:small" ><span style="color:red; font-weight: bold;">B</span>asic <span style="color:red; font-weight: bold;">L</span>inear <span style="color:red; font-weight: bold;">A</span>lgebra <span style="color:red; font-weight: bold;">S</span>ubprograms</span>)
 
-This is a :ok_hand: 100% Pure Javascript ( TypeScript ) re-write of the reference implementation `Basic Linear Algebra SubPrograms` (BLAS) numerical library found [here][blas-site].
+This is a 100% Pure Javascript ( TypeScript ) re-write of the reference implementation `Basic Linear Algebra SubPrograms` (BLAS) numerical library found [here][blas-site].
 This is a full manual re-write, ["emscripten"](https://kripken.github.io/emscripten-site) was not used.
 
 #### summary
@@ -95,9 +95,9 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [Matrix Creation Examples](#matrix-creation-examples)
 * [Level 1 Functions](#level-1-functions)
     * [Euclidean norm of a vector]()
-        * [`scnrm2`, `dznrm2`, `snrm2`, `dnrm2`]() 
+        * [`scnrm2`, `dznrm2`, `snrm2`, `dnrm2`](#scnrm2-dznrm2-snrm2-dnrm2)
     * [Construct a Givens plane rotation]
-        * `srotg`, `drotg`, `crotg`, `zrotg`
+        * `srotg`, `drotg`, `crotg`,`zrotg`
     * Construct the **modified** Givens rotation matrix `H`
         * `srotmg`,`drotmg`
     * Apply the modified Givens Transformation
@@ -115,12 +115,25 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     * Dot prodcut of two vectors
         * `sdot`, `ddot`, `sdsdot`, `dsdot`
     * Finds the index of the first element having maximum absolute value
+        * `isamax`, `idamax`, `icamax`, `izamax`
+    * Copy a vector x to a vector y
+        * `scopy`, `dcopy`, `ccopy`, `zcopy`
+    * Constant times a vector plus a vector
+        * `saxpy`, `daxpy`, `caxpy`, `zaxpy`
 
 
-## `scnrm2`, `dznrm2`, `snrm2`, `dnrm2`
-
+## `srotg`, `drotg`, `crotg`,`zrotg`
+## `srotmg`,`drotmg`
+## `srotm`, `drotm`
+## `srot`,`drot`, `csrot`, `zdrot`
 ## `sscal`, `dscal`, `cscal`, `zscal`, `csscal`, `zdscal`
-
+## `sasum`, `dasum`, `scasum`, `dzasum`
+## `cswap`, `dswap`, `sswap`, `zswap`
+## `cdotu`, `cdotc`, `zdotu`, `zdotc`
+##  `sdot`, `ddot`, `sdsdot`, `dsdot`
+## `isamax`, `idamax`, `icamax`, `izamax`
+## `scopy`, `dcopy`, `ccopy`, `zcopy`
+## `saxpy`, `daxpy`, `caxpy`, `zaxpy`
 
 # Language differences with FORTRAN/BLAS.
 

@@ -126,18 +126,18 @@ x DSDOT Compute the inner product of two vectors with extended precision accumul
 x SDSDOT Compute the inner product of two vectors with extended precision accumulation.
 
 
-ICAMAX finds the index of the first
-IDAMAX finds the index of the first element having maximum absolute value.
-ISAMAX finds the index of the first element having maximum absolute value.
-IZAMAX finds the index of the first element having maximum |Re(.)| + |Im(.)|
+x ICAMAX finds the index of the first
+x IDAMAX finds the index of the first element having maximum absolute value.
+x ISAMAX finds the index of the first element having maximum absolute value.
+x IZAMAX finds the index of the first element having maximum |Re(.)| + |Im(.)|
 
-CCOPY copies a vector x to a vector y.
-DCOPY copies a vector, x, to a vector, y.
-SCOPY copies a vector, x, to a vector, y.
-ZCOPY copies a vector, x, to a vector, y.
+x CCOPY copies a vector x to a vector y.
+x DCOPY copies a vector, x, to a vector, y.
+x SCOPY copies a vector, x, to a vector, y.
+x ZCOPY copies a vector, x, to a vector, y.
 
-CAXPY constant times a vector plus a vector.
-DAXPY constant times a vector plus a vector.
-SAXPY constant times a vector plus a vector.
-ZAXPY constant times a vector plus a vector.
+x CAXPY constant times a vector plus a vector.
+x DAXPY constant times a vector plus a vector.
+x SAXPY constant times a vector plus a vector.
+x ZAXPY constant times a vector plus a vector.
 */
