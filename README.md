@@ -94,54 +94,14 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [fortranMatrixComplex64](#fortranmatrixcomplex64)
         * [Matrix Creation Examples](#matrix-creation-examples)
 * [Level 1 Functions](#level-1-functions)
-    * [strotg/drotg](#srotgdrotg)
-    * [crotg/zrotg](#crotgzrotg) 
-    * [](#)
-    * [`isamax`/`idamax`/`izamax`/`icamax` find maximum element of a vector]()
-    * [`sasum`/`dasum` sum of the absolute vector element values]()
-    * [`saxpy/daxpy/caxpy/zaxpy` ]
-    * scnrm2
-    * scopy/dcopy/ccopy/zcopy
-    * sdot/ddot/cdotc/zdotc
-    * sdsdot/dsdot  Compute the inner product of two vectors with extended precision.
-    * snrm2/drnm2
-    * srot/drot/zdrot/csrot
-    * srotg/drotg/crotg/zrotg
-    * srotm/drotm
-    * sscal/dscal/cscal/csscal
-    * sswap/dswap/cswap/zswap
-    * cdotu/zdotu
-    * scasum/dzasum
+    * Euclidean norm of a vector.
+        * `scnrm2`, `dznrm2`, `snrm2`, `dnrm2` 
+    * Construct a Givens plane rotation.
+        * `srotg`, `drotg`, `crotg`,`zrotg`
+    * Construct the **modified** Givens rotation matrix `H`
+        * `srotmg`,`drotm`
+    * Apply the modified Givens Transformation 
 
-* [Level 2](#level-2) 
-    * sgbmv/dgbmv/cgbmv/zgbmv
-    * sgemv/dgemv/cgemv/zgemv
-    * sger/dger
-    * ssbmv/dspmv
-    * sspr/dspr
-    * ssymv/dsymv
-    * ssyr/dsyr
-    * sspr2/dspr2
-    * ssymv, dsymv
-    * ssyr/dsyr
-    * ssyr2, dsyr2
-    * stbmv/dtbmv/ctbmv/ztbmv
-    * stbsv/dtbsv/ctbsv/ztbsv
-    * stpmv/dtpmv/ctpmv/ztpmv
-    * stpsv/dtpsv/ctpsv/ztpsv
-    * strmv/dtrmv/ctrmv/ztrmv
-    * strsv/dtrsv/ctrsv/ztrsv
-    * strmv/dtrmv/ctrmv/ztrmv
-    * strsv/dtrsv/ctrsv/ztrsv
-    * cgerc/zgerc
-    * cgeru/zgeru
-    * chbmv/zhbmv
-    * chemv/zhemv
-    * cher/zher
-    * cher2/zher2
-    * chpmv/zhpmv
-    * chpr/zhpr
-    * chpr2/zhpr2
 
 # Language differences with FORTRAN/BLAS.
 
