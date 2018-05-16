@@ -97,29 +97,38 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     * [Euclidean norm of a vector]()
         * [`scnrm2`, `dznrm2`, `snrm2`, `dnrm2`](#scnrm2-dznrm2-snrm2-dnrm2)
     * [Construct a Givens plane rotation]
-        * `srotg`, `drotg`, `crotg`,`zrotg`
-    * Construct the **modified** Givens rotation matrix `H`
-        * `srotmg`,`drotmg`
-    * Apply the modified Givens Transformation
-        * `srotm`, `drotm`
-    * Apply plane rotation:
-        * `srot`,`drot`, `csrot`, `zdrot`
-    * Scale a vector by a constant
-        * `sscal`, `dscal`, `cscal`, `zscal`, `csscal`, `zdscal`
-    * Takes the sum of the absolute values of the components of vector.
-        * `sasum`, `dasum`, `scasum`, `dzasum`
-    * Interchanges 2 vectors
-        * `cswap`, `dswap`, `sswap`, `zswap`
-    * Dot product of two complex vectors
-        * `cdotu`, `cdotc`, `zdotu`, `zdotc`
-    * Dot prodcut of two vectors
-        * `sdot`, `ddot`, `sdsdot`, `dsdot`
-    * Finds the index of the first element having maximum absolute value
-        * `isamax`, `idamax`, `icamax`, `izamax`
-    * Copy a vector x to a vector y
-        * `scopy`, `dcopy`, `ccopy`, `zcopy`
-    * Constant times a vector plus a vector
-        * `saxpy`, `daxpy`, `caxpy`, `zaxpy`
+        * [`srotg`, `drotg`, `crotg`,`zrotg`](#srotg-drotg-crotgzrotg)
+    * [Construct the **modified** Givens rotation matrix `H`]()
+        * [`srotmg`,`drotmg`](#srotmg-drotmg)
+    * [Apply the modified Givens Transformation]()
+        * [`srotm`, `drotm`](#srotm-drotm)
+    * [Apply plane rotation]()
+        * [`srot`,`drot`, `csrot`, `zdrot`](#srot-drot-csrot-zdrot)
+    * [Scale a vector by a constant]()
+        * [`sscal`, `dscal`, `cscal`, `zscal`, `csscal`, `zdscal`](#sscal-dscal-cscal-zscal-csscal-zdscal)
+    * [Takes the sum of the absolute values of the components of vector]()
+        * [`sasum`, `dasum`, `scasum`, `dzasum`](#sasum-dasum-scasum-dzasum)
+    * [Interchanges 2 vectors]()
+        * [`cswap`, `dswap`, `sswap`, `zswap`](#cswap-dswap-sswap-zswap)
+    * [Dot product of two complex vectors]()
+        * [`cdotu`, `cdotc`, `zdotu`, `zdotc`](#cdotu-cdotc-zdotu-zdotc)
+    * [Dot prodcut of two vectors]()
+        * [`sdot`, `ddot`, `sdsdot`, `dsdot`](#sdot-ddot-sdsdot-dsdot)
+    * [Finds the index of the first element having maximum absolute value]()
+        * [`isamax`, `idamax`, `icamax`, `izamax`](#isamax-idamax-icamax-izamax)
+    * [Copy a vector x to a vector y]()
+        * [`scopy`, `dcopy`, `ccopy`, `zcopy`](#scopy-dcopy-ccopy-zcopy)
+    * [Constant times a vector plus a vector]()
+        * [`saxpy`, `daxpy`, `caxpy`, `zaxpy`](#saxpy-daxpy-caxpy-zaxpy)
+
+
+
+
+
+
+
+
+
 
 
 ## `srotg`, `drotg`, `crotg`,`zrotg`
