@@ -15,6 +15,9 @@ notes.md
 !/.travis.yml
 !/.codecov.yml
 *.exe
+docs
+!docs/legacy-code
+
 
 *.pdf
 *.PNG
