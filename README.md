@@ -93,7 +93,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [fortranMatrixComplex32](#fortranmatrixcomplex32)
         * [fortranMatrixComplex64](#fortranmatrixcomplex64)
         * [Matrix Creation Examples](#matrix-creation-examples)
-* [Level 1 Functions](#level-1-functions)
+* [Level 1 Routines](#level-1-routines)
     * [Euclidean norm of a vector]()
         * [`scnrm2`, `dznrm2`, `snrm2`, `dnrm2`](#scnrm2-dznrm2-snrm2-dnrm2)
     * [Construct a Givens plane rotation]()
@@ -120,13 +120,6 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [`scopy`, `dcopy`, `ccopy`, `zcopy`](#scopy-dcopy-ccopy-zcopy)
     * [Constant times a vector plus a vector]()
         * [`saxpy`, `daxpy`, `caxpy`, `zaxpy`](#saxpy-daxpy-caxpy-zaxpy)
-
-
-
-
-
-
-
 
 
 
@@ -1175,8 +1168,47 @@ const m3 = A64(3, 3, 1, 1);
 
 # Level 1 routines
 
-Routines categorized as `Level 1`  perform scalar, vector and vector-vector operations.
+Routines categorized as `Level 1` perform scalar-vector and vector-vector operations.
 
+## Euclidean norm of a vector
+
+Precision:
+> In `blasjs` the numeric precision of (complex or real) the BLAS routines is determined by how the [`FortranArr`](#fortranarr) is constructed before used as arguments.
+
+### `scnrm2`, `dznrm2`, `snrm2`, `dnrm2`
+
+`scrnm2` and `dznrm2` are each others alias. Only the call signature of `scrnm2` is shown.
+See BLAS [doc](http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html).
+In the case of a complex vector `FortranArr` the norm is defined as `SQRT(x<sup>H</sup>*x)`
+Conjugate inner product.   
+
+```typescript
+// dnrm2 is has the same call si
+declare function scnrm2(
+    n: number, 
+    x: FortranArr, 
+    incx: number
+): number 
+```
+
+`dnrm2` and `snrm2` are each others alias. Only the call signature of `snrm2` is shown.
+See BLAS [snrm2 doc](http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html).
+See BLAS [dnrm2 doc](http://www.netlib.org/lapack/explore-html/da/d7f/dnrm2_8f.html).
+
+```typescript
+// dnrm2 is has the same call signature
+declare function snrm2(
+    n: number, 
+    x: FortranArr, 
+    incx: number
+): number
+```
+
+Usage:
+
+```javascript
+
+```
 
 ## `srotg`/`drotg`
 
@@ -1293,65 +1325,11 @@ CROTG,ZROTG,SROTG,DROTG
 SROTMG, DROTMG
 
 
-Subroutine	Description
-SDOT, DDOT	Return the dot product of two vectors
-CDOTC, ZDOTC	Return the complex dot product of two vectors, conjugating the first
 
-CDOTU, ZDOTU	Return the complex dot product of two vectors
-SAXPY, DAXPY, CAXPY, ZAXPY	Return a constant times a vector plus a vector
-, , , ZROTG	Construct a Givens plane rotation
-SROT, DROT, CSROT, ZDROT	Apply a plane rotation
-SCOPY, DCOPY, CCOPY, ZCOPY	Copy vector X to Y
-SSWAP, DSWAP, CSWAP, ZSWAP	Interchange vectors X and Y
-SNRM2, DNRM2, SCNRM2, DZNRM2	Return the Euclidean norm of the N-vector stored in X() with storage increment INCX
-SASUM, DASUM, SCASUM, DZASUM	Return the sum of absolute values of vector components
- SSCAL, DSCAL, CSSCAL, CSCAL, ZDSCAL, ZSCAL	Scale a vector by a constant
-ISAMAX, IDAMAX, ICAMAX, IZAMAX	Find the index of element having maximum absolute value
-SDSDOT	Returns the dot product of two vectors plus a constant
-SROTM, DROTM	Apply the modified Givens transformation
-SROTMG, DROTMG	Construct a modified Givens transformation
 
 Level 2: matrix-vector subroutines include:
 
-Subroutine	Description
-SGEMV, DGEMV,CGEMV, ZGEMV	Perform matrix-vector operation with general matrices
-SGBMV, DGBMV, CGBMV, ZGBMV	Perform matrix-vector operations with general banded matrices
-CHEMV, ZHEMV	Perform matrix-vector operations using Hermitian matrices
-CHBMV, ZHBMV	Perform matrix-vector operations using a Hermitian band matrix
-CHPMV,ZHPMV	Perform matrix-vector operations using a packed Hermitian matrix
-SSYMV , DSYMV	Perform matrix-vector operations using a symmetric matrix
-SSBMV , DSBMV	Perform matrix-vector operations using symmetric band matrix
-SSPMV , DSPMV	Perform matrix-vector operations using a packed symmetric matrix
-STRMV, DTRMV, CTRMV, ZTRMV	Perform matrix-vector operations using a triangular matrix
-STBMV, DTBMV, CTBMV, ZTBMV	Perform matrix-vector operations using a triangular band matrix
-STPMV, DTPMV, CTPMV, ZTPMV	Perform matrix-vector operations on a packed triangular matrix
-STRSV, DTRSV, CTRSV, ZTRSV	Solve system of equations
-STBSV, DTBSV, CTBSV, ZTBSV	Solve system of equations
-STPSV, DTPSV, CTPSV, ZTPSV	Solve systems of equations
-SGER, DGER	Perform rank 1 operation
-CGERU, ZGERU	Perform rank 1 operation
-CGERC,ZGERC	Perform rank 1 operation
-CHER, ZHER	Perform Hermitian rank 1 operation
-CHPR,ZHPR	Perform Hermitian rank 1 operation
-CHPR2,ZHPR2	Perform Hermitian rank 2 operation
-SSYR, DSYR	Perform symmetric rank 1 operation
-SSPR, DSPR	Perform symmetric rank 1 operation
-SSYR2 , DSYR2	Perform symmetric rank 2 operation
-SSPR2 ,DSPR2	Perform symmetric rank 2 operation
-
-
 Level 3: matrix-matrix subroutines include:
-
-Subroutine	Description
-SGEMM, DGEMM, CGEMM, ZGEMM	Perform matrix-matrix operations on general matrices
-SSYMM, DSYMM,CSYMM, ZSYMM	Perform matrix-matrix operations on symmetrical matrices
-CHEMM,ZHEMM	Perform matrix-matrix operations on Hermitian matrices
-SSYRK, DSYRK,CSYRK, ZSYRK	Perform symmetric rank k operations
-CHERK, ZHERK	Perform Hermitian rank k operations
-SSYR2K, DSYR2K, CSYR2K, ZSYR2K	Perform symmetric rank 2k operations
-CHER2K,ZHER2K	Perform Hermitian rank 2k operations
-STRMM, DTRMM,CTRMM, ZTRMM,	Perform matrix-matrix operations on triangular matrixes
-STRSM, DTRSM, CTRSM, ZTRSM	Solve certain matrix equations
 
 Greek letter Lower case Unicode Upper case Unicode
 alpha α 03b1 A 0391
@@ -1401,7 +1379,11 @@ https://fsymbols.com/generators/overline/
 A̅ᵗ   Conjugate transpose
 B̅    Conjugate
 
-_`A̅ᵗ ∙ B̅`_
+`A̅ᵗ ∙ B̅`_
 
 Aᵗ 
+
+xᵗx
+
+ᵗ
 ```
