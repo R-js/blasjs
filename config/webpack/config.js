@@ -19,10 +19,10 @@ module.exports = function(env) {
             libraryTarget: 'umd2',
             library: 'BLAS'
         },
-        node: {
+        /*node: {
             __dirname: false,
             __filename: false,
-        },
+        },*/
         devtool: 'source-map',
         externals: [
             wPackN_Ext() //for examples see ./externals/index.js
@@ -34,7 +34,7 @@ module.exports = function(env) {
             ]
         },
         plugins: [
-            rm({ paths: ['lib'] })
+            rm({ paths: ['lib', './'] })
         ],
         resolve: {
             extensions,
