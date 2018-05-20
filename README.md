@@ -112,7 +112,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [`cswap`, `dswap`, `sswap`, `zswap`](#cswap-dswap-sswap-zswap)
     * [Dot product of two complex vectors]()
         * [`cdotu`, `cdotc`, `zdotu`, `zdotc`](#cdotu-cdotc-zdotu-zdotc)
-    * [Dot prodcut of two vectors]()
+    * [Dot product of two vectors]()
         * [`sdot`, `ddot`, `sdsdot`, `dsdot`](#sdot-ddot-sdsdot-dsdot)
     * [Finds the index of the first element having maximum absolute value]()
         * [`isamax`, `idamax`, `icamax`, `izamax`](#isamax-idamax-icamax-izamax)
@@ -120,9 +120,74 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [`scopy`, `dcopy`, `ccopy`, `zcopy`](#scopy-dcopy-ccopy-zcopy)
     * [Constant times a vector plus a vector]()
         * [`saxpy`, `daxpy`, `caxpy`, `zaxpy`](#saxpy-daxpy-caxpy-zaxpy)
+* [Level 2 Routines](#level-2-routines)    
+    * [The hermitian rank 2 operation A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A]()
+        * [`cher2`, `zher2`, `chpr2`, `zhpr2`]() 
+    * [The symmetric rank 2 operation A ⟵ α·x·yᵀ + α·y·xᵀ + A]()
+        * [`sspr2`, `dspr2`, `ssyr2`, `dsyr2`]()
+    * [The rank 1 operation A ⟵ α·x·yᴴ + A or A ⟵ α·x·yᵀ + A]()
+        * [`sger`, `dger`, `cgerc`, `zgerc`, `cgeru`, `zgeru`]()
+    * [The hermitian rank 1 operation A ⟵ α·x·xᴴ + A]()
+        * [`cher`, `zher`, `chpr`, `zpr`]()
+    * [The symmetric rank 1 operation A ⟵ α·x·xᵀ + A]()
+        * [`sspr`, `dspr`, `ssyr`, `dsyr`]()
+    * [The matrix-vector operation, y ⟵ α·A·x + β·y, or y ⟵ α·Aᵀ·x + β·y or y ⟵  α·Aᴴ·x + β·y]()
+        * [`cgbmv`, `chbmv`, `dgbmv`, `dsbmv`, `sgbmv`, `ssbmv`, `zgbmv`, `zhbmv`]()
+        * [`ctbmv`, `dtbmv`, `stbmv`, `ztbmv`]()
+        * [`cgemv`, `chemv`, `dgemv`, `sgemv`, `zgemv`, `zhemv`]()
+        * [`chpmv`, `dspmv`, `sspmv`, `zhpmv`]()
+        * [`dsymv`, `ssymv`]()
+    * [The matrix-vector operation, x ⟵ A·x, or x ⟵ Aᵀ·x, or x ⟵ Aᴴ·x]()
+        * [`ctpmv`, `ctrmv`, `dtpmv`, `dtrmv`, `stpmv`, `strmv`, `ztpmv`, `ztrmv`]()
+    * [Solves a systems of equations A·x = b, or Aᵀ·x = b, or Aᴴ·x = b]()
+        * [`ctbsv`, `ctpsv`, `ctrsv`, `dtbsv`, `dtpsv`, `dtrsv`, `stbsv`, `stpsv`, `strsv`, `ztbsv`, `ztpsv`, `ztrsv`]()
+* [Level 3 Routines](#level-3-routines)
+    * [Hermitian rank 2k operations C ⟵ α·A·Bᴴ + conjg( α )·B·Aᴴ + β·C or C ⟵ α·Aᴴ·B + conjg( α )·Bᴴ·A + β·C]()
+        * [`cher2k`, `zher2k`]()
+    * [Symmetric rank 2k operations C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C, or C ⟵ α·Aᵀ·B +  α·Bᵀ·A + β·C]()
+        * [`csyr2k`, `dsyr2k`, `ssyr2k`, `zsyr2k`]()
+    * [Hermatian rank k operations C ⟵ α·A·Aᴴ + β·C, or C ⟵ α·Aᴴ·A + β·C]()
+        * [`cherk`, `zherk`]()
+    * [Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C]()
+        * [`csyrk`, `dsyrk`, `ssyrk`, `zsyrk`]()
+    * [Matrix-matrix operations C ⟵ α·_f̅(A)_·_h̅(B)_ + β·C]()
+        * [`cgemm`, `dgemm`, `sgemm`, `zgemm`]()
+        * [`chemm`, `zhemm`]()
+        * [`ctrmm`, `dtrmm`, `strmm`, `ztrmm`]()
+        * [`csymm`, `dsymm`, `ssymm`, `zsymm`]()
+    * [Solves the matrix equations _f̅( A )_·X = α·B, or X·_h̅( A )_ =  α·B]()
+        * [`ctrsm`, `dtrsm`, `strsm`, `ztrsm`]()
 
 
 
+# level 2
+
+## `cher2`, `zher2`, `chpr2`, `zhpr2`
+## `sspr2`, `dspr2`, `ssyr2`, `dsyr2`
+## `sger`, `dger`, `cgerc`, `zgerc`, `cgeru`, `zgeru`
+## `cher`, `zher`, `chpr`, `zpr`
+## `sspr`, `dspr`, `ssyr`, `dsyr`
+## `cgbmv`, `chbmv`, `dgbmv`, `dsbmv`, `sgbmv`, `ssbmv`, `zgbmv`, `zhbmv`
+## `ctbmv`, `dtbmv`, `stbmv`, `ztbmv`
+## `cgemv`, `chemv`, `dgemv`, `sgemv`, `zgemv`, `zhemv`
+## `chpmv`, `dspmv`, `sspmv`, `zhpmv`
+## `dsymv`, `ssymv`
+## `ctpmv`, `ctrmv`, `dtpmv`, `dtrmv`, `stpmv`, `strmv`, `ztpmv`, `ztrmv`
+## `ctbsv`, `ctpsv`, `ctrsv`, `dtbsv`, `dtpsv`, `dtrsv`, `stbsv`, `stpsv`, `strsv`, `ztbsv`, `ztpsv`, `ztrsv`
+
+# level 3
+
+## `cher2k`, `zher2k`
+## `csyr2k`, `dsyr2k`, `ssyr2k`, `zsyr2k`
+## `cherk`, `zherk`
+## `csyrk`, `dsyrk`, `ssyrk`, `zsyrk`
+## `cgemm`, `dgemm`, `sgemm`, `zgemm`
+## `chemm`, `zhemm`
+## `ctrmm`, `dtrmm`, `strmm`, `ztrmm`
+## `csymm`, `dsymm`, `ssymm`, `zsymm`
+## `ctrsm`, `dtrsm`, `strsm`, `ztrsm`
+
+# level1
 
 ## `srotg`, `drotg`, `crotg`,`zrotg`
 ## `srotmg`, `drotmg`

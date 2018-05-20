@@ -109,5 +109,3 @@ export const level2 = {
     ztrsv: ctrsv,
 };
 
-
-import './doc';
