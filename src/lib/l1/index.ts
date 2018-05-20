@@ -82,3 +82,5 @@ export const level1 = {
     zscal: cscal,
     zswap: cswap
 };
+
+import './doc';

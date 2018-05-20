@@ -110,3 +110,4 @@ export const level2 = {
 };
 
 
+import './doc';

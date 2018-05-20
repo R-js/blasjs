@@ -59,35 +59,5 @@ export { Matrix, Complex, fpArray, FortranArr, util, helper, level1, level2, lev
 
 export default { level1, level2, level3, helper, util };
 
-/*
 
-WORKS!!
-WORKS!!
-WORKS!!
 
-function firstSuccess<T, K>(data: T[], fn: (v: T) => Promise<K>): Promise<K> {
-    function loop(arr: T[]) {
-        const elt = arr.pop();
-        if (!elt) {
-            return Promise.reject('list exhausted');
-        }
-        return fn(elt)
-            .then(d => d)
-            .catch(d => { console.log(d); return loop(arr); });
-
-    }
-    //kickoff
-    return loop(data);
-}
-
-firstSuccess([6, 18, 20, 30, 40],
-    function testFunction(n: number) {
-        if (n > 5) {
-            return Promise.reject(n);
-        }
-        return Promise.resolve(n);
-    })
-    .then(r => console.log('result', r))
-    .catch(err => console.log('all trials failed:', err));
-
-*/

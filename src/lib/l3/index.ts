@@ -68,3 +68,5 @@ export const level3 = {
     ztrmm: ctrmm,
     ztrsm: ctrsm
 };
+
+import './doc';
