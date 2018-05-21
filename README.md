@@ -213,7 +213,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 ### `csyrk`, `dsyrk`, `ssyrk`, `zsyrk`
 
-## Matrix · matrix: C ⟵ α·_f̅(A)_·_h̅(B)_ + β·C
+## Matrix-matrix: C ⟵ α·_f̅(A)_·_h̅(B)_ + β·C
 
 ### `cgemm`, `dgemm`, `sgemm`, `zgemm`
 ### `chemm`, `zhemm`
