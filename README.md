@@ -13,7 +13,7 @@ BLASjs contains all the functions (Complex, Real) of the reference implementatio
 * Level 1: all vector-vector operations implemented.
 * Level 2: all vector-matrix operations implemented.
 * Level 3: all matrix-matrix operations implemented.
-* Helper functions to easy porting of FORTRAN BLAS usage to Javascript.
+* Helper functions to easye the porting of FORTRAN BLAS usage to Javascript.
 
 #### Node and Web
 
