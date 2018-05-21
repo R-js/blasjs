@@ -13,11 +13,11 @@ BLASjs contains all the functions (Complex, Real) of the reference implementatio
 * Level 1: all vector-vector operations implemented.
 * Level 2: all vector-matrix operations implemented.
 * Level 3: all matrix-matrix operations implemented.
-* Helper functions to easye the porting of FORTRAN BLAS usage to Javascript.
+* Helper functions to ease the porting of FORTRAN BLAS usage to Javascript.
 
 #### Node and Web
 
-The library js file is an agnostic UMD library, it can be used in a web client
+The resulting bundled `blasjs` file is an agnostic UMD library, it can be used in a web client
 as-well as in a server side node environment.
 
 ## Installation
