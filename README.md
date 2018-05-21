@@ -121,9 +121,9 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     * [Constant times a vector plus a vector]()
         * [`saxpy`, `daxpy`, `caxpy`, `zaxpy`](#saxpy-daxpy-caxpy-zaxpy)
 * [Level 2 Routines](#level-2-routines)    
-    * [The hermitian rank 2 operation A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A]()
+    * [The hermitian rank 2 operation A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A](#hermitian-rank-2-a--αxyᴴ--conjg-α-yxᴴ--a)
         * [`cher2`, `zher2`, `chpr2`, `zhpr2`](#cher2-zher2-chpr2-zhpr2) 
-    * [The symmetric rank 2 operation A ⟵ α·x·yᵀ + α·y·xᵀ + A]()
+    * [The symmetric rank 2 operation A ⟵ α·x·yᵀ + α·y·xᵀ + A](#symmetric-rank-2-a--αxyᵀ--αyxᵀ--a)
         * [`sspr2`, `dspr2`, `ssyr2`, `dsyr2`](#sspr2-dspr2-ssyr2-dsyr2)
     * [The rank 1 operation A ⟵ α·x·yᴴ + A or A ⟵ α·x·yᵀ + A]()
         * [`sger`, `dger`, `cgerc`, `zgerc`, `cgeru`, `zgeru`](#sger-dger-cgerc-zgerc-cgeru-zgeru)
@@ -160,37 +160,69 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 
 
-# level 2
+# level 2 routines
 
-# Hermitian rank 2: A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A
-## `cher2`, `zher2`, `chpr2`, `zhpr2`
+## Hermitian rank 2: A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A
 
-# Symmetric rank 2: A ⟵ α·x·yᵀ + α·y·xᵀ + A
-## `sspr2`, `dspr2`, `ssyr2`, `dsyr2`
+### `cher2`, `zher2`, `chpr2`, `zhpr2`
 
-## `sspr2`, `dspr2`, `ssyr2`, `dsyr2`
-## `sger`, `dger`, `cgerc`, `zgerc`, `cgeru`, `zgeru`
-## `cher`, `zher`, `chpr`, `zpr`
-## `sspr`, `dspr`, `ssyr`, `dsyr`
-## `cgbmv`, `chbmv`, `dgbmv`, `dsbmv`, `sgbmv`, `ssbmv`, `zgbmv`, `zhbmv`
-## `ctbmv`, `dtbmv`, `stbmv`, `ztbmv`
-## `cgemv`, `chemv`, `dgemv`, `sgemv`, `zgemv`, `zhemv`
-## `chpmv`, `dspmv`, `sspmv`, `zhpmv`
-## `dsymv`, `ssymv`
-## `ctpmv`, `ctrmv`, `dtpmv`, `dtrmv`, `stpmv`, `strmv`, `ztpmv`, `ztrmv`
-## `ctbsv`, `ctpsv`, `ctrsv`, `dtbsv`, `dtpsv`, `dtrsv`, `stbsv`, `stpsv`, `strsv`, `ztbsv`, `ztpsv`, `ztrsv`
+## Symmetric rank 2: A ⟵ α·x·yᵀ + α·y·xᵀ + A
 
-# level 3
+### `sspr2`, `dspr2`, `ssyr2`, `dsyr2`
 
-## `cher2k`, `zher2k`
-## `csyr2k`, `dsyr2k`, `ssyr2k`, `zsyr2k`
-## `cherk`, `zherk`
-## `csyrk`, `dsyrk`, `ssyrk`, `zsyrk`
-## `cgemm`, `dgemm`, `sgemm`, `zgemm`
-## `chemm`, `zhemm`
-## `ctrmm`, `dtrmm`, `strmm`, `ztrmm`
-## `csymm`, `dsymm`, `ssymm`, `zsymm`
-## `ctrsm`, `dtrsm`, `strsm`, `ztrsm`
+## The rank 1: A ⟵ α·x·yᴴ + A or A ⟵ α·x·yᵀ + A
+
+### `sger`, `dger`, `cgerc`, `zgerc`, `cgeru`, `zgeru`
+
+## Hermitian rank 1: A ⟵ α·x·xᴴ + A
+
+### `cher`, `zher`, `chpr`, `zpr`
+
+## Symmetric rank 1: A ⟵ α·x·xᵀ + A
+
+### `sspr`, `dspr`, `ssyr`, `dsyr`
+
+## y ⟵ α·A·x + β·y ∨ y ⟵ α·Aᵀ·x + β·y ∨ y ⟵ α·Aᴴ·x + β·y
+
+### `cgbmv`, `chbmv`, `dgbmv`, `dsbmv`, `sgbmv`, `ssbmv`, `zgbmv`, `zhbmv`
+
+### `ctbmv`, `dtbmv`, `stbmv`, `ztbmv`
+### `cgemv`, `chemv`, `dgemv`, `sgemv`, `zgemv`, `zhemv`
+### `chpmv`, `dspmv`, `sspmv`, `zhpmv`
+### `dsymv`, `ssymv`
+
+## x ⟵ A·x ∨ x ⟵ Aᵀ·x ∨ x ⟵ Aᴴ·x
+
+### `ctpmv`, `ctrmv`, `dtpmv`, `dtrmv`, `stpmv`, `strmv`, `ztpmv`, `ztrmv`
+
+## solves A·x = b ∨ Aᵀ·x = b ∨ Aᴴ·x = b
+
+### `ctbsv`, `ctpsv`, `ctrsv`, `dtbsv`, `dtpsv`, `dtrsv`, `stbsv`, `stpsv`, `strsv`, `ztbsv`, `ztpsv`, `ztrsv`
+
+# level 3 routines
+
+## Hermitian rank 2k: C ⟵ α·A·Bᴴ + conjg( α )·B·Aᴴ + β·C ∨ C ⟵ α·Aᴴ·B + conjg( α )·Bᴴ·A + β·C
+
+### `cher2k`, `zher2k`
+
+## Symmetric rank 2k: C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C ∨ C ⟵ α·Aᵀ·B +  α·Bᵀ·A + β·C
+
+### `csyr2k`, `dsyr2k`, `ssyr2k`, `zsyr2k`
+
+## Hermatian rank k: C ⟵ α·A·Aᴴ + β·C ∨ C ⟵ α·Aᴴ·A + β·C
+
+### `csyrk`, `dsyrk`, `ssyrk`, `zsyrk`
+
+## Matrix · matrix: C ⟵ α·_f̅(A)_·_h̅(B)_ + β·C
+
+### `cgemm`, `dgemm`, `sgemm`, `zgemm`
+### `chemm`, `zhemm`
+### `ctrmm`, `dtrmm`, `strmm`, `ztrmm`
+### `csymm`, `dsymm`, `ssymm`, `zsymm`
+
+## Solves _f̅( A )_·X = α·B ∨ X·_h̅( A )_ =  α·B
+
+### `ctrsm`, `dtrsm`, `strsm`, `ztrsm`
 
 # level1
 
