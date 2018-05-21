@@ -162,10 +162,10 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 # level 2
 
-# Hermitian rank 2 A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A
+# Hermitian rank 2: A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A
 ## `cher2`, `zher2`, `chpr2`, `zhpr2`
 
-# Symmetric rank 2 A ⟵ α·x·yᵀ + α·y·xᵀ + A
+# Symmetric rank 2: A ⟵ α·x·yᵀ + α·y·xᵀ + A
 ## `sspr2`, `dspr2`, `ssyr2`, `dsyr2`
 
 ## `sspr2`, `dspr2`, `ssyr2`, `dsyr2`
