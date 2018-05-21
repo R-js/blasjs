@@ -122,11 +122,11 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [`saxpy`, `daxpy`, `caxpy`, `zaxpy`](#saxpy-daxpy-caxpy-zaxpy)
 * [Level 2 Routines](#level-2-routines)    
     * [The hermitian rank 2 operation A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A]()
-        * [`cher2`, `zher2`, `chpr2`, `zhpr2`]() 
+        * [`cher2`, `zher2`, `chpr2`, `zhpr2`](#cher2-zher2-chpr2-zhpr2) 
     * [The symmetric rank 2 operation A ⟵ α·x·yᵀ + α·y·xᵀ + A]()
-        * [`sspr2`, `dspr2`, `ssyr2`, `dsyr2`]()
+        * [`sspr2`, `dspr2`, `ssyr2`, `dsyr2`](#sspr2-dspr2-ssyr2-dsyr2)
     * [The rank 1 operation A ⟵ α·x·yᴴ + A or A ⟵ α·x·yᵀ + A]()
-        * [`sger`, `dger`, `cgerc`, `zgerc`, `cgeru`, `zgeru`]()
+        * [`sger`, `dger`, `cgerc`, `zgerc`, `cgeru`, `zgeru`](#sger-dger-cgerc-zgerc-cgeru-zgeru)
     * [The hermitian rank 1 operation A ⟵ α·x·xᴴ + A]()
         * [`cher`, `zher`, `chpr`, `zpr`]()
     * [The symmetric rank 1 operation A ⟵ α·x·xᵀ + A]()
@@ -162,7 +162,12 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 # level 2
 
+# The hermitian rank 2 operation A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A
 ## `cher2`, `zher2`, `chpr2`, `zhpr2`
+
+# The symmetric rank 2 operation A ⟵ α·x·yᵀ + α·y·xᵀ + A
+## `sspr2`, `dspr2`, `ssyr2`, `dsyr2`
+
 ## `sspr2`, `dspr2`, `ssyr2`, `dsyr2`
 ## `sger`, `dger`, `cgerc`, `zgerc`, `cgeru`, `zgeru`
 ## `cher`, `zher`, `chpr`, `zpr`
