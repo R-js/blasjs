@@ -76,7 +76,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
                 * [Matrix.prototype.packedUpper](#matrixprototypepackedupper)
                 * [Matrix.prototype.packedLower](#matrixprototypepackedlower)
             * [Convert Matrix object to Js Array](#convert-matrix-object-to-a-js-array)
-                * [Matrix.prototype.toArr](#matrixprototypetoarr) 
+                * [Matrix.prototype.toArr](#matrixprototypetoarr)
             * [Matrix Examples](#matrix-examples)
     * [General Helpers](#general-helpers)
         * [arrayrify](#arrayrify)
@@ -89,12 +89,12 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [fortranArrComplex32](#fortranarrcomplex32)
         * [fortranArrComplex64](#fortranarrcomplex64)
         * [Vector Creation Examples](#vector-creation-examples)
-    * [Matrix constructors](#matrix-constructors) 
+    * [Matrix constructors](#matrix-constructors)
         * [fortranMatrixComplex32](#fortranmatrixcomplex32)
         * [fortranMatrixComplex64](#fortranmatrixcomplex64)
         * [Matrix Creation Examples](#matrix-creation-examples)
 * [Level 1 Routines](#level-1-routines)
-    * [Euclidean norm of a vector]()
+    * [Euclidean norm of a vector](#euclidean-norm-of-a-vector)
         * [`scnrm2`, `dznrm2`, `snrm2`, `dnrm2`](#scnrm2-dznrm2-snrm2-dnrm2)
     * [Construct a Givens plane rotation]()
         * [`srotg`, `drotg`, `crotg`,`zrotg`](#srotg-drotg-crotgzrotg)
@@ -122,7 +122,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [`saxpy`, `daxpy`, `caxpy`, `zaxpy`](#saxpy-daxpy-caxpy-zaxpy)
 * [Level 2 Routines](#level-2-routines)    
     * [The hermitian rank 2 operation A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A](#hermitian-rank-2-a--αxyᴴ--conjg-α-yxᴴ--a)
-        * [`cher2`, `zher2`, `chpr2`, `zhpr2`](#cher2-zher2-chpr2-zhpr2) 
+        * [`cher2`, `zher2`, `chpr2`, `zhpr2`](#cher2-zher2-chpr2-zhpr2)
     * [The symmetric rank 2 operation A ⟵ α·x·yᵀ + α·y·xᵀ + A](#symmetric-rank-2-a--αxyᵀ--αyxᵀ--a)
         * [`sspr2`, `dspr2`, `ssyr2`, `dsyr2`](#sspr2-dspr2-ssyr2-dsyr2)
     * [The rank 1 operation A ⟵ α·x·yᴴ + A or A ⟵ α·x·yᵀ + A]()
@@ -158,7 +158,25 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     * [Solves the matrix equations _f̅( A )_·X = α·B, or X·_h̅( A )_ =  α·B]()
         * [`ctrsm`, `dtrsm`, `strsm`, `ztrsm`]()
 
+# Level 1 Routines
 
+Routines categorized as _"Level 1"_ perform scalar-vector and vector-vector operations.
+
+## Euclidean norm of a vector
+
+
+### `srotg`, `drotg`, `crotg`,`zrotg`
+## `srotmg`, `drotmg`
+## `srotm`, `drotm`
+## `srot`, `drot`, `csrot`, `zdrot`
+## `sscal`, `dscal`, `cscal`, `zscal`, `csscal`, `zdscal`
+## `sasum`, `dasum`, `scasum`, `dzasum`
+## `cswap`, `dswap`, `sswap`, `zswap`
+## `cdotu`, `cdotc`, `zdotu`, `zdotc`
+## `sdot`, `ddot`, `sdsdot`, `dsdot`
+## `isamax`, `idamax`, `icamax`, `izamax`
+## `scopy`, `dcopy`, `ccopy`, `zcopy`
+## `saxpy`, `daxpy`, `caxpy`, `zaxpy`
 
 # level 2 routines
 
@@ -224,20 +242,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 ### `ctrsm`, `dtrsm`, `strsm`, `ztrsm`
 
-# level1
 
-## `srotg`, `drotg`, `crotg`,`zrotg`
-## `srotmg`, `drotmg`
-## `srotm`, `drotm`
-## `srot`, `drot`, `csrot`, `zdrot`
-## `sscal`, `dscal`, `cscal`, `zscal`, `csscal`, `zdscal`
-## `sasum`, `dasum`, `scasum`, `dzasum`
-## `cswap`, `dswap`, `sswap`, `zswap`
-## `cdotu`, `cdotc`, `zdotu`, `zdotc`
-##  `sdot`, `ddot`, `sdsdot`, `dsdot`
-## `isamax`, `idamax`, `icamax`, `izamax`
-## `scopy`, `dcopy`, `ccopy`, `zcopy`
-## `saxpy`, `daxpy`, `caxpy`, `zaxpy`
 
 # Language differences with FORTRAN/BLAS.
 
@@ -257,7 +262,7 @@ _The FORTRAN complex scalar, complex array and complex "Matrix"_
      COMPLEX*16 A(1:5,1:10)
 ```
 
-To work with the concept of non-zero based arrays and complex numbers in JS, 
+To work with the concept of non-zero based arrays and complex numbers in JS,
 these FORTRAN constructs have equivalents in the `blasjs` library.
 
 _The `blasjs` helpers to create complex scalar, complex array and complex "Matrix" objects_
@@ -321,7 +326,7 @@ _decl_:
 ```typescript
 export declare type FortranArr = {
     base: number;
-    r: fpArray; 
+    r: fpArray;
     i?: fpArray;
     s: (index: number) => (re?: number, im?: number) => number | Complex;
     toArr: () => Complex[] | number[];
@@ -354,7 +359,7 @@ const complexDataArr = [
 //    and fill it with above data
 const sp = fortranArrComplex64(complexArr)(2);
 
-// fast! normal JS TypedArray access 
+// fast! normal JS TypedArray access
 let re = sp.r[ 2 - sp.base ];
 // 1.8
 
@@ -467,7 +472,7 @@ Some examples:
 
 ```fortran
        DOUBLE PRECISION A1(4)  ! array indexes 1,2,3,4
-       DOUBLE PRECISION A2(-1:3)  ! array indexes -1,0,2,3 
+       DOUBLE PRECISION A2(-1:3)  ! array indexes -1,0,2,3
        DOUBLE PRECISION A3(0:3) ! Javascript like Array with 4 elements
 ```
 
@@ -817,7 +822,7 @@ A.lowerBand(1); // banded array storage for BLAS(js)
    a21  a32  0    
 ]*/
 
-const Areal = A.real(); 
+const Areal = A.real();
 // Areal.i is undefined
 // Areal.r =
 /*[
@@ -826,7 +831,7 @@ const Areal = A.real();
     0.3 -0.2, 0.23
 ]*/
 
-const Aimag = A.imaginary(); 
+const Aimag = A.imaginary();
 // imaginary parts are copied to real side in new Matrix
 // Aimag.i is undefined
 // Aimag.r =
@@ -836,7 +841,7 @@ const Aimag = A.imaginary();
       0.9   0.45  0.56
 ]*/
 
-A.packedUpper(1) 
+A.packedUpper(1)
 /* [ a11 a12 a22 a23 a 33] */
 
 A.packedLower(1)
@@ -1247,7 +1252,7 @@ const m1 = A32(3, 3); // 3x3 matrix with rowBase=1, colBase=1
 // mimic FORTRAN  "COMPLEX*8  A(-2:1, -3:0)"
 const m2 = A32(3, 3, -2, -3);
 
-//same as FORTRAN default COMPLEX*8 A(3,3) !aka A(1:3,1:3) 
+//same as FORTRAN default COMPLEX*8 A(3,3) !aka A(1:3,1:3)
 const m3 = A32(3, 3, 1, 1)
 
 /* double precision */
@@ -1264,34 +1269,38 @@ const m1 = A64(3, 3); // 3x3 matrix with rowBase=1, colBase=1
 // mimic FORTRAN  "COMPLEX*16  A(-2:1, -3:0)"
 const m2 = A64(3, 3, -2, -3);
 
-// same as FORTRAN default COMPLEX*16 A(3,3) !aka A(1:3,1:3) 
+// same as FORTRAN default COMPLEX*16 A(3,3) !aka A(1:3,1:3)
 const m3 = A64(3, 3, 1, 1);
 ```
 
 # Level 1 routines
 
-Routines categorized as `Level 1` perform scalar-vector and vector-vector operations.
+Routines categorized as _Level 1_ perform scalar-vector and vector-vector operations.
 
 ## Euclidean norm of a vector
 
 Precision:
-> In `blasjs` the numeric precision of (complex or real) the BLAS routines is determined by how the [`FortranArr`](#fortranarr) is constructed before used as arguments.
+> In `blasjs` the numeric precision of (complex or real) a vector the  is determined by how the [`FortranArr`](#fortranarr) is constructed before passed as arguments in `blasjs` routines.
 
 ### `scnrm2`, `dznrm2`, `snrm2`, `dnrm2`
 
-`scrnm2` and `dznrm2` are each others alias. Only the call signature of `scrnm2` is shown.
-See BLAS [doc](http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html).
-In the case of a complex vector `FortranArr` the norm is defined as `SQRT(x<sup>H</sup>*x)`
-Conjugate inner product.   
+`scrnm2` and `dznrm2` calculate the norm of complex vector. `snrm2` and `dnrm2` calculate the norm of the non-complex vector.
+
+The FORTRAN reference implementation has different functions for 32bit and 64bit floating point operation. However in `blasjs` the precision is not determined by the function, but by the arguments passed to the function. See for more information [FortranArr]() and [Matrix](). The naming is preserved for backward compatibility and compliance with the reference BLAS.
+
+#### Call signature of `dznrm2` and `scrnm2` (alias). See BLAS [doc](http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html).
 
 ```typescript
-// dnrm2 is has the same call si
-declare function scnrm2(
-    n: number, 
-    x: FortranArr, 
+// scrnm2 and dznrm2 have the same signature
+declare function dznrm2(
+    n: number,
+    x: FortranArr, //complex elements
     incx: number
-): number 
+): number
 ```
+
+In the case of a complex vector `FortranArr` the norm is defined as xᴴx `SQRT(x<sup>H</sup>*x)`
+Conjugate inner product.
 
 `dnrm2` and `snrm2` are each others alias. Only the call signature of `snrm2` is shown.
 See BLAS [snrm2 doc](http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html).
@@ -1300,8 +1309,8 @@ See BLAS [dnrm2 doc](http://www.netlib.org/lapack/explore-html/da/d7f/dnrm2_8f.h
 ```typescript
 // dnrm2 is has the same call signature
 declare function snrm2(
-    n: number, 
-    x: FortranArr, 
+    n: number,
+    x: FortranArr,
     incx: number
 ): number
 ```
@@ -1335,7 +1344,7 @@ Complex analog to the [srotg/drotg](#srotgdrotg) givens rotation.
 `zrotg` is an alias for `crotg`.
 
 ```typescript
-// function "zrotg" has the same call signature 
+// function "zrotg" has the same call signature
 export function crotg(
       ca: Complex,
       cb: Complex,
@@ -1426,9 +1435,6 @@ CROTG,ZROTG,SROTG,DROTG
 
 SROTMG, DROTMG
 
-
-
-
 Level 2: matrix-vector subroutines include:
 
 Level 3: matrix-matrix subroutines include:
@@ -1483,7 +1489,7 @@ B̅    Conjugate
 
 `A̅ᵗ ∙ B̅`_
 
-Aᵗ 
+Aᵗ
 
 xᵗx
 
