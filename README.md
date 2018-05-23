@@ -94,8 +94,8 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [fortranMatrixComplex64](#fortranmatrixcomplex64)
         * [Matrix Creation Examples](#matrix-creation-examples)
 * [Level 1 Routines](#level-1-routines)
-    * [Euclidean norm of a vector](#euclidean-norm-of-a-vector)
-        * [`scnrm2`, `dznrm2`, `snrm2`, `dnrm2`](#scnrm2-dznrm2-snrm2-dnrm2)
+    * [Euclidean norm: √(xᴴ·x) or √(xᵀ·x)]()
+        * [`scnrm2`, `dznrm2`, `snrm2`, `dnrm2`](#naming)
     * [Construct a Givens plane rotation]()
         * [`srotg`, `drotg`, `crotg`,`zrotg`](#srotg-drotg-crotgzrotg)
     * [Construct the **modified** Givens rotation matrix `H`]()
@@ -114,7 +114,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [`cdotu`, `cdotc`, `zdotu`, `zdotc`](#cdotu-cdotc-zdotu-zdotc)
     * [Dot product of two vectors]()
         * [`sdot`, `ddot`, `sdsdot`, `dsdot`](#sdot-ddot-sdsdot-dsdot)
-    * [Finds the index of the first element having maximum absolute value]()
+    * [Finds the index of the first element having maximum absolut value]()
         * [`isamax`, `idamax`, `icamax`, `izamax`](#isamax-idamax-icamax-izamax)
     * [Copy a vector x to a vector y]()
         * [`scopy`, `dcopy`, `ccopy`, `zcopy`](#scopy-dcopy-ccopy-zcopy)
@@ -1273,104 +1273,110 @@ const m2 = A64(3, 3, -2, -3);
 const m3 = A64(3, 3, 1, 1);
 ```
 
+# A note on numeric precision
+
+In `blasjs`, contrary to the FORTRAN reference implementation, the numeric precision of a routine, is not determined by its name but by [*how*](#vector-constructors) its arguments like [`FortranArr`](#fortranarr) and [`Matrix`](#matrix) are constructed before used as arguments in `blasjs` routines. The original FORTRAN names are kept for backwards compatibility to ease the porting of FORTRAN code toward `blasjs`.
+
+# Mimicking FORTRAN OUT Arguments
+
+
+In FORTRAN a subroutine can have IN, OUT and IN/OUT scalar arguments. In JavaScript only arguments of type `object` are passed by reference. To mimic OUT and IN/OUT FORTRAN arguments, scalars are wrapped in a JS object. See [Construct a Givens plane rotation](#construct-a-givens-plane-rotation) for an example.
+
+
 # Level 1 routines
 
 Routines categorized as _Level 1_ perform scalar-vector and vector-vector operations.
 
-## Euclidean norm of a vector
+## Euclidean norm: √(xᴴ·x)  or √(xᵀ·x)
 
-Precision:
-> In `blasjs` the numeric precision of (complex or real) a vector the  is determined by how the [`FortranArr`](#fortranarr) is constructed before passed as arguments in `blasjs` routines.
+Calculates the norm of a (complex) vector.
 
-### `scnrm2`, `dznrm2`, `snrm2`, `dnrm2`
+xᴴ is the _conjugate_ of x.
 
-`scrnm2` and `dznrm2` calculate the norm of complex vector. `snrm2` and `dnrm2` calculate the norm of the non-complex vector.
+xᵀ is the _transpose_ of x
 
-The FORTRAN reference implementation has different functions for 32bit and 64bit floating point operation. However in `blasjs` the precision is not determined by the function, but by the arguments passed to the function. See for more information [FortranArr]() and [Matrix](). The naming is preserved for backward compatibility and compliance with the reference BLAS.
+#### Naming
 
-#### Call signature of `dznrm2` and `scrnm2` (alias). See BLAS [doc](http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html).
+* `scrnm2`: complex, [single or double precision][precision-note]. See [ref]().
+* `dznrm2`: complex, (alias for `scrnm2`). See [ref]().
+* `snrm2`: real, [single or double precision][precision-note]. See [ref][ref-snrm2].
+* `dnrm2`: real, (alias for `dnrm2`). See [ref](ref-dnrm2).
+
+_decl_
 
 ```typescript
-// scrnm2 and dznrm2 have the same signature
-declare function dznrm2(
-    n: number,
-    x: FortranArr, //complex elements
-    incx: number
-): number
+ function scnrm2(n: number, x: FortranArr, incx: number): number;
+ function dznrm2(n: number, x: FortranArr, incx: number): number;
+ function snrm2(n: number, x: FortranArr, incx: number): number;
+ function dnrm2(n: number, x: FortranArr, incx: number): number;
 ```
 
-In the case of a complex vector `FortranArr` the norm is defined as xᴴx `SQRT(x<sup>H</sup>*x)`
-Conjugate inner product.
+See: _[how to create fortranArr](#vector-constructors)_.
 
-`dnrm2` and `snrm2` are each others alias. Only the call signature of `snrm2` is shown.
-See BLAS [snrm2 doc](http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html).
-See BLAS [dnrm2 doc](http://www.netlib.org/lapack/explore-html/da/d7f/dnrm2_8f.html).
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { scnrm2, dznrm2, snrm2, dnrm2 } = BLAS.level1;
+```
+
+## Construct a Givens plane rotation
+
+See [wiki][givens-rotation]. 
+
+
+```Math
+
+⎡ s c ⎤ ⎯
+⎣ c s ⎦ 
+```
+
+#### Naming
+
+* `srotg`:
+* `drotg`:
+* `crotg`:
+* `zrotg`:
+
+_decl_
 
 ```typescript
-// dnrm2 is has the same call signature
-declare function snrm2(
-    n: number,
-    x: FortranArr,
-    incx: number
-): number
+function srotg(p: { sa: number, sb: number, c: number, s: number } ): void;
+function drotg(p: { sa: number, sb: number, c: number, s: number } ): void;
+function crotg(ca: Complex, cb: Complex, c: { val: number }, s: Complex ): void
+function zrotg(ca: Complex, cb: Complex, c: { val: number }, s: Complex ): void
 ```
 
 Usage:
 
 ```javascript
-
+const BLAS = require('blasjs');
+const { srotg, drotg, crotg, zrotg } = BLAS.level1;
 ```
 
-## `srotg`/`drotg`
+## Construct the **modified** Givens rotation matrix `H`
 
-See [blas doc](#http://www.netlib.org/lapack/explore-html/d7/d26/srotg_8f.html). Construct [givens plane rotation][givens-rotation]. In JavaScript, scalar function-arguments are always passed as copies. To mimic FORTRAN `out` variables an object wrapper must be used (See `p` below).
+
+### Naming
+* `srotmg`:
+* `drotmg`:
+
+_decl_
 
 ```typescript
-// function "drotg" has the same call signature.
-declare function srotg(
-    p: {
-     sa: number,
-     sb: number,
-     c: number,
-     s: number
-   }
- ): void
+function srotmg(p: { sd1: number, sd2: number, sx1: number, sy1: number, sparam: FortranArr }): void;
+function drotmg(p: { sd1: number, sd2: number, sx1: number, sy1: number, sparam: FortranArr }): void;
 ```
 
-## `crotg`/`zrotg`
+See: _[how to create fortranArr](#vector-constructors)_.
 
-See [blas doc](#http://www.netlib.org/lapack/explore-html/dc/dfe/zrotg_8f.html).
-Complex analog to the [srotg/drotg](#srotgdrotg) givens rotation.
-`zrotg` is an alias for `crotg`.
+Usage:
 
-```typescript
-// function "zrotg" has the same call signature
-export function crotg(
-      ca: Complex,
-      cb: Complex,
-      c: { val: number },
-      s: Complex
-): void;
+```javascript
+const BLAS = require('blasjs');
+const { srotmg, drotmg } = BLAS.level1;
 ```
 
-## `srotm`/`drotm`
-
-Apply the modified [givens transformation](#
-http://www.netlib.org/lapack/explore-html/dd/d48/srotmg_8f.html)
-
-`drotm` is an alias for `srotm` as the numeric precision is only determined how the `FortrenArr` object is constructed.
-
-```typescript
-// function drotm has the same signature
-export function srotm(
-      N: number,
-      SX: FortranArr,
-      INCX: number,
-      SY: FortranArr,
-      INCY: number,
-      SPARAM: FortranArr,
-): void
-```
 
 ## `srot`/`drot`/`zdrot`/`csrot`
 
@@ -1477,21 +1483,17 @@ omega ω 03c9 Ω 03a9
 
 [float64-array]: [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array]
 
+[mimic-fortran-args]: [#mimicking-FORTRAN-OUT-Arguments]
+[precision-note]: [#a-note-on-numeric-precision]
 [language-differences]: [#language-differences-with-fortranblas]
 [givens-rotation]: https://en.wikipedia.org/wiki/Givens_rotation#Stable_calculation
+[ref-snrm2]: http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html
+[ref-dnrm2]: http://www.netlib.org/lapack/explore-html/da/d7f/dnrm2_8f.html
+[ref-srotg]: http://www.netlib.org/lapack/explore-html/d7/d26/srotg_8f.html
+[ref-zrotg]: #http://www.netlib.org/lapack/explore-html/dc/dfe/zrotg_8f.html
+
 
 Some notes on Matrix symbols
 
 https://fsymbols.com/generators/overline/
-
-A̅ᵗ   Conjugate transpose
-B̅    Conjugate
-
-`A̅ᵗ ∙ B̅`_
-
-Aᵗ
-
-xᵗx
-
-ᵗ
 ```

@@ -72,12 +72,14 @@ export const level1 = {
     scasum,
     //double complex
     dzasum: scasum,
+    dznrm2: scnrm2,
     izamax: icamax,
     zaxpy: caxpy,
     zcopy: ccopy,
     zdotc: cdotc,
     zdotu: cdotu,
     zdrot: csrot,
+    zdscal: cscal,
     zrotg: csrot,
     zscal: cscal,
     zswap: cswap
