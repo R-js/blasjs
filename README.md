@@ -102,7 +102,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         * [`srotmg`,`drotmg`](#srotmg-drotmg)
     * [Apply the modified Givens Transformation]()
         * [`srotm`, `drotm`](#srotm-drotm)
-    * [Apply plane rotation]()
+    * [Applies a plane rotation]()
         * [`srot`,`drot`, `csrot`, `zdrot`](#srot-drot-csrot-zdrot)
     * [Scale a vector by a constant]()
         * [`sscal`, `dscal`, `cscal`, `zscal`, `csscal`, `zdscal`](#sscal-dscal-cscal-zscal-csscal-zdscal)
@@ -1297,18 +1297,18 @@ xᵀ is the _transpose_ of x
 
 #### Naming
 
-* `scrnm2`: complex, [single or double precision][precision-note]. See [ref]().
-* `dznrm2`: complex, (alias for `scrnm2`). See [ref]().
-* `snrm2`: real, [single or double precision][precision-note]. See [ref][ref-snrm2].
-* `dnrm2`: real, (alias for `dnrm2`). See [ref](ref-dnrm2).
+* `scrnm2`: complex, [single or double precision][precision-note]. See [blas ref][ref-scnrm2].
+* `dznrm2`: complex, (alias for `scrnm2`). See [blas ref][ref-dznrm2].
+* `snrm2`: real, [single or double precision][precision-note]. See [blas ref][ref-snrm2].
+* `dnrm2`: real, (alias for `dnrm2`). See [blas ref][ref-dnrm2].
 
 _decl_
 
 ```typescript
- function scnrm2(n: number, x: FortranArr, incx: number): number;
- function dznrm2(n: number, x: FortranArr, incx: number): number;
- function snrm2(n: number, x: FortranArr, incx: number): number;
- function dnrm2(n: number, x: FortranArr, incx: number): number;
+function scnrm2(n: number, x: FortranArr, incx: number): number;
+function dznrm2(n: number, x: FortranArr, incx: number): number;
+function snrm2(n: number, x: FortranArr, incx: number): number;
+function dnrm2(n: number, x: FortranArr, incx: number): number;
 ```
 
 See: _[how to create fortranArr](#vector-constructors)_.
@@ -1334,10 +1334,10 @@ See [wiki][givens-rotation].
 
 #### Naming
 
-* `srotg`: real, (alias for `drotg`). See [ref][ref-srotg].
-* `drotg`: real, [single or double precision][precision-note]. See [ref][ref-drotg].
-* `crotg`: complex, [single or double precision][precision-note]. See [ref][ref-crotg].
-* `zrotg`: complex, (alias for `crotg`). See [ref][ref-zrotg].
+* `srotg`: real, (alias for `drotg`). See [blas ref][ref-srotg].
+* `drotg`: real, [single or double precision][precision-note]. See [blas ref][ref-drotg].
+* `crotg`: complex, [single or double precision][precision-note]. See [blas ref][ref-crotg].
+* `zrotg`: complex, (alias for `crotg`). See [blas ref][ref-zrotg].
 
 _decl_
 
@@ -1355,14 +1355,16 @@ const BLAS = require('blasjs');
 const { srotg, drotg, crotg, zrotg } = BLAS.level1;
 ```
 
-## Construct the **modified** Givens rotation matrix `H
+## Construct the **modified** Givens rotation matrix `H`
 
-
+Construct the modified Givens transformation matrix H which zeros
+the second component of the 2 vector  ( sx1*√(sd1) , sy1* √(sd2) )
+See [researchgate.net][construct-modified-givens-transformation].
 
 #### Naming
 
-* `srotmg`: real, (alias for `drotmg`). See [ref][ref-srotmg].
-* `drotmg`: real, [single or double precision][precision-note]. See [ref][ref-drotmg].
+* `srotmg`: real, (alias for `drotmg`). See [blas ref][ref-srotmg].
+* `drotmg`: real, [single or double precision][precision-note]. See [blas ref][ref-drotmg].
 
 _decl_
 
@@ -1386,8 +1388,8 @@ See [wiki][apply-modified-givens-transformation].
 
 #### Naming
 
-* `srotm`: real, (alias for `drotm`). See [ref][ref-srotm].
-* `drotm`: real, [single or double precision][precision-note]. See [ref][ref-drotm].
+* `srotm`: real, (alias for `drotm`). See [blas ref][ref-srotm].
+* `drotm`: real, [single or double precision][precision-note]. See [blas ref][ref-drotm].
 
 _decl_
 
@@ -1406,16 +1408,16 @@ const BLAS = require('blasjs');
 const { srotm, drotm } = BLAS.level1;
 ```
 
-## Apply the Givens plane rotation
+## Applies a plane rotation
 
-See [wiki][apply-givens-rotation]
+See [researchgate.net][construct-modified-givens-transformation].
 
 #### Naming
 
-* `srot`: real, (alias for `drot`). See [ref][ref-srot].
-* `drot`: real, [single or double precision][precision-note]. See [ref][ref-drot].
-* `csrot`: complex, (alias for `zdrot`). See [ref][ref-csrot].
-* `zdrot`: complex, [single or double precision][precision-note]. See [ref][ref-zdrot].
+* `srot`: real, (alias for `drot`). See [blas ref][ref-srot].
+* `drot`: real, [single or double precision][precision-note]. See [blas ref][ref-drot].
+* `csrot`: complex, (alias for `zdrot`). See [blas ref][ref-csrot].
+* `zdrot`: complex, [single or double precision][precision-note]. See [blas ref][ref-zdrot].
 
 _decl_
 
@@ -1429,103 +1431,62 @@ function zdrot: (n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: 
 
 See: _[how to create fortranArr](#vector-constructors)_.
 
+Usage:
 
+```javascript
+const BLAS = require('blasjs');
+const { srot, drot, csrot, zdrot } = BLAS.level1;
+```
 
-Applies a plane rotation.
+## Scale a vector by a constant
+
+x ⟵ α·x
 
 #### Naming
 
-* `srotm`: real, (alias for `drotm`). See [ref][ref-srotm].
-* `drotm`: real, [single or double precision][precision-note]. See [ref][ref-drotm].
-* 
-### `srot`/`drot`
+* `sscal`: Alias for `dscal`. See [blas ref][ref-sscal].
+* `dscal`: Scales a REAL vector ( [single or double precision][precision-note] ) by a REAL constant. See [blas ref][ref-dscal].
+* `cscal`: Alias for `zscal`. See [blas ref][ref-cscal].
+* `zscal`: Scales a COMPLEX vector with a COMPLEX constant. See [blas ref][ref-zscal].
+* `csscal`: Alias for `zdscal`. [blas ref][ref-csscal].
+* `zdscal`: Scales a COMPLEX vector with a REAL constant. See [blas ref][ref-zdscal].
 
-The routines `srot` and `drot` are each others alias. **Unlike FORTRAN BLAS** the precision of the routines is **not** embedded in the naming of the routines.
-In `blasjs` the numeric precision ( 32-bit / 64-bit floating ) is determined by how the [`FortanArr`](#fortranarr) object is created.
-
-See [drot doc](#http://www.netlib.org/lapack/explore-html/dc/d23/drot_8f.html).
-See [srot doc](#http://www.netlib.org/lapack/explore-html/db/d6c/srot_8f.html).
+_decl_
 
 ```typescript
-// Function "drot" has exactly the same signature
-declare function srot(
-      n: number,
-      sx: FortranArr,
-      incx: number,
-      sy: FortranArr,
-      incy: number,
-      c: number,
-      s: number
-): void
+function sscal(n: number, sa: number, sx: FortranArr, incx: number): void;
+function dscal(n: number, sa: number, sx: FortranArr, incx: number): void;
+function cscal(n: number, ca: Complex,cx: FortranArr, incx: number): void;
+function zscal(n: number, ca: Complex,cx: FortranArr, incx: number): void;
+function csscal(n: number, sa: number, cx: FortranArr, incx: number): void;
+function zdscal(n: number, sa: number, cx: FortranArr, incx: number): void;
 ```
 
-### `zdrot`/`csrot`
+See: _[how to create fortranArr](#vector-constructors)_.
 
-Applies a plane rotation with real cosine and complex sine to a pair of complex vectors.
-
-The routines `zdrot` and `csrot` are each others alias. **Unlike FORTRAN BLAS** the precision of the routines is **not** embedded in the nameing of the routines.
-In `blasjs` the numeric precision ( 32-bit / 64-bit floating point ) is determined by how the [`FortanArr`](#fortranarr) object is created.
-
-See [zdrot doc](#http://www.netlib.org/lapack/explore-html/d4/de9/zdrot_8f.html)
-See [csrot doc](#http://www.netlib.org/lapack/explore-html/d1/dbb/csrot_8f.html)
+Usage:
 
 ```javascript
-// zdrot routine has exactly the same signature
-declare function csrot(
-      n: number,
-      cx: FortranArr,
-      incx: number,
-      cy: FortranArr,
-      incy: number,
-      c: number,
-      s: number
-): void
+const BLAS = require('blasjs');
+const { sscal, dscal, cscal, zscal, csscal, zdscal } = BLAS.level1;
 ```
 
-## `sdot`/`ddot`/`cdotc`/`zdotc`/`cdotu`/`zdotu`
+## Takes the sum of the absolute values of the components of vector
 
-Return the dot product of two vectors
+```math
+     __
+s ⟵ \   | x  |
+     /   |  i |
+     ¯¯
+```
 
-### `sdot`/`ddot`
+#### Naming
 
-### `cdotu`/`zdotu`
+* `sasum`:
+* `dasum`:
+* `scasum`:
+* `dzasum`:
 
-### `cdotc`/`zdotc`
-
-
-CROTG,ZROTG,SROTG,DROTG
-
-SROTMG, DROTMG
-
-Level 2: matrix-vector subroutines include:
-
-Level 3: matrix-matrix subroutines include:
-
-Greek letter Lower case Unicode Upper case Unicode
-alpha α 03b1 A 0391
-beta  β 03b2 B 0392
-gamma γ 03b3 Γ 0393
-delta δ 03b4 Δ 0394
-epsilon ϵ 03b5 E 0395
-zeta ζ 03b6 Z 0396
-eta η 03b7 H 0397
-theta θ 03b8 Θ 0398
-iota ι 03b9 I 0399
-kappa κ 03ba K 039a
-lambda λ 03bb Λ 039b
-mu μ 03bc M 039c
-nu ν 03bd N 039d
-xi ξ 03be Ξ 039e
-omicron o 03bf O 039f
-pi π 03c0 Π 03a0
-rho ρ 03c1 P 03a1
-sigma σ 03c3 Σ 03a3
-tau τ 03c4 T 03a4
-upsilon υ 03c5 ϒ 03a5
-phi ϕ 03c6 Φ 03a6
-chi χ 03c7 X 03a7
-psi ψ 03c8 Ψ 03a8
-omega ω 03c9 Ω 03a9
 
 
 [srotg]: https://en.wikipedia.org/wiki/Givens_rotation
@@ -1546,13 +1507,28 @@ omega ω 03c9 Ω 03a9
 [apply-givens-rotation]: https://en.wikipedia.org/wiki/Givens_rotation#Stable_calculation
 [ref-snrm2]: http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html
 [ref-dnrm2]: http://www.netlib.org/lapack/explore-html/da/d7f/dnrm2_8f.html
+[ref-scnrm2]: http://www.netlib.org/lapack/explore-html/db/d66/scnrm2_8f.html
 [ref-srotg]: http://www.netlib.org/lapack/explore-html/d7/d26/srotg_8f.html
 [ref-zrotg]: http://www.netlib.org/lapack/explore-html/dc/dfe/zrotg_8f.html
+
 [ref-srotmg]: http://www.netlib.org/lapack/explore-html/dd/d48/srotmg_8f.html
 [ref-drotmg]: http://www.netlib.org/lapack/explore-html/df/deb/drotmg_8f.html
 
+[construct-modified-givens-transformation]: https://www.researchgate.net/profile/JV_Mccanny/publication/224312422_Modified_Givens_rotations_and_their_application_to_matrix_inversion/links/55cdcefa08aee19936f80088/Modified-Givens-rotations-and-their-application-to-matrix-inversion.pdf
 
-Some notes on Matrix symbols
+[ref-srotm]: http://www.netlib.org/lapack/explore-html/d6/d0f/srotm_8f.html
+[ref-drotm]: http://www.netlib.org/lapack/explore-html/d8/d7b/drotm_8f.html
 
-https://fsymbols.com/generators/overline/
-```
+[ref-srot]: http://www.netlib.org/lapack/explore-html/db/d6c/srot_8f.html
+[ref-drot]: http://www.netlib.org/lapack/explore-html/dc/d23/drot_8f.html
+[ref-csrot]: http://www.netlib.org/lapack/explore-html/d1/dbb/csrot_8f.html
+[ref-zdrot]: http://www.netlib.org/lapack/explore-html/d4/de9/zdrot_8f.html
+
+[ref-sscal]: http://www.netlib.org/lapack/explore-html/d9/d04/sscal_8f.html
+[ref-dscal]: http://www.netlib.org/lapack/explore-html/d4/dd0/dscal_8f.html
+[ref-cscal]: http://www.netlib.org/lapack/explore-html/dc/d81/cscal_8f.html
+[ref-zscal]: http://www.netlib.org/lapack/explore-html/d2/d74/zscal_8f.html
+[ref-csscal]: http://www.netlib.org/lapack/explore-html/de/d5e/csscal_8f.html
+[ref-zdscal]: http://www.netlib.org/lapack/explore-html/dd/d76/zdscal_8f.html
+
+
