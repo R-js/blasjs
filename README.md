@@ -1174,10 +1174,10 @@ declare function fortranMatrixComplex32(...rest: (Complex | Complex[])[]):
     * A single [`Complex`](#type-complex) object.
     * An array of [`Complex`](#type-complex) objects.
     * An array of number values.
-*  `nrRows`: where rnRows is equal to `n` in the matrix A(m,n).
-*  `nrCols`: where nrCols is equal to `m` in the matrix A(m,n).
-*  `rowBase`: FORTRAN offset for the first dimension (rows) as explained in [Language differences][language-differences].
-*  `rowBase`: FORTRAN offset for the second dimension (columns) as explained in [Language differences][language-differences].
+* `nrRows`: where nrRows is equal to `n` in the matrix A(m,n).
+* `nrCols`: where nrCols is equal to `m` in the matrix A(m,n).
+* `rowBase`: FORTRAN offset for the first dimension (rows) as explained in [Language differences][language-differences].
+* `rowBase`: FORTRAN offset for the second dimension (columns) as explained in [Language differences][language-differences].
 
 See _[Examples](#matrix-creation-examples)_
 
@@ -1291,7 +1291,7 @@ Routines categorized as _Level 1_ perform scalar-vector and vector-vector operat
 
 Calculates the norm of a (complex) vector.
 
-xᴴ is the _conjugate_ of x.
+xᴴ is the _conjugate_ of x
 
 xᵀ is the _transpose_ of x
 
@@ -1322,21 +1322,22 @@ const { scnrm2, dznrm2, snrm2, dnrm2 } = BLAS.level1;
 
 ## Construct a Givens plane rotation
 
-See [wiki][givens-rotation]. 
-
+See [wiki][givens-rotation].
 
 ```Math
+ |c  -s| x |a| =   |r |
+ |s   c|   |b|     |0 |
 
-⎡ s c ⎤ ⎯
-⎣ c s ⎦ 
+ r =  √( a² + b² )
+
 ```
 
 #### Naming
 
-* `srotg`:
-* `drotg`:
-* `crotg`:
-* `zrotg`:
+* `srotg`: real, (alias for `drotg`). See [ref][ref-srotg].
+* `drotg`: real, [single or double precision][precision-note]. See [ref][ref-drotg].
+* `crotg`: complex, [single or double precision][precision-note]. See [ref][ref-crotg].
+* `zrotg`: complex, (alias for `crotg`). See [ref][ref-zrotg].
 
 _decl_
 
@@ -1354,12 +1355,14 @@ const BLAS = require('blasjs');
 const { srotg, drotg, crotg, zrotg } = BLAS.level1;
 ```
 
-## Construct the **modified** Givens rotation matrix `H`
+## Construct the **modified** Givens rotation matrix `H
 
 
-### Naming
-* `srotmg`:
-* `drotmg`:
+
+#### Naming
+
+* `srotmg`: real, (alias for `drotmg`). See [ref][ref-srotmg].
+* `drotmg`: real, [single or double precision][precision-note]. See [ref][ref-drotmg].
 
 _decl_
 
@@ -1377,11 +1380,64 @@ const BLAS = require('blasjs');
 const { srotmg, drotmg } = BLAS.level1;
 ```
 
+## Apply the modified Givens Transformation
 
-## `srot`/`drot`/`zdrot`/`csrot`
+See [wiki][apply-modified-givens-transformation].
+
+#### Naming
+
+* `srotm`: real, (alias for `drotm`). See [ref][ref-srotm].
+* `drotm`: real, [single or double precision][precision-note]. See [ref][ref-drotm].
+
+_decl_
+
+```typescript
+function srotm(n: number, sy: FortranArr, incx: number, sy: FortranArr, incy: number, sparam: FortranArr)): void;
+
+function drotm(n: number, sy: FortranArr, incx: number, sy: FortranArr, incy: number, sparam: FortranArr)): void;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { srotm, drotm } = BLAS.level1;
+```
+
+## Apply the Givens plane rotation
+
+See [wiki][apply-givens-rotation]
+
+#### Naming
+
+* `srot`: real, (alias for `drot`). See [ref][ref-srot].
+* `drot`: real, [single or double precision][precision-note]. See [ref][ref-drot].
+* `csrot`: complex, (alias for `zdrot`). See [ref][ref-csrot].
+* `zdrot`: complex, [single or double precision][precision-note]. See [ref][ref-zdrot].
+
+_decl_
+
+```typescript
+function srot(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number, c: number, s: number): void;
+function drot(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number, c: number, s: number): void;
+
+function csrot: (n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: number, c: number, s: number): void;
+function zdrot: (n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: number, c: number, s: number): void;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+
 
 Applies a plane rotation.
 
+#### Naming
+
+* `srotm`: real, (alias for `drotm`). See [ref][ref-srotm].
+* `drotm`: real, [single or double precision][precision-note]. See [ref][ref-drotm].
+* 
 ### `srot`/`drot`
 
 The routines `srot` and `drot` are each others alias. **Unlike FORTRAN BLAS** the precision of the routines is **not** embedded in the naming of the routines.
@@ -1487,10 +1543,13 @@ omega ω 03c9 Ω 03a9
 [precision-note]: [#a-note-on-numeric-precision]
 [language-differences]: [#language-differences-with-fortranblas]
 [givens-rotation]: https://en.wikipedia.org/wiki/Givens_rotation#Stable_calculation
+[apply-givens-rotation]: https://en.wikipedia.org/wiki/Givens_rotation#Stable_calculation
 [ref-snrm2]: http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html
 [ref-dnrm2]: http://www.netlib.org/lapack/explore-html/da/d7f/dnrm2_8f.html
 [ref-srotg]: http://www.netlib.org/lapack/explore-html/d7/d26/srotg_8f.html
-[ref-zrotg]: #http://www.netlib.org/lapack/explore-html/dc/dfe/zrotg_8f.html
+[ref-zrotg]: http://www.netlib.org/lapack/explore-html/dc/dfe/zrotg_8f.html
+[ref-srotmg]: http://www.netlib.org/lapack/explore-html/dd/d48/srotmg_8f.html
+[ref-drotmg]: http://www.netlib.org/lapack/explore-html/df/deb/drotmg_8f.html
 
 
 Some notes on Matrix symbols
