@@ -2055,12 +2055,34 @@ const { sspr, dspr, ssyr, dsyr } = BLAS.level2;
 ## The matrix-vector operation, y ⟵ α·A·x + β·y, or y ⟵ α·Aᵀ·x + β·y or y ⟵  α·Aᴴ·x + β·y
 
 
-        
-        * [`cgbmv`, `chbmv`, `dgbmv`, `dsbmv`, `sgbmv`, `ssbmv`, `zgbmv`, `zhbmv`]()
-        * [`ctbmv`, `dtbmv`, `stbmv`, `ztbmv`]()
-        * [`cgemv`, `chemv`, `dgemv`, `sgemv`, `zgemv`, `zhemv`]()
-        * [`chpmv`, `dspmv`, `sspmv`, `zhpmv`]()
-        * [`dsymv`, `ssymv`]()
+
+
+#### Naming
+
+* `cgbmv`:
+* `chbmv`:
+* `dgbmv`:
+* `dsbmv`:
+* `sgbmv`:
+* `ssbmv`:
+* `zgbmv`:
+* `zhbmv`:
+* `ctbmv`:
+* `dtbmv`:
+* `stbmv`:
+* `ztbmv`:
+* `cgemv`:
+* `chemv`:
+* `dgemv`:
+* `sgemv`:
+* `zgemv`:
+* `zhemv`:
+* `chpmv`:
+* `dspmv`:
+* `sspmv`:
+* `zhpmv`:
+* `dsymv`:
+* `ssymv`:
 
 [srotg]: https://en.wikipedia.org/wiki/Givens_rotation
 [givenmodified]: https://www.ibm.com/support/knowledgecenter/en/SSFHY8_5.5.0/com.ibm.cluster.essl.v5r5.essl100.doc/am5gr_srotm.htm
