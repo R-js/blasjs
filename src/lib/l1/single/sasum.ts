@@ -24,7 +24,7 @@ const { abs } = Math;
  * @param sx   SX is REAL array, dimension ( 1 + ( N - 1 )*abs( INCX ) )
  * @param incx  storage spacing between elements of SX
  */
-export function sasum(n: number, sx: FortranArr, incx: number) {
+export function sasum(n: number, sx: FortranArr, incx: number): number {
 
       let stemp = 0;
 

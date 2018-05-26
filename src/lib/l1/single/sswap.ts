@@ -51,19 +51,18 @@ export function sswap(
             // simular to the compiler switch for 
             // "loop unrolling".
             // we keep it here as a rememberance
-            for (let i = mp1; i <= n;) {
+            for (let i = mp1; i <= n; i += 3) {
                   stemp = sx.r[i - xb];
                   sx.r[i - xb] = sy.r[i - yb];
                   sy.r[i - yb] = stemp;
-                  i++;
-                  stemp = sx.r[i - xb];
-                  sx.r[i - xb] = sy.r[i - yb];
-                  sy.r[i - yb] = stemp;
-                  i++;
-                  stemp = sx.r[i - xb];
-                  sx.r[i - xb] = sy.r[i - yb];
-                  sy.r[i - yb] = stemp;
-                  i++;
+
+                  stemp = sx.r[i - xb + 1];
+                  sx.r[i - xb + 1] = sy.r[i - yb + 1];
+                  sy.r[i - yb + 1] = stemp;
+
+                  stemp = sx.r[i - xb + 2];
+                  sx.r[i - xb + 2] = sy.r[i - yb + 2];
+                  sy.r[i - yb + 2] = stemp;
             }
       }
       else {

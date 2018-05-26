@@ -1445,7 +1445,7 @@ x ⟵ α·x
 #### Naming
 
 * `sscal`: Alias for `dscal`. See [blas ref][ref-sscal].
-* `dscal`: Scales a REAL vector ( [single or double precision][precision-note] ) by a REAL constant. See [blas ref][ref-dscal].
+* `dscal`:  by a REAL constant. See [blas ref][ref-dscal].
 * `cscal`: Alias for `zscal`. See [blas ref][ref-cscal].
 * `zscal`: Scales a COMPLEX vector with a COMPLEX constant. See [blas ref][ref-zscal].
 * `csscal`: Alias for `zdscal`. [blas ref][ref-csscal].
@@ -1473,19 +1473,197 @@ const { sscal, dscal, cscal, zscal, csscal, zdscal } = BLAS.level1;
 
 ## Takes the sum of the absolute values of the components of vector
 
-```math
-     __
-s ⟵ \   | x  |
-     /   |  i |
-     ¯¯
-```
+s ⟵ ∑ ∥ Re( x ) ∥ + ∥ Im( x ) ∥
 
 #### Naming
 
-* `sasum`:
-* `dasum`:
-* `scasum`:
-* `dzasum`:
+* `sasum`: Alias for `dasum`. See [blas ref][ref-sasum]
+* `dasum`: uses REAL vector, ( [single or double precision][precision-note] ). See [blas-ref][ref-dasum].
+* `scasum`: Alias for `dzasum`. See [blas ref][ref-scasum].
+* `dzasum`: uses Complex vector, ( [single or double precision][precision-note] ). See [blas-ref][ref-dzasum].
+
+_decl_
+
+```typescript
+function sasum(n: number, sx: FortranArr, incx: number): number;
+function dasum(n: number, sx: FortranArr, incx: number): number;
+function scasum(n: number, cx: FortranArr, incx: number): number;
+function dzasum(n: number, cx: FortranArr, incx: number): number;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { sasum, dasum, scasum, dzasum } = BLAS.level1;
+```
+
+## Interchanges 2 vectors
+
+Swap 2 vectors.
+
+#### Naming
+
+* `sswap`: Alias for `dswap`. See [blas ref][ref-sswap].
+* `dswap`: REAL vector, ( [single or double precision][precision-note] ). See [blas ref][ref-dasum].
+* `cswap`: Alias for `zswap`. See [blas ref][ref-xcswap].  
+* `zswap`: REAL vector, ( [single or double precision][precision-note] ). See [blas ref][ref-zswap].
+
+_decl_
+
+````javascript
+function sswap(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number ): void;
+function dswap(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number ): void;
+function cswap(n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: number ): void;
+function zswap(n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: number ): void;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { sswap, dswap, cswap, zswap } = BLAS.level1;
+```
+
+## Dot product of two complex vectors
+
+  xᵀ·y or xᴴ·y
+
+### Naming
+
+* `cdotu`: Alias for `zdotu`. See [blas ref][ref-zdotc].
+* `cdotc`: Alias for `zdotc`. See [blas ref][ref-cdotc].
+* `zdotu`: `xᵀ·y`. Complex arguments, ( [single or double precision][precision-note] ). See [blas-ref][ref-zdotu].
+* `zdotc`: `xᴴ·y`. The fist complex vector argument is made conjugate, ( [single or double precision][precision-note] ). See [blas-ref][ref-zdotc].
+
+_decl_
+
+````javascript
+function cdotu(n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: number): Complex;
+
+// first argument sx is made conjugate
+function cdotc(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number ): Complex;
+
+function zdotu(n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: number ): Complex;
+
+// first argument sx is made conjugate
+function zdotc(n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: number ): Complex;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { cdotu, cdotc, zdotu, zdotc } = BLAS.level1;
+```
+
+## Dot product of two non complex vectors
+  
+xᵀ·y
+
+### Naming
+
+* `sdot`: Alias for `dsdot`. See [blas ref][ref-sdot].
+* `ddot`: Alias for `dsdot`. See [blas ref][ref-ddot].
+* `sdsdot`: Alias for `dsdot`. See [blas ref][ref-sdsdot].
+* `dsdot`: `xᵀ·y` Inner product of 2 vectors ( [single or double precision][precision-note] ). See [blas ref][ref-dsdot].
+
+_decl_
+
+````javascript
+function sdot(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): number;
+function ddot(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): number;
+function sdsdot(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): number;
+function dsdot(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): number;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+## Finds the index of the first element having maximum absolut value.
+
+Find k for wich: ∥ xₖ ∥ > ∥ xₜ ∥ for all t ∈ [1, n].
+
+### Naming
+
+
+* `isamax`: Alias for `idamax`. See [blas ref]:[ref-isamax]
+* `idamax`: Find the index of the maximum element of a REAL vector ( [single or double precision][precision-note] ). See [blas ref][ref-idamax]. 
+* `icamax`: Alias for `izamax`. See [blas ref]:[ref-icamax]
+* `izamax`: Find the index of the maximum element of a COMPLEX vector ( [single or double precision][precision-note] ). See [blas ref][ref-izamax].
+
+_decl_
+
+````javascript
+function isamax: (n: number, sx: FortranArr, incx: number): number;
+function idamax: (n: number, sx: FortranArr, incx: number): number;
+function icamax: (n: number, sx: FortranArr, incx: number): number;
+function izamax: (n: number, sx: FortranArr, incx: number): number;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+## Copy a vector x to a vector y
+
+### Naming
+
+* `scopy`: Alias for `dcopy`. See [blas ref]:[ref-scopy]
+* `dcopy`: Copies a REAL vector ( [single or double precision][precision-note] ). See [blas ref][ref-dcopy].
+* `ccopy`: Alias for `zcopy`. See [blas ref]:[ref-ccopy]
+* `zcopy`: Copies a COMPLEX vector ( [single or double precision][precision-note] ). See [blas ref][ref-zcopy].
+
+_decl_
+
+````javascript
+function scopy (n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): void;
+function dcopy (n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): void;
+function ccopy (n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: number): void;
+function zcopy (n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: number): void;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+## Constant times a vector plus a vector
+
+y ⟵ y + a·x  where y, a and x can be complex or a real number.
+
+### Naming
+
+* `saxpy`: Alias for `daxpy`. See [blas ref]:[ref-saxpy].
+* `daxpy`: REAL constant used in multiplication with a vector ( [single or double precision][precision-note] ). See [blas ref]:[ref-daxpy].   
+* `caxpy`: Alias for `zaxpy`. See [blas ref]:[ref-saxpy].
+* `zaxpy`: Complex constant used in multiplication with a vector ( [single or double precision][precision-note] ). See [blas ref]:[ref-zaxpy].
+
+_decl_
+
+```
+function saxpy(n: number, sa: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): void;
+function daxpy(n: number, sa: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): void;
+function caxpy(n: number, ca: Complex, cx: FortranArr, incx: number, cy: FortranArr, incy: number): void;
+function zaxpy(n: number, ca: Complex, cx: FortranArr, incx: number, cy: FortranArr, incy: number): void;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+# Level 2 Routines
+
+Routines categorized as _Level 2_ perform Matrix-vector operations.
+
+## The hermitian rank 2 operation
+
+A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A
+
+
+* `cher2`:
+* `zher2`:
+* `chpr2`:
+* `zhpr2`:
+
 
 
 
@@ -1531,4 +1709,8 @@ s ⟵ \   | x  |
 [ref-csscal]: http://www.netlib.org/lapack/explore-html/de/d5e/csscal_8f.html
 [ref-zdscal]: http://www.netlib.org/lapack/explore-html/dd/d76/zdscal_8f.html
 
+[ref-sasum]: xxx
+[ref-dasum]: xxx
+[ref-scasum]: xxx
+[ref-dzasum]: xxx
 
