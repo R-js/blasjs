@@ -2050,6 +2050,7 @@ Usage:
 ```javascript
 const BLAS = require('blasjs');
 const { sspr, dspr, ssyr, dsyr } = BLAS.level2;
+```
 
 ## The matrix-vector operation, y ⟵ α·A·x + β·y, or y ⟵ α·Aᵀ·x + β·y or y ⟵  α·Aᴴ·x + β·y
 
