@@ -1542,7 +1542,7 @@ const { sswap, dswap, cswap, zswap } = BLAS.level1;
 
 _decl_
 
-````javascript
+```javascript
 function cdotu(n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: number): Complex;
 
 // first argument sx is made conjugate
@@ -1576,7 +1576,7 @@ xᵀ·y
 
 _decl_
 
-````javascript
+```javascript
 function sdot(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): number;
 function ddot(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): number;
 function sdsdot(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): number;
@@ -1599,7 +1599,7 @@ Find k for wich: ∥ xₖ ∥ > ∥ xₜ ∥ for all t ∈ [1, n].
 
 _decl_
 
-````javascript
+```javascript
 function isamax: (n: number, sx: FortranArr, incx: number): number;
 function idamax: (n: number, sx: FortranArr, incx: number): number;
 function icamax: (n: number, sx: FortranArr, incx: number): number;
@@ -1619,7 +1619,7 @@ See: _[how to create fortranArr](#vector-constructors)_.
 
 _decl_
 
-````javascript
+```javascript
 function scopy (n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): void;
 function dcopy (n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): void;
 function ccopy (n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: number): void;
@@ -1641,7 +1641,7 @@ y ⟵ y + a·x  where y, a and x can be complex or a real number.
 
 _decl_
 
-```
+```javascript
 function saxpy(n: number, sa: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): void;
 function daxpy(n: number, sa: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): void;
 function caxpy(n: number, ca: Complex, cx: FortranArr, incx: number, cy: FortranArr, incy: number): void;
