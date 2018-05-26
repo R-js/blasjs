@@ -1513,7 +1513,7 @@ Swap 2 vectors.
 
 _decl_
 
-````javascript
+```javascript
 function sswap(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number ): void;
 function dswap(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number ): void;
 function cswap(n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: number ): void;
@@ -1659,10 +1659,10 @@ Routines categorized as _Level 2_ perform Matrix-vector operations.
 A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A
 
 
-* `cher2`:
+* `cher2`: alias for `zher2`. See [blas ref]:[ref-cher2].
 * `zher2`:
-* `chpr2`:
-* `zhpr2`:
+* `chpr2`: alias for `zhpr2`. See [blas ref]:[ref-chpr2].
+* `zhpr2`: 
 
 
 
