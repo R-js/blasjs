@@ -29,7 +29,7 @@ export function chpr(
     alpha: number,
     x: FortranArr,
     incx: number,
-    ap: FortranArr, ): void {
+    ap: FortranArr): void {
 
 
     if (x.i === undefined) {

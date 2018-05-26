@@ -128,7 +128,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     * [The rank 1 operation A ⟵ α·x·yᴴ + A or A ⟵ α·x·yᵀ + A]()
         * [`sger`, `dger`, `cgerc`, `zgerc`, `cgeru`, `zgeru`](#sger-dger-cgerc-zgerc-cgeru-zgeru)
     * [The hermitian rank 1 operation A ⟵ α·x·xᴴ + A]()
-        * [`cher`, `zher`, `chpr`, `zpr`]()
+        * [`cher`, `zher`, `chpr`, `zhpr`]()
     * [The symmetric rank 1 operation A ⟵ α·x·xᵀ + A]()
         * [`sspr`, `dspr`, `ssyr`, `dsyr`]()
     * [The matrix-vector operation, y ⟵ α·A·x + β·y, or y ⟵ α·Aᵀ·x + β·y or y ⟵  α·Aᴴ·x + β·y]()
@@ -1585,6 +1585,13 @@ function dsdot(n: number, sx: FortranArr, incx: number, sy: FortranArr, incy: nu
 
 See: _[how to create fortranArr](#vector-constructors)_.
 
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { sdot, ddot, sdsdot, dsdot } = BLAS.level1;
+```
+
 ## Finds the index of the first element having maximum absolut value.
 
 Find k for wich: ∥ xₖ ∥ > ∥ xₜ ∥ for all t ∈ [1, n].
@@ -1608,6 +1615,13 @@ function izamax: (n: number, sx: FortranArr, incx: number): number;
 
 See: _[how to create fortranArr](#vector-constructors)_.
 
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { isamax, idamax, icamax, izamax } = BLAS.level1;
+```
+
 ## Copy a vector x to a vector y
 
 ### Naming
@@ -1627,6 +1641,13 @@ function zcopy (n: number, cx: FortranArr, incx: number, cy: FortranArr, incy: n
 ```
 
 See: _[how to create fortranArr](#vector-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { scopy, dcopy, ccopy, zcopy } = BLAS.level1;
+```
 
 ## Constant times a vector plus a vector
 
@@ -1650,22 +1671,395 @@ function zaxpy(n: number, ca: Complex, cx: FortranArr, incx: number, cy: Fortran
 
 See: _[how to create fortranArr](#vector-constructors)_.
 
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { saxpy, daxpy, caxpy, zaxpy } = BLAS.level1;
+```
+
 # Level 2 Routines
 
 Routines categorized as _Level 2_ perform Matrix-vector operations.
 
-## The hermitian rank 2 operation
+## The hermitian rank 2 operation A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A  
 
-A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A
+( ᴴ means conjugate transpose )
+
+For the routines `chpr2` and `zhpr2` the matrix A is in packed form ( a [fortranArr](#vector-constructors) ).
+
+For the routines `cher2` and `zher2` the matrix symmetry is exploited (use only upper/lower triangular part of the matrix). 
+
+### Naming
+
+* `cher2`: alias for `zher2`. See [blas ref][ref-cher2].
+* `zher2`: The Matrix `A` is in upper or lower triangular form ( [single or double precision][precision-note] ). See [blas ref][ref-zher2].  
+* `chpr2`: alias for `zhpr2`. See [blas ref][ref-chpr2].
+* `zhpr2`: The matrix `A` is in [packed](#packed-matrices) form ( [single or double precision][precision-note] ). See [blas ref][ref-zhpr2].
+
+_decl_
+
+```typescript
+function cher2(
+     uplo: "u" | "l", 
+     n: number, 
+     alpha: Complex, 
+     x: FortranArr, 
+     incx: number, 
+     y: FortranArr, 
+     incy: number, 
+     a: Matrix, 
+     lda: number): void;
+
+function zher2(
+     uplo: "u" | "l", 
+     n: number, 
+     alpha: Complex, 
+     x: FortranArr, 
+     incx: number, 
+     y: FortranArr, 
+     incy: number, 
+     a: Matrix, 
+     lda: number): void; 
+
+function chpr2(
+     uplo: "u" | "l", 
+     n: number, 
+     alpha: Complex, 
+     x: FortranArr, 
+     incx: number, 
+     y: FortranArr, 
+     incy: number, 
+     ap: FortranArr): void;
+
+function zhpr2(
+     uplo: "u" | "l", 
+     n: number, 
+     alpha: Complex, 
+     x: FortranArr, 
+     incx: number, 
+     y: FortranArr, 
+     incy: number, 
+     ap: FortranArr): void;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+See: _[how to create Matrix](#matrix-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { cher2, zher2, chpr, zhpr } = BLAS.level2;
+```
+
+## The symmetric rank 2 operation A ⟵ α·x·yᵀ + α·y·xᵀ + A
+
+For the routines `sspr2` and `dspr2` the matrix A is in [packed](#packed-matrices) form ( a [fortranArr](#vector-constructors) ).
+
+For the routines `ssyr2` and `dsyr2` the matrix symmetry is exploited (use only upper/lower triangular part of the matrix). 
+
+### Naming
+
+* `sspr2`: Alias for dspr2. See [blas ref][ref-sspr2].
+* `dspr2`: The matrix `A` is in [packed](#packed-matrices) form ( [single or double precision][precision-note] ). See [blas ref][ref-dspr2].
+* `ssyr2`: Alias for dsyr2. See [blas ref][ref-ssyr2].
+* `dsyr2`: The Matrix `A` is in upper or lower triangular form ( [single or double precision][precision-note] ). See [blas ref][ref-dsyr2].
+
+ _decl_
+
+```typescript
+function sspr2(
+    uplo: "u" | "l", 
+    n: number, 
+    alpha: number, 
+    x: FortranArr, 
+    incx: number, 
+    y: FortranArr, 
+    incy: number, 
+    ap: FortranArr):void;
+
+function dspr2(
+    uplo: "u" | "l", 
+    n: number, 
+    alpha: number, 
+    x: FortranArr, 
+    incx: number, 
+    y: FortranArr, 
+    incy: number, 
+    ap: FortranArr):void;
+
+function ssyr2(
+    uplo: 'u' | 'l', 
+    n: number, 
+    alpha: number, 
+    x: FortranArr, 
+    incx: number, 
+    y: FortranArr, 
+    incy: number, 
+    A: Matrix, 
+    lda: number): void;
+
+function dsyr2(
+    uplo: 'u' | 'l', 
+    n: number, 
+    alpha: number, 
+    x: FortranArr, 
+    incx: number, 
+    y: FortranArr, 
+    incy: number, 
+    A: Matrix, 
+    lda: number): void;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+See: _[how to create Matrix](#matrix-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { sspr2, dspr2, ssyr2, dsyr2 } = BLAS.level2;
+```
+
+## The rank 1 operation A ⟵ α·x·yᴴ + A or A ⟵ α·x·yᵀ + A
+
+( ᴴ means conjugate transpose )
+
+The subroutines `sger` and `dger` perform  A ⟵ α·x·yᵀ + A. Where α is a REAL scalar,
+ A, x, y are [single or double precision][precision-note] REAL Matrix and vectors.
+
+The subroutines `cgerc` and `zgerc` perform  A ⟵ α·x·yᴴ + A. Where α is a COMPLEX scalar,
+ A, x, y are [single or double precision][precision-note] COMPLEX Matrix and vectors.
+
+The subroutines `cgeru` and `zgeru` perform  A ⟵ α·x·yᵀ + A. Where α is a COMPLEX scalar,
+ A, x, y are [single or double precision][precision-note] COMPLEX Matrix and vectors.  
+
+### Naming
+
+* `sger`: alias for `dger`. See [blas ref][ref-sger].
+* `dger`: See [blas ref][ref-dger].
+* `cgerc`: alias for `zgerc`. See [blas ref][ref-cgerc].
+* `zgerc`: See [blas ref][ref-zgerc].
+* `cgeru`: alias for `zgeru`. See [blas ref][ref-cgeru].
+* `zgeru`: See [blas ref][ref-zgeru].
+
+_decl_
+
+```typescript
+function sger(
+    m: number, 
+    n: number, 
+    alpha: number, 
+    x: FortranArr, 
+    incx: number, 
+    y: FortranArr, 
+    incy: number, 
+    a: Matrix, 
+    lda: number):void;
+
+function dger(
+    m: number, 
+    n: number, 
+    alpha: number, 
+    x: FortranArr, 
+    incx: number, 
+    y: FortranArr, 
+    incy: number, 
+    a: Matrix, 
+    lda: number):void;
+    
+function cgerc(
+    m: number, 
+    n: number, 
+    alpha: Complex, 
+    x: FortranArr, 
+    incx: number, 
+    y: FortranArr, 
+    incy: number, 
+    a: Matrix, 
+    lda: number): void;
+
+function zgerc(
+    m: number, 
+    n: number, 
+    alpha: Complex, 
+    x: FortranArr, 
+    incx: number, 
+    y: FortranArr, 
+    incy: number, 
+    a: Matrix, 
+    lda: number): void;
+
+function cgeru(
+    m: number, 
+    n: number, 
+    alpha: Complex, 
+    x: FortranArr, 
+    incx: number, 
+    y: FortranArr, 
+    incy: number, 
+    a: Matrix, 
+    lda: number): void;
+    
+function zgeru(
+    m: number, 
+    n: number, 
+    alpha: Complex, 
+    x: FortranArr, 
+    incx: number, 
+    y: FortranArr, 
+    incy: number, 
+    a: Matrix, 
+    lda: number): void;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+See: _[how to create Matrix](#matrix-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { sger, dger, cgerc, zgerc, cgeru, zgeru } = BLAS.level2;
+```
+
+## The hermitian rank 1 operation A ⟵ α·x·xᴴ + A
+
+( ᴴ means conjugate transpose )
+
+For the routines `cher` and `zher` α is a REAL scalar, the matrix symmetry of A is exploited (use only upper/lower triangular part of the matrix).
+
+For the routines `chpr` and `zhpr` α is a REAL scalar, the matrix A is in [packed](#packed-matrices) form ( a [fortranArr](#vector-constructors) ).
+
+### Naming
+
+* `cher`: alias for `zher`. See [blas ref][ref-cher].
+* `zher`: For [single or double precision][precision-note] complex `x` and `A`. See [blas ref][ref-cher].
+* `chpr`: alias for `zher`. See [blas ref][ref-cher].
+* `zhpr`: For [single or double precision][precision-note] complex `x` and `A`. See [blas ref][ref-cher].
 
 
-* `cher2`: alias for `zher2`. See [blas ref]:[ref-cher2].
-* `zher2`:
-* `chpr2`: alias for `zhpr2`. See [blas ref]:[ref-chpr2].
-* `zhpr2`: 
+```typescript
+function cher(
+    uplo: "u" | "l", 
+    n: number, 
+    alpha: number, 
+    x: FortranArr, 
+    incx: number, 
+    a: Matrix, 
+    lda: number): void;
+
+function zher(
+    uplo: "u" | "l", 
+    n: number, 
+    alpha: number, 
+    x: FortranArr, 
+    incx: number, 
+    a: Matrix, 
+    lda: number): void;
+
+function chpr(u
+    uplo: "u" | "l", 
+    n: number, 
+    alpha: number, 
+    x: FortranArr, 
+    incx: number, 
+    ap: FortranArr): void;
+
+function zhpr(
+    uplo: "u" | "l", 
+    n: number, 
+    alpha: number, 
+    x: FortranArr, 
+    incx: number, 
+    ap: FortranArr): void;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+See: _[how to create Matrix](#matrix-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { cher, zher, chpr, zhpr } = BLAS.level2;
+```
+
+## The symmetric rank 1 operation A ⟵ α·x·xᵀ + A
+
+For the routines `ssyr` and `dsyr` α is a REAL scalar, the symmetry of the REAL matrix A is exploited (use only upper/lower triangular part of the matrix).
+
+For the routines `sspr` and `dspr` α is a REAL scalar, the REAL matrix A is in [packed](#packed-matrices) form ( a [fortranArr](#vector-constructors) ).
+
+### Naming
+
+* `sspr`: alias for `dspr`. See [blas ref][ref-sspr].
+* `dspr`: For [single or double precision][precision-note] REAL `α` , `x` and `A`. See [blas ref][ref-dspr].
+* `ssyr`: alias for `ssyr`. See [blas ref][ref-ssyr].
+* `dsyr`: For [single or double precision][precision-note] REAL `α` , `x` and `A`. See [blas ref][ref-dsyr].
+
+_decl_
+
+```typescript
+function sspr(
+   uplo: "u" | "l", 
+   n: number, 
+   alpha: number, 
+   x: FortranArr, 
+   incx: number, 
+   ap: FortranArr): void;
+
+function dspr(
+   uplo: "u" | "l", 
+   n: number, 
+   alpha: number, 
+   x: FortranArr, 
+   incx: number, 
+   ap: FortranArr): void;
+
+function ssyr(
+    uplo: "u" | "l", 
+    n: number, 
+    alpha: number, 
+    x: FortranArr, 
+    incx: number, 
+    a: Matrix, 
+    lda: number): void;
+
+function dsyr(
+    uplo: "u" | "l", 
+    n: number, 
+    alpha: number, 
+    x: FortranArr, 
+    incx: number, 
+    a: Matrix, 
+    lda: number): void;    
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+See: _[how to create Matrix](#matrix-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { sspr, dspr, ssyr, dsyr } = BLAS.level2;
+
+## The matrix-vector operation, y ⟵ α·A·x + β·y, or y ⟵ α·Aᵀ·x + β·y or y ⟵  α·Aᴴ·x + β·y
 
 
-
+        
+        * [`cgbmv`, `chbmv`, `dgbmv`, `dsbmv`, `sgbmv`, `ssbmv`, `zgbmv`, `zhbmv`]()
+        * [`ctbmv`, `dtbmv`, `stbmv`, `ztbmv`]()
+        * [`cgemv`, `chemv`, `dgemv`, `sgemv`, `zgemv`, `zhemv`]()
+        * [`chpmv`, `dspmv`, `sspmv`, `zhpmv`]()
+        * [`dsymv`, `ssymv`]()
 
 [srotg]: https://en.wikipedia.org/wiki/Givens_rotation
 [givenmodified]: https://www.ibm.com/support/knowledgecenter/en/SSFHY8_5.5.0/com.ibm.cluster.essl.v5r5.essl100.doc/am5gr_srotm.htm
@@ -1709,8 +2103,63 @@ A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A
 [ref-csscal]: http://www.netlib.org/lapack/explore-html/de/d5e/csscal_8f.html
 [ref-zdscal]: http://www.netlib.org/lapack/explore-html/dd/d76/zdscal_8f.html
 
-[ref-sasum]: xxx
-[ref-dasum]: xxx
-[ref-scasum]: xxx
-[ref-dzasum]: xxx
+[ref-sasum]: http://www.netlib.org/lapack/explore-html/df/d1f/sasum_8f.html
+[ref-dasum]: http://www.netlib.org/lapack/explore-html/de/d05/dasum_8f.html
+[ref-scasum]: http://www.netlib.org/lapack/explore-html/db/d53/scasum_8f.html
+[ref-dzasum]: http://www.netlib.org/lapack/explore-html/df/d0f/dzasum_8f.html
+
+[ref-cher2]: http://www.netlib.org/lapack/explore-html/db/d87/cher2_8f.html
+[ref-zher2]: http://www.netlib.org/lapack/explore-html/da/d8a/zher2_8f.html
+[ref-chpr2]: http://www.netlib.org/lapack/explore-html/d6/d44/chpr2_8f.html
+[ref-zhpr2]: http://www.netlib.org/lapack/explore-html/d5/d52/zhpr2_8f.html
+
+[ref-sspr2]: http://www.netlib.org/lapack/explore-html/db/d3e/sspr2_8f.html
+[ref-dspr2]: http://www.netlib.org/lapack/explore-html/dd/d9e/dspr2_8f.html
+[ref-ssyr2]: http://www.netlib.org/lapack/explore-html/db/d99/ssyr2_8f.html
+[ref-dsyr2]: http://www.netlib.org/lapack/explore-html/de/d41/dsyr2_8f.html 
+
+[ref-sger]: http://www.netlib.org/lapack/explore-html/db/d5c/sger_8f.html
+[ref-dger]: http://www.netlib.org/lapack/explore-html/dc/da8/dger_8f.html
+[ref-cgerc]: http://www.netlib.org/lapack/explore-html/dd/d84/cgerc_8f.html
+[ref-zgerc]: http://www.netlib.org/lapack/explore-html/d3/dad/zgerc_8f.html
+[ref-cgeru]: http://www.netlib.org/lapack/explore-html/db/d5f/cgeru_8f.html
+[ref-zgeru]: http://www.netlib.org/lapack/explore-html/d7/d12/zgeru_8f.html
+
+[ref-cher]: http://www.netlib.org/lapack/explore-html/d3/d6d/cher_8f.html
+[ref-zher]: http://www.netlib.org/lapack/explore-html/de/d0e/zher_8f.html
+[ref-chpr]: http://www.netlib.org/lapack/explore-html/db/dcd/chpr_8f.html
+[ref-zhpr]: http://www.netlib.org/lapack/explore-html/de/de1/zhpr_8f.html
+ 
+[ref-sspr]: http://www.netlib.org/lapack/explore-html/d2/d9b/sspr_8f.html
+[ref-dspr]: http://www.netlib.org/lapack/explore-html/dd/dba/dspr_8f.html
+[ref-ssyr]: http://www.netlib.org/lapack/explore-html/d6/dac/ssyr_8f.html
+[ref-dsyr]: http://www.netlib.org/lapack/explore-html/d3/d60/dsyr_8f.html 
+
+ 
+[ref-cgbmv]: http://www.netlib.org/lapack/explore-html/d0/d75/cgbmv_8f.html
+[ref-chbmv]: http://www.netlib.org/lapack/explore-html/db/dc2/chbmv_8f.html
+[ref-dgbmv]: http://www.netlib.org/lapack/explore-html/d2/d3f/dgbmv_8f.html
+[ref-dsbmv]: http://www.netlib.org/lapack/explore-html/d8/d1e/dsbmv_8f.html
+[ref-sgbmv]: http://www.netlib.org/lapack/explore-html/d6/d46/sgbmv_8f.html
+[ref-ssbmv]: http://www.netlib.org/lapack/explore-html/d3/da1/ssbmv_8f.html
+[ref-zgbmv]: http://www.netlib.org/lapack/explore-html/d9/d46/zgbmv_8f.html
+[ref-zhbmv]: http://www.netlib.org/lapack/explore-html/d3/d1a/zhbmv_8f.html
+[ref-ctbmv]: http://www.netlib.org/lapack/explore-html/d3/dcd/ctbmv_8f.html
+[ref-dtbmv]: http://www.netlib.org/lapack/explore-html/df/d29/dtbmv_8f.html
+[ref-stbmv]: http://www.netlib.org/lapack/explore-html/d6/d7d/stbmv_8f.html
+[ref-ztbmv]: http://www.netlib.org/lapack/explore-html/d3/d39/ztbmv_8f.html
+[ref-cgemv]: http://www.netlib.org/lapack/explore-html/d4/d8a/cgemv_8f.html
+[ref-chemv]: http://www.netlib.org/lapack/explore-html/d7/d51/chemv_8f.html
+[ref-dgemv]: http://www.netlib.org/lapack/explore-html/dc/da8/dgemv_8f.html
+[ref-sgemv]: http://www.netlib.org/lapack/explore-html/db/d58/sgemv_8f.html 
+[ref-zgemv]: http://www.netlib.org/lapack/explore-html/db/d40/zgemv_8f.html
+[ref-zhemv]: http://www.netlib.org/lapack/explore-html/d0/ddd/zhemv_8f.html
+[ref-chpmv]: http://www.netlib.org/lapack/explore-html/d3/d1a/zhbmv_8f.html
+[ref-dspmv]: http://www.netlib.org/lapack/explore-html/d4/d85/dspmv_8f.html
+[ref-sspmv]: http://www.netlib.org/lapack/explore-html/d8/d68/sspmv_8f.html
+[ref-zhpmv]: http://www.netlib.org/lapack/explore-html/d0/d60/zhpmv_8f.html
+[ref-dsymv]: http://www.netlib.org/lapack/explore-html/d8/dbe/dsymv_8f.html
+[ref-ssymv]: http://www.netlib.org/lapack/explore-html/d2/d94/ssymv_8f.html
+        
+
 
