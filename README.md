@@ -156,8 +156,6 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
         - [cherk, zherk](#cherk-zherk)
     - [Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C](#symmetric-rank-k-operations-c--αaaᵀ--βc-or-c--αaᵀa--βc)
         - [ssyrk, dsyrk, csyrk, zsyrk](#ssyrk-dsyrk-csyrk-zsyrk)
-    - [Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C](#symmetric-rank-k-operations-c--αaaᵀ--βc-or-c--αaᵀa--βc)
-        - [ssyrk, dsyrk, csyrk, zsyrk](#ssyrk-dsyrk-csyrk-zsyrk)
     - [Matrix-matrix operations C ⟵ α·_f(A)_·_h(B)_ + β·C or C ⟵ α·_h(B)_·_f(A)_ + β·C](#matrix-matrix-operations-c--α_fa__hb_--βc-or-c--α_hb__fa_--βc)
         - [sgemm, dgemm, cgemm, zgemm](#sgemm-dgemm-cgemm-zgemm)
     - [Matrix-matrix operations C ⟵ α·A·B + β·C or C ⟵ α·B·A + β·C](#matrix-matrix-operations-c--αab--βc-or-c--αba--βc)
@@ -2441,64 +2439,14 @@ const { cherk, zherk } = BLAS.level3;
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
 
-| subroutine  | operation                             | complex    | real | type of matrix C       | blas ref link                         |
-| ----------- | ------------------------------------- | ---------- | ---- | ---------------------- | ------------------------------------- |
-| ssyrk/dsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | none       | α, A, β, C             | upper/lower triangular                | [ssyrk][ref-ssyrk]/[dsyrk][ref-dsyrk] |
-| csyrk/zsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | α, A, β, C | none | upper/lower triangular | [csyrk][ref-csyrk]/[zsyrk][ref-zsyrk] |
+| subroutine  | operation                             | complex    | real       | type of matrix C       | blas ref link                         |
+| ----------- | ------------------------------------- | ---------- | ---------- | ---------------------- | ------------------------------------- |
+| ssyrk/dsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | none       | α, A, β, C | upper/lower triangular | [ssyrk][ref-ssyrk]/[dsyrk][ref-dsyrk] |
+| csyrk/zsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | α, A, β, C | none       | upper/lower triangular | [csyrk][ref-csyrk]/[zsyrk][ref-zsyrk] |
 
 _decl_
 
 ```typescript
-function ssyrk|dsyrk(
-    uplo: 'u' | 'l',
-    trans: 'n' | 't' | 'c',
-    n: number,
-    k: number,
-    alpha: number,
-    a: Matrix,
-    lda: number,
-    beta: number,
-    c: Matrix,
-    ldc: number
-): void;
-
-function csyrk|zsyrk(
-    uplo: 'u' | 'l',
-    trans: 'n' | 't' | 'c',
-    n: number,
-    k: number,
-    alpha: number,
-    a: Matrix,
-    lda: number,
-    beta: number,
-    c: Matrix,
-    ldc: number
-): void;
-```
-
-See: _[how to create Matrix](#matrix-constructors)_.     
-
-Usage:
-
-```javascript
-const BLAS = require('blasjs');
-const { ssyrk, dsyrk, csyrk, zsyrk } = BLAS.level3;
-```
-
-## Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C
-
-### ssyrk, dsyrk, csyrk, zsyrk
-
-The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
-
-| subroutine  | operation                             | complex    | real | type of matrix C       | blas ref link                         |
-| ----------- | ------------------------------------- | ---------- | ---- | ---------------------- | ------------------------------------- |
-| ssyrk/dsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | none       | none | α, A, β, C             | upper/lower triangular                | [ssyrk][ref-ssyrk]/[dsyrk][ref-dsyrk] |
-| csyrk/zsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | α, A, β, C | none | upper/lower triangular | [csyrk][ref-csyrk]/[zsyrk][ref-zsyrk] |
-
-_decl_  
-
-```javascript
 function ssyrk|dsyrk(
     uplo: 'u' | 'l',
     trans: 'n' | 't' | 'c',
