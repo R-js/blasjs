@@ -54,13 +54,6 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 ```
 
 # Table of Contents
-- [BLASjs (<span style="color:red; font-weight: bold;">Basic Linear Algebra Subprograms</span>)](#blasjs-span-stylecolorred-font-weight-boldbasic-linear-algebra-subprogramsspan)
-            - [summary](#summary)
-            - [Node and Web](#node-and-web)
-    - [Installation](#installation)
-            - [node](#node)
-            - [web](#web)
-- [Table of Contents](#table-of-contents)
 - [Language differences with FORTRAN/BLAS.](#language-differences-with-fortranblas)
 - [Helper functions](#helper-functions)
     - [Types](#types)
