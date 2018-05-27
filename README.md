@@ -55,6 +55,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 # Table of Contents
 
+
 - [BLASjs (<span style="color:red; font-weight: bold;">Basic Linear Algebra Subprograms</span>)](#blasjs-span-stylefont-size-small-span-stylecolor-red--font-weight--bold-b-spanasic-span-stylecolor-red--font-weight--bold-l-spaninear-span-stylecolor-red--font-weight--bold-a-spanlgebra-span-stylecolor-red--font-weight--bold-s-spanubprograms-span)
             - [summary](#summary)
             - [Node and Web](#node-and-web)
@@ -118,53 +119,53 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     - [Scale a vector by a constant](#scale-a-vector-by-a-constant)
             - [Naming](#naming)
     - [Takes the sum of the absolute values of the components of vector](#takes-the-sum-of-the-absolute-values-of-the-components-of-vector)
-            - [Naming](#naming)
+        - [Naming](#naming)
     - [Interchanges 2 vectors](#interchanges-2-vectors)
-            - [Naming](#naming)
+        - [sswap/dswap, cswap/zswap](#sswap-dswap--cswap-zswap)
     - [Dot product of two complex vectors](#dot-product-of-two-complex-vectors)
-        - [Naming](#naming)
+        - [cdotu/cdotc, zdotu/zdotc](#cdotu-cdotc--zdotu-zdotc)
     - [Dot product of two non complex vectors](#dot-product-of-two-non-complex-vectors)
-        - [Naming](#naming)
+        - [sdot/ddot, sdsdot/dsdot](#sdot-ddot--sdsdot-dsdot)
     - [Finds the index of the first element having maximum absolut value.](#finds-the-index-of-the-first-element-having-maximum-absolut-value)
-        - [Naming](#naming)
+        - [isamax/idamax, icamax/izamax](#isamax-idamax--icamax-izamax)
     - [Copy a vector x to a vector y](#copy-a-vector-x-to-a-vector-y)
-        - [Naming](#naming)
+        - [scopy/dcopy, ccopy/zcopy](#scopy-dcopy--ccopy-zcopy)
     - [Constant times a vector plus a vector](#constant-times-a-vector-plus-a-vector)
-        - [Naming](#naming)
+        - [saxpy/daxpy, caxpy/zaxpy](#saxpy-daxpy--caxpy-zaxpy)
 - [Level 2 Routines](#level-2-routines)
     - [The hermitian rank 2 operation A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A](#the-hermitian-rank-2-operation-a---x-y-conjg---y-x-a)
-        - [Naming](#naming)
+        - [cher2/zher2, chpr2|zhpr2](#cher2-zher2--chpr2zhpr2)
     - [The symmetric rank 2 operation A ⟵ α·x·yᵀ + α·y·xᵀ + A](#the-symmetric-rank-2-operation-a---x-y--y-x-a)
-        - [Naming](#naming)
+        - [sspr2/dspr2, ssyr2/dsyr2](#sspr2-dspr2--ssyr2-dsyr2)
     - [The rank 1 operation A ⟵ α·x·yᴴ + A or A ⟵ α·x·yᵀ + A](#the-rank-1-operation-a---x-y-a-or-a---x-y-a)
-        - [Naming](#naming)
+        - [sger/dger, cgerc/zgerc, cgeru/zgeru](#sger-dger--cgerc-zgerc--cgeru-zgeru)
     - [The hermitian rank 1 operation A ⟵ α·x·xᴴ + A](#the-hermitian-rank-1-operation-a---x-x-a)
         - [Naming](#naming)
     - [The symmetric rank 1 operation A ⟵ α·x·xᵀ + A](#the-symmetric-rank-1-operation-a---x-x-a)
-        - [Naming](#naming)
+        - [sspr/dspr, ssyr/dsyr](#sspr-dspr--ssyr-dsyr)
     - [The matrix-vector operation, y ⟵ α·A·x + β·y, or y ⟵ α·Aᵀ·x + β·y or y ⟵ α·Aᴴ·x + β·y](#the-matrix-vector-operation--y---a-x--y--or-y---a-x--y-or-y---a-x--y)
-        - [Naming](#naming)
+        - [cgbmv/zgbmv, chbmv/zhbmv, ssbmv/dsbmv, sgbmv/dgbmv, stbmv/dtbmv, chemv/zhemv, sgemv/dgemv, cgemv/zgemv, chpmv/zhpmv, sspmv/dspmv, ssymv/dsymv](#cgbmv-zgbmv--chbmv-zhbmv--ssbmv-dsbmv--sgbmv-dgbmv--stbmv-dtbmv--chemv-zhemv--sgemv-dgemv--cgemv-zgemv--chpmv-zhpmv--sspmv-dspmv--ssymv-dsymv)
     - [The matrix-vector operation, x ⟵ A·x, or x ⟵ Aᵀ·x, or x ⟵ Aᴴ·x](#the-matrix-vector-operation--x--a-x--or-x--a-x--or-x--a-x)
-        - [Naming](#naming)
+        - [stbmv, dtbmv, ctbmv, dtpmv, ctpmv, ztpmv, strmv, dtrmv, ctrmv, ztrmv](#stbmv--dtbmv--ctbmv--dtpmv--ctpmv--ztpmv--strmv--dtrmv--ctrmv--ztrmv)
     - [Solves a systems of equations A·x = b, or Aᵀ·x = b, or Aᴴ·x = b](#solves-a-systems-of-equations-a-x-b--or-a-x-b--or-a-x-b)
-        - [Naming](#naming)
+        - [stbsv, dtbsv, ctbsv, ztbsv, stpsv, dtpsv, ctpsv, ztpsv, ctrsv, ztrsv, strs, dtrsv](#stbsv--dtbsv--ctbsv--ztbsv--stpsv--dtpsv--ctpsv--ztpsv--ctrsv--ztrsv--strs--dtrsv)
 - [Level 3 Routines](#level-3-routines)
     - [Hermitian rank 2k: C ⟵ α·A·Bᴴ + con( α )·B·Aᴴ + β·C or C ⟵ α·Aᴴ·B + con( α )·Bᴴ·A + β·C](#hermitian-rank-2k--c---a-b-con---b-a--c-or-c---a-b-con---b-a--c)
-        - [Naming](#naming)
+        - [cher2k, zher2k](#cher2k--zher2k)
     - [Symmetric rank 2k operations C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C, or C ⟵ α·Aᵀ·B + α·Bᵀ·A + β·C](#symmetric-rank-2k-operations-c---a-b--b-a--c--or-c---a-b--b-a--c)
-        - [Naming](#naming)
+        - [ssyr2k, dsyr2k, csyr2k, zsyr2k](#ssyr2k--dsyr2k--csyr2k--zsyr2k)
     - [Hermatian rank k operations C ⟵ α·A·Aᴴ + β·C, or C ⟵ α·Aᴴ·A + β·C](#hermatian-rank-k-operations-c---a-a--c--or-c---a-a--c)
-        - [Naming](#naming)
+        - [cherk, zherk](#cherk--zherk)
     - [Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C](#symmetric-rank-k-operations-c---a-a--c--or-c---a-a--c)
-        - [Naming](#naming)
+        - [ssyrk, dsyrk, csyrk, zsyrk](#ssyrk--dsyrk--csyrk--zsyrk)
     - [Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C](#symmetric-rank-k-operations-c---a-a--c--or-c---a-a--c)
-        - [Naming](#naming)
+        - [ssyrk, dsyrk, csyrk, zsyrk](#ssyrk--dsyrk--csyrk--zsyrk)
     - [Matrix-matrix operations C ⟵ α·_f(A)_·_h(B)_ + β·C or C ⟵ α·_h(B)_·_f(A)_ + β·C](#matrix-matrix-operations-c----fa---hb---c-or-c----hb---fa---c)
-        - [Naming](#naming)
+        - [sgemm, dgemm, cgemm, zgemm](#sgemm--dgemm--cgemm--zgemm)
     - [Matrix-matrix operations C ⟵ α·A·B + β·C or C ⟵ α·B·A + β·C](#matrix-matrix-operations-c---a-b--c-or-c---b-a--c)
-        - [Naming](#naming)
+        - [chemm, zhemm, ssymm, dsymm, csymm, zsymm](#chemm--zhemm--ssymm--dsymm--csymm--zsymm)
     - [Matrix-matrix operations B ⟵ α·f(A)·B or B ⟵ α·B·f(A)](#matrix-matrix-operations-b---fa-b-or-b---b-fa)
-        - [Naming](#naming)
+        - [strmm, dtrmm, ctrmm, ztrmm](#strmm--dtrmm--ctrmm--ztrmm)
     - [Solves the matrix equations: _f( A )_·X = α·B, or X·_f( A )_ = α·B](#solves-the-matrix-equations---f-a---x--b--or-x--f-a----b)
         - [strsm, dtrsm, ctrsm, ztrsm](#strsm--dtrsm--ctrsm--ztrsm)
 
@@ -1220,7 +1221,7 @@ xᴴ is the _conjugate_ of x
 
 xᵀ is the _transpose_ of x
 
-#### Naming
+### scrnm2/dznrm2, snrm2/dnrm2
 
 * `scrnm2`: complex, [single or double precision][precision-note]. See [blas ref][ref-scnrm2].
 * `dznrm2`: complex, (alias for `scrnm2`). See [blas ref][ref-dznrm2].
@@ -1256,7 +1257,7 @@ See [wiki][givens-rotation].
  r =  √( a² + b² )
 ```
 
-#### Naming
+### srotg/drotg, crotg/zrotg
 
 * `srotg`: real, (alias for `drotg`). See [blas ref][ref-srotg].
 * `drotg`: real, [single or double precision][precision-note]. See [blas ref][ref-drotg].
@@ -1285,7 +1286,7 @@ Construct the modified Givens transformation matrix H which zeros
 the second component of the 2 vector  ( sx1*√(sd1) , sy1* √(sd2) )
 See [researchgate.net][construct-modified-givens-transformation].
 
-#### Naming
+### srotmg/drotmg
 
 * `srotmg`: real, (alias for `drotmg`). See [blas ref][ref-srotmg].
 * `drotmg`: real, [single or double precision][precision-note]. See [blas ref][ref-drotmg].
@@ -1310,7 +1311,7 @@ const { srotmg, drotmg } = BLAS.level1;
 
 See [wiki][apply-modified-givens-transformation].
 
-#### Naming
+### srotm/drotm
 
 * `srotm`: real, (alias for `drotm`). See [blas ref][ref-srotm].
 * `drotm`: real, [single or double precision][precision-note]. See [blas ref][ref-drotm].
@@ -1336,7 +1337,7 @@ const { srotm, drotm } = BLAS.level1;
 
 See [researchgate.net][construct-modified-givens-transformation].
 
-#### Naming
+### srot/drot, csrot/zdrot
 
 * `srot`: real, (alias for `drot`). See [blas ref][ref-srot].
 * `drot`: real, [single or double precision][precision-note]. See [blas ref][ref-drot].
@@ -1366,7 +1367,7 @@ const { srot, drot, csrot, zdrot } = BLAS.level1;
 
 x ⟵ α·x
 
-#### Naming
+### sscal/dscal, cscal/zscal, csscal/zdscal
 
 * `sscal`: Alias for `dscal`. See [blas ref][ref-sscal].
 * `dscal`:  by a REAL constant. See [blas ref][ref-dscal].
@@ -1399,7 +1400,7 @@ const { sscal, dscal, cscal, zscal, csscal, zdscal } = BLAS.level1;
 
 s ⟵ ∑ ∥ Re( x ) ∥ + ∥ Im( x ) ∥
 
-#### Naming
+### sasum/dasum, scasum/dzasum
 
 * `sasum`: Alias for `dasum`. See [blas ref][ref-sasum]
 * `dasum`: uses REAL vector, ( [single or double precision][precision-note] ). See [blas-ref][ref-dasum].
@@ -1428,7 +1429,7 @@ const { sasum, dasum, scasum, dzasum } = BLAS.level1;
 
 Swap 2 vectors.
 
-#### Naming
+### sswap/dswap, cswap/zswap
 
 * `sswap`: Alias for `dswap`. See [blas ref][ref-sswap].
 * `dswap`: REAL vector, ( [single or double precision][precision-note] ). See [blas ref][ref-dasum].
@@ -1457,7 +1458,7 @@ const { sswap, dswap, cswap, zswap } = BLAS.level1;
 
   xᵀ·y or xᴴ·y
 
-### Naming
+### cdotu/cdotc, zdotu/zdotc
 
 * `cdotu`: Alias for `zdotu`. See [blas ref][ref-zdotc].
 * `cdotc`: Alias for `zdotc`. See [blas ref][ref-cdotc].
@@ -1491,7 +1492,7 @@ const { cdotu, cdotc, zdotu, zdotc } = BLAS.level1;
   
 xᵀ·y
 
-### Naming
+### sdot/ddot, sdsdot/dsdot
 
 * `sdot`: Alias for `dsdot`. See [blas ref][ref-sdot].
 * `ddot`: Alias for `dsdot`. See [blas ref][ref-ddot].
@@ -1520,8 +1521,7 @@ const { sdot, ddot, sdsdot, dsdot } = BLAS.level1;
 
 Find k for wich: ∥ xₖ ∥ > ∥ xₜ ∥ for all t ∈ [1, n].
 
-### Naming
-
+### isamax/idamax, icamax/izamax
 
 * `isamax`: Alias for `idamax`. See [blas ref]:[ref-isamax]
 * `idamax`: Find the index of the maximum element of a REAL vector ( [single or double precision][precision-note] ). See [blas ref][ref-idamax]. 
@@ -1548,7 +1548,7 @@ const { isamax, idamax, icamax, izamax } = BLAS.level1;
 
 ## Copy a vector x to a vector y
 
-### Naming
+### scopy/dcopy, ccopy/zcopy
 
 * `scopy`: Alias for `dcopy`. See [blas ref]:[ref-scopy]
 * `dcopy`: Copies a REAL vector ( [single or double precision][precision-note] ). See [blas ref][ref-dcopy].
@@ -1577,7 +1577,7 @@ const { scopy, dcopy, ccopy, zcopy } = BLAS.level1;
 
 y ⟵ y + a·x  where y, a and x can be complex or a real number.
 
-### Naming
+### saxpy/daxpy, caxpy/zaxpy
 
 * `saxpy`: Alias for `daxpy`. See [blas ref]:[ref-saxpy].
 * `daxpy`: REAL constant used in multiplication with a vector ( [single or double precision][precision-note] ). See [blas ref]:[ref-daxpy].   
@@ -1614,7 +1614,7 @@ For the routines `chpr2` and `zhpr2` the matrix A is in packed form ( a [fortran
 
 For the routines `cher2` and `zher2` the matrix symmetry is exploited (use only upper/lower triangular part of the matrix). 
 
-### Naming
+### cher2/zher2, chpr2|zhpr2
 
 * `cher2`: alias for `zher2`. See [blas ref][ref-cher2].
 * `zher2`: The Matrix `A` is in upper or lower triangular form ( [single or double precision][precision-note] ). See [blas ref][ref-zher2].  
@@ -1624,7 +1624,7 @@ For the routines `cher2` and `zher2` the matrix symmetry is exploited (use only 
 _decl_
 
 ```typescript
-function cher2(
+function cher2|zher2(
      uplo: "u" | "l", 
      n: number, 
      alpha: Complex, 
@@ -1635,28 +1635,7 @@ function cher2(
      a: Matrix, 
      lda: number): void;
 
-function zher2(
-     uplo: "u" | "l", 
-     n: number, 
-     alpha: Complex, 
-     x: FortranArr, 
-     incx: number, 
-     y: FortranArr, 
-     incy: number, 
-     a: Matrix, 
-     lda: number): void; 
-
-function chpr2(
-     uplo: "u" | "l", 
-     n: number, 
-     alpha: Complex, 
-     x: FortranArr, 
-     incx: number, 
-     y: FortranArr, 
-     incy: number, 
-     ap: FortranArr): void;
-
-function zhpr2(
+function chpr2|zhpr2(
      uplo: "u" | "l", 
      n: number, 
      alpha: Complex, 
@@ -1684,7 +1663,7 @@ For the routines `sspr2` and `dspr2` the matrix A is in [packed](#packed-matrice
 
 For the routines `ssyr2` and `dsyr2` the matrix symmetry is exploited (use only upper/lower triangular part of the matrix). 
 
-### Naming
+### sspr2/dspr2, ssyr2/dsyr2
 
 * `sspr2`: Alias for dspr2. See [blas ref][ref-sspr2].
 * `dspr2`: The matrix `A` is in [packed](#packed-matrices) form ( [single or double precision][precision-note] ). See [blas ref][ref-dspr2].
@@ -1694,7 +1673,7 @@ For the routines `ssyr2` and `dsyr2` the matrix symmetry is exploited (use only 
  _decl_
 
 ```typescript
-function sspr2(
+function sspr2|dspr2(
     uplo: "u" | "l", 
     n: number, 
     alpha: number, 
@@ -1704,28 +1683,7 @@ function sspr2(
     incy: number, 
     ap: FortranArr):void;
 
-function dspr2(
-    uplo: "u" | "l", 
-    n: number, 
-    alpha: number, 
-    x: FortranArr, 
-    incx: number, 
-    y: FortranArr, 
-    incy: number, 
-    ap: FortranArr):void;
-
-function ssyr2(
-    uplo: 'u' | 'l', 
-    n: number, 
-    alpha: number, 
-    x: FortranArr, 
-    incx: number, 
-    y: FortranArr, 
-    incy: number, 
-    A: Matrix, 
-    lda: number): void;
-
-function dsyr2(
+function ssyr2|dsyr2(
     uplo: 'u' | 'l', 
     n: number, 
     alpha: number, 
@@ -1761,7 +1719,7 @@ The subroutines `cgerc` and `zgerc` perform  A ⟵ α·x·yᴴ + A. Where α is 
 The subroutines `cgeru` and `zgeru` perform  A ⟵ α·x·yᵀ + A. Where α is a COMPLEX scalar,
  A, x, y are [single or double precision][precision-note] COMPLEX Matrix and vectors.  
 
-### Naming
+### sger/dger, cgerc/zgerc, cgeru/zgeru
 
 * `sger`: alias for `dger`. See [blas ref][ref-sger].
 * `dger`: See [blas ref][ref-dger].
@@ -1773,7 +1731,7 @@ The subroutines `cgeru` and `zgeru` perform  A ⟵ α·x·yᵀ + A. Where α is 
 _decl_
 
 ```typescript
-function sger(
+function sger|dger(
     m: number, 
     n: number, 
     alpha: number, 
@@ -1784,18 +1742,7 @@ function sger(
     a: Matrix, 
     lda: number):void;
 
-function dger(
-    m: number, 
-    n: number, 
-    alpha: number, 
-    x: FortranArr, 
-    incx: number, 
-    y: FortranArr, 
-    incy: number, 
-    a: Matrix, 
-    lda: number):void;
-    
-function cgerc(
+function cgerc|zgerc(
     m: number, 
     n: number, 
     alpha: Complex, 
@@ -1806,29 +1753,7 @@ function cgerc(
     a: Matrix, 
     lda: number): void;
 
-function zgerc(
-    m: number, 
-    n: number, 
-    alpha: Complex, 
-    x: FortranArr, 
-    incx: number, 
-    y: FortranArr, 
-    incy: number, 
-    a: Matrix, 
-    lda: number): void;
-
-function cgeru(
-    m: number, 
-    n: number, 
-    alpha: Complex, 
-    x: FortranArr, 
-    incx: number, 
-    y: FortranArr, 
-    incy: number, 
-    a: Matrix, 
-    lda: number): void;
-    
-function zgeru(
+function cgeru|zgeru(
     m: number, 
     n: number, 
     alpha: Complex, 
@@ -1920,7 +1845,7 @@ For the routines `ssyr` and `dsyr` α is a REAL scalar, the symmetry of the REAL
 
 For the routines `sspr` and `dspr` α is a REAL scalar, the REAL matrix A is in [packed](#packed-matrices) form ( a [fortranArr](#vector-constructors) ).
 
-### Naming
+### sspr/dspr, ssyr/dsyr
 
 * `sspr`: alias for `dspr`. See [blas ref][ref-sspr].
 * `dspr`: For [single or double precision][precision-note] REAL `α` , `x` and `A`. See [blas ref][ref-dspr].
@@ -1982,7 +1907,7 @@ Aᴴ is the complex conjugate transpose of matrix A
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation. 
 
-### Naming
+### cgbmv/zgbmv, chbmv/zhbmv, ssbmv/dsbmv, sgbmv/dgbmv, stbmv/dtbmv, chemv/zhemv, sgemv/dgemv, cgemv/zgemv, chpmv/zhpmv, sspmv/dspmv, ssymv/dsymv
 
 | subroutine  | operation                                              | complex | real    | type of matrix A              | blas ref link                         |
 | ----------- | ------------------------------------------------------ | ------- | ------- | ----------------------------- | ------------------------------------- |
@@ -2174,7 +2099,7 @@ Aᴴ is the complex conjugate transpose of matrix A
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
 
-### Naming
+### stbmv, dtbmv, ctbmv, dtpmv, ctpmv, ztpmv, strmv, dtrmv, ctrmv, ztrmv  
 
 | subroutine  | operation                         | complex | real | type of matrix A              | blas ref link                         |
 | ----------- | --------------------------------- | ------- | ---- | ----------------------------- | ------------------------------------- |
@@ -2273,7 +2198,7 @@ const {
 
 Aᴴ is the complex conjugate transpose of matrix A
 
-### Naming
+### stbsv, dtbsv, ctbsv, ztbsv, stpsv, dtpsv, ctpsv, ztpsv, ctrsv, ztrsv, strs, dtrsv
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
 
@@ -2384,7 +2309,7 @@ Aᴴ is the conjugate transpose of Matrix A.
 
 Bᴴ isthe conjugate transpose of Matrix B.
 
-### Naming
+### cher2k, zher2k 
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
 
@@ -2422,7 +2347,7 @@ const { cher2k,  zher2k } = BLAS.level3;
 
 ## Symmetric rank 2k operations C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C, or C ⟵ α·Aᵀ·B +  α·Bᵀ·A + β·C
 
-### Naming
+### ssyr2k, dsyr2k, csyr2k, zsyr2k
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
 
@@ -2478,7 +2403,7 @@ const { ssyr2k, dsyr2k, csyr2k, zsyr2k } = BLAS.level3;
         
 Aᴴ is the conjugate transpose of Matrix A.
 
-### Naming
+### cherk, zherk
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
 
@@ -2514,7 +2439,7 @@ const { cherk, zherk } = BLAS.level3;
 
 ## Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C
 
-### Naming
+### ssyrk, dsyrk, csyrk, zsyrk   
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
 
@@ -2564,7 +2489,7 @@ const { ssyrk, dsyrk, csyrk, zsyrk } = BLAS.level3;
 
 ## Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C
 
-### Naming
+### ssyrk, dsyrk, csyrk, zsyrk
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
 
@@ -2622,7 +2547,7 @@ S(A) is the set of all possible results of f(A) for a routine.
 
 S(B) is the set of all possible results of h(B) for a routine.
 
-### Naming
+### sgemm,  dgemm, cgemm, zgemm 
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
 
@@ -2678,7 +2603,7 @@ const { sgemm, dgemm, cgemm, zgemm } = BLAS.level3;
 
 ## Matrix-matrix operations C ⟵ α·A·B + β·C or C ⟵ α·B·A + β·C
        
-### Naming
+### chemm, zhemm, ssymm, dsymm, csymm, zsymm
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
 
@@ -2919,58 +2844,58 @@ The naming in blasjs does not reflect the precision used, precision is determine
 [ref-dsymv]: http://www.netlib.org/lapack/explore-html/d8/dbe/dsymv_8f.html
 [ref-ssymv]: http://www.netlib.org/lapack/explore-html/d2/d94/ssymv_8f.html
         
-[ref-stpmv]:
-[ref-dtpmv]:
-[ref-ctpmv]:
-[ref-ztpmv]:
-[ref-strmv]:
-[ref-dtrmv]:
-[ref-ctrmv]:
-[ref-ztrmv]:
-[ref-stbsv]: 
-[ref-dtbsv]:
+[ref-stpmv]: http://www.netlib.org/lapack/explore-html/db/db1/stpmv_8f.html
+[ref-dtpmv]: http://www.netlib.org/lapack/explore-html/dc/dcd/dtpmv_8f.html
+[ref-ctpmv]: http://www.netlib.org/lapack/explore-html/d4/dbb/ctpmv_8f.html
+[ref-ztpmv]: http://www.netlib.org/lapack/explore-html/d2/d9e/ztpmv_8f.html
+[ref-strmv]: http://www.netlib.org/lapack/explore-html/de/d45/strmv_8f.html
+[ref-dtrmv]: http://www.netlib.org/lapack/explore-html/dc/d7e/dtrmv_8f.html
+[ref-ctrmv]: http://www.netlib.org/lapack/explore-html/d9/d5f/ctbsv_8f.html
+[ref-ztrmv]: http://www.netlib.org/lapack/explore-html/d0/dd1/ztrmv_8f.html
+[ref-stbsv]: http://www.netlib.org/lapack/explore-html/d0/d1f/stbsv_8f.html 
+[ref-dtbsv]: http://www.netlib.org/lapack/explore-html/d4/dcf/dtbsv_8f.html
 
-[ref-ctbsv]:
-[ref-ztbsv]:
+[ref-ctbsv]: http://www.netlib.org/lapack/explore-html/d9/d5f/ctbsv_8f.html
+[ref-ztbsv]: http://www.netlib.org/lapack/explore-html/d4/d5a/ztbsv_8f.html
 
-[ref-stpsv]:
-[ref-dtpsv]:
+[ref-stpsv]: http://www.netlib.org/lapack/explore-html/d0/d7c/stpsv_8f.html
+[ref-dtpsv]: http://www.netlib.org/lapack/explore-html/d9/d84/dtpsv_8f.html
 
-[ref-ctpsv]:
-[ref-ztpsv]:
+[ref-ctpsv]: http://www.netlib.org/lapack/explore-html/d8/d56/ctpsv_8f.html
+[ref-ztpsv]: http://www.netlib.org/lapack/explore-html/da/d57/ztpsv_8f.html
 
-[ref-ctrsv]:
-[ref-ztrsv]:
+[ref-ctrsv]: http://www.netlib.org/lapack/explore-html/d4/dc8/ctrsv_8f.html
+[ref-ztrsv]: http://www.netlib.org/lapack/explore-html/d1/d2f/ztrsv_8f.html 
 
-[ref-strsv]:
-[ref-dtrsv]:
+[ref-strsv]: http://www.netlib.org/lapack/explore-html/d0/d2a/strsv_8f.html
+[ref-dtrsv]: http://www.netlib.org/lapack/explore-html/d6/d96/dtrsv_8f.html
 
-[ref-cher2k]:
-[ref-zher2k]:
-[ref-cherk]:
-[ref-zherk]:
-[ref-ssyrk]:
-[ref-dsyrk]:
-[ref-csyrk]:
-[ref-zsyrk]:
+[ref-cher2k]: http://www.netlib.org/lapack/explore-html/d1/d82/cher2k_8f.html
+[ref-zher2k]: http://www.netlib.org/lapack/explore-html/d7/dfa/zher2k_8f.html
+[ref-cherk]: http://www.netlib.org/lapack/explore-html/d8/d52/cherk_8f.html
+[ref-zherk]: http://www.netlib.org/lapack/explore-html/d1/db1/zherk_8f.html
+[ref-ssyrk]: http://www.netlib.org/lapack/explore-html/d0/d40/ssyrk_8f.html
+[ref-dsyrk]: http://www.netlib.org/lapack/explore-html/dc/d05/dsyrk_8f.html
+[ref-csyrk]: http://www.netlib.org/lapack/explore-html/d3/d6a/csyrk_8f.html
+[ref-zsyrk]: http://www.netlib.org/lapack/explore-html/de/d54/zsyrk_8f.html
 
-[ref-sgemm]:
-[ref-dgemm]:
-[ref-cgemm]:
-[ref-zgemm]:
-[ref-chemm]:
-[ref-zhemm]:
-[ref-strmm]:
-[ref-dtrmm]:
-[ref-ctrmm]:
-[ref-ztrmm]:
+[ref-sgemm]: http://www.netlib.org/lapack/explore-html/d4/de2/sgemm_8f.html
+[ref-dgemm]: http://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f.html
+[ref-cgemm]: http://www.netlib.org/lapack/explore-html/d6/d5b/cgemm_8f.html
+[ref-zgemm]: http://www.netlib.org/lapack/explore-html/d7/d76/zgemm_8f.html
+[ref-chemm]: http://www.netlib.org/lapack/explore-html/d3/d66/chemm_8f.html
+[ref-zhemm]: http://www.netlib.org/lapack/explore-html/d6/d3e/zhemm_8f.html
+[ref-strmm]: http://www.netlib.org/lapack/explore-html/df/d01/strmm_8f.html
+[ref-dtrmm]: http://www.netlib.org/lapack/explore-html/dd/d19/dtrmm_8f.html
+[ref-ctrmm]: http://www.netlib.org/lapack/explore-html/d4/d9b/ctrmm_8f.html
+[ref-ztrmm]: http://www.netlib.org/lapack/explore-html/d8/de1/ztrmm_8f.html
 
-[ref-ssymm]:
-[ref-dsymm]:
+[ref-ssymm]: http://www.netlib.org/lapack/explore-html/d7/d42/ssymm_8f.html
+[ref-dsymm]: http://www.netlib.org/lapack/explore-html/db/d59/csymm_8f.html
 
-[ref-csymm]:
-[ref-zsymm]:
-[ref-strsm]:
-[ref-dtrsm]:
-[ref-ctrmm]:
-[ref-ztrmm]:
+[ref-csymm]: http://www.netlib.org/lapack/explore-html/d8/de1/ztrmm_8f.html
+[ref-zsymm]: http://www.netlib.org/lapack/explore-html/df/d51/zsymm_8f.html
+[ref-strsm]: http://www.netlib.org/lapack/explore-html/d2/d8b/strsm_8f.html
+[ref-dtrsm]: http://www.netlib.org/lapack/explore-html/de/da7/dtrsm_8f.html
+[ref-ctrmm]: http://www.netlib.org/lapack/explore-html/d4/d9b/ctrmm_8f.html
+[ref-ztrmm]: http://www.netlib.org/lapack/explore-html/d8/de1/ztrmm_8f.html
