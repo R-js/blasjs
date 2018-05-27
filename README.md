@@ -2847,3 +2847,6 @@ The naming in blasjs does not reflect the precision used, precision is determine
 [ref-ztrmm]: http://www.netlib.org/lapack/explore-html/d8/de1/ztrmm_8f.html
 [ref-csyr2k]: http://www.netlib.org/lapack/explore-html/de/d7e/csyr2k_8f.html
 [ref-zsyr2k]: http://www.netlib.org/lapack/explore-html/df/d20/zsyr2k_8f.html
+
+[ref-ctrsm]: http://www.netlib.org/lapack/explore-html/de/d30/ctrsm_8f.html
+[ref-ztrsm]: http://www.netlib.org/lapack/explore-html/d1/d39/ztrsm_8f.html
