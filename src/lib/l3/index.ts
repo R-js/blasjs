@@ -69,4 +69,4 @@ export const level3 = {
     ztrsm: ctrsm
 };
 
-import './doc';
+//import './doc';

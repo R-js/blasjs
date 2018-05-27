@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-import { errWrongArg, Matrix } from '../../f_func';
+import { errWrongArg, lowerChar, Matrix } from '../../f_func';
 
 const { max } = Math;
 
@@ -32,8 +32,8 @@ export function ssyrk(
     c: Matrix,
     ldc: number): void {
 
-    const ul = String.fromCharCode(uplo.charCodeAt(0) | 0X20);
-    const tr = String.fromCharCode(trans.charCodeAt(0) | 0X20);
+    const ul = lowerChar(uplo);
+    const tr = lowerChar(trans);
 
     const nrowA = (tr === 'n') ? n : k;
 

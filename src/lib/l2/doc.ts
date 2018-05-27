@@ -84,7 +84,7 @@ export const desc: { [index: string]: string } = {
     console.log(' } ');
 })();
 
-const x = {
+//const x = {
     //
     //CHER2: 'performs the hermitian rank 2 operation A := alpha*x*y**H + conjg( alpha )*y*x**H + A',
     //ZHER2: 'performs the hermitian rank 2 operation A := alpha*x*y**H + conjg( alpha )*y*x**H + A',
@@ -165,4 +165,4 @@ const x = {
     //STRSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
     //ZTRSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b'
 
-};
+//};

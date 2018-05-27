@@ -55,193 +55,118 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 
 # Table of Contents
 
-* [Language differences with FORTRAN/BLAS](#language-differences-with-fortranblas)
-* [*Read this first*: Helper functions](#helper-functions-for-working-with-blasjs)
-    * [Types](#Types)
-        * [fpArray](#fpArray)
-        * [FortranArr](#fortranarr)
-        * [Type Complex](#type-complex)
-        * [Matrix](#matrix)
-            * [Float[32/64]Array Complex number storage for Matrix](#float3264array-complex-number-storage-for-matrix)
-            * [Handling FORTRAN matrices](#handling-fortran-matrices-multidimensional-arrays)
-            * [Performance](#performance)
-            * [Creating new transformed Matrix instances from existing ones](#creating-new-transformed-matrix-instances-from-existing-ones)
-                * [Matrix.prototype.setlower](#matrixprototypesetlower)
-                * [Matrix.prototype.setUpper](#matrixprototypesetupper)
-                * [Matrix.prototype.upperBand](#matrixprototypeupperband)
-                * [Matrix.prototype.lowerBand](#matrixprototypelowerband)
-                * [Matrix.prototype.real](#matrixprototypereal)
-                * [Matrix.prototype.imaginary](#matrixprototypeimaginary)
-            * [Packed Matrices](#packed-matrices)
-                * [Matrix.prototype.packedUpper](#matrixprototypepackedupper)
-                * [Matrix.prototype.packedLower](#matrixprototypepackedlower)
-            * [Convert Matrix object to Js Array](#convert-matrix-object-to-a-js-array)
-                * [Matrix.prototype.toArr](#matrixprototypetoarr)
-            * [Matrix Examples](#matrix-examples)
-    * [General Helpers](#general-helpers)
-        * [arrayrify](#arrayrify)
-        * [complex](#complex)
-        * [each](#each)
-        * [map](#map)
-        * [muxCmplx](#muxCmplx)
-        * [numberPrecision](#numberPrecision)
-    * [Vector constructors](#vector-constructors)
-        * [fortranArrComplex32](#fortranarrcomplex32)
-        * [fortranArrComplex64](#fortranarrcomplex64)
-        * [Vector Creation Examples](#vector-creation-examples)
-    * [Matrix constructors](#matrix-constructors)
-        * [fortranMatrixComplex32](#fortranmatrixcomplex32)
-        * [fortranMatrixComplex64](#fortranmatrixcomplex64)
-        * [Matrix Creation Examples](#matrix-creation-examples)
-* [Level 1 Routines](#level-1-routines)
-    * [Euclidean norm: √(xᴴ·x) or √(xᵀ·x)]()
-        * [`scnrm2`, `dznrm2`, `snrm2`, `dnrm2`](#naming)
-    * [Construct a Givens plane rotation]()
-        * [`srotg`, `drotg`, `crotg`,`zrotg`](#srotg-drotg-crotgzrotg)
-    * [Construct the **modified** Givens rotation matrix `H`]()
-        * [`srotmg`,`drotmg`](#srotmg-drotmg)
-    * [Apply the modified Givens Transformation]()
-        * [`srotm`, `drotm`](#srotm-drotm)
-    * [Applies a plane rotation]()
-        * [`srot`,`drot`, `csrot`, `zdrot`](#srot-drot-csrot-zdrot)
-    * [Scale a vector by a constant]()
-        * [`sscal`, `dscal`, `cscal`, `zscal`, `csscal`, `zdscal`](#sscal-dscal-cscal-zscal-csscal-zdscal)
-    * [Takes the sum of the absolute values of the components of vector]()
-        * [`sasum`, `dasum`, `scasum`, `dzasum`](#sasum-dasum-scasum-dzasum)
-    * [Interchanges 2 vectors]()
-        * [`cswap`, `dswap`, `sswap`, `zswap`](#cswap-dswap-sswap-zswap)
-    * [Dot product of two complex vectors]()
-        * [`cdotu`, `cdotc`, `zdotu`, `zdotc`](#cdotu-cdotc-zdotu-zdotc)
-    * [Dot product of two vectors]()
-        * [`sdot`, `ddot`, `sdsdot`, `dsdot`](#sdot-ddot-sdsdot-dsdot)
-    * [Finds the index of the first element having maximum absolut value]()
-        * [`isamax`, `idamax`, `icamax`, `izamax`](#isamax-idamax-icamax-izamax)
-    * [Copy a vector x to a vector y]()
-        * [`scopy`, `dcopy`, `ccopy`, `zcopy`](#scopy-dcopy-ccopy-zcopy)
-    * [Constant times a vector plus a vector]()
-        * [`saxpy`, `daxpy`, `caxpy`, `zaxpy`](#saxpy-daxpy-caxpy-zaxpy)
-* [Level 2 Routines](#level-2-routines)    
-    * [The hermitian rank 2 operation A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A](#hermitian-rank-2-a--αxyᴴ--conjg-α-yxᴴ--a)
-        * [`cher2`, `zher2`, `chpr2`, `zhpr2`](#cher2-zher2-chpr2-zhpr2)
-    * [The symmetric rank 2 operation A ⟵ α·x·yᵀ + α·y·xᵀ + A](#symmetric-rank-2-a--αxyᵀ--αyxᵀ--a)
-        * [`sspr2`, `dspr2`, `ssyr2`, `dsyr2`](#sspr2-dspr2-ssyr2-dsyr2)
-    * [The rank 1 operation A ⟵ α·x·yᴴ + A or A ⟵ α·x·yᵀ + A]()
-        * [`sger`, `dger`, `cgerc`, `zgerc`, `cgeru`, `zgeru`](#sger-dger-cgerc-zgerc-cgeru-zgeru)
-    * [The hermitian rank 1 operation A ⟵ α·x·xᴴ + A]()
-        * [`cher`, `zher`, `chpr`, `zhpr`]()
-    * [The symmetric rank 1 operation A ⟵ α·x·xᵀ + A]()
-        * [`sspr`, `dspr`, `ssyr`, `dsyr`]()
-    * [The matrix-vector operation, y ⟵ α·A·x + β·y, or y ⟵ α·Aᵀ·x + β·y or y ⟵  α·Aᴴ·x + β·y]()
-        * [`cgbmv`, `chbmv`, `dgbmv`, `dsbmv`, `sgbmv`, `ssbmv`, `zgbmv`, `zhbmv`]()
-        * [`ctbmv`, `dtbmv`, `stbmv`, `ztbmv`]()
-        * [`cgemv`, `chemv`, `dgemv`, `sgemv`, `zgemv`, `zhemv`]()
-        * [`chpmv`, `dspmv`, `sspmv`, `zhpmv`]()
-        * [`dsymv`, `ssymv`]()
-    * [The matrix-vector operation, x ⟵ A·x, or x ⟵ Aᵀ·x, or x ⟵ Aᴴ·x]()
-        * [`ctpmv`, `ctrmv`, `dtpmv`, `dtrmv`, `stpmv`, `strmv`, `ztpmv`, `ztrmv`]()
-    * [Solves a systems of equations A·x = b, or Aᵀ·x = b, or Aᴴ·x = b]()
-        * [`ctbsv`, `ctpsv`, `ctrsv`, `dtbsv`, `dtpsv`, `dtrsv`, `stbsv`, `stpsv`, `strsv`, `ztbsv`, `ztpsv`, `ztrsv`]()
-* [Level 3 Routines](#level-3-routines)
-    * [Hermitian rank 2k operations C ⟵ α·A·Bᴴ + conjg( α )·B·Aᴴ + β·C or C ⟵ α·Aᴴ·B + conjg( α )·Bᴴ·A + β·C]()
-        * [`cher2k`, `zher2k`]()
-    * [Symmetric rank 2k operations C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C, or C ⟵ α·Aᵀ·B +  α·Bᵀ·A + β·C]()
-        * [`csyr2k`, `dsyr2k`, `ssyr2k`, `zsyr2k`]()
-    * [Hermatian rank k operations C ⟵ α·A·Aᴴ + β·C, or C ⟵ α·Aᴴ·A + β·C]()
-        * [`cherk`, `zherk`]()
-    * [Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C]()
-        * [`csyrk`, `dsyrk`, `ssyrk`, `zsyrk`]()
-    * [Matrix-matrix operations C ⟵ α·_f̅(A)_·_h̅(B)_ + β·C]()
-        * [`cgemm`, `dgemm`, `sgemm`, `zgemm`]()
-        * [`chemm`, `zhemm`]()
-        * [`ctrmm`, `dtrmm`, `strmm`, `ztrmm`]()
-        * [`csymm`, `dsymm`, `ssymm`, `zsymm`]()
-    * [Solves the matrix equations _f̅( A )_·X = α·B, or X·_h̅( A )_ =  α·B]()
-        * [`ctrsm`, `dtrsm`, `strsm`, `ztrsm`]()
-
-# Level 1 Routines
-
-Routines categorized as _"Level 1"_ perform scalar-vector and vector-vector operations.
-
-## Euclidean norm of a vector
-
-
-### `srotg`, `drotg`, `crotg`,`zrotg`
-## `srotmg`, `drotmg`
-## `srotm`, `drotm`
-## `srot`, `drot`, `csrot`, `zdrot`
-## `sscal`, `dscal`, `cscal`, `zscal`, `csscal`, `zdscal`
-## `sasum`, `dasum`, `scasum`, `dzasum`
-## `cswap`, `dswap`, `sswap`, `zswap`
-## `cdotu`, `cdotc`, `zdotu`, `zdotc`
-## `sdot`, `ddot`, `sdsdot`, `dsdot`
-## `isamax`, `idamax`, `icamax`, `izamax`
-## `scopy`, `dcopy`, `ccopy`, `zcopy`
-## `saxpy`, `daxpy`, `caxpy`, `zaxpy`
-
-# level 2 routines
-
-## Hermitian rank 2: A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A
-
-### `cher2`, `zher2`, `chpr2`, `zhpr2`
-
-## Symmetric rank 2: A ⟵ α·x·yᵀ + α·y·xᵀ + A
-
-### `sspr2`, `dspr2`, `ssyr2`, `dsyr2`
-
-## The rank 1: A ⟵ α·x·yᴴ + A or A ⟵ α·x·yᵀ + A
-
-### `sger`, `dger`, `cgerc`, `zgerc`, `cgeru`, `zgeru`
-
-## Hermitian rank 1: A ⟵ α·x·xᴴ + A
-
-### `cher`, `zher`, `chpr`, `zpr`
-
-## Symmetric rank 1: A ⟵ α·x·xᵀ + A
-
-### `sspr`, `dspr`, `ssyr`, `dsyr`
-
-## y ⟵ α·A·x + β·y ∨ y ⟵ α·Aᵀ·x + β·y ∨ y ⟵ α·Aᴴ·x + β·y
-
-### `cgbmv`, `chbmv`, `dgbmv`, `dsbmv`, `sgbmv`, `ssbmv`, `zgbmv`, `zhbmv`
-
-### `ctbmv`, `dtbmv`, `stbmv`, `ztbmv`
-### `cgemv`, `chemv`, `dgemv`, `sgemv`, `zgemv`, `zhemv`
-### `chpmv`, `dspmv`, `sspmv`, `zhpmv`
-### `dsymv`, `ssymv`
-
-## x ⟵ A·x ∨ x ⟵ Aᵀ·x ∨ x ⟵ Aᴴ·x
-
-### `ctpmv`, `ctrmv`, `dtpmv`, `dtrmv`, `stpmv`, `strmv`, `ztpmv`, `ztrmv`
-
-## solves A·x = b ∨ Aᵀ·x = b ∨ Aᴴ·x = b
-
-### `ctbsv`, `ctpsv`, `ctrsv`, `dtbsv`, `dtpsv`, `dtrsv`, `stbsv`, `stpsv`, `strsv`, `ztbsv`, `ztpsv`, `ztrsv`
-
-# level 3 routines
-
-## Hermitian rank 2k: C ⟵ α·A·Bᴴ + conjg( α )·B·Aᴴ + β·C ∨ C ⟵ α·Aᴴ·B + conjg( α )·Bᴴ·A + β·C
-
-### `cher2k`, `zher2k`
-
-## Symmetric rank 2k: C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C ∨ C ⟵ α·Aᵀ·B +  α·Bᵀ·A + β·C
-
-### `csyr2k`, `dsyr2k`, `ssyr2k`, `zsyr2k`
-
-## Hermatian rank k: C ⟵ α·A·Aᴴ + β·C ∨ C ⟵ α·Aᴴ·A + β·C
-
-### `csyrk`, `dsyrk`, `ssyrk`, `zsyrk`
-
-## Matrix-matrix: C ⟵ α·_f̅(A)_·_h̅(B)_ + β·C
-
-### `cgemm`, `dgemm`, `sgemm`, `zgemm`
-### `chemm`, `zhemm`
-### `ctrmm`, `dtrmm`, `strmm`, `ztrmm`
-### `csymm`, `dsymm`, `ssymm`, `zsymm`
-
-## Solves _f̅( A )_·X = α·B ∨ X·_h̅( A )_ =  α·B
-
-### `ctrsm`, `dtrsm`, `strsm`, `ztrsm`
-
+- [BLASjs (<span style="color:red; font-weight: bold;">Basic Linear Algebra Subprograms</span>)](#blasjs-span-stylefont-size-small-span-stylecolor-red--font-weight--bold-b-spanasic-span-stylecolor-red--font-weight--bold-l-spaninear-span-stylecolor-red--font-weight--bold-a-spanlgebra-span-stylecolor-red--font-weight--bold-s-spanubprograms-span)
+            - [summary](#summary)
+            - [Node and Web](#node-and-web)
+    - [Installation](#installation)
+            - [node](#node)
+            - [web](#web)
+- [Table of Contents](#table-of-contents)
+- [Language differences with FORTRAN/BLAS.](#language-differences-with-fortran-blas)
+- [Helper functions](#helper-functions)
+    - [Types](#types)
+        - [`fpArray`](#fparray)
+        - [`FortranArr`](#fortranarr)
+        - [`Type Complex`](#type-complex)
+        - [`Matrix`](#matrix)
+            - [Float[32/64]Array Complex number storage for Matrix.](#float32-64array-complex-number-storage-for-matrix)
+            - [Handling FORTRAN matrices (multidimensional Arrays).](#handling-fortran-matrices-multidimensional-arrays)
+            - [performance](#performance)
+            - [Creating new transformed Matrix instances from existing ones](#creating-new-transformed-matrix-instances-from-existing-ones)
+            - [`Matrix.prototype.slice`](#matrixprototypeslice)
+            - [`Matrix.prototype.setLower`](#matrixprototypesetlower)
+            - [`Matrix.prototype.setUpper`](#matrixprototypesetupper)
+            - [`Matrix.prototype.upperBand`](#matrixprototypeupperband)
+            - [`Matrix.prototype.lowerBand`](#matrixprototypelowerband)
+            - [`Matrix.prototype.real`](#matrixprototypereal)
+            - [`Matrix.prototype.imaginary`](#matrixprototypeimaginary)
+            - [Packed Matrices](#packed-matrices)
+            - [`Matrix.prototype.packedUpper`](#matrixprototypepackedupper)
+            - [`Matrix.prototype.packedLower`](#matrixprototypepackedlower)
+            - [Convert Matrix object to a JS array](#convert-matrix-object-to-a-js-array)
+            - [`Matrix.prototype.toArr`](#matrixprototypetoarr)
+            - [Summary: Full type declaration of Matrix](#summary--full-type-declaration-of-matrix)
+            - [Matrix Examples](#matrix-examples)
+    - [General Helpers](#general-helpers)
+        - [`arrayrify`](#arrayrify)
+        - [`complex`](#complex)
+        - [`each`](#each)
+        - [`map`](#map)
+        - [`muxCmplx`](#muxcmplx)
+        - [`numberPrecision`](#numberprecision)
+    - [Vector Constructors](#vector-constructors)
+        - [`fortranArrComplex32`](#fortranarrcomplex32)
+        - [`fortranArrComplex64`](#fortranarrcomplex64)
+            - [Vector creation examples](#vector-creation-examples)
+    - [Matrix Constructors](#matrix-constructors)
+        - [`fortranMatrixComplex32`](#fortranmatrixcomplex32)
+        - [`fortranMatrixComplex64`](#fortranmatrixcomplex64)
+        - [Matrix Creation Examples](#matrix-creation-examples)
+- [A note on numeric precision](#a-note-on-numeric-precision)
+- [Mimicking FORTRAN OUT Arguments](#mimicking-fortran-out-arguments)
+- [Level 1 routines](#level-1-routines)
+    - [Euclidean norm: √(xᴴ·x) or √(xᵀ·x)](#euclidean-norm--x-x-or-x-x)
+            - [Naming](#naming)
+    - [Construct a Givens plane rotation](#construct-a-givens-plane-rotation)
+            - [Naming](#naming)
+    - [Construct the **modified** Givens rotation matrix `H`](#construct-the-modified-givens-rotation-matrix-h)
+            - [Naming](#naming)
+    - [Apply the modified Givens Transformation](#apply-the-modified-givens-transformation)
+            - [Naming](#naming)
+    - [Applies a plane rotation](#applies-a-plane-rotation)
+            - [Naming](#naming)
+    - [Scale a vector by a constant](#scale-a-vector-by-a-constant)
+            - [Naming](#naming)
+    - [Takes the sum of the absolute values of the components of vector](#takes-the-sum-of-the-absolute-values-of-the-components-of-vector)
+            - [Naming](#naming)
+    - [Interchanges 2 vectors](#interchanges-2-vectors)
+            - [Naming](#naming)
+    - [Dot product of two complex vectors](#dot-product-of-two-complex-vectors)
+        - [Naming](#naming)
+    - [Dot product of two non complex vectors](#dot-product-of-two-non-complex-vectors)
+        - [Naming](#naming)
+    - [Finds the index of the first element having maximum absolut value.](#finds-the-index-of-the-first-element-having-maximum-absolut-value)
+        - [Naming](#naming)
+    - [Copy a vector x to a vector y](#copy-a-vector-x-to-a-vector-y)
+        - [Naming](#naming)
+    - [Constant times a vector plus a vector](#constant-times-a-vector-plus-a-vector)
+        - [Naming](#naming)
+- [Level 2 Routines](#level-2-routines)
+    - [The hermitian rank 2 operation A ⟵ α·x·yᴴ + conjg( α )·y·xᴴ + A](#the-hermitian-rank-2-operation-a---x-y-conjg---y-x-a)
+        - [Naming](#naming)
+    - [The symmetric rank 2 operation A ⟵ α·x·yᵀ + α·y·xᵀ + A](#the-symmetric-rank-2-operation-a---x-y--y-x-a)
+        - [Naming](#naming)
+    - [The rank 1 operation A ⟵ α·x·yᴴ + A or A ⟵ α·x·yᵀ + A](#the-rank-1-operation-a---x-y-a-or-a---x-y-a)
+        - [Naming](#naming)
+    - [The hermitian rank 1 operation A ⟵ α·x·xᴴ + A](#the-hermitian-rank-1-operation-a---x-x-a)
+        - [Naming](#naming)
+    - [The symmetric rank 1 operation A ⟵ α·x·xᵀ + A](#the-symmetric-rank-1-operation-a---x-x-a)
+        - [Naming](#naming)
+    - [The matrix-vector operation, y ⟵ α·A·x + β·y, or y ⟵ α·Aᵀ·x + β·y or y ⟵ α·Aᴴ·x + β·y](#the-matrix-vector-operation--y---a-x--y--or-y---a-x--y-or-y---a-x--y)
+        - [Naming](#naming)
+    - [The matrix-vector operation, x ⟵ A·x, or x ⟵ Aᵀ·x, or x ⟵ Aᴴ·x](#the-matrix-vector-operation--x--a-x--or-x--a-x--or-x--a-x)
+        - [Naming](#naming)
+    - [Solves a systems of equations A·x = b, or Aᵀ·x = b, or Aᴴ·x = b](#solves-a-systems-of-equations-a-x-b--or-a-x-b--or-a-x-b)
+        - [Naming](#naming)
+- [Level 3 Routines](#level-3-routines)
+    - [Hermitian rank 2k: C ⟵ α·A·Bᴴ + con( α )·B·Aᴴ + β·C or C ⟵ α·Aᴴ·B + con( α )·Bᴴ·A + β·C](#hermitian-rank-2k--c---a-b-con---b-a--c-or-c---a-b-con---b-a--c)
+        - [Naming](#naming)
+    - [Symmetric rank 2k operations C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C, or C ⟵ α·Aᵀ·B + α·Bᵀ·A + β·C](#symmetric-rank-2k-operations-c---a-b--b-a--c--or-c---a-b--b-a--c)
+        - [Naming](#naming)
+    - [Hermatian rank k operations C ⟵ α·A·Aᴴ + β·C, or C ⟵ α·Aᴴ·A + β·C](#hermatian-rank-k-operations-c---a-a--c--or-c---a-a--c)
+        - [Naming](#naming)
+    - [Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C](#symmetric-rank-k-operations-c---a-a--c--or-c---a-a--c)
+        - [Naming](#naming)
+    - [Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C](#symmetric-rank-k-operations-c---a-a--c--or-c---a-a--c)
+        - [Naming](#naming)
+    - [Matrix-matrix operations C ⟵ α·_f(A)_·_h(B)_ + β·C or C ⟵ α·_h(B)_·_f(A)_ + β·C](#matrix-matrix-operations-c----fa---hb---c-or-c----hb---fa---c)
+        - [Naming](#naming)
+    - [Matrix-matrix operations C ⟵ α·A·B + β·C or C ⟵ α·B·A + β·C](#matrix-matrix-operations-c---a-b--c-or-c---b-a--c)
+        - [Naming](#naming)
+    - [Matrix-matrix operations B ⟵ α·f(A)·B or B ⟵ α·B·f(A)](#matrix-matrix-operations-b---fa-b-or-b---b-fa)
+        - [Naming](#naming)
+    - [Solves the matrix equations: _f( A )_·X = α·B, or X·_f( A )_ = α·B](#solves-the-matrix-equations---f-a---x--b--or-x--f-a----b)
+        - [strsm, dtrsm, ctrsm, ztrsm](#strsm--dtrsm--ctrsm--ztrsm)
 
 
 # Language differences with FORTRAN/BLAS.
@@ -1325,11 +1250,10 @@ const { scnrm2, dznrm2, snrm2, dnrm2 } = BLAS.level1;
 See [wiki][givens-rotation].
 
 ```Math
- |c  -s| x |a| =   |r |
+ |c  -s| × |a| =   |r |
  |s   c|   |b|     |0 |
 
  r =  √( a² + b² )
-
 ```
 
 #### Naming
@@ -2054,35 +1978,847 @@ const { sspr, dspr, ssyr, dsyr } = BLAS.level2;
 
 ## The matrix-vector operation, y ⟵ α·A·x + β·y, or y ⟵ α·Aᵀ·x + β·y or y ⟵  α·Aᴴ·x + β·y
 
+Aᴴ is the complex conjugate transpose of matrix A
+
+The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation. 
+
+### Naming
+
+| subroutine  | operation                                              | complex | real    | type of matrix A              | blas ref link                         |
+| ----------- | ------------------------------------------------------ | ------- | ------- | ----------------------------- | ------------------------------------- |
+| cgbmv/zgbmv | y ⟵ α·A·x + β·y , y ⟵ α·Aᵀ·x + β·y, y ⟵  α·Aᴴ·x + β·y  | α, A, β | none    | upper/lower band              | [cgbmv][ref-cgbmv]/[zgbmv][ref-zgbmv] |
+| chbmv/zhbmv | y ⟵ α·A·x + β·y                                        | α, A, β | none    | upper/lower band              | [chbmv][ref-chbmv]/[zhbmv][ref-zhbmv] |  |
+| ssbmv/dsbmv | y ⟵ α·A·x + β·y                                        | none    | α, A, β | upper/lower band              | [chbmv][ref-chbmv]/[zhbmv][ref-zhbmv] |
+| sgbmv/dgbmv | y ⟵ α·A·x + β·y , y ⟵ α·Aᵀ·x + β·y                     | none    | α, A, β | upper/lower band              | [sgbmv][ref-sgbmv]/[dgbmv][ref-dgbmv] |
+| stbmv/dtbmv | y ⟵ α·A·x + β·y                                        | none    | α, A, β | upper/lower band              | [stbmv][ref-stbmv]/[dtbmv][ref-dtbmv] |
+| chemv/zhemv | y ⟵ α·A·x + β·y                                        | α, A, β | none    | triangular upper/lower        | [chemv][ref-chemv]/[zhemv][ref-zhemv] |  |
+| sgemv/dgemv | y ⟵ α·A·x + β·y , y ⟵ α·Aᵀ·x + β·y                     | none    | α, A, β | full m x n                    | [sgemv][ref-sgemv]/[dgemv][ref-dgemv] |  |
+| cgemv/zgemv | y ⟵ α·A·x + β·y , y ⟵ α·Aᵀ·x + β·y,  y ⟵  α·Aᴴ·x + β·y | α, A, β | none    | full m x n                    | [cgemv][ref-cgemv]/[zgemv][ref-zgemv] |
+| chpmv/zhpmv | y ⟵ α·A·x + β·y                                        | α, A, β | none    | packed upper/lower triangular | [cgemv][ref-cgemv]/[zgemv][ref-zgemv] |
+| sspmv/dspmv | y ⟵ α·A·x + β·y                                        | none    | α, A, β | packed upper/lower triangular | [sspmv][ref-sspmv]/[dspmv][ref-dspmv] |
+| ssymv/dsymv | y ⟵ α·A·x + β·y                                        | α, A, β | none    | upper/lower triangular        | [ssymv][ref-ssymv]/[dsymv][ref-dsymv] |
+
+_decl_
+
+```typescript
+
+function cgbmv|zgbmv(
+    trans: 'n' | 't' | 'c',
+    m: number,
+    n: number,
+    kl: number,
+    ku: number,
+    alpha: Complex,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number,
+    beta: Complex,
+    y: FortranArr,
+    incy: number
+): void;
+
+function chbmv|zhbmv(
+    uplo: 'u' | 'l',
+    n: number,
+    k: number,
+    alpha: Complex,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number,
+    beta: Complex,
+    y: FortranArr,
+    incy: number
+): void;
+
+export function ssbmv|dsbmv(
+    uplo: string,
+    n: number,
+    k: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number,
+    beta: number,
+    y: FortranArr,
+    incy: number
+): void;
+
+function sgbmv|dgbmv(
+    trans: string,
+    m: number,
+    n: number,
+    kl: number,
+    ku: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number,
+    beta: number,
+    y: FortranArr,
+    incy: number
+): void;
+
+function stbmv | dtbmv(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    diag: 'u' | 'n',
+    n: number,
+    k: number,
+    A: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number
+): void; 
+
+function chemv|zhemv(
+    uplo: 'u' | 'l',
+    n: number,
+    alpha: Complex,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number,
+    beta: Complex,
+    y: FortranArr,
+    incy: number
+): void 
+
+function sgemv|dgemv(
+    trans: string,
+    m: number,
+    n: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number,
+    beta: number,
+    y: FortranArr,
+    incy: number
+): void;
+
+function cgemv|zgemv(
+    trans: 'n' | 't' | 'c',
+    m: number,
+    n: number,
+    alpha: Complex,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number,
+    beta: Complex,
+    y: FortranArr,
+    incy: number
+): void;
+
+function chpmv|zhpmv(
+    uplo: 'u' | 'l',
+    n: number,
+    alpha: Complex,
+    ap: FortranArr,
+    x: FortranArr,
+    incx: number,
+    beta: Complex,
+    y: FortranArr,
+    incy: number
+): void;
+
+function sspmv|dspmv(
+    uplo: 'u' | 'l',
+    n: number,
+    alpha: number,
+    ap: FortranArr, // a symmetric matrix in packed form
+    x: FortranArr,
+    incx: number,
+    beta: number,
+    y: FortranArr,
+    incy: number
+): void
+
+function ssymv|dsymv(
+    uplo: 'u' | 'l',
+    n: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number,
+    beta: number,
+    y: FortranArr,
+    incy: number
+): void
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+See: _[how to create Matrix](#matrix-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+
+const { 
+ cgbmv, chbmv, dgbmv, dsbmv, sgbmv, ssbmv, zgbmv, zhbmv,
+ cgemv, chemv, dgemv, sgemv, zgemv, zhemv,
+ chpmv, dspmv, sspmv, zhpmv, dsymv, ssymv } = BLAS.level2;
+```
+
+## The matrix-vector operation, x ⟵ A·x, or x ⟵ Aᵀ·x, or x ⟵ Aᴴ·x
+
+Aᴴ is the complex conjugate transpose of matrix A
+
+The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
+
+### Naming
+
+| subroutine  | operation                         | complex | real | type of matrix A              | blas ref link                         |
+| ----------- | --------------------------------- | ------- | ---- | ----------------------------- | ------------------------------------- |
+| stbmv/dtbmv | x ⟵ A·x, or x ⟵ Aᵀ·x              | none    | A, x | upper/lower band              | [stbmv][ref-stbmv]/[dtbmv][ref-dtbmv] |
+| ctbmv/ztbmv | x ⟵ A·x, or x ⟵ Aᵀ·x, or x ⟵ Aᴴ·x | A, x    | none | upper/lower band              | [ctbmv][ref-ctbmv]/[ztbmv][ref-ztbmv] |
+| stpmv/dtpmv | x ⟵ A·x, or x ⟵ Aᵀ·x              | none    | A, x | upper/lower triangular packed | [stpmv][ref-stpmv]/[dtpmv][ref-dtpmv] |
+| ctpmv/ztpmv | x ⟵ A·x, or x ⟵ Aᵀ·x, or x ⟵ Aᴴ·x | A, x    | none | upper/lower triangular packed | [ctpmv][ref-ctpmv]/[ztpmv][ref-ztpmv] |
+| strmv/dtrmv | x ⟵ A·x, or x ⟵ Aᵀ·x              | none    | A, x | upper/lower triangular        | [strmv][ref-strmv]/[dtrmv][ref-dtrmv] |
+| ctrmv/ztrmv | x ⟵ A·x, or x ⟵ Aᵀ·x, or x ⟵ Aᴴ·x | A, x    | none | upper/lower triangular        | [ctrmv][ref-ctrmv]/[ztrmv][ref-ztrmv] |
+
+_decl_
+
+```typescript
+function stbmv|dtbmv(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    diag: 'u' | 'n',
+    n: number,
+    k: number,
+    A: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number
+): void;
+
+function ctbmv|ztbmv(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    diag: 'u' | 'n',
+    n: number,
+    k: number,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number
+): void;
+
+function stpmv|zhbmv (
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    diag: 'u' | 'n',
+    n: number,
+    ap: FortranArr,
+    x: FortranArr,
+    incx: number
+): void; 
+
+function ctpmv|ztpmv(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    diag: 'u' | 'n',
+    n: number,
+    ap: FortranArr,
+    x: FortranArr,
+    incx: number
+): void;
+
+function strmv|dtrmv(
+    uplo: 'u' | 'l',
+    trans: 't' | 'c' | 'n',
+    diag: 'u' | 'n',
+    n: number,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number
+): void;
+
+function ctrmv|ztrmv(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    diag: 'u' | 'n',
+    n: number,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number
+): void;
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+See: _[how to create Matrix](#matrix-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+
+const { 
+ stbmv, dtbmv, ctbmv, ztbmv, stpmv, dtpmv, ctpmv, ztpmv, strmv
+ dtrmv, ctrmv, ztrmv } = BLAS.level2;
+```
+
+## Solves a systems of equations A·x = b, or Aᵀ·x = b, or Aᴴ·x = b
+
+Aᴴ is the complex conjugate transpose of matrix A
+
+### Naming
+
+The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
+
+| subroutine  | operation                         | complex | real    | type of matrix A              | blas ref link                         |
+| ----------- | --------------------------------- | ------- | ------- | ----------------------------- | ------------------------------------- |
+| stbsv/dtbsv | A·x = b, or Aᵀ·x = b              | none    | A, b, x | upper/lower band              | [stbsv][ref-stbsv]/[dtbsv][ref-dtbsv] |
+| ctbsv/ztbsv | A·x = b, or Aᵀ·x = b, or Aᴴ·x = b | A, b, x | none    | upper/lower band              | [ctbsv][ref-ctbsv]/[ztbsv][ref-ztbsv] |
+| stpsv/dtpsv | A·x = b, or Aᵀ·x = b              | none    | A, b, x | packed upper/lower triangular | [stpsv][ref-stpsv]/[dtpsv][ref-dtpsv] |
+| ctpsv/ztpsv | A·x = b, or Aᵀ·x = b, or Aᴴ·x = b | A, b, x | none    | packed upper/lower triangular | [ctpsv][ref-ctpsv]/[ztpsv][ref-ztpsv] |
+| ctrsv/ztrsv | A·x = b, or Aᵀ·x = b, or Aᴴ·x = b | A, b, x | none    | upper/lower triangular        | [ctrsv][ref-ctrsv]/[ztrsv][ref-ztrsv] |
+| strsv/dtrsv | A·x = b, or Aᵀ·x = b              | none    | A, b, x | upper/lower triangular        | [strsv][ref-strsv]/[dtrsv][ref-dtrsv] |
+
+_decl_
+
+```typescript
+
+function stbsv|dtbsv(
+    uplo: 'u' | 'l',
+    trans: 't' | 'n' | 'c',
+    diag: 'u' | 'n',
+    n: number,
+    k: number,
+    A: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number
+): void;
+
+function ctbsv|ztbsv(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    diag: 'u' | 'n',
+    n: number,
+    k: number,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number
+): void;
+ 
+function stpsv|dtpsv(
+    uplo: 'u' | 'l',
+    trans: 't' | 'n' | 'c',
+    diag: 'u' | 'n',
+    n: number,
+    ap: FortranArr,
+    x: FortranArr,
+    incx: number
+): void;
+
+function ctpsv|ztpsv(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    diag: 'u' | 'n',
+    n: number,
+    ap: FortranArr,
+    x: FortranArr,
+    incx: number
+): void 
+
+function ctrsv|ztrsv(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    diag: 'u' | 'n',
+    n: number,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number
+): void 
+
+function strsv|dtrsv(
+    uplo: 'u' | 'l',
+    trans: 't' | 'c' | 'n',
+    diag: 'u' | 'n',
+    n: number,
+    a: Matrix,
+    lda: number,
+    x: FortranArr,
+    incx: number
+): void 
+```
+
+See: _[how to create fortranArr](#vector-constructors)_.
+
+See: _[how to create Matrix](#matrix-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+
+const { 
+    stbsv, dtbsv, ctbsv, ztbsv, stpsv, 
+    dtpsv, ctpsv, ztpsv, ctrsv, ztrsv, 
+    strsv, dtrsv } = BLAS.level2;
+```
+
+# Level 3 Routines
+
+Routines categorized as _Level 2_ perform Matrix-vector operations.
+
+## Hermitian rank 2k: C ⟵ α·A·Bᴴ + con( α )·B·Aᴴ + β·C or C ⟵ α·Aᴴ·B + con( α )·Bᴴ·A + β·C
+
+con( α ) is the conjugate of α.
+
+Aᴴ is the conjugate transpose of Matrix A.
+
+Bᴴ isthe conjugate transpose of Matrix B.
+
+### Naming
+
+The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
+
+| subroutine    | operation                                                            | complex    | real | type of matrix C       | blas ref link                             |
+| ------------- | -------------------------------------------------------------------- | ---------- | ---- | ---------------------- | ----------------------------------------- |
+| cher2k/zher2k | C ⟵ α·A·Bᴴ + con( α )·B·Aᴴ + β·C or C ⟵ α·Aᴴ·B + con( α )·Bᴴ·A + β·C | α, A, B, C | β    | upper/lower triangular | [cher2k][ref-cher2k]/[zher2k][ref-zher2k] |
+
+_decl_
+
+```typescript
+function cher2k | zher2k(
+    uplo: 'u' | 'l',
+    trans: 'n' | 'c',
+    n: number,
+    k: number,
+    alpha: Complex,
+    a: Matrix,
+    lda: number,
+    b: Matrix,
+    ldb: number,
+    beta: number,
+    c: Matrix,
+    ldc: number
+): void;
+```
+
+See: _[how to create Matrix](#matrix-constructors)_.
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { cher2k,  zher2k } = BLAS.level3;
+```
+
+## Symmetric rank 2k operations C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C, or C ⟵ α·Aᵀ·B +  α·Bᵀ·A + β·C
+
+### Naming
+
+The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
+
+| subroutine    | operation                                                | complex       | real          | type of matrix C       | blas ref link                             |
+| ------------- | -------------------------------------------------------- | ------------- | ------------- | ---------------------- | ----------------------------------------- |
+| ssyr2k/dsyr2k | C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C, or C ⟵ α·Aᵀ·B +  α·Bᵀ·A + β·C | none          | α, A, β, B, C | upper/lower triangular | [cher2k][ref-cher2k]/[zher2k][ref-zher2k] |
+| csyr2k/zsyr2k | C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C, or C ⟵ α·Aᵀ·B +  α·Bᵀ·A + β·C | α, A, β, B, C | none          | upper/lower triangular | [csyr2k][ref-csyr2k]/[zsyr2k][ref-zsyr2k] |
+
+_decl_
+
+```typescript
+function ssyr2k|dsyr2k(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    n: number,
+    k: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    b: Matrix,
+    ldb: number,
+    beta: number,
+    c: Matrix,
+    ldc: number
+): void;
+
+function csyr2k|zsyr2k(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't',
+    n: number,
+    k: number,
+    alpha: Complex,
+    a: Matrix,
+    lda: number,
+    b: Matrix,
+    ldb: number,
+    beta: Complex,
+    c: Matrix,
+    ldc: number
+): void
+```
+
+See: _[how to create Matrix](#matrix-constructors)_.     
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { ssyr2k, dsyr2k, csyr2k, zsyr2k } = BLAS.level3;
+```
+
+## Hermatian rank k operations C ⟵ α·A·Aᴴ + β·C, or C ⟵ α·Aᴴ·A + β·C
+        
+Aᴴ is the conjugate transpose of Matrix A.
+
+### Naming
+
+The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
+
+| subroutine  | operation                             | complex | real | type of matrix C       | blas ref link                         |
+| ----------- | ------------------------------------- | ------- | ---- | ---------------------- | ------------------------------------- |
+| cherk/zherk | C ⟵ α·A·Aᴴ + β·C, or C ⟵ α·Aᴴ·A + β·C | A, C    | α, β | upper/lower triangular | [cherk][ref-cherk]/[zherk][ref-zherk] |
+
+_decl_
+
+```typescript
+function cherk|zherk(
+    uplo: 'u' | 'l',
+    trans: 'n' | 'c',
+    n: number,
+    k: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    beta: number,
+    c: Matrix,
+    ldc: number
+): void;
+```
+
+See: _[how to create Matrix](#matrix-constructors)_.     
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { cherk, zherk } = BLAS.level3;
+```
+
+## Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C
+
+### Naming
+
+The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
+
+| subroutine  | operation                             | complex    | real | type of matrix C       | blas ref link                         |
+| ----------- | ------------------------------------- | ---------- | ---- | ---------------------- | ------------------------------------- |
+| ssyrk/dsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | none       | none | α, A, β, C             | upper/lower triangular                | [ssyrk][ref-ssyrk]/[dsyrk][ref-dsyrk] |
+| csyrk/zsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | α, A, β, C | none | upper/lower triangular | [csyrk][ref-csyrk]/[zsyrk][ref-zsyrk] |
+
+_decl_
+
+```typescript
+function ssyrk|dsyrk(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    n: number,
+    k: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    beta: number,
+    c: Matrix,
+    ldc: number
+): void;
+
+function csyrk|zsyrk(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    n: number,
+    k: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    beta: number,
+    c: Matrix,
+    ldc: number
+): void;
+```
+
+See: _[how to create Matrix](#matrix-constructors)_.     
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { ssyrk, dsyrk, csyrk, zsyrk } = BLAS.level3;
+```
+
+## Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C
+
+### Naming
+
+The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
+
+| subroutine  | operation                             | complex    | real | type of matrix C       | blas ref link                         |
+| ----------- | ------------------------------------- | ---------- | ---- | ---------------------- | ------------------------------------- |
+| ssyrk/dsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | none       | none | α, A, β, C             | upper/lower triangular                | [ssyrk][ref-ssyrk]/[dsyrk][ref-dsyrk] |
+| csyrk/zsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | α, A, β, C | none | upper/lower triangular | [csyrk][ref-csyrk]/[zsyrk][ref-zsyrk] |
+
+_decl_  
+
+```javascript
+function ssyrk|dsyrk(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    n: number,
+    k: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    beta: number,
+    c: Matrix,
+    ldc: number
+): void;
+
+function csyrk|zsyrk(
+    uplo: 'u' | 'l',
+    trans: 'n' | 't' | 'c',
+    n: number,
+    k: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    beta: number,
+    c: Matrix,
+    ldc: number
+): void;
+```
+
+See: _[how to create Matrix](#matrix-constructors)_.     
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { ssyrk, dsyrk, csyrk, zsyrk } = BLAS.level3;
+```
+
+## Matrix-matrix operations C ⟵ α·_f(A)_·_h(B)_ + β·C or C ⟵ α·_h(B)_·_f(A)_ + β·C
+
+f(A) is the result of an operation on matrix A, like Aᵀ, Aᴴ, or A (no-op)
+
+h(B) is an operation on matrix B, like Bᵀ, Bᴴ, or B (no-op)
+
+S(A) is the set of all possible results of f(A) for a routine.
+
+S(B) is the set of all possible results of h(B) for a routine.
+
+### Naming
+
+The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
+
+| subroutine  | operation               | S(A)      | S(B)      | real          | complex       | type of matrix C | blas ref link                         |
+| ----------- | ----------------------- | --------- | --------- | ------------- | ------------- | ---------------- | ------------------------------------- |
+| sgemm/dgemm | α·_f̅(A)_·_h̅(B)_ + β·C | Aᵀ, A     | Bᵀ, B     | α, A, β, B, C | none          | m x n            | [sgemm][ref-sgemm]/[dgemm][ref-dgemm] |
+| cgemm/zgemm | α·_f̅(A)_·_h̅(B)_ + β·C | Aᴴ, Aᵀ, A | Bᴴ, Bᵀ, B | none          | α, A, β, B, C | m x n            | [cgemm][ref-cgemm]/[zgemm][ref-zgemm] |
+
+_decl_
+
+```typescript
+function sgemm|dgemm(
+    transA: 'n' | 't' | 'c',
+    transB: 'n' | 't' | 'c',
+    m: number,
+    n: number,
+    k: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    b: Matrix,
+    ldb: number,
+    beta: number,
+    c: Matrix,
+    ldc: number
+): void;
+
+function cgemm|zgemm(
+    transA: 'n' | 't' | 'c',
+    transB: 'n' | 't' | 'c',
+    m: number,
+    n: number,
+    k: number,
+    alpha: Complex,
+    a: Matrix,
+    lda: number,
+    b: Matrix,
+    ldb: number,
+    beta: Complex,
+    c: Matrix,
+    ldc: number
+): void
+```
+
+See: _[how to create Matrix](#matrix-constructors)_.     
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { sgemm, dgemm, cgemm, zgemm } = BLAS.level3;
+```
+
+## Matrix-matrix operations C ⟵ α·A·B + β·C or C ⟵ α·B·A + β·C
+       
+### Naming
+
+The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
+
+| subroutine  | operation                          | real          | complex       | type of matrix C | blas ref link                         |
+| ----------- | ---------------------------------- | ------------- | ------------- | ---------------- | ------------------------------------- |
+| chemm/zhemm | C ⟵ α·A·B + β·C or C ⟵ α·B·A + β·C | none          | α, A, B, β, C | m x n            | [chemm][ref-chemm]/[zhemm][ref-zhemm] |
+| ssymm/dsymm | C ⟵ α·A·B + β·C or C ⟵ α·B·A + β·C | α, A, B, β, C | none          | m x n            | [ssymm][ref-ssymm]/[dsymm][ref-dsymm] |
+| csymm/zsymm | C ⟵ α·A·B + β·C or C ⟵ α·B·A + β·C | none          | α, A, B, β, C | m x n            | [csymm][ref-csymm]/[zsymm][ref-zsymm] |
+
+_decl_
+
+```typescript
+function chemm|zhemm(
+    side: 'l' | 'r',
+    uplo: 'u' | 'l',
+    m: number,
+    n: number,
+    alpha: Complex,
+    a: Matrix,
+    lda: number,
+    b: Matrix,
+    ldb: number,
+    beta: Complex,
+    c: Matrix,
+    ldc: number
+): void;
+
+function ssymm|dsymm(
+    side: 'l' | 'r',
+    uplo: 'u' | 'l',
+    m: number,
+    n: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    b: Matrix,
+    ldb: number,
+    beta: number,
+    c: Matrix,
+    ldc: number
+): void
+
+function csymm|zsymm(
+    side: 'l' | 'r',
+    uplo: 'u' | 'l',
+    m: number,
+    n: number,
+    alpha: Complex,
+    a: Matrix,
+    lda: number,
+    b: Matrix,
+    ldb: number,
+    beta: Complex,
+    c: Matrix,
+    ldc: number
+): void 
+```
+
+See: _[how to create Matrix](#matrix-constructors)_.     
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { chemm, zhemm,  ssymm, dsymm, csymm, zsymm } = BLAS.level3;
+```
+
+## Matrix-matrix operations B ⟵ α·f(A)·B or B ⟵ α·B·f(A)
+
+f(A) is the result of an operation on matrix A, like Aᵀ, Aᴴ, or A (no-op)
+
+S(A) is the set of all possible results of f(A) for a routine.
+
+### Naming
+
+The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
+
+| subroutine  | operation                    | S(A)      | real | complex | type of matrix B | blas ref link                         |
+| ----------- | ---------------------------- | --------- | ---- | ------- | ---------------- | ------------------------------------- |
+| strmm/dtrmm | B ⟵ α·f(A)·B or B ⟵ α·B·f(A) | A, Aᵀ     | α, B | none    | m x n            | [strmm][ref-strmm]/[dtrmm][ref-dtrmm] |
+| ctrmm/ztrmm | B ⟵ α·f(A)·B or B ⟵ α·B·f(A) | A, Aᵀ, Aᴴ | none | α, A, B | m x n            | [ctrmm][ref-ctrmm]/[ztrmm][ref-ztrmm] |
+
+_decl_
+
+```typescript
+function strmm|dtrmm(
+    side: 'l' | 'r',
+    uplo: 'u' | 'l',
+    transA: 'n' | 't' | 'c',
+    diag: 'u' | 'n',
+    m: number,
+    n: number,
+    alpha: number,
+    a: Matrix,
+    lda: number,
+    b: Matrix,
+    ldb: number
+): void;
+
+function ctrmm|ztrmm(
+    side: 'l' | 'r',
+    uplo: 'u' | 'l',
+    transA: 'n' | 't' | 'c',
+    diag: 'u' | 'n',
+    m: number,
+    n: number,
+    alpha: Complex,
+    a: Matrix,
+    lda: number,
+    b: Matrix,
+    ldb: number
+): void;
+```
+
+See: _[how to create Matrix](#matrix-constructors)_.     
+
+Usage:
+
+```javascript
+const BLAS = require('blasjs');
+const { strmm, dtrmm,  ctrmm, ztrmm } = BLAS.level3;
+```
+
+## Solves the matrix equations: _f( A )_·X = α·B, or X·_f( A )_ = α·B
+
+f(A) is the result of an operation on matrix A, like Aᵀ, Aᴴ, or A (no-op)
+
+S(A) is the set of all possible results of f(A) for a routine.
+
+### strsm, dtrsm, ctrsm, ztrsm 
+
+The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
+
+| subroutine  | operation                             | S(A)      | real    | complex | type of matrix B | blas ref link                         |
+| ----------- | ------------------------------------- | --------- | ------- | ------- | ---------------- | ------------------------------------- |
+| strsm/dtrsm | _f( A )_·X = α·B, or X·_f( A )_ = α·B | A, Aᵀ     | α, A, B | none    | m x n            | [strsm][ref-strsm]/[dtrsm][ref-dtrsm] |
+| ctrsm/ztrsm | _f( A )_·X = α·B, or X·_f( A )_ = α·B | A, Aᵀ, Aᴴ | none    | α, A, B | m x n            | [ctrsm][ref-ctrsm]/[ztrsm][ref-ztrsm] |
 
 
 
-#### Naming
-
-* `cgbmv`:
-* `chbmv`:
-* `dgbmv`:
-* `dsbmv`:
-* `sgbmv`:
-* `ssbmv`:
-* `zgbmv`:
-* `zhbmv`:
-* `ctbmv`:
-* `dtbmv`:
-* `stbmv`:
-* `ztbmv`:
-* `cgemv`:
-* `chemv`:
-* `dgemv`:
-* `sgemv`:
-* `zgemv`:
-* `zhemv`:
-* `chpmv`:
-* `dspmv`:
-* `sspmv`:
-* `zhpmv`:
-* `dsymv`:
-* `ssymv`:
 
 [srotg]: https://en.wikipedia.org/wiki/Givens_rotation
 [givenmodified]: https://www.ibm.com/support/knowledgecenter/en/SSFHY8_5.5.0/com.ibm.cluster.essl.v5r5.essl100.doc/am5gr_srotm.htm
@@ -2157,7 +2893,6 @@ const { sspr, dspr, ssyr, dsyr } = BLAS.level2;
 [ref-dspr]: http://www.netlib.org/lapack/explore-html/dd/dba/dspr_8f.html
 [ref-ssyr]: http://www.netlib.org/lapack/explore-html/d6/dac/ssyr_8f.html
 [ref-dsyr]: http://www.netlib.org/lapack/explore-html/d3/d60/dsyr_8f.html 
-
  
 [ref-cgbmv]: http://www.netlib.org/lapack/explore-html/d0/d75/cgbmv_8f.html
 [ref-chbmv]: http://www.netlib.org/lapack/explore-html/db/dc2/chbmv_8f.html
@@ -2184,5 +2919,58 @@ const { sspr, dspr, ssyr, dsyr } = BLAS.level2;
 [ref-dsymv]: http://www.netlib.org/lapack/explore-html/d8/dbe/dsymv_8f.html
 [ref-ssymv]: http://www.netlib.org/lapack/explore-html/d2/d94/ssymv_8f.html
         
+[ref-stpmv]:
+[ref-dtpmv]:
+[ref-ctpmv]:
+[ref-ztpmv]:
+[ref-strmv]:
+[ref-dtrmv]:
+[ref-ctrmv]:
+[ref-ztrmv]:
+[ref-stbsv]: 
+[ref-dtbsv]:
 
+[ref-ctbsv]:
+[ref-ztbsv]:
 
+[ref-stpsv]:
+[ref-dtpsv]:
+
+[ref-ctpsv]:
+[ref-ztpsv]:
+
+[ref-ctrsv]:
+[ref-ztrsv]:
+
+[ref-strsv]:
+[ref-dtrsv]:
+
+[ref-cher2k]:
+[ref-zher2k]:
+[ref-cherk]:
+[ref-zherk]:
+[ref-ssyrk]:
+[ref-dsyrk]:
+[ref-csyrk]:
+[ref-zsyrk]:
+
+[ref-sgemm]:
+[ref-dgemm]:
+[ref-cgemm]:
+[ref-zgemm]:
+[ref-chemm]:
+[ref-zhemm]:
+[ref-strmm]:
+[ref-dtrmm]:
+[ref-ctrmm]:
+[ref-ztrmm]:
+
+[ref-ssymm]:
+[ref-dsymm]:
+
+[ref-csymm]:
+[ref-zsymm]:
+[ref-strsm]:
+[ref-dtrsm]:
+[ref-ctrmm]:
+[ref-ztrmm]:
