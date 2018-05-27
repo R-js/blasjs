@@ -54,6 +54,13 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 ```
 
 # Table of Contents
+- [BLASjs (<span style="color:red; font-weight: bold;">Basic Linear Algebra Subprograms</span>)](#blasjs-span-stylecolorred-font-weight-boldbasic-linear-algebra-subprogramsspan)
+            - [summary](#summary)
+            - [Node and Web](#node-and-web)
+    - [Installation](#installation)
+            - [node](#node)
+            - [web](#web)
+- [Table of Contents](#table-of-contents)
 - [Language differences with FORTRAN/BLAS.](#language-differences-with-fortranblas)
 - [Helper functions](#helper-functions)
     - [Types](#types)
@@ -2436,7 +2443,7 @@ The naming in blasjs does not reflect the precision used, precision is determine
 
 | subroutine  | operation                             | complex    | real | type of matrix C       | blas ref link                         |
 | ----------- | ------------------------------------- | ---------- | ---- | ---------------------- | ------------------------------------- |
-| ssyrk/dsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | none       | none | α, A, β, C             | upper/lower triangular                | [ssyrk][ref-ssyrk]/[dsyrk][ref-dsyrk] |
+| ssyrk/dsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | none       | α, A, β, C             | upper/lower triangular                | [ssyrk][ref-ssyrk]/[dsyrk][ref-dsyrk] |
 | csyrk/zsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | α, A, β, C | none | upper/lower triangular | [csyrk][ref-csyrk]/[zsyrk][ref-zsyrk] |
 
 _decl_
@@ -2890,3 +2897,5 @@ The naming in blasjs does not reflect the precision used, precision is determine
 [ref-dtrsm]: http://www.netlib.org/lapack/explore-html/de/da7/dtrsm_8f.html
 [ref-ctrmm]: http://www.netlib.org/lapack/explore-html/d4/d9b/ctrmm_8f.html
 [ref-ztrmm]: http://www.netlib.org/lapack/explore-html/d8/de1/ztrmm_8f.html
+[ref-csyr2k]: http://www.netlib.org/lapack/explore-html/de/d7e/csyr2k_8f.html
+[ref-zsyr2k]: http://www.netlib.org/lapack/explore-html/df/d20/zsyr2k_8f.html
