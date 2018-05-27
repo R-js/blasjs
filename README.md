@@ -2752,7 +2752,7 @@ f(A) is the result of an operation on matrix A, like Aᵀ, Aᴴ, or A (no-op)
 
 S(A) is the set of all possible results of f(A) for a routine.
 
-### Naming
+### strmm, dtrmm, ctrmm, ztrmm 
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
 
