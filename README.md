@@ -2497,10 +2497,10 @@ S(B) is the set of all possible results of h(B) for a routine.
 
 The naming in blasjs does not reflect the precision used, precision is determined by [argument construction][precision-note]. The naming is maintained for compatibility with the reference implementation.
 
-| subroutine  | operation               | S(A)      | S(B)      | real          | complex       | type of matrix C | blas ref link                         |
-| ----------- | ----------------------- | --------- | --------- | ------------- | ------------- | ---------------- | ------------------------------------- |
-| sgemm/dgemm | α·_f̅(A)_·_h̅(B)_ + β·C | Aᵀ, A     | Bᵀ, B     | α, A, β, B, C | none          | m x n            | [sgemm][ref-sgemm]/[dgemm][ref-dgemm] |
-| cgemm/zgemm | α·_f̅(A)_·_h̅(B)_ + β·C | Aᴴ, Aᵀ, A | Bᴴ, Bᵀ, B | none          | α, A, β, B, C | m x n            | [cgemm][ref-cgemm]/[zgemm][ref-zgemm] |
+| subroutine  | operation                 | S(A)      | S(B)      | real          | complex       | type of matrix C | blas ref link                         |
+| ----------- | ------------------------- | --------- | --------- | ------------- | ------------- | ---------------- | ------------------------------------- |
+| sgemm/dgemm | C ⟵ α·_f(A)_·_h(B)_ + β·C | Aᵀ, A     | Bᵀ, B     | α, A, β, B, C | none          | m x n            | [sgemm][ref-sgemm]/[dgemm][ref-dgemm] |
+| cgemm/zgemm | C ⟵ α·_f(A)_·_h(B)_ + β·C | Aᴴ, Aᵀ, A | Bᴴ, Bᵀ, B | none          | α, A, β, B, C | m x n            | [cgemm][ref-cgemm]/[zgemm][ref-zgemm] |
 
 _decl_
 
