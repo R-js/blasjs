@@ -261,7 +261,7 @@ Usage:
 ```javascript
 const blas = require('blasjs');
 
-const { fortranArrComplex64 } = helper;
+const { helper: { fortranArrComplex64 } } = blas;
 
 // You can also use the helper "complex" or "muxComplex"
 // to generate JS complex arrays
