@@ -2696,7 +2696,7 @@ The naming in blasjs does not reflect the precision used, precision is determine
 [float64-array]: [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array]
 
 [mimic-fortran-args]: [#mimicking-FORTRAN-OUT-Arguments]
-[precision-note]: [#a-note-on-numeric-precision]
+[precision-note]: #a-note-on-numeric-precision
 [language-differences]: [#language-differences-with-fortranblas]
 [givens-rotation]: https://en.wikipedia.org/wiki/Givens_rotation#Stable_calculation
 [apply-givens-rotation]: https://en.wikipedia.org/wiki/Givens_rotation#Stable_calculation
