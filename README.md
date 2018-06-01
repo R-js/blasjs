@@ -2691,13 +2691,13 @@ The naming in blasjs does not reflect the precision used, precision is determine
 
 [blas-site]: http://www.netlib.org/blas/
 [blas-source]: https://github.com/Reference-LAPACK/lapack/tree/master/BLAS
-[float32-array]: [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array]
+[float32-array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array
 
-[float64-array]: [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array]
+[float64-array]:https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array]
 
-[mimic-fortran-args]: [#mimicking-FORTRAN-OUT-Arguments]
+[mimic-fortran-args]: #mimicking-FORTRAN-OUT-Argument]
 [precision-note]: #a-note-on-numeric-precision
-[language-differences]: [#language-differences-with-fortranblas]
+[language-differences]: #language-differences-with-fortranblas
 [givens-rotation]: https://en.wikipedia.org/wiki/Givens_rotation#Stable_calculation
 [apply-givens-rotation]: https://en.wikipedia.org/wiki/Givens_rotation#Stable_calculation
 [ref-snrm2]: http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html
