@@ -5,7 +5,6 @@ dist/
 TODO
 npm-debug.log*
 scratch-pad
-test/fortran-snippets
 *.pem
 .*
 notes.md
