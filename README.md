@@ -53,7 +53,7 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 </script>
 ```
 
-# Table of Contents
+# <a i="toc"></a>Table of Contents
 - [Language differences with FORTRAN/BLAS.](#language-differences-with-fortranblas)
 - [Helper functions](#helper-functions)
     - [Types](#types)
