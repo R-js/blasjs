@@ -51,7 +51,7 @@
         "webpack": "^2.7.0",
         "webpack-node-externals": "^1.6.0"
     },
-    "homepage": "https://github.com/jacobbogers/blasjs.js#readme",
+    "homepage": "https://github.com/jacobbogers/blasjs#readme",
     "keywords": [
         "blas",
         "linear algebra",
