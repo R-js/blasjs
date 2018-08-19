@@ -1,4 +1,5 @@
-      PROGRAM dsymvtest
+c
+      PROGRAM zgbmvtest
 c      
 c    A*x = b,   or   A**T*x = b,
 c SUBROUTINE ZGBMV(TRANS,M,N,KL,KU,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
@@ -7,7 +8,7 @@ c
 *>
 *>    y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,   or
 *>
-*>    y := alpha*A**H*x + beta*y,
+*>    y := alpha*A**H*x + beta*y, /
 
       EXTERNAL ZGBMV, COPY, ZEROA, COPYMA,FILL
       EXTERNAL FILLM, PRNMATR, PRNVEC, CRCMPLX
@@ -28,7 +29,7 @@ c
       DOUBLE PRECISION ARE(LDA,N), AIM(LDA,N)
          
          
-      DATA ((ARE(I,J),I=1,LDA),J=1,N)/
+      DATA ((ARE(I,J),I=1,LDA),J=1,N)  /
      +  1.2629542848807933,
      +   -0.3262333607056494,
      +   1.3297992629225006,
@@ -74,9 +75,9 @@ c
      +   0,
      +   0,
      +   0,
-     +   0,
-     +   0,
-     +   0.04672617218835198/   
+     *   0,
+     x   0,
+     +   0.04672617218835198/  
 
       DATA ((AIM(I,J),I=1,LDA),J=1,N)/
      +   0.9921603654457979,
