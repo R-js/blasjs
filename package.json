@@ -43,6 +43,7 @@
         "schema-utils": "^0.4.5",
         "shx": "^0.2.2",
         "source-map-support": "^0.5.3",
+        "sshpk": "^1.14.2",
         "ts-node": "^4.1.0",
         "tslint": "^5.9.1",
         "tslint-loader": "^3.5.3",
