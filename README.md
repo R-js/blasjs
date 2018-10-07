@@ -25,8 +25,10 @@ as-well as in a server side node environment.
 #### node
 
 ```bash
-npm i blasjs
+$ npm i blasjs
 ```
+
+Usage:
 
 ```javascript
 //node
@@ -37,12 +39,12 @@ npm i blasjs
 
 #### web
 
-The module directory contains a minimized bundle for use in html `<script>` tag. The library is attached to the `window.BLAS` object after loading.
+The module directory contains a standalone bundle for use in html `<script>` insertion. The library assigns `window.BLAS` after loading.
 
 ```html
-<!-- script src="your_server_url/blasjs.min.js"></script -->
+<!-- <script src="your_server_url/blasjs.min.js"></script> -->
 <!-- this example uses unpkg as CDN -->
-<script src="https://unpkg.com/blasjs@latest/dist/lib/blasjs.min.js">
+<script src="https://unpkg.com/blasjs@latest/dist/lib/blasjs.min.js"></script>
 <script>
   const blas = window.BLAS; //UMD exposes it as BLAS
 
@@ -54,7 +56,11 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
 ```
 
 # Table of Contents
-- [Language differences with FORTRAN/BLAS.](#language-differences-with-fortranblas)
+
+<details>
+  <summary><b>Table of Contents</b> (click to show)</summary>
+
+- [Language differences with FORTRAN/BLAS](#language-differences-with-fortranblas)
 - [Helper functions](#helper-functions)
     - [Types](#types)
         - [`fpArray`](#fparray)
@@ -158,8 +164,9 @@ The module directory contains a minimized bundle for use in html `<script>` tag.
     - [Solves the matrix equations: _f( A )_·X = α·B, or X·_f( A )_ = α·B](#solves-the-matrix-equations-_f-a-_x--αb-or-x_f-a-_--αb)
         - [strsm, dtrsm, ctrsm, ztrsm](#strsm-dtrsm-ctrsm-ztrsm)
 
+</details>
 
-# Language differences with FORTRAN/BLAS.
+# Language differences with FORTRAN/BLAS
 
 FORTRAN language can instrinsicly work with non-zero based multidimensional arrays and complex numbers. Below are some examples from FORTRAN that have no Javascript counterpart. The reference implementation of BLAS functions expect inputs of these types.
 
@@ -211,8 +218,7 @@ before anything else.
 
 # Helper functions
 
-`blasjs`
-uses "FORTRAN like" complex number 32/64 bit precision multidimensional complex/real data.
+`blasjs` uses "FORTRAN like" complex number 32/64 bit precision multidimensional complex/real data.
 These helper functions have been designed to significantly ease the use of working with these
 data types in JavaScript.
 
@@ -224,17 +230,25 @@ Typescript types/interfaces to mimic FORTRAN native (complex) multidimensional a
 
 Wraps JS types [Float32Array][float32-array] and [Float64Array][float64-array] into a single type.
 
+<details>
+  <summary><b>Details</b> (click to show)</summary>
+
 _decl_:
 
 ```typescript
 export type fpArray = Float32Array | Float64Array;
 ```
 
+</details>
+
 ### `FortranArr`
 
 Abstraction of a 1 dimensional single/double precision complex/real FORTRAN array.
 Used by [level 1](#level-1) and [level 2](#level-2) `blasjs` functions.
 `FortranArr`objects should be created by the [`fortranArrComplex32`][float32-array] and [`fortranArrComplex64`][float64-array] helper functions.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_:
 
@@ -333,9 +347,14 @@ let old = sp.s(3)(0.11, -0.9);
 // {re: 2.3, im: 0.6 }
 ```
 
+</details>
+
 ### `Type Complex`
 
 Typescript definition of a complex scalar.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_:
 
@@ -357,6 +376,8 @@ const complexArr: Complex[] [
 ];
 ```
 
+</details>
+
 ### `Matrix`
 
 The `Matrix` object is the input of many level-2 and level-3 `blasjs` functions.
@@ -370,6 +391,9 @@ In this section the internals of `Matrix` are explained in detail and how `blasj
 
 The `Matrix` object has 2 properties `r` and `i` for respectively real and imaginary parts of matrix elements. These are the actual aforementioned JS TypedArrays. The imaginary property part is optional if it is not defined the Matrix represents solely an array of real elements.
 
+<details>
+  <summary><b>Details</b> (click to show)</summary>
+
 ```typescript
 declare type Matrix = { //Incomplete declaration
     .
@@ -379,9 +403,14 @@ declare type Matrix = { //Incomplete declaration
 }
 ```
 
+</details>
+
 #### Handling FORTRAN matrices (multidimensional Arrays).
 
 Contrary to languages like JavaScript. FORTRAN defines arrays ( aka `DIMENSIONS` in FORTRAN lingo ) as 1 based arrays by default.. This can be changed by specifying a different base in the declaration.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 Some examples:
 
@@ -428,12 +457,17 @@ At = [a11,a21, a12, a22]
 
 In case of complex values for A, the real part will be stored in `r` and the imaginary part in `i` each in the same column-first manner.
 
-#### performance
+</details>
+
+#### Performance
 
 Direct access to TypedArrays within the `Matrix` object is the preferable way to get/set matrix data.
 Since BLAS (and therefore `blasjs`) functions access matrices mostly to iterate over matrix row's first . It was decided to story 2 dimensional an a column-first basis.
 
 To help with the calculation of finding/setting an element A(i,j) in `Matrix` the following helper member functions have been added to `Matrix`.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare type Matrix = { //SHOW PARTIAL TYPE
@@ -449,6 +483,8 @@ declare type Matrix = { //SHOW PARTIAL TYPE
     .
 }
 ```
+
+</details>
 
 Explanation:
 
@@ -468,6 +504,9 @@ One can create/transform new Matrix instances form existing onces. A copy of all
 
 Slices a rectangular piece of data out of an matrix into a new `Matrix` instance. **All arguments are FORTRAN-style non-zero based indexes**.
 
+<details>
+  <summary><b>Details</b> (click to show)</summary>
+
 ```typescript
 declare type Matrix = { // only "slice" is shown
    .
@@ -483,10 +522,15 @@ declare type Matrix = { // only "slice" is shown
 
 _[See Example](#matrix-examples)_
 
+</details>
+
 #### `Matrix.prototype.setLower`
 
 Returns a new Matrix where everything below the matrix diagonal is set to a `value`.
 Sets the real (and imaginary part, if it exist) to said value.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare type Matrix = { // only "setLower" is shown.
@@ -498,10 +542,15 @@ declare type Matrix = { // only "setLower" is shown.
 
 _[See Example](#matrix-examples)_
 
+</details>
+
 #### `Matrix.prototype.setUpper`
 
 Returns a new Matrix where everything _below_ the matrix diagonal is set to a `value`.
 Sets the real (and imaginary part, if it exist) to said value.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare type Matrix = { //only "setUpper" is shown
@@ -513,10 +562,15 @@ declare type Matrix = { //only "setUpper" is shown
 
 _[See Example](#matrix-examples)_
 
+</details>
+
 #### `Matrix.prototype.upperBand`
 
 Returns a new `Matrix` object where the `k` super-diagonals are retained into the new copy.
 The efficient storage format of `BLAS` band matrices is used.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare type Matrix = { //only "upperBand" is shown
@@ -530,10 +584,15 @@ The default value for `k` is the the maximum size possible for the number of sup
 
 _[See Example](#matrix-examples)_
 
+</details>
+
 #### `Matrix.prototype.lowerBand`
 
 Returns a new `Matrix` object where the `k` sub-diagonals are retained into the new copy.
 The efficient storage format of `BLAS` band matrices is used.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare type Matrix = { // Only "lowerBand" is shown
@@ -547,9 +606,14 @@ The default value for `k` is the the maximum size possible for the number of sub
 
 _[See Example](#matrix-examples)_
 
+</details>
+
 #### `Matrix.prototype.real`
 
 Returns a new `Matrix` object where with only real elements (omits the imaginary part during copy).
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare type Matrix = { // Only "real" is shown
@@ -561,10 +625,15 @@ declare type Matrix = { // Only "real" is shown
 
 _[See Example](#matrix-examples)_
 
+</details>
+
 #### `Matrix.prototype.imaginary`
 
 Returns a new `Matrix` object where with only imaginary part of the element (omits the real part during copy).
-**If there were now imaginary elements **
+**If there were now imaginary elements**
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare type Matrix = { // Only "imaginary" is shown.
@@ -576,6 +645,8 @@ declare type Matrix = { // Only "imaginary" is shown.
 
 _[See Example](#matrix-examples)_
 
+</details>
+
 #### Packed Matrices
 
 BLAS ( and therefore `blasjs` ) can work with upper/lower-matrices and band-matrices in the most compacted form, aka `packed matrices`.
@@ -584,6 +655,9 @@ With `packed matrices` there are no unused elements in the matrix (no zeros). Pa
 #### `Matrix.prototype.packedUpper`
 
 Creates a packed array from a normal/upper Matrix only referencing the diagonal and super-diagonals.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare type Matrix = { // Only "packedUpper" is shown.
@@ -597,9 +671,14 @@ _[See Example](#matrix-examples)_
 
 The default value for `k` is the the maximum size possible for the number of super-diagonals: ( `nrRows-1` )
 
+</details>
+
 #### `Matrix.prototype.packedLower`
 
 Creates a packed array from a normal/upper Matrix only referencing the diagonal and sub-diagonals.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare type Matrix = { // Only "packedUpper" is shown.
@@ -623,6 +702,8 @@ declare type Matrix = { // Only "packedUpper" is shown.
 
 The default value for `k` is the the maximum size possible for the number of sub-diagonals: ( `nrRows - 1` )
 
+</details>
+
 #### Convert Matrix object to a JS array
 
 The `Matrix` object can convert the underlying TypedArray(s) to real JavaScript arrays.
@@ -630,6 +711,9 @@ The `Matrix` object can convert the underlying TypedArray(s) to real JavaScript 
 #### `Matrix.prototype.toArr`
 
 Creates a normal JS Array with element of type 'number' or of type [Complex](#type-complex)
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare type Matrix = { // Only "toArr" is shown.
@@ -640,6 +724,8 @@ declare type Matrix = { // Only "toArr" is shown.
 ```
 
 _[See Example](#matrix-examples)_
+
+</details>
 
 #### Summary: Full type declaration of Matrix
 
@@ -678,6 +764,9 @@ declare type Matrix = {
 #### Matrix Examples
 
 Common usage of the Matrix type.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```javascript
 const blas = require('../blasjs');
@@ -777,6 +866,8 @@ A.toArr(); // returns JavaScript Array
 */
 ```
 
+</details>
+
 ## General Helpers
 
 Collection of helper function to manipulate common JS array and object types in a functional way.
@@ -784,6 +875,9 @@ Collection of helper function to manipulate common JS array and object types in 
 ### `arrayrify`
 
 Creates a new function from an existing one, to add the ability to accept vectorized input.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _Example_:
 
@@ -809,11 +903,16 @@ sin() //
 //NaN  same as Math.sin()
 ```
 
+</details>
+
 ### `complex`
 
 Mimics the GNU Fortran extension [complex](https://gcc.gnu.org/onlinedocs/gfortran/COMPLEX.html).
 Creates a JS object that represents a complex scalar number.
 Used by `blasjs` for scalar input arguments.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _Example_:
 
@@ -832,9 +931,14 @@ const c3 = complex(0.5);
 //c3 = { re: 0.5, im:0 }
 ```
 
+</details>
+
 ### `each`
 
 Curried functional analog to `Array.prototype.forEach`, but takes arbitrary input.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _Example_:
 
@@ -867,11 +971,16 @@ each([])(console.log)
 //nothing happens
 ```
 
+</details>
+
 ### `map`
 
 Curried functional analog to `Array.prototype.map`, but takes arbitrary input.
 
 :warning: Forces the output to be a an array regardless of the input.
+
+<details>
+  <summary><b>Example</b> (click to show)</summary>
 
 _Example_:
 
@@ -898,10 +1007,15 @@ map()()
 //[]
 ```
 
+</details>
+
 ### `muxCmplx`
 
 Creates an array of complex numbers from arrayed input.
 The result is always an array type.
+
+<details>
+  <summary><b>Example</b> (click to show)</summary>
 
 _Example_:
 
@@ -945,9 +1059,14 @@ muxCmplx(1,-2)//
 //[ { re: 1, im: -2 } ]
 ```
 
+</details>
+
 ### `numberPrecision`
 
 Enforces significant figure of a number, or on the properties of a JS object (deep search) with numeric values.
+
+<details>
+  <summary><b>Example</b> (click to show)</summary>
 
 _Example_:
 
@@ -972,6 +1091,8 @@ _4([0.123456, 0.78901234]);
 //[ 0.1235, 0.789 ]
 ```
 
+</details>
+
 ## Vector Constructors
 
 These constructors create the `FortranArr` object for working with single/double precision complex/real Arrays.
@@ -979,6 +1100,9 @@ These constructors create the `FortranArr` object for working with single/double
 ### `fortranArrComplex32`
 
 Constructs a [FortranArr](#fortranArr) object using [Float32Array][float32-array] as the underlying array(s) (plural in the case of complex) elements.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare function fortranArrComplex32(
@@ -997,9 +1121,14 @@ declare function fortranArrComplex32(
 
 See _[Examples](#vector-creation-examples)_
 
+</details>
+
 ### `fortranArrComplex64`
 
 Constructs a [FortranArr](#fortranArr) object using [Float64Array][float64-array] as the underlying array(s) (plural in the case of complex) elements.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare function fortranArrComplex64(
@@ -1016,7 +1145,12 @@ declare function fortranArrComplex64(
     * An array of number values.
 *  `offset`: the Fortran dimension offset (defaults to 1)
 
+</details>
+
 #### Vector creation examples
+
+<details>
+  <summary><b>Example</b> (click to show)</summary>
 
 ```javascript
 const blas = require('blasjs');
@@ -1069,6 +1203,8 @@ const sp4 = fortranArrComplex64(123)(4);
 }*/
 ```
 
+</details>
+
 ## Matrix Constructors
 
 These constructors create the [`Matrix`](#matrix) object for working with single/double precision complex/real Matrices.
@@ -1076,6 +1212,9 @@ These constructors create the [`Matrix`](#matrix) object for working with single
 ### `fortranMatrixComplex32`
 
 Constructs a [Matrix](#matrix) object using [Float32Array][float32-array] as the underlying array(s) (plural in the case of complex) elements.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare function fortranMatrixComplex32(...rest: (Complex | Complex[])[]):
@@ -1096,10 +1235,14 @@ declare function fortranMatrixComplex32(...rest: (Complex | Complex[])[]):
 
 See _[Examples](#matrix-creation-examples)_
 
+</details>
 
 ### `fortranMatrixComplex64`
 
 Constructs a [Matrix](#matrix) object using [Float64Array][float64-array] as the underlying array(s) (plural in the case of complex) elements.
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 declare function fortranMatrixComplex64(...rest: (Complex | Complex[])[]):
@@ -1118,7 +1261,12 @@ declare function fortranMatrixComplex64(...rest: (Complex | Complex[])[]):
 *  `rowBase`: FORTRAN offset for the first dimension (rows) as explained in [Language differences][language-differences].
 *  `rowBase`: FORTRAN offset for the second dimension (columns) as explained in [Language differences][language-differences].
 
+</details>
+
 ### Matrix Creation Examples
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```javascript
 const blas = require('blasjs');
@@ -1188,6 +1336,8 @@ const m2 = A64(3, 3, -2, -3);
 const m3 = A64(3, 3, 1, 1);
 ```
 
+</details>
+
 # A note on numeric precision
 
 In `blasjs`, contrary to the FORTRAN reference implementation, the numeric precision of a routine, is not determined by its name but by [*how*](#vector-constructors) its arguments like [`FortranArr`](#fortranarr) and [`Matrix`](#matrix) are constructed before used as arguments in `blasjs` routines. The original FORTRAN names are kept for backwards compatibility to ease the porting of FORTRAN code toward `blasjs`.
@@ -1217,6 +1367,9 @@ xᵀ is the _transpose_ of x
 * `snrm2`: real, [single or double precision][precision-note]. See [blas ref][ref-snrm2].
 * `dnrm2`: real, (alias for `dnrm2`). See [blas ref][ref-dnrm2].
 
+<details>
+  <summary><b>Details</b> (click to show)</summary>
+
 _decl_
 
 ```typescript
@@ -1235,11 +1388,13 @@ const BLAS = require('blasjs');
 const { scnrm2, dznrm2, snrm2, dnrm2 } = BLAS.level1;
 ```
 
+</details>
+
 ## Construct a Givens plane rotation
 
 See [wiki][givens-rotation].
 
-```Math
+```math
  |c  -s| × |a| =   |r |
  |s   c|   |b|     |0 |
 
@@ -1252,6 +1407,9 @@ See [wiki][givens-rotation].
 * `drotg`: real, [single or double precision][precision-note]. See [blas ref][ref-drotg].
 * `crotg`: complex, [single or double precision][precision-note]. See [blas ref][ref-crotg].
 * `zrotg`: complex, (alias for `crotg`). See [blas ref][ref-zrotg].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1269,6 +1427,8 @@ const BLAS = require('blasjs');
 const { srotg, drotg, crotg, zrotg } = BLAS.level1;
 ```
 
+</details>
+
 ## Construct the **modified** Givens rotation matrix `H`
 
 Construct the modified Givens transformation matrix H which zeros
@@ -1279,6 +1439,9 @@ See [researchgate.net][construct-modified-givens-transformation].
 
 * `srotmg`: real, (alias for `drotmg`). See [blas ref][ref-srotmg].
 * `drotmg`: real, [single or double precision][precision-note]. See [blas ref][ref-drotmg].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1296,6 +1459,8 @@ const BLAS = require('blasjs');
 const { srotmg, drotmg } = BLAS.level1;
 ```
 
+</details>
+
 ## Apply the modified Givens Transformation
 
 See [wiki][apply-modified-givens-transformation].
@@ -1304,6 +1469,9 @@ See [wiki][apply-modified-givens-transformation].
 
 * `srotm`: real, (alias for `drotm`). See [blas ref][ref-srotm].
 * `drotm`: real, [single or double precision][precision-note]. See [blas ref][ref-drotm].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1322,6 +1490,8 @@ const BLAS = require('blasjs');
 const { srotm, drotm } = BLAS.level1;
 ```
 
+</details>
+
 ## Applies a plane rotation
 
 See [researchgate.net][construct-modified-givens-transformation].
@@ -1332,6 +1502,9 @@ See [researchgate.net][construct-modified-givens-transformation].
 * `drot`: real, [single or double precision][precision-note]. See [blas ref][ref-drot].
 * `csrot`: complex, (alias for `zdrot`). See [blas ref][ref-csrot].
 * `zdrot`: complex, [single or double precision][precision-note]. See [blas ref][ref-zdrot].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1352,6 +1525,8 @@ const BLAS = require('blasjs');
 const { srot, drot, csrot, zdrot } = BLAS.level1;
 ```
 
+</details>
+
 ## Scale a vector by a constant
 
 x ⟵ α·x
@@ -1364,6 +1539,9 @@ x ⟵ α·x
 * `zscal`: Scales a COMPLEX vector with a COMPLEX constant. See [blas ref][ref-zscal].
 * `csscal`: Alias for `zdscal`. [blas ref][ref-csscal].
 * `zdscal`: Scales a COMPLEX vector with a REAL constant. See [blas ref][ref-zdscal].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1385,6 +1563,8 @@ const BLAS = require('blasjs');
 const { sscal, dscal, cscal, zscal, csscal, zdscal } = BLAS.level1;
 ```
 
+</details>
+
 ## Takes the sum of the absolute values of the components of vector
 
 s ⟵ ∑ ∥ Re( x ) ∥ + ∥ Im( x ) ∥
@@ -1395,6 +1575,9 @@ s ⟵ ∑ ∥ Re( x ) ∥ + ∥ Im( x ) ∥
 * `dasum`: uses REAL vector, ( [single or double precision][precision-note] ). See [blas-ref][ref-dasum].
 * `scasum`: Alias for `dzasum`. See [blas ref][ref-scasum].
 * `dzasum`: uses Complex vector, ( [single or double precision][precision-note] ). See [blas-ref][ref-dzasum].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1414,6 +1597,8 @@ const BLAS = require('blasjs');
 const { sasum, dasum, scasum, dzasum } = BLAS.level1;
 ```
 
+</details>
+
 ## Interchanges 2 vectors
 
 Swap 2 vectors.
@@ -1424,6 +1609,9 @@ Swap 2 vectors.
 * `dswap`: REAL vector, ( [single or double precision][precision-note] ). See [blas ref][ref-dasum].
 * `cswap`: Alias for `zswap`. See [blas ref][ref-xcswap].  
 * `zswap`: REAL vector, ( [single or double precision][precision-note] ). See [blas ref][ref-zswap].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1443,6 +1631,8 @@ const BLAS = require('blasjs');
 const { sswap, dswap, cswap, zswap } = BLAS.level1;
 ```
 
+</details>
+
 ## Dot product of two complex vectors
 
   xᵀ·y or xᴴ·y
@@ -1453,6 +1643,9 @@ const { sswap, dswap, cswap, zswap } = BLAS.level1;
 * `cdotc`: Alias for `zdotc`. See [blas ref][ref-cdotc].
 * `zdotu`: `xᵀ·y`. Complex arguments, ( [single or double precision][precision-note] ). See [blas-ref][ref-zdotu].
 * `zdotc`: `xᴴ·y`. The fist complex vector argument is made conjugate, ( [single or double precision][precision-note] ). See [blas-ref][ref-zdotc].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1477,6 +1670,8 @@ const BLAS = require('blasjs');
 const { cdotu, cdotc, zdotu, zdotc } = BLAS.level1;
 ```
 
+</details>
+
 ## Dot product of two non complex vectors
   
 xᵀ·y
@@ -1487,6 +1682,9 @@ xᵀ·y
 * `ddot`: Alias for `dsdot`. See [blas ref][ref-ddot].
 * `sdsdot`: Alias for `dsdot`. See [blas ref][ref-sdsdot].
 * `dsdot`: `xᵀ·y` Inner product of 2 vectors ( [single or double precision][precision-note] ). See [blas ref][ref-dsdot].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1506,6 +1704,8 @@ const BLAS = require('blasjs');
 const { sdot, ddot, sdsdot, dsdot } = BLAS.level1;
 ```
 
+</details>
+
 ## Finds the index of the first element having maximum absolut value.
 
 Find k for wich: ∥ xₖ ∥ > ∥ xₜ ∥ for all t ∈ [1, n].
@@ -1516,6 +1716,9 @@ Find k for wich: ∥ xₖ ∥ > ∥ xₜ ∥ for all t ∈ [1, n].
 * `idamax`: Find the index of the maximum element of a REAL vector ( [single or double precision][precision-note] ). See [blas ref][ref-idamax]. 
 * `icamax`: Alias for `izamax`. See [blas ref]:[ref-icamax]
 * `izamax`: Find the index of the maximum element of a COMPLEX vector ( [single or double precision][precision-note] ). See [blas ref][ref-izamax].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1535,6 +1738,8 @@ const BLAS = require('blasjs');
 const { isamax, idamax, icamax, izamax } = BLAS.level1;
 ```
 
+</details>
+
 ## Copy a vector x to a vector y
 
 ### scopy/dcopy, ccopy/zcopy
@@ -1543,6 +1748,9 @@ const { isamax, idamax, icamax, izamax } = BLAS.level1;
 * `dcopy`: Copies a REAL vector ( [single or double precision][precision-note] ). See [blas ref][ref-dcopy].
 * `ccopy`: Alias for `zcopy`. See [blas ref]:[ref-ccopy]
 * `zcopy`: Copies a COMPLEX vector ( [single or double precision][precision-note] ). See [blas ref][ref-zcopy].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1562,6 +1770,8 @@ const BLAS = require('blasjs');
 const { scopy, dcopy, ccopy, zcopy } = BLAS.level1;
 ```
 
+</details>
+
 ## Constant times a vector plus a vector
 
 y ⟵ y + a·x  where y, a and x can be complex or a real number.
@@ -1572,6 +1782,9 @@ y ⟵ y + a·x  where y, a and x can be complex or a real number.
 * `daxpy`: REAL constant used in multiplication with a vector ( [single or double precision][precision-note] ). See [blas ref]:[ref-daxpy].   
 * `caxpy`: Alias for `zaxpy`. See [blas ref]:[ref-saxpy].
 * `zaxpy`: Complex constant used in multiplication with a vector ( [single or double precision][precision-note] ). See [blas ref]:[ref-zaxpy].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1591,6 +1804,8 @@ const BLAS = require('blasjs');
 const { saxpy, daxpy, caxpy, zaxpy } = BLAS.level1;
 ```
 
+</details>
+
 # Level 2 Routines
 
 Routines categorized as _Level 2_ perform Matrix-vector operations.
@@ -1609,6 +1824,9 @@ For the routines `cher2` and `zher2` the matrix symmetry is exploited (use only 
 * `zher2`: The Matrix `A` is in upper or lower triangular form ( [single or double precision][precision-note] ). See [blas ref][ref-zher2].  
 * `chpr2`: alias for `zhpr2`. See [blas ref][ref-chpr2].
 * `zhpr2`: The matrix `A` is in [packed](#packed-matrices) form ( [single or double precision][precision-note] ). See [blas ref][ref-zhpr2].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1646,6 +1864,8 @@ const BLAS = require('blasjs');
 const { cher2, zher2, chpr, zhpr } = BLAS.level2;
 ```
 
+</details>
+
 ## The symmetric rank 2 operation A ⟵ α·x·yᵀ + α·y·xᵀ + A
 
 For the routines `sspr2` and `dspr2` the matrix A is in [packed](#packed-matrices) form ( a [fortranArr](#vector-constructors) ).
@@ -1658,6 +1878,9 @@ For the routines `ssyr2` and `dsyr2` the matrix symmetry is exploited (use only 
 * `dspr2`: The matrix `A` is in [packed](#packed-matrices) form ( [single or double precision][precision-note] ). See [blas ref][ref-dspr2].
 * `ssyr2`: Alias for dsyr2. See [blas ref][ref-ssyr2].
 * `dsyr2`: The Matrix `A` is in upper or lower triangular form ( [single or double precision][precision-note] ). See [blas ref][ref-dsyr2].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
  _decl_
 
@@ -1695,6 +1918,8 @@ const BLAS = require('blasjs');
 const { sspr2, dspr2, ssyr2, dsyr2 } = BLAS.level2;
 ```
 
+</details>
+
 ## The rank 1 operation A ⟵ α·x·yᴴ + A or A ⟵ α·x·yᵀ + A
 
 ( ᴴ means conjugate transpose )
@@ -1716,6 +1941,9 @@ The subroutines `cgeru` and `zgeru` perform  A ⟵ α·x·yᵀ + A. Where α is 
 * `zgerc`: See [blas ref][ref-zgerc].
 * `cgeru`: alias for `zgeru`. See [blas ref][ref-cgeru].
 * `zgeru`: See [blas ref][ref-zgeru].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1765,6 +1993,8 @@ const BLAS = require('blasjs');
 const { sger, dger, cgerc, zgerc, cgeru, zgeru } = BLAS.level2;
 ```
 
+</details>
+
 ## The hermitian rank 1 operation A ⟵ α·x·xᴴ + A
 
 ( ᴴ means conjugate transpose )
@@ -1780,6 +2010,8 @@ For the routines `chpr` and `zhpr` α is a REAL scalar, the matrix A is in [pack
 * `chpr`: alias for `zher`. See [blas ref][ref-cher].
 * `zhpr`: For [single or double precision][precision-note] complex `x` and `A`. See [blas ref][ref-cher].
 
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 ```typescript
 function cher(
@@ -1828,6 +2060,8 @@ const BLAS = require('blasjs');
 const { cher, zher, chpr, zhpr } = BLAS.level2;
 ```
 
+</details>
+
 ## The symmetric rank 1 operation A ⟵ α·x·xᵀ + A
 
 For the routines `ssyr` and `dsyr` α is a REAL scalar, the symmetry of the REAL matrix A is exploited (use only upper/lower triangular part of the matrix).
@@ -1840,6 +2074,9 @@ For the routines `sspr` and `dspr` α is a REAL scalar, the REAL matrix A is in 
 * `dspr`: For [single or double precision][precision-note] REAL `α` , `x` and `A`. See [blas ref][ref-dspr].
 * `ssyr`: alias for `ssyr`. See [blas ref][ref-ssyr].
 * `dsyr`: For [single or double precision][precision-note] REAL `α` , `x` and `A`. See [blas ref][ref-dsyr].
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -1890,6 +2127,8 @@ const BLAS = require('blasjs');
 const { sspr, dspr, ssyr, dsyr } = BLAS.level2;
 ```
 
+</details>
+
 ## The matrix-vector operation, y ⟵ α·A·x + β·y, or y ⟵ α·Aᵀ·x + β·y or y ⟵  α·Aᴴ·x + β·y
 
 Aᴴ is the complex conjugate transpose of matrix A
@@ -1911,6 +2150,9 @@ The naming in blasjs does not reflect the precision used, precision is determine
 | chpmv/zhpmv | y ⟵ α·A·x + β·y                                        | α, A, β | none    | packed upper/lower triangular | [cgemv][ref-cgemv]/[zgemv][ref-zgemv] |
 | sspmv/dspmv | y ⟵ α·A·x + β·y                                        | none    | α, A, β | packed upper/lower triangular | [sspmv][ref-sspmv]/[dspmv][ref-dspmv] |
 | ssymv/dsymv | y ⟵ α·A·x + β·y                                        | α, A, β | none    | upper/lower triangular        | [ssymv][ref-ssymv]/[dsymv][ref-dsymv] |
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -2082,6 +2324,8 @@ const {
  chpmv, dspmv, sspmv, zhpmv, dsymv, ssymv } = BLAS.level2;
 ```
 
+</details>
+
 ## The matrix-vector operation, x ⟵ A·x, or x ⟵ Aᵀ·x, or x ⟵ Aᴴ·x
 
 Aᴴ is the complex conjugate transpose of matrix A
@@ -2098,6 +2342,9 @@ The naming in blasjs does not reflect the precision used, precision is determine
 | ctpmv/ztpmv | x ⟵ A·x, or x ⟵ Aᵀ·x, or x ⟵ Aᴴ·x | A, x    | none | upper/lower triangular packed | [ctpmv][ref-ctpmv]/[ztpmv][ref-ztpmv] |
 | strmv/dtrmv | x ⟵ A·x, or x ⟵ Aᵀ·x              | none    | A, x | upper/lower triangular        | [strmv][ref-strmv]/[dtrmv][ref-dtrmv] |
 | ctrmv/ztrmv | x ⟵ A·x, or x ⟵ Aᵀ·x, or x ⟵ Aᴴ·x | A, x    | none | upper/lower triangular        | [ctrmv][ref-ctrmv]/[ztrmv][ref-ztrmv] |
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -2183,6 +2430,8 @@ const {
  dtrmv, ctrmv, ztrmv } = BLAS.level2;
 ```
 
+</details>
+
 ## Solves a systems of equations A·x = b, or Aᵀ·x = b, or Aᴴ·x = b
 
 Aᴴ is the complex conjugate transpose of matrix A
@@ -2199,6 +2448,9 @@ The naming in blasjs does not reflect the precision used, precision is determine
 | ctpsv/ztpsv | A·x = b, or Aᵀ·x = b, or Aᴴ·x = b | A, b, x | none    | packed upper/lower triangular | [ctpsv][ref-ctpsv]/[ztpsv][ref-ztpsv] |
 | ctrsv/ztrsv | A·x = b, or Aᵀ·x = b, or Aᴴ·x = b | A, b, x | none    | upper/lower triangular        | [ctrsv][ref-ctrsv]/[ztrsv][ref-ztrsv] |
 | strsv/dtrsv | A·x = b, or Aᵀ·x = b              | none    | A, b, x | upper/lower triangular        | [strsv][ref-strsv]/[dtrsv][ref-dtrsv] |
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -2286,6 +2538,8 @@ const {
     strsv, dtrsv } = BLAS.level2;
 ```
 
+</details>
+
 # Level 3 Routines
 
 Routines categorized as _Level 2_ perform Matrix-vector operations.
@@ -2305,6 +2559,9 @@ The naming in blasjs does not reflect the precision used, precision is determine
 | subroutine    | operation                                                            | complex    | real | type of matrix C       | blas ref link                             |
 | ------------- | -------------------------------------------------------------------- | ---------- | ---- | ---------------------- | ----------------------------------------- |
 | cher2k/zher2k | C ⟵ α·A·Bᴴ + con( α )·B·Aᴴ + β·C or C ⟵ α·Aᴴ·B + con( α )·Bᴴ·A + β·C | α, A, B, C | β    | upper/lower triangular | [cher2k][ref-cher2k]/[zher2k][ref-zher2k] |
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -2334,6 +2591,8 @@ const BLAS = require('blasjs');
 const { cher2k,  zher2k } = BLAS.level3;
 ```
 
+</details>
+
 ## Symmetric rank 2k operations C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C, or C ⟵ α·Aᵀ·B +  α·Bᵀ·A + β·C
 
 ### ssyr2k, dsyr2k, csyr2k, zsyr2k
@@ -2344,6 +2603,9 @@ The naming in blasjs does not reflect the precision used, precision is determine
 | ------------- | -------------------------------------------------------- | ------------- | ------------- | ---------------------- | ----------------------------------------- |
 | ssyr2k/dsyr2k | C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C, or C ⟵ α·Aᵀ·B +  α·Bᵀ·A + β·C | none          | α, A, β, B, C | upper/lower triangular | [cher2k][ref-cher2k]/[zher2k][ref-zher2k] |
 | csyr2k/zsyr2k | C ⟵ α·A·Bᵀ + α·B·Aᵀ + β·C, or C ⟵ α·Aᵀ·B +  α·Bᵀ·A + β·C | α, A, β, B, C | none          | upper/lower triangular | [csyr2k][ref-csyr2k]/[zsyr2k][ref-zsyr2k] |
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -2388,6 +2650,8 @@ const BLAS = require('blasjs');
 const { ssyr2k, dsyr2k, csyr2k, zsyr2k } = BLAS.level3;
 ```
 
+</details>
+
 ## Hermatian rank k operations C ⟵ α·A·Aᴴ + β·C, or C ⟵ α·Aᴴ·A + β·C
         
 Aᴴ is the conjugate transpose of Matrix A.
@@ -2399,6 +2663,9 @@ The naming in blasjs does not reflect the precision used, precision is determine
 | subroutine  | operation                             | complex | real | type of matrix C       | blas ref link                         |
 | ----------- | ------------------------------------- | ------- | ---- | ---------------------- | ------------------------------------- |
 | cherk/zherk | C ⟵ α·A·Aᴴ + β·C, or C ⟵ α·Aᴴ·A + β·C | A, C    | α, β | upper/lower triangular | [cherk][ref-cherk]/[zherk][ref-zherk] |
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -2426,6 +2693,8 @@ const BLAS = require('blasjs');
 const { cherk, zherk } = BLAS.level3;
 ```
 
+</details>
+
 ## Symmetric rank k operations C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C
 
 ### ssyrk, dsyrk, csyrk, zsyrk   
@@ -2436,6 +2705,9 @@ The naming in blasjs does not reflect the precision used, precision is determine
 | ----------- | ------------------------------------- | ---------- | ---------- | ---------------------- | ------------------------------------- |
 | ssyrk/dsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | none       | α, A, β, C | upper/lower triangular | [ssyrk][ref-ssyrk]/[dsyrk][ref-dsyrk] |
 | csyrk/zsyrk | C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C | α, A, β, C | none       | upper/lower triangular | [csyrk][ref-csyrk]/[zsyrk][ref-zsyrk] |
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -2476,6 +2748,8 @@ const BLAS = require('blasjs');
 const { ssyrk, dsyrk, csyrk, zsyrk } = BLAS.level3;
 ```
 
+</details>
+
 ## Matrix-matrix operations C ⟵ α·_f(A)_·_h(B)_ + β·C or C ⟵ α·_h(B)_·_f(A)_ + β·C
 
 f(A) is the result of an operation on matrix A, like Aᵀ, Aᴴ, or A (no-op)
@@ -2494,6 +2768,9 @@ The naming in blasjs does not reflect the precision used, precision is determine
 | ----------- | ------------------------- | --------- | --------- | ------------- | ------------- | ---------------- | ------------------------------------- |
 | sgemm/dgemm | C ⟵ α·_f(A)_·_h(B)_ + β·C | Aᵀ, A     | Bᵀ, B     | α, A, β, B, C | none          | m x n            | [sgemm][ref-sgemm]/[dgemm][ref-dgemm] |
 | cgemm/zgemm | C ⟵ α·_f(A)_·_h(B)_ + β·C | Aᴴ, Aᵀ, A | Bᴴ, Bᵀ, B | none          | α, A, β, B, C | m x n            | [cgemm][ref-cgemm]/[zgemm][ref-zgemm] |
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -2540,6 +2817,8 @@ const BLAS = require('blasjs');
 const { sgemm, dgemm, cgemm, zgemm } = BLAS.level3;
 ```
 
+</details>
+
 ## Matrix-matrix operations C ⟵ α·A·B + β·C or C ⟵ α·B·A + β·C
        
 ### chemm, zhemm, ssymm, dsymm, csymm, zsymm
@@ -2551,6 +2830,9 @@ The naming in blasjs does not reflect the precision used, precision is determine
 | chemm/zhemm | C ⟵ α·A·B + β·C or C ⟵ α·B·A + β·C | none          | α, A, B, β, C | m x n            | [chemm][ref-chemm]/[zhemm][ref-zhemm] |
 | ssymm/dsymm | C ⟵ α·A·B + β·C or C ⟵ α·B·A + β·C | α, A, B, β, C | none          | m x n            | [ssymm][ref-ssymm]/[dsymm][ref-dsymm] |
 | csymm/zsymm | C ⟵ α·A·B + β·C or C ⟵ α·B·A + β·C | none          | α, A, B, β, C | m x n            | [csymm][ref-csymm]/[zsymm][ref-zsymm] |
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -2610,6 +2892,8 @@ const BLAS = require('blasjs');
 const { chemm, zhemm,  ssymm, dsymm, csymm, zsymm } = BLAS.level3;
 ```
 
+</details>
+
 ## Matrix-matrix operations B ⟵ α·f(A)·B or B ⟵ α·B·f(A)
 
 f(A) is the result of an operation on matrix A, like Aᵀ, Aᴴ, or A (no-op)
@@ -2624,6 +2908,9 @@ The naming in blasjs does not reflect the precision used, precision is determine
 | ----------- | ---------------------------- | --------- | ---- | ------- | ---------------- | ------------------------------------- |
 | strmm/dtrmm | B ⟵ α·f(A)·B or B ⟵ α·B·f(A) | A, Aᵀ     | α, B | none    | m x n            | [strmm][ref-strmm]/[dtrmm][ref-dtrmm] |
 | ctrmm/ztrmm | B ⟵ α·f(A)·B or B ⟵ α·B·f(A) | A, Aᵀ, Aᴴ | none | α, A, B | m x n            | [ctrmm][ref-ctrmm]/[ztrmm][ref-ztrmm] |
+
+<details>
+  <summary><b>Details</b> (click to show)</summary>
 
 _decl_
 
@@ -2666,6 +2953,8 @@ const BLAS = require('blasjs');
 const { strmm, dtrmm,  ctrmm, ztrmm } = BLAS.level3;
 ```
 
+</details>
+
 ## Solves the matrix equations: _f( A )_·X = α·B, or X·_f( A )_ = α·B
 
 f(A) is the result of an operation on matrix A, like Aᵀ, Aᴴ, or A (no-op)
@@ -2699,7 +2988,7 @@ The naming in blasjs does not reflect the precision used, precision is determine
 [precision-note]: #a-note-on-numeric-precision
 [language-differences]: #language-differences-with-fortranblas
 [givens-rotation]: https://en.wikipedia.org/wiki/Givens_rotation#Stable_calculation
-[apply-givens-rotation]: https://en.wikipedia.org/wiki/Givens_rotation#Stable_calculation
+[apply-modified-givens-transformation]: https://en.wikipedia.org/wiki/Givens_rotation#Stable_calculation
 [ref-snrm2]: http://www.netlib.org/lapack/explore-html/d7/df1/snrm2_8f.html
 [ref-dnrm2]: http://www.netlib.org/lapack/explore-html/da/d7f/dnrm2_8f.html
 [ref-scnrm2]: http://www.netlib.org/lapack/explore-html/db/d66/scnrm2_8f.html
@@ -2843,3 +3132,4 @@ The naming in blasjs does not reflect the precision used, precision is determine
 
 [ref-ctrsm]: http://www.netlib.org/lapack/explore-html/de/d30/ctrsm_8f.html
 [ref-ztrsm]: http://www.netlib.org/lapack/explore-html/d1/d39/ztrsm_8f.html
+
