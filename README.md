@@ -57,8 +57,6 @@ The module directory contains a standalone bundle for use in html `<script>` ins
 
 # Table of Contents
 
-<details>
-  <summary><b>Table of Contents</b> (click to show)</summary>
 
 - [Language differences with FORTRAN/BLAS](#language-differences-with-fortranblas)
 - [Helper functions](#helper-functions)
@@ -164,7 +162,6 @@ The module directory contains a standalone bundle for use in html `<script>` ins
     - [Solves the matrix equations: _f( A )_·X = α·B, or X·_f( A )_ = α·B](#solves-the-matrix-equations-_f-a-_x--αb-or-x_f-a-_--αb)
         - [strsm, dtrsm, ctrsm, ztrsm](#strsm-dtrsm-ctrsm-ztrsm)
 
-</details>
 
 # Language differences with FORTRAN/BLAS
 
