@@ -16,26 +16,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-    complex,
-    fortranArrComplex64 as arr64,
-    fortranMatrixComplex64
+    complex
 } from '../../../../src/lib/f_func';
 
 
 
 import {
-    diagonal_nxn,
-    matrix_mxn,
-    vector
+    matrix_mxn
 } from '../../../matrices';
-
-const pI = Infinity;
-const nI = -Infinity;
-const { PI, sin, cos, abs, sqrt } = Math;
-
-const cospi = x => cos(PI * x);
-const sinpi = x => sin(PI * x);
-
 
 export const fixture = {
     dgemm: {
@@ -193,7 +181,7 @@ export const fixture = {
             }
         },
         case5: {
-            desc: 'trA="n", trB="n",s m=4,n=6, k=3, ld[x]=6, n_a=m_b=k=4, alpha(0.3,-0.7), beta(1, 0)',
+            desc: 'trA="n", trB="n",s m=4,n=6, k=3, ld[x]=6, alpha=0.3, beta=-1.2',
             input: {
                 trA: 'n',
                 trB: 'n',
@@ -498,7 +486,7 @@ export const fixture = {
                 a: (() => {
                     const m = matrix_mxn(6, 6);
                     const m2 = m.real();
-                    console.log(m2);
+                    //console.log(m2);
                     //process.exit(1);
                     return m2;
                 })(),

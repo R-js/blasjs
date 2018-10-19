@@ -15,33 +15,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
 import * as blas from '../../../../src/lib';
-import { Matrix, real } from '../../../../src/lib/f_func';
+import { real } from '../../../../src/lib/f_func';
 import {
-  approximately,
   approximatelyWithPrec
 } from '../../../test-helpers';
 import { fixture } from './fixtures';
 
 const {
   util: {
-
-    numberPrecision,
     each,
     multiplexer,
-    fortranArrComplex64,
     fortranMatrixComplex64,
-    complex,
-
   },
   level3: {
     dgemm
   }
 } = blas;
 
-const { abs } = Math;
-const { isNaN, isFinite } = Number;
 
 describe('blas level 3 single/double complex', function n() {
 
@@ -62,13 +54,13 @@ describe('blas level 3 single/double complex', function n() {
           ldc, // ldc >= M
           beta,
           alpha,
-          //bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 4, ku = 4)
           a,
           b,
           c
         }, expect, desc
       }, key) => {
         it(`[${key}]/[${desc}]`, function t() {
+          //console.log(c.r)
           dgemm(trA, trB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc);
           if (cmd === 'debug') {
             //console.log(c);
@@ -84,7 +76,7 @@ describe('blas level 3 single/double complex', function n() {
         });
       });
     });
-
+/*
     describe('test errors', () => {
       const { dgemmErrors: errors } = fixture;
       each(errors)(({ input: {
@@ -117,6 +109,6 @@ describe('blas level 3 single/double complex', function n() {
           expect(call).to.throw();
         });
       });
-    });
+    });*/
   });
 });
