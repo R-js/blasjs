@@ -1,3 +1,11 @@
+   log('raw gpu version:');
+    const canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    const webgl = canvas.getContext('webgl2');
+    const gpuKernel = gpuFunctionRaw(webgl, canvas);
+    log(gpuKernel(a, b, c, lda, ldb, ldc, m, n, k, alpha, beta));
+
+
 const gpuFunctionRaw = (gl, canvas, debug) => {
   const paramNames = ["a","b","c","lda","ldb","ldc","m","n","k","alpha","beta"];
   const paramTypes = ["Array","Array","Array","Integer","Integer","Integer","Integer","Integer","Integer","Float","Float"];
