@@ -20,6 +20,8 @@ BLASjs contains all the functions (Complex, Real) of the reference implementatio
 The resulting bundled `blasjs` file is an agnostic UMD library, it can be used in a web client
 as-well as in a server side node environment.
 
+[![Slack](https://slack.bri.im/badge.svg)](https://slack.bri.im)
+
 ## Installation
 
 #### node
