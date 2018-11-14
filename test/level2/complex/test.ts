@@ -15,22 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
 import * as blas from '../../../src/lib';
-import { Matrix } from '../../../src/lib/f_func';
-import { approximately, approximatelyWithPrec } from '../../test-helpers';
+import { approximatelyWithPrec } from '../../test-helpers';
 import { fixture } from './fixtures';
 
 const {
   util: {
-    arrayrify,
-    numberPrecision,
     each,
     multiplexer,
     fortranArrComplex64,
-    fortranMatrixComplex64,
-    complex,
-    muxCmplx
+    fortranMatrixComplex64
   },
   level2: {
     cgbmv,
