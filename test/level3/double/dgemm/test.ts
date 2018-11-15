@@ -76,7 +76,7 @@ describe('blas level 3 single/double complex', function n() {
         });
       });
     });
-/*
+
     describe('test errors', () => {
       const { dgemmErrors: errors } = fixture;
       each(errors)(({ input: {
@@ -109,6 +109,6 @@ describe('blas level 3 single/double complex', function n() {
           expect(call).to.throw();
         });
       });
-    });*/
+    });
   });
 });
