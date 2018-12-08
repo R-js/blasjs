@@ -107,7 +107,6 @@ export function ssymm(
                         c.r[coorCJ + k] += temp1 * a.r[coorAI + k];
                         temp2 += b.r[coorBJ + k] * a.r[coorAI + k];
                     }
-                    //TEMP1*A(I,I) + ALPHA*TEMP2
                     let re = temp1 * a.r[coorAI + i] + alpha * temp2;
                     if (beta !== 0) {
                         re += beta * c.r[coorCJ + i];
@@ -140,9 +139,6 @@ export function ssymm(
     else {
         //  Form  C := alpha*B*A + beta*C.
         for (let j = 1; j <= n; j++) {
-            //throw new Error('hh');
-            //pre-calc
-            // console.log(a, b, c);
             const coorAJ = a.colOfEx(j);
             const coorCJ = c.colOfEx(j);
             const coorBJ = b.colOfEx(j);
@@ -155,9 +151,7 @@ export function ssymm(
             }
             else {
                 for (let i = 1; i <= m; i++) {
-
                     c.r[coorCJ + i] = beta * c.r[coorCJ + i] + temp1 * b.r[coorBJ + i];
-
                 }
             }
             for (let k = 1; k <= j - 1; k++) {

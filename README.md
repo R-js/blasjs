@@ -59,7 +59,6 @@ The module directory contains a standalone bundle for use in html `<script>` ins
 
 # Table of Contents
 
-
 - [Language differences with FORTRAN/BLAS](#language-differences-with-fortranblas)
 - [Helper functions](#helper-functions)
     - [Types](#types)
@@ -2807,7 +2806,7 @@ function cgemm|zgemm(
 ): void
 ```
 
-See: _[how to create Matrix](#matrix-constructors)_.     
+See: _[how to create Matrix](#matrix-constructors)_.
 
 Usage:
 
@@ -2879,10 +2878,10 @@ function csymm|zsymm(
     beta: Complex,
     c: Matrix,
     ldc: number
-): void 
+): void
 ```
 
-See: _[how to create Matrix](#matrix-constructors)_.     
+See: _[how to create Matrix](#matrix-constructors)_.
 
 Usage:
 
