@@ -177,7 +177,9 @@ break;
 kernelResult = user_sum;return;
 }
 void main(void) {
-  index = int(vTexCoord.s * float(uTexSize.x)) + int(vTexCoord.t * float(uTexSize.y)) * uTexSize.x;
+  index = 
+     int(vTexCoord.s * float(uTexSize.x)) + 
+     int(vTexCoord.t * float(uTexSize.y)) * uTexSize.x;
   threadId = indexTo3D(index, uOutputDim);
   kernel();
   data0 = encode32(kernelResult);

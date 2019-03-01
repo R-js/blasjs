@@ -1384,7 +1384,7 @@ export const fixture = {
                 k: 3,
                 alpha: complex(0.2, 0.8),
                 beta: complex(0.3, -0.7),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).upperBand(3),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).upperBand(3),
                 lda: 6,
                 incx: 1,
                 incy: 1,
@@ -1415,7 +1415,7 @@ export const fixture = {
                 k: 3,
                 alpha: complex(0.2, 0.8),
                 beta: complex(0, 0),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).upperBand(3),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).upperBand(3),
                 lda: 6,
                 incx: -1,
                 incy: -1,
@@ -1446,7 +1446,7 @@ export const fixture = {
                 k: 3,
                 alpha: complex(0, 0),
                 beta: complex(0, 0),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).upperBand(3),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).upperBand(3),
                 lda: 6,
                 incx: -1,
                 incy: -1,
@@ -1477,7 +1477,7 @@ export const fixture = {
                 k: 3,
                 alpha: complex(0, 0),
                 beta: complex(1, 0),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).upperBand(3),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).upperBand(3),
                 lda: 6,
                 incx: -1,
                 incy: -1,
@@ -1506,7 +1506,7 @@ export const fixture = {
                 k: 3,
                 alpha: complex(0.2, 0.8),
                 beta: complex(1, 0),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).upperBand(3),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).upperBand(3),
                 lda: 6,
                 incx: -1,
                 incy: -1,
@@ -1537,7 +1537,7 @@ export const fixture = {
                 k: 3,
                 alpha: complex(0.2, 0.8),
                 beta: complex(1, 0),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).lowerBand(3),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).lowerBand(3),
                 lda: 6,
                 incx: 1,
                 incy: 1,
@@ -1713,7 +1713,7 @@ export const fixture = {
                 incy: 1,
                 alpha: complex(0.2, 0.8),
                 beta: complex(0.3, -0.7),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: vector(6),
                 y: (() => {
                     let v = vector(6);
@@ -1743,7 +1743,7 @@ export const fixture = {
                 incy: -1,
                 alpha: complex(-0.12, 0.88),
                 beta: complex(-0.43, 0.57),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: vector(6),
                 y: (() => {
                     let v = vector(6);
@@ -1773,7 +1773,7 @@ export const fixture = {
                 incy: -1,
                 alpha: complex(-0.12, 0.88),
                 beta: complex(-0.43, 0.57),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: vector(6),
                 y: (() => {
                     let v = vector(6);
@@ -1803,7 +1803,7 @@ export const fixture = {
                 incy: -1,
                 alpha: complex(0, 0),
                 beta: complex(0, 0),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: vector(6),
                 y: (() => {
                     let v = vector(6);
@@ -1833,7 +1833,7 @@ export const fixture = {
                 incy: -1,
                 alpha: complex(0, 0),
                 beta: complex(1, 0),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: vector(6),
                 y: (() => {
                     let v = vector(6);
@@ -1861,7 +1861,7 @@ export const fixture = {
                 incy: -1,
                 alpha: complex(0, 1),
                 beta: complex(1, 0),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: vector(6),
                 y: (() => {
                     let v = vector(6);
@@ -2015,7 +2015,7 @@ export const fixture = {
                 a: (() => {
                     const m = matrix_mxn(6, 8);
                     //console.log(m.r);
-                    const m1 = m.slice(1, 6, 1, 6);
+                    const m1 = m.slice_used_for_test(1, 6, 1, 6);
                     //console.log(m1.r);
                     const m2 = m1.setLower(0);
                     //console.log(m2.i.length);
@@ -2078,7 +2078,7 @@ export const fixture = {
                 lda: 6,
                 incx: -1,
                 alpha: 0.2, // NOTE: MUST BE REAL
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2135,7 +2135,7 @@ export const fixture = {
                 lda: 6,
                 incx: -1,
                 alpha: 0, // NOTE: MUST BE REAL
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2193,7 +2193,7 @@ export const fixture = {
                 incx: -1,
                 alpha: 1.234, // NOTE: MUST BE REAL
                 a: (() => {
-                    const m = matrix_mxn(6, 8).slice(1, 6, 1, 6);
+                    const m = matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6);
                     const m2 = m.setUpper(0);
                     // console.log(m2.r); debug
                     // process.exit(1);
@@ -2337,7 +2337,7 @@ export const fixture = {
                 incx: 1,
                 incy: 1,
                 alpha: complex(0.2, 0.8),
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2384,7 +2384,7 @@ export const fixture = {
                 incx: -1,
                 incy: -1,
                 alpha: complex(0.2, 0.8),
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0).packedLower(),
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0).packedLower(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2431,7 +2431,7 @@ export const fixture = {
                 incx: -1,
                 incy: -1,
                 alpha: complex(0, 0),
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0).packedLower(),
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0).packedLower(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2445,7 +2445,7 @@ export const fixture = {
                 })()
             },
             expect: {
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0).packedLower().toArr()
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0).packedLower().toArr()
             }
         },
     },
@@ -2566,7 +2566,7 @@ export const fixture = {
                 incy: 1,
                 lda: 6,
                 alpha: complex(0.2, 0.8),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2634,7 +2634,7 @@ export const fixture = {
                 incy: -1,
                 lda: 6,
                 alpha: complex(0.2, 0.8),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2697,7 +2697,7 @@ export const fixture = {
                 incy: -1,
                 lda: 6,
                 alpha: complex(0, 0),
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2711,7 +2711,7 @@ export const fixture = {
                 })()
             },
             expect: {
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0).toArr()
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0).toArr()
             }
         },
     },
@@ -2841,7 +2841,7 @@ export const fixture = {
                 incy: 1,
                 alpha: complex(0.2, -0.8),
                 beta: complex(0.3, -0.7),
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower().packedUpper(),
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower().packedUpper(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2874,7 +2874,7 @@ export const fixture = {
                 incy: -1,
                 alpha: complex(0.2, -0.8),
                 beta: complex(0.3, -0.7),
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2907,7 +2907,7 @@ export const fixture = {
                 incy: -1,
                 alpha: complex(0, 0),
                 beta: complex(1, 0),
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0).packedLower(),
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0).packedLower(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2937,7 +2937,7 @@ export const fixture = {
                 incy: -1,
                 alpha: complex(0, 0),
                 beta: complex(0, 0),
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0).packedLower(),
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0).packedLower(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -2963,7 +2963,7 @@ export const fixture = {
                 incy: -1,
                 alpha: complex(1, 0),
                 beta: complex(1, 0),
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 y: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -3107,7 +3107,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 alpha: 0.2,
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -3148,7 +3148,7 @@ export const fixture = {
                 n: 6,
                 incx: -1,
                 alpha: 0.2,
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -3189,7 +3189,7 @@ export const fixture = {
                 n: 6,
                 incx: -1,
                 alpha: 0,
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(4)(0, 0);
@@ -3198,7 +3198,7 @@ export const fixture = {
                 })()
             },
             expect: {
-                ap: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0).packedUpper().toArr()
+                ap: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper().toArr()
             }
         },
     },
@@ -4285,7 +4285,7 @@ export const fixture = {
                 diag: 'n',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4312,7 +4312,7 @@ export const fixture = {
                 diag: 'u',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4339,7 +4339,7 @@ export const fixture = {
                 diag: 'n',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4366,7 +4366,7 @@ export const fixture = {
                 diag: 'u',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4393,7 +4393,7 @@ export const fixture = {
                 diag: 'n',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4420,7 +4420,7 @@ export const fixture = {
                 diag: 'u',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4447,7 +4447,7 @@ export const fixture = {
                 diag: 'n',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4473,7 +4473,7 @@ export const fixture = {
                 diag: 'u',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4500,7 +4500,7 @@ export const fixture = {
                 diag: 'n',
                 n: 6,
                 incx: -1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4527,7 +4527,7 @@ export const fixture = {
                 diag: 'u',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4554,7 +4554,7 @@ export const fixture = {
                 diag: 'n',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4581,7 +4581,7 @@ export const fixture = {
                 diag: 'u',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4608,7 +4608,7 @@ export const fixture = {
                 diag: 'u',
                 n: 0,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4723,7 +4723,7 @@ export const fixture = {
                 diag: 'n',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -4750,7 +4750,7 @@ export const fixture = {
                 diag: 'u',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -4777,7 +4777,7 @@ export const fixture = {
                 diag: 'n',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4804,7 +4804,7 @@ export const fixture = {
                 diag: 'u',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4831,7 +4831,7 @@ export const fixture = {
                 diag: 'n',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4858,7 +4858,7 @@ export const fixture = {
                 diag: 'u',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4885,7 +4885,7 @@ export const fixture = {
                 diag: 'n',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4912,7 +4912,7 @@ export const fixture = {
                 diag: 'u',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4939,7 +4939,7 @@ export const fixture = {
                 diag: 'n',
                 n: 6,
                 incx: -1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4966,7 +4966,7 @@ export const fixture = {
                 diag: 'u',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -4993,7 +4993,7 @@ export const fixture = {
                 diag: 'n',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -5020,7 +5020,7 @@ export const fixture = {
                 diag: 'u',
                 n: 6,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -5047,7 +5047,7 @@ export const fixture = {
                 diag: 'u',
                 n: 0,
                 incx: 1,
-                ap: matrix_mxn(6, 6, 6).slice(1, 6, 1, 6).setLower(0).packedUpper(),
+                ap: matrix_mxn(6, 6, 6).slice_used_for_test(1, 6, 1, 6).setLower(0).packedUpper(),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -5164,7 +5164,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5192,7 +5192,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5220,7 +5220,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5248,7 +5248,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5276,7 +5276,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5304,7 +5304,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5332,7 +5332,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5360,7 +5360,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5388,7 +5388,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5416,7 +5416,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5444,7 +5444,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5472,7 +5472,7 @@ export const fixture = {
                 n: 6,
                 incx: -1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5500,7 +5500,7 @@ export const fixture = {
                 n: 0,
                 incx: -1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5637,7 +5637,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5664,7 +5664,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5691,7 +5691,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -5720,7 +5720,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -5747,7 +5747,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -5775,7 +5775,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -5803,7 +5803,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5831,7 +5831,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5859,7 +5859,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -5888,7 +5888,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setLower(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setLower(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(1)(0, 0);
@@ -5916,7 +5916,7 @@ export const fixture = {
                 n: 6,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5943,7 +5943,7 @@ export const fixture = {
                 n: 6,
                 incx: -1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: (() => {
                     let v = vector(6);
                     v.s(6)(0, 0);
@@ -5971,7 +5971,7 @@ export const fixture = {
                 n: 0,
                 incx: 1,
                 lda: 6,
-                a: matrix_mxn(6, 8).slice(1, 6, 1, 6).setUpper(0),
+                a: matrix_mxn(6, 8).slice_used_for_test(1, 6, 1, 6).setUpper(0),
                 x: vector(6)
             },
             expect: {

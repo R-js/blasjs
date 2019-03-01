@@ -216,7 +216,7 @@ describe('blas level 2 single/double precision', function n() {
 
           sger(m, n, alpha, sx, incx, sy, incy, aM, lda);
           //console.log({ a: aM.slice(1, m, 1, n).r });
-          multiplexer(aM.slice(1, m, 1, n).toArr(), expect.a)(approximatelyWithPrec(1E-7));
+          multiplexer(aM.slice_used_for_test(1, m, 1, n).toArr(), expect.a)(approximatelyWithPrec(1E-7));
 
         });
       });

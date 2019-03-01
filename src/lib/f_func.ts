@@ -260,7 +260,7 @@ export interface Matrix {
     // zap a row with fa valie
     coord(col): (row) => number;
     setCol(col: number, rowStart: number, rowEnd: number, value: number): void;
-    slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
+    slice_used_for_test(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
     setLower(value?: number): Matrix;
     setUpper(value?: number): Matrix;
     upperBand(value: number): Matrix;
@@ -404,7 +404,7 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
                 }
                 return rc;
             },
-            slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix {
+            slice_used_for_test(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix {
                 const _nrRows = (rowEnd - rowStart) + 1;
                 const _nrCols = (colEnd - colStart) + 1;
 
