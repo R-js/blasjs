@@ -261,6 +261,7 @@ export interface Matrix {
     coord(col): (row) => number;
     setCol(col: number, rowStart: number, rowEnd: number, value: number): void;
     slice_used_for_test(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
+    slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
     setLower(value?: number): Matrix;
     setUpper(value?: number): Matrix;
     upperBand(value: number): Matrix;
@@ -403,6 +404,31 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
                     }
                 }
                 return rc;
+            },
+            slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix {
+                const _nrRows = (rowEnd - rowStart) + 1;
+                const _nrCols = (colEnd - colStart) + 1;
+
+                let re = new Float64Array(_nrRows * _nrCols);
+                let im: Float64Array | undefined;
+                //
+                if (this.i) {
+                    im = new Float64Array(_nrRows * _nrCols);
+                }
+                //
+                for (let j = colStart; j <= colEnd; j++) {
+                       //  x x | x x
+                    const targetBase = (j - colStart) * _nrRows;
+                    const coorJ = this.colOfEx(j);
+                    for (let i = rowStart; i <= rowEnd; i++) {
+                        // console.log(j, coorJ + i, base + i, r[coorJ + i]);
+                        re[targetBase + ( i - rowStart )] = r[coorJ + i];
+                        if (this.i && im) {
+                            im[targetBase + (i - rowStart)] = this.i[coorJ + i];
+                        }
+                    }
+                }
+                return mimicFMatrix(re, im)(_nrRows, _nrCols);
             },
             slice_used_for_test(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix {
                 const _nrRows = (rowEnd - rowStart) + 1;
