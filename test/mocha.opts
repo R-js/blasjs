@@ -4,5 +4,6 @@
 --require source-map-support/register
 --sort
 --bail
+--timeout=0
 --require mocha-clean
 test/**/*test.ts

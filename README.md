@@ -3001,6 +3001,33 @@ The naming in blasjs does not reflect the precision used, precision is determine
 [ref-srotm]: http://www.netlib.org/lapack/explore-html/d6/d0f/srotm_8f.html
 [ref-drotm]: http://www.netlib.org/lapack/explore-html/d8/d7b/drotm_8f.html
 
+[ref-xcswap]: http://www.netlib.org/lapack/explore-html/d1/d44/cswap_8f.html
+
+[ref-dznrm2]: http://www.netlib.org/lapack/explore-html/d9/d19/dznrm2_8f.html
+[ref-drotg]: http://www.netlib.org/lapack/explore-html/de/d13/drotg_8f.html
+[ref-crotg]: http://www.netlib.org/lapack/explore-html/dc/de6/crotg_8f.html
+[ref-zswap]: http://www.netlib.org/lapack/explore-html/d3/dc0/zswap_8f.html
+[ref-zdotc]: http://www.netlib.org/lapack/explore-html/d6/db8/zdotc_8f.html
+[ref-cdotc]: http://www.netlib.org/lapack/explore-html/dd/db2/cdotc_8f.html
+[ref-zdotu]: http://www.netlib.org/lapack/explore-html/db/d2d/zdotu_8f.html
+[ref-sdot]: http://www.netlib.org/lapack/explore-html/d0/d16/sdot_8f.html
+[ref-dsdot]: http://www.netlib.org/lapack/explore-html/dc/d01/dsdot_8f.html
+[ref-idamax]: http://www.netlib.org/lapack/explore-html/dd/de0/idamax_8f.html
+[ref-izamax]: http://www.netlib.org/lapack/explore-html/d0/da5/izamax_8f.html
+[ref-scopy]: http://www.netlib.org/lapack/explore-html/de/dc0/scopy_8f.html
+[ref-dcopy]: http://www.netlib.org/lapack/explore-html/da/d6c/dcopy_8f.html
+[ref-ccopy]: http://www.netlib.org/lapack/explore-html/d9/dfb/ccopy_8f.html
+[ref-zcopy]: http://www.netlib.org/lapack/explore-html/d6/d53/zcopy_8f.html
+[ref-daxpy]: http://www.netlib.org/lapack/explore-html/d9/dcd/daxpy_8f.html
+[ref-zaxpy]: http://www.netlib.org/lapack/explore-html/d7/db2/zaxpy_8f.html
+
+[ref-icamax]: http://www.netlib.org/lapack/explore-html/dd/d51/icamax_8f.html
+[ref-isamax]: http://www.netlib.org/lapack/explore-html/d6/d44/isamax_8f.html
+[ref-sdsdot]: http://www.netlib.org/lapack/explore-html/d9/d47/sdsdot_8f.html
+[ref-cdotc]: http://www.netlib.org/lapack/explore-html/dd/db2/cdotc_8f.html
+[ref-zdotc]: http://www.netlib.org/lapack/explore-html/d6/db8/zdotc_8f.html
+[ref-sswap]: http://www.netlib.org/lapack/explore-html/d9/da9/sswap_8f.html
+[ref-sdot]: http://www.netlib.org/lapack/explore-html/d0/d16/sdot_8f.html
 [ref-srot]: http://www.netlib.org/lapack/explore-html/db/d6c/srot_8f.html
 [ref-drot]: http://www.netlib.org/lapack/explore-html/dc/d23/drot_8f.html
 [ref-csrot]: http://www.netlib.org/lapack/explore-html/d1/dbb/csrot_8f.html
@@ -3080,7 +3107,7 @@ The naming in blasjs does not reflect the precision used, precision is determine
 [ref-ztrmv]: http://www.netlib.org/lapack/explore-html/d0/dd1/ztrmv_8f.html
 [ref-stbsv]: http://www.netlib.org/lapack/explore-html/d0/d1f/stbsv_8f.html 
 [ref-dtbsv]: http://www.netlib.org/lapack/explore-html/d4/dcf/dtbsv_8f.html
-
+[ref-ddot]: http://www.netlib.org/lapack/explore-html/d5/df6/ddot_8f.html
 [ref-ctbsv]: http://www.netlib.org/lapack/explore-html/d9/d5f/ctbsv_8f.html
 [ref-ztbsv]: http://www.netlib.org/lapack/explore-html/d4/d5a/ztbsv_8f.html
 

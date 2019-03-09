@@ -40,7 +40,7 @@ export const fixture = {
             },
         },
         case1: {
-            desc: 'isamx n=3, incx=2',
+            desc: 'ismax n=3, incx=2',
             input: {
                 n: 3,
                 cx: {
@@ -49,7 +49,7 @@ export const fixture = {
                 incx: 2,
             },
             output: {
-                max: 5
+                max: 3
             },
         },
         case2: {

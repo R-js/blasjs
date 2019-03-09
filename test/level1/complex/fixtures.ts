@@ -30,8 +30,6 @@ export const fixture = {
         case0: {
             desc: 'cy = cy + ca*cx, incx=1, incy=1',
             input: {
-                //> set.seed(0)
-                //> complex(r=rnorm(10),i=rnorm(10))
                 cx: {
                     re: [
                         1.2629542848807933098, -0.3262333607056494000, 1.3297992629225006134,
@@ -1015,7 +1013,7 @@ export const fixture = {
     },
     icamax: {
         case0: {
-            desc: 'icamx n=6, incx=1',
+            desc: 'icamax n=6, incx=1',
             input: {
                 n: 6,
                 cx: {
@@ -1029,7 +1027,7 @@ export const fixture = {
             },
         },
         case1: {
-            desc: 'icamx n=3, incx=2',
+            desc: 'icamax n=3, incx=2',
             input: {
                 n: 3,
                 cx: {
@@ -1039,11 +1037,11 @@ export const fixture = {
                 incx: 2,
             },
             output: {
-                max: 5
+                max: 3
             },
         },
         case2: {
-            desc: 'icamx n=3, incx=-1',
+            desc: 'icamax n=6, incx=-1',
             input: {
                 n: 6,
                 cx: {
