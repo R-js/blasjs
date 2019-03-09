@@ -94,5 +94,5 @@
         "test": "cross-env-shell NODE_ENV=test TS_NODE_DISABLE_WARNINGS=true nyc mocha"
     },
     "types": "./dist/src/lib/index.d.ts",
-    "version": "1.0.12"
+    "version": "1.0.13"
 }
