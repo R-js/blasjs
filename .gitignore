@@ -7,6 +7,8 @@ npm-debug.log*
 scratch-pad
 *.pem
 .*
+src/**/*.d.ts
+src/**/*.js
 notes.md
 !/.gitignore
 !/.npmignore

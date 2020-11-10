@@ -73,15 +73,6 @@ export type FortranArrEComplex = {
 
 };
 
-export function isComplex(a): a is Complex {
-    return (
-        (a !== null) &&
-        (typeof a === 'object') &&
-        ('re' in a) &&
-        ('im' in a) &&
-        (typeof a['re'] === 'number' && typeof a['im'] === 'number')
-    );
-}
 //2
 export function mimicFArray(r: fpArray, i?: fpArray) {
     //Lets make some curry
@@ -156,7 +147,7 @@ function demuxComplex(...rest: (Complex | number)[]): { reals: number[], imags?:
 
     const c = flatten(rest);
 
-    const collect: { reals: number[], imags: number[] } = { reals: [], imags: [] };
+    const collect: { reals: number[], imags?: number[] } = { reals: [], imags: [] };
 
     c.reduce((prev, v) => {
         if (typeof v === 'number') {
@@ -168,14 +159,16 @@ function demuxComplex(...rest: (Complex | number)[]): { reals: number[], imags?:
         if (re !== undefined) {
             prev.reals.push(re);
         }
-        if (im !== undefined) {
+        if (im !== undefined && prev.imags) {
             prev.imags.push(im);
         }
         return prev;
     }, collect);
     //only reals?
-    if (collect.reals.length > 0 && collect.imags.length === 0) {
-        delete collect.imags;
+    if (collect.reals.length > 0){
+        if (collect.imags && collect.imags.length === 0){
+           delete collect.imags;
+        }
     }
     return collect;
 }
@@ -565,7 +558,7 @@ export function fortranMatrixComplex64(...rest: (number | number[] | Complex | C
 
 export function lowerChar<T extends string>(c?: T): T {
     if (typeof c !== 'string') {
-        return '' as any;
+        return '' as T;
     }
     const cc = c.charCodeAt(0);
     if ((cc >= 65 && cc <= 90) || (cc >= 97 && cc <= 122)) {

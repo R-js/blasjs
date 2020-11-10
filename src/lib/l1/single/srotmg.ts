@@ -145,7 +145,7 @@ export function srotmg(p: {
             }
         }
 
-        // PROCESURE..SCALE - CHECK
+        // PROCEDURE..SCALE - CHECK
         if (SD1 !== ZERO) {
             while ((SD1 <= RGAMSQ) || (SD1 >= GAMSQ)) {
                 if (SFLAG === ZERO) {

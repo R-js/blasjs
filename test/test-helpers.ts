@@ -17,7 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { assert } from 'chai';
 
-import { Complex, isComplex } from '../src/lib/f_func';
+import { Complex } from '../src/lib/f_func';
+
+
+export function isComplex(a): a is Complex {
+    return (
+        (a !== null) &&
+        (typeof a === 'object') &&
+        ('re' in a) &&
+        ('im' in a) &&
+        (typeof a['re'] === 'number' && typeof a['im'] === 'number')
+    );
+}
 
 export function approximatelyWithPrec(prec: number): (act: number | Complex, exp: number) => void {
 

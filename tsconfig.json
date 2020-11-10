@@ -1,37 +1,36 @@
 {
     "compilerOptions": {
-        "strictPropertyInitialization": false,
-        "noImplicitAny": false,
+        "allowJs": true,
+        "checkJs": true,
+        "moduleResolution": "node",
+        "removeComments": true,
+        // strictness
+        "strict": true,
+        "alwaysStrict": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictPropertyInitialization": true,
+        
         "noLib": false,
         "noUnusedLocals": true,
         "newLine": "LF",
-        "noEmit": false,
+        "noEmit": true,
         "listEmittedFiles": true,
-        "declarationDir": "dist",
-        "declaration": true,
-        "removeComments": true,
-        "allowUnreachableCode": true,
+        "allowUnreachableCode": false,
         "baseUrl": "./",
-        "experimentalDecorators": true,
-        "jsx": "react",
         "lib": [
             "es6",
             "dom",
             "esnext.asynciterable"
         ],
-        "module": "commonjs",
         "target": "es2016",
-        "moduleResolution": "node",
-        "outDir": "dist",
         "rootDir": "",
         "sourceMap": true,
-        "strict": true
     },
-    "exclude": [
-        "node_modules"
-    ],
     "include": [
-        "src/**/*.ts",
-        "src/**/*.tsx"
-    ]
+        "src/**/*.ts"
+    ],
+    "typeAcquisition": {
+        "enable": true
+    }
 }

@@ -57,7 +57,6 @@ const helper = util;
 
 export { Matrix, Complex, fpArray, FortranArr, util, helper, level1, level2, level3 };
 
-export default { level1, level2, level3, helper, util };
 
 
 
