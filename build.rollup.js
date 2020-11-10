@@ -13,7 +13,7 @@ const outputOptions = {
     file: 'dist/blas.js',
     name: 'blas',
     sourcemap: true,
-    plugins: [ terser()]
+   // plugins: [ terser()]
 };
 
 async function build() {
@@ -29,7 +29,7 @@ async function build() {
             //   source: string | Uint8Array    // the asset source
             //   type: 'asset'                  // signifies that this is an asset
             // }
-            console.log('Asset', chunkOrAsset.fileName);
+            //console.log('Asset', chunkOrAsset.fileName);
         } else {
             // For chunks, this contains
             // {
@@ -57,7 +57,7 @@ async function build() {
             //   referencedFiles: string[]      // files referenced via import.meta.ROLLUP_FILE_URL_<id>
             //   type: 'chunk',                 // signifies that this is a chunk
             // }
-            console.log('Chunk', chunkOrAsset.fileName);
+            //console.log('Chunk', chunkOrAsset.fileName);
         }
     }
 

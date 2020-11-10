@@ -248,10 +248,10 @@ export interface Matrix {
     readonly r: fpArray; //[(ncols+1)*(nrows+1)]
     readonly i?: fpArray; //imaginary part of matrix [(ncols+1)*(nrows+1)]
     //readonly colOf: (number) => number;
-    readonly colOfEx: (number) => number;
+    colOfEx(n: number): number;
     //s: FortranMatrixSetterGetter
     // zap a row with fa valie
-    coord(col): (row) => number;
+    coord(col: number): (a: number) => number;
     setCol(col: number, rowStart: number, rowEnd: number, value: number): void;
     slice_used_for_test(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
     slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
@@ -331,7 +331,7 @@ function packedBandi_fied_Matrix(uplo: 'u' | 'l', k: number, A: Matrix): Fortran
 
 export function mimicFMatrix(r: fpArray, i?: fpArray) {
 
-    return function c1(lda: number, nrCols: number, rowBase: number = 1, colBase = 1): Matrix {
+    return function c1(lda: number, nrCols: number, rowBase: number = 1, colBase = 1): Readonly<Matrix> {
 
         // check rows
         if (lda < 0) {
@@ -354,7 +354,6 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
             throw new Error(errWrongArg('colBase', 'is a NaN'));
         }
 
-
         return Object.freeze<Matrix>({
             rowBase,
             colBase,
@@ -362,9 +361,9 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
             nrRows: lda,
             r,
             i,
-            coord(col) {
+            coord(col: number) {
                 const tb = (col - colBase) * lda;
-                return row => tb + (row - rowBase)
+                return (row: number) => tb + (row - rowBase);
             },
             //  colOf: (col) => (col - colBase) * nrRows,
             colOfEx: (col) => (col - colBase) * lda - rowBase,

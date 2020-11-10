@@ -2,7 +2,6 @@
     "compilerOptions": {
         "allowJs": true,
         "checkJs": true,
-        "moduleResolution": "node",
         "removeComments": true,
         // strictness
         "strict": true,
@@ -10,25 +9,43 @@
         "noImplicitAny": true,
         "noImplicitThis": true,
         "strictPropertyInitialization": true,
-        
+        // module resolution
+        "allowSyntheticDefaultImports": false,
+        "allowUmdGlobalAccess": false,
+        "esModuleInterop": true,
+        "baseUrl": "./",
+        "importHelpers":true,
+        "moduleResolution": "node",
+        // source maps
+        "inlineSources": false,
+        "sourceMap": true,
+            // sourceRoot: <dont specify>
+            // mapRoot: <dont specify>
+
+        // linter checks
+        "noFallthroughCasesInSwitch": false,// fall through is ok
+        "noImplicitReturns": true,
+
+        // unexamined part
         "noLib": false,
         "noUnusedLocals": true,
         "newLine": "LF",
         "noEmit": true,
         "listEmittedFiles": true,
         "allowUnreachableCode": false,
-        "baseUrl": "./",
+        
         "lib": [
-            "es6",
-            "dom",
-            "esnext.asynciterable"
+            "es2020"          
         ],
         "target": "es2016",
-        "rootDir": "",
-        "sourceMap": true,
+        
+      
     },
     "include": [
         "src/**/*.ts"
+    ],
+    "exclude":[
+        "src/**/doc.ts"
     ],
     "typeAcquisition": {
         "enable": true

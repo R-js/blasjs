@@ -72,18 +72,6 @@ export const desc: { [index: string]: string } = {
 };
 //65
 
-
-(function i() {
-
-    const props = Object.getOwnPropertyNames(desc);
-    const reverted = props.map(name => ({ o: name, n: name.split('').reverse().join('') }));
-    const reverseSorted = reverted.sort((o1, o2) => o1.n > o2.n ? 1 : o1.n < o2.n ? -1 : 0);
-    console.log('===level2=====');
-    console.log('{ ');
-    reverseSorted.forEach(o => console.log(`${o.o}: '${desc[o.o].replace(/\s+/g, ' ')}',`));
-    console.log(' } ');
-})();
-
 //const x = {
     //
     //CHER2: 'performs the hermitian rank 2 operation A := alpha*x*y**H + conjg( alpha )*y*x**H + A',

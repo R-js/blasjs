@@ -62,18 +62,6 @@ export const desc = {
     SROTMG: 'CONSTRUCT THE MODIFIED GIVENS TRANSFORMATION MATRIX H'
 };
 
-(function i() {
-
-    const props = Object.getOwnPropertyNames(desc);
-    const reverted = props.map(name => ({ o: name, n: name.split('').reverse().join('') }));
-    const reverseSorted = reverted.sort((o1, o2) => o1.n > o2.n ? 1 : o1.n < o2.n ? -1 : 0);
-    console.log('===level1=====');
-    console.log('{ ');
-    reverseSorted.forEach(o => console.log(`${o.o}: '${desc[o.o].replace(/\s+/g, ' ')}',`));
-    console.log(' } ');
-})();
-
-
 export const x = {
     SCNRM2: 'returns the euclidean norm of a vector via the function name, so that SCNRM2 := sqrt( x**H*x )',
     DNRM2: 'returns the euclidean norm of a vector via the function name, so that DNRM2 := sqrt( x\' * x ) ',

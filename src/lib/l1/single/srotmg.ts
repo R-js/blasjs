@@ -162,14 +162,14 @@ export function srotmg(p: {
                 if (SD1 <= RGAMSQ) {
                     SD1 = SD1 * GAM2;
                     SX1 = SX1 / GAM;
-                    SH11 = SH11 / GAM;
-                    SH12 = SH12 / GAM;
+                    SH11 = <number>SH11 / GAM;
+                    SH12 = <number>SH12 / GAM;
                 }
                 else {
                     SD1 = SD1 / GAM2;
                     SX1 = SX1 * GAM;
-                    SH11 = SH11 * GAM;
-                    SH12 = SH12 * GAM;
+                    SH11 = <number>SH11 * GAM;
+                    SH12 = <number>SH12 * GAM;
                 }
             }//while
 
@@ -189,13 +189,13 @@ export function srotmg(p: {
                 }
                 if (ABS(SD2) <= RGAMSQ) {
                     SD2 = SD2 * GAM2;
-                    SH21 = SH21 / GAM;
-                    SH22 = SH22 / GAM;
+                    SH21 = <number>SH21 / GAM;
+                    SH22 = <number>SH22 / GAM;
                 }
                 else {
                     SD2 = SD2 / GAM2;
-                    SH21 = SH21 * GAM;
-                    SH22 = SH22 * GAM;
+                    SH21 = <number>SH21 * GAM;
+                    SH22 = <number>SH22 * GAM;
                 }
             }//while
         }//if
@@ -203,22 +203,22 @@ export function srotmg(p: {
     // shortcut
     const parr = p.sparam.r;
 
-    if (SFLAG < ZERO) {
-        parr[2 - pb] = SH11;
-        parr[3 - pb] = SH21;
-        parr[4 - pb] = SH12;
-        parr[5 - pb] = SH22;
+    if (<number>SFLAG < ZERO) {
+        parr[2 - pb] = <number>SH11;
+        parr[3 - pb] = <number>SH21;
+        parr[4 - pb] = <number>SH12;
+        parr[5 - pb] = <number>SH22;
     }
     else if (SFLAG === ZERO) {
-        parr[3 - pb] = SH21;
-        parr[4 - pb] = SH12;
+        parr[3 - pb] = <number>SH21;
+        parr[4 - pb] = <number>SH12;
     }
     else {
-        parr[2 - pb] = SH11;
-        parr[5 - pb] = SH22;
+        parr[2 - pb] = <number>SH11;
+        parr[5 - pb] = <number>SH22;
     }
-    parr[1 - pb] = SFLAG;
-    //wrap it up, => pushback
+    parr[1 - pb] = <number>SFLAG;
+    //wrap it up, => push back
     p.sd1 = SD1;
     p.sd2 = SD2;
     p.sx1 = SX1;

@@ -35,17 +35,6 @@ export const desc: { [index: string]: string } = {
     STRSM: 'solves one of the matrix equations op( A )*X = alpha*B,   or   X*op( A ) = alpha*B'
 };
 
-(function i() {
-
-    const props = Object.getOwnPropertyNames(desc);
-    const reverted = props.map(name => ({ o: name, n: name.split('').reverse().join('') }));
-    const reverseSorted = reverted.sort((o1, o2) => o1.n > o2.n ? 1 : o1.n < o2.n ? -1 : 0);
-    console.log('===level3=====');
-    console.log('{ ');
-    reverseSorted.forEach(o => console.log(`${o.o}: '${desc[o.o].replace(/\s+/g, ' ')}',`));
-    console.log(' } ');
-})();
-
 
 export const x = {
 
