@@ -1,24 +1,89 @@
 {
+    // file inclusion
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude":[
+        "src/**/doc.ts"
+    ],
+    "typeAcquisition": {
+        "enable": true
+    },
     "compilerOptions": {
+        // project options
         "allowJs": true,
         "checkJs": true,
-        "removeComments": true,
+        /* composite works with:
+            - rootDir set it explicitly
+            - all files must be in the "include" or "files" property
+            - set declaration to "true"
+            ! cannot be specified with "noEmit"
+        */
+        "composite": true, 
+        "declaration": true, // generate decleration files, make sure they go into a declarationDir
+        "declarationMap": true, // make map files for .d.ts files
+        "downlevelIteration": false, // let babble handle it
+        // import helpers
+        // https://www.typescriptlang.org/tsconfig#importHelpers
+        "importHelpers": false, // babble domain
+        "incremental": true,
+        // warn for potential cross-module transpile problems
+        // example: ambient const enum member generate errors
+        // https://www.typescriptlang.org/tsconfig#isolatedModules
+        "isolatedModules": true, 
+        // "jsx": --> "undefined",
+        //
+        // this is not the transpilation target
+        "lib":[ 
+            "ES2020"
+        ],
+        "module":"ES2020",
+        "noEmit": false,
+        "outDir": "./build", // babel will take it from here and move to /bin
+        //"outFile" , non modules files get concatenated to this file
+        //"plugins":[...] for vscode editor, already included in package.json "contributes" field
+        "removeComments": false, // babel should handle it
+        "rootDir": "./src",
+        "sourceMap": true, // not sure if this should be turned on if you use babel
+        "target": "ES2020", // no down transpiling , that is for babel
+        // "tsBuildInfoFile": , we dont use composite projects
+
+        /* STRICT CHECKS
+        https://www.typescriptlang.org/tsconfig#Strict_Type_Checking_Options_6173 */
+
         // strictness
+        /*
+        "strict": true sets all below to true aswell
+          alwaysStrict, 
+          strictNullChecks, 
+          strictBindCallApply, 
+          strictFunctionTypes, 
+          strictPropertyInitialization, 
+          noImplicitAny, 
+          noImplicitThis
+        */
         "strict": true,
         "alwaysStrict": true,
         "noImplicitAny": true,
         "noImplicitThis": true,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
         "strictPropertyInitialization": true,
-        // module resolution
+        
+        /* MODULE RESOLUTION
+            https://www.typescriptlang.org/tsconfig#Module_Resolution_Options_6174
+        */
+        // we are here 17-11-2020
         "allowSyntheticDefaultImports": false,
         "allowUmdGlobalAccess": false,
         "esModuleInterop": true,
         "baseUrl": "./",
-        "importHelpers":true,
+       
         "moduleResolution": "node",
         // source maps
         "inlineSources": false,
-        "sourceMap": true,
+     
             // sourceRoot: <dont specify>
             // mapRoot: <dont specify>
 
@@ -30,24 +95,12 @@
         "noLib": false,
         "noUnusedLocals": true,
         "newLine": "LF",
-        "noEmit": true,
+       
         "listEmittedFiles": true,
         "allowUnreachableCode": false,
         
-        "lib": [
-            "es2020"          
-        ],
-        "target": "es2016",
-        
+       
       
-    },
-    "include": [
-        "src/**/*.ts"
-    ],
-    "exclude":[
-        "src/**/doc.ts"
-    ],
-    "typeAcquisition": {
-        "enable": true
+      
     }
 }

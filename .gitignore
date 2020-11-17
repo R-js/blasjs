@@ -1,6 +1,7 @@
 # Logs
 logs
 dist/
+build/
 *.log
 TODO
 npm-debug.log*

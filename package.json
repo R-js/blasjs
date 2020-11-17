@@ -6,6 +6,13 @@
     "dependencies": {
         "typescript": "^4.0.5"
     },
+    "contributes": {
+        "typescriptServerPlugins": [
+            {
+                "name": "typescript-eslint-language-service"
+            }
+        ]
+    },
     "description": "Javascript Pure Implementation of BLAS Level 1, level 2, level 3 functions",
     "devDependencies": {
         "@rollup/plugin-typescript": "^6.1.0",
@@ -51,6 +58,7 @@
         "tslib": "^2.0.3",
         "tslint": "^5.9.1",
         "tslint-loader": "^3.5.3",
+        "typescript-eslint-language-service": "^4.1.1",
         "uglifyjs-webpack-plugin": "^1.1.8",
         "webpack": "^2.7.0",
         "webpack-node-externals": "^1.6.0"
