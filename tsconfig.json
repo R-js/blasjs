@@ -71,26 +71,69 @@
         "strictNullChecks": true,
         "strictPropertyInitialization": true,
         
-        /* MODULE RESOLUTION
-            https://www.typescriptlang.org/tsconfig#Module_Resolution_Options_6174
-        */
-        // we are here 17-11-2020
+        /* MODULE RESOLUTION */
+        /* MODULE RESOLUTION */
+        /* MODULE RESOLUTION */
+        //https://www.typescriptlang.org/tsconfig#Module_Resolution_Options_6174
+
+        //
         "allowSyntheticDefaultImports": false,
         "allowUmdGlobalAccess": false,
-        "esModuleInterop": true,
-        "baseUrl": "./",
-       
-        "moduleResolution": "node",
+        "baseUrl": "./", // because src needs to be accessible by test
+        "esModuleInterop": false, // let babble handle this issue
+        // this is how modules are resolved at build time
+        // we dont use dynamic module loading or the ES6 module spec
+        "moduleResolution": "node", 
+        "path": { //  we can use this for the test to pick up the module
+            "blasjs" :"src/lib"
+        }, // maybe use later, if you decide to use this, specify baseurl
         // source maps
+        "preserveSymlinks": true, // keep it around just in case
+        /** 
+           dont use it yet, does NOT affect typescript transpilation
+           "rootDirs":[] dont use it yet, does NOT affect typescript transpilation
+           can be used to trigger resolution of non js assets css etc
+           like import { appClass } from "./main.css"  
+           main.css in src/css/main.css can by found by rootDirs:[ "src/css" ]
+        **/
+        // rootDirs:[something]
+        /*
+           Where to find typefiles, normally "./node_modules/@types"
+           all types are relative to tsconfig.json
+          
+        */
+        // "typeRoots":['./vender/types','./node_modules/@types']
+        /*
+            only these packages will be included in global scope
+            (sliced out of what is allowed by typeRoots),
+            note this is only global types (without import statement)
+            types included by "import" statements will not be affected by this setting
+        */
+        // types:["node","jest","express"]
+        
+        /* SOURCE MAPS */
+        /* SOURCE MAPS */
+        /* SOURCE MAPS */
+        // https://www.typescriptlang.org/tsconfig#Source_Map_Options_6175
+        "inlineSourceMap": false,
         "inlineSources": false,
-     
-            // sourceRoot: <dont specify>
-            // mapRoot: <dont specify>
+        /* url that is included in the source map verbatim! 
+           location of the sourcemap
+        */
+        // "mapRoot": "http://someurl/debug/sourcemaps" use it? will be handled by babble?
+        /* "sourceRoot" will be the url needed to find the original ts files
+          this allows for debugging through original ts files
+        */  
+        // "sourceRoot: "http://someurl/debug/sources" use it? will be handled by babble?
+          
+        /* LINTER CHECKS */
+        /* LINTER CHECKS */
+        /* LINTER CHECKS */
+        // https://www.typescriptlang.org/tsconfig#Source_Map_Options_6175
+        "noImplicitReturns" : false, // allow for it
+        // I am here 18-11-2020
 
-        // linter checks
         "noFallthroughCasesInSwitch": false,// fall through is ok
-        "noImplicitReturns": true,
-
         // unexamined part
         "noLib": false,
         "noUnusedLocals": true,
