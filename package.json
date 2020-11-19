@@ -1,10 +1,8 @@
 {
     "author": "Jacob K.F. Bogers",
+    "browser": "dist/lib/blasjs.min.js",
     "bugs": {
         "url": "https://github.com/jacobbogers/blasjs/issues"
-    },
-    "dependencies": {
-        "typescript": "^4.0.5"
     },
     "contributes": {
         "typescriptServerPlugins": [
@@ -13,6 +11,7 @@
             }
         ]
     },
+    "dependencies": {},
     "description": "Javascript Pure Implementation of BLAS Level 1, level 2, level 3 functions",
     "devDependencies": {
         "@rollup/plugin-typescript": "^6.1.0",
@@ -58,6 +57,7 @@
         "tslib": "^2.0.3",
         "tslint": "^5.9.1",
         "tslint-loader": "^3.5.3",
+        "typescript": "^4.0.5",
         "typescript-eslint-language-service": "^4.1.1",
         "uglifyjs-webpack-plugin": "^1.1.8",
         "webpack": "^2.7.0",
@@ -85,7 +85,6 @@
         "conjugate matrix"
     ],
     "license": "GPL-3.0",
-    "browser": "dist/lib/blasjs.min.js",
     "main": "dist/lib/index.js",
     "name": "blasjs",
     "repository": {
@@ -95,12 +94,12 @@
     "scripts": {
         "build": "webpack --progress --color --display-error-details --config config/webpack/config",
         "build:prod": "webpack --progress --color --display-error-details --config config/webpack/config --env=prod",
+        "codecov": "codecov",
         "lint": "tslint -c tslint.json -p .",
         "lint:fix": "npm run lint -- --fix",
         "lint:report": "npm run lint -- -o .lint-report.txt --force && code .lint-report.txt",
         "post-test": "echo posttest",
         "prepublishOnly": "tsc && npm run build:prod",
-        "codecov": "codecov",
         "report": "opn coverage/lcov-report/index.html",
         "test": "cross-env-shell NODE_ENV=test TS_NODE_DISABLE_WARNINGS=true nyc mocha"
     },
