@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-import { FortranArr } from '../../f_func';
+import type { FortranArr } from '../../f_func';
 
 export function sdsdot(
     n: number,

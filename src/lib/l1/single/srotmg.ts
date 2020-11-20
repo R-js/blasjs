@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 const { abs, abs: ABS } = Math;
-import { FortranArr } from '../../f_func';
+import type { FortranArr } from '../../f_func';
 
 export function srotmg(p: {
     sd1: number,

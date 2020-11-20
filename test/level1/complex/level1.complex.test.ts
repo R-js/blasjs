@@ -15,16 +15,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
 import * as blas from '../../../src/lib';
 import { approximately } from '../../test-helpers';
 import { fixture } from './fixtures';
 
 
 const {
-  util: { arrayrify, numberPrecision, each, multiplexer, fortranArrComplex64, complex, muxCmplx },
+  util: { numberPrecision, each, multiplexer, fortranArrComplex64, complex, muxCmplx },
   level1: { scasum, cswap, csscal, caxpy, ccopy, cdotc, cdotu, crotg, cscal, csrot, icamax }
-} = blas;
+} = blas; 
 
 const { abs } = Math;
 const { isNaN, isFinite } = Number;

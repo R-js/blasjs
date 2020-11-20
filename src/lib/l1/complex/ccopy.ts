@@ -14,7 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { errMissingIm, FortranArr } from '../../f_func';
+import type { FortranArr } from '../../f_func';
+import { errMissingIm } from '../../f_func';
 
 export function ccopy(
       n: number,
