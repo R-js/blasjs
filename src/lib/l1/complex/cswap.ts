@@ -18,54 +18,51 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { errMissingIm, FortranArr } from '../../f_func';
 
 export function cswap(
-      n: number,
-      cx: FortranArr, //  dimension(1 + (N - 1) * abs(INCX))
-      incx: number,
-      cy: FortranArr, // dimension(1 + (N - 1) * abs(INCY))
-      incy: number
+    n: number,
+    cx: FortranArr, //  dimension(1 + (N - 1) * abs(INCX))
+    incx: number,
+    cy: FortranArr, // dimension(1 + (N - 1) * abs(INCY))
+    incy: number,
 ): void {
+    if (!cx.i) {
+        throw new Error(errMissingIm('cx'));
+    }
 
-      if (!cx.i) {
-            throw new Error(errMissingIm('cx'));
-      }
+    if (!cy.i) {
+        throw new Error(errMissingIm('cy'));
+    }
 
-      if (!cy.i) {
-            throw new Error(errMissingIm('cy'));
-      }
+    if (n <= 0) return;
 
-      if (n <= 0) return;
+    const bx = cx.base;
+    const by = cy.base;
 
-      const bx = cx.base;
-      const by = cy.base;
+    let ix = 1;
+    let iy = 1;
 
-      let ix = 1;
-      let iy = 1;
+    if (incx <= 0) ix = (-n + 1) * incx + 1;
+    if (incy <= 0) iy = (-n + 1) * incy + 1;
 
-      if (incx <= 0) ix = (-n + 1) * incx + 1;
-      if (incy <= 0) iy = (-n + 1) * incy + 1;
+    // case incx = -1 incy=1
+    //  x[n] = y[1]
+    //  y[1] = x[n]
+    //-
+    // x[n-1] = y[2]
+    // y[2]= x[n-1]
+    for (let i = 1; i <= n; i++) {
+        const kx = ix - bx;
+        const ky = iy - by;
 
-      // case incx = -1 incy=1
-      //  x[n] = y[1]
-      //  y[1] = x[n]
-      //-
-      // x[n-1] = y[2]
-      // y[2]= x[n-1]
-      for (let i = 1; i <= n; i++) {
-            const kx = ix - bx;
-            const ky = iy - by;
+        const re = cx.r[kx];
+        const im = cx.i[kx];
 
-            const re = cx.r[kx];
-            const im = cx.i[kx];
+        cx.r[kx] = cy.r[ky];
+        cx.i[kx] = cy.i[ky];
 
-            cx.r[kx] = cy.r[ky];
-            cx.i[kx] = cy.i[ky];
+        cy.r[ky] = re;
+        cy.i[ky] = im;
 
-            cy.r[ky] = re;
-            cy.i[ky] = im;
-
-            ix += incx;
-            iy += incy;
-      }
-
-
+        ix += incx;
+        iy += incy;
+    }
 }

@@ -15,12 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    div_rxr,
-    FortranArrEComplex,
-    MatrixEComplex,
-    mul_rxr
-} from '../../../f_func'
+import { div_rxr, FortranArrEComplex, MatrixEComplex, mul_rxr } from '../../../f_func';
 
 export function normalLower(
     kx: number,
@@ -29,9 +24,8 @@ export function normalLower(
     x: FortranArrEComplex,
     incx: number,
     a: MatrixEComplex,
-    n: number
+    n: number,
 ) {
-
     let jx = kx;
     for (let j = 1; j <= n; j++) {
         const coorAJ = a.colOfEx(j);
@@ -39,26 +33,16 @@ export function normalLower(
         if (!isXZero) {
             if (nounit) {
                 //(a+ib)/c+id) = (ac+bd)/(c*c +d*d) + i(-ad+bc)/(c*c+d*d)
-                const { re, im } = div_rxr(
-                    x.r[jx - x.base],
-                    x.i[jx - x.base],
-                    a.r[coorAJ + j],
-                    a.i[coorAJ + j]
-                );
+                const { re, im } = div_rxr(x.r[jx - x.base], x.i[jx - x.base], a.r[coorAJ + j], a.i[coorAJ + j]);
                 x.r[jx - x.base] = re;
                 x.i[jx - x.base] = im;
             }
-            let tempRe = x.r[jx - x.base];
-            let tempIm = x.i[jx - x.base];
+            const tempRe = x.r[jx - x.base];
+            const tempIm = x.i[jx - x.base];
             let ix = jx;
             for (let i = j + 1; i <= n; i++) {
                 ix += incx;
-                const { re, im } = mul_rxr(
-                    tempRe,
-                    tempIm,
-                    a.r[coorAJ + i],
-                    a.i[coorAJ + i]
-                );
+                const { re, im } = mul_rxr(tempRe, tempIm, a.r[coorAJ + i], a.i[coorAJ + i]);
                 x.r[ix - x.base] -= re;
                 x.i[ix - x.base] -= im;
             }

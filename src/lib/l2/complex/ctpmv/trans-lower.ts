@@ -24,8 +24,8 @@ export function transLower(
     x: FortranArrEComplex,
     incx: number,
     ap: FortranArrEComplex,
-    n: number
-) {
+    n: number,
+): void {
     let kk = 1;
     let jx = kx;
     for (let j = 1; j <= n; j++) {
@@ -35,24 +35,14 @@ export function transLower(
         //   if (noconj) {
         if (nounit) {
             const apkk = kk - ap.base;
-            const { re, im } = mul_rxr(
-                tempRe,
-                tempIm,
-                ap.r[apkk],
-                (noconj ? ap.i[apkk] : -ap.i[apkk])
-            );
+            const { re, im } = mul_rxr(tempRe, tempIm, ap.r[apkk], noconj ? ap.i[apkk] : -ap.i[apkk]);
             tempRe = re;
             tempIm = im;
         }
         for (let k = kk + 1; k <= kk + n - j; k++) {
             ix += incx;
             const apk = k - ap.base;
-            const { re, im } = mul_rxr(
-                ap.r[apk],
-                (noconj ? ap.i[apk] : -ap.i[apk]),
-                x.r[ix - x.base],
-                x.i[ix - x.base]
-            );
+            const { re, im } = mul_rxr(ap.r[apk], noconj ? ap.i[apk] : -ap.i[apk], x.r[ix - x.base], x.i[ix - x.base]);
             tempRe += re;
             tempIm += im;
         }

@@ -27,31 +27,26 @@ export function strsv(
     a: Matrix,
     lda: number,
     x: FortranArr,
-    incx: number): void {
-
+    incx: number,
+): void {
     // lowerCase it all in a fast way
     const ul = lowerChar(uplo);
     const tr = lowerChar(trans);
     const dg = lowerChar(diag);
 
-    let info = 0
+    let info = 0;
 
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (!'ntc'.includes(tr)) {
+    } else if (!'ntc'.includes(tr)) {
         info = 2;
-    }
-    else if (!'un'.includes(dg)) {
+    } else if (!'un'.includes(dg)) {
         info = 3;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 4;
-    }
-    else if (lda < max(1, n)) {
+    } else if (lda < max(1, n)) {
         info = 6;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 8;
     }
 
@@ -73,13 +68,13 @@ export function strsv(
     if (tr === 'n') {
         //Form  x := inv( A )*x.
         if (ul === 'u') {
-            let jx = (kx + (n - 1) * incx) - x.base;
+            let jx = kx + (n - 1) * incx - x.base;
             for (let j = n; j >= 1; j--) {
                 if (x.r[jx] !== 0) {
                     const coords = a.colOfEx(j);
 
                     if (nounit) x.r[jx] /= a.r[coords + j];
-                    let temp = x.r[jx];
+                    const temp = x.r[jx];
                     let ix = jx;
                     for (let i = j - 1; i >= 1; i--) {
                         ix -= incx;
@@ -88,14 +83,13 @@ export function strsv(
                 }
                 jx -= incx;
             }
-        }
-        else {
+        } else {
             let jx = kx - x.base;
             for (let j = 1; j <= n; j++) {
                 const coords = a.colOfEx(j);
                 if (x.r[jx] !== 0) {
                     if (nounit) x.r[jx] /= a.r[coords + j];
-                    let temp = x.r[jx];
+                    const temp = x.r[jx];
                     let ix = jx;
                     for (let i = j + 1; i <= n; i++) {
                         ix += incx;
@@ -105,8 +99,7 @@ export function strsv(
                 jx += incx;
             }
         }
-    }
-    else {
+    } else {
         if (ul === 'u') {
             let jx = kx;
             for (let j = 1; j <= n; j++) {
@@ -121,8 +114,7 @@ export function strsv(
                 x.r[jx - x.base] = temp;
                 jx += incx;
             }
-        }
-        else {
+        } else {
             kx += (n - 1) * incx;
             let jx = kx;
             for (let j = n; j >= 1; j--) {

@@ -15,15 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import type {
-    Complex,
-    MatrixEComplex,
-} from '../../../f_func';
+import type { Complex, MatrixEComplex } from '../../../f_func';
 
-import {
-    mul_cxr,
-    mul_rxr
-} from '../../../f_func';
+import { mul_cxr, mul_rxr } from '../../../f_func';
 
 export function AB(
     nounit: boolean,
@@ -33,8 +27,8 @@ export function AB(
     m: number,
     a: MatrixEComplex,
     b: MatrixEComplex,
-    alpha: Complex): void {
-
+    alpha: Complex,
+): void {
     if (upper) {
         for (let j = 1; j <= n; j++) {
             const coorBJ = b.colOfEx(j);
@@ -55,7 +49,6 @@ export function AB(
                         b.r[coorBJ + i] += re;
                         b.i[coorBJ + i] += im;
                         //                console.log(`${j},${k},${i},\t (${b.r[coorBJ + i]},${b.i[coorBJ + i]})`);
-
                     }
                     if (nounit) {
                         //TEMP = TEMP*A(K,K)
@@ -66,20 +59,18 @@ export function AB(
                     //B(K,J) = TEMP
                     b.r[coorBJ + k] = tempRe;
                     b.i[coorBJ + k] = tempIm;
-                }//if b[*]!=zero
-            }//for k
-        }//for j
-    }
-    else {
+                } //if b[*]!=zero
+            } //for k
+        } //for j
+    } else {
         for (let j = 1; j <= n; j++) {
             const coorBJ = b.colOfEx(j);
             for (let k = m; k >= 1; k--) {
                 const coorAK = a.colOfEx(k);
                 const bIsZero = b.r[coorBJ + k] === 0 && b.i[coorBJ + k] === 0;
                 if (!bIsZero) {
-
-                    let tempRe = alpha.re * b.r[coorBJ + k] - alpha.im * b.i[coorBJ + k];
-                    let tempIm = alpha.re * b.i[coorBJ + k] + alpha.im * b.r[coorBJ + k];
+                    const tempRe = alpha.re * b.r[coorBJ + k] - alpha.im * b.i[coorBJ + k];
+                    const tempIm = alpha.re * b.i[coorBJ + k] + alpha.im * b.r[coorBJ + k];
                     b.r[coorBJ + k] = tempRe;
                     b.i[coorBJ + k] = tempIm;
                     //                    console.log(`${j},${k},\t${tempRe},${tempIm}`);
@@ -100,8 +91,8 @@ export function AB(
                     //console.log(`${j},${k},\t${b.r[coorBJ + k]},${b.i[coorBJ + k]}`);
                     for (let i = k + 1; i <= m; i++) {
                         //TEMP * A(I,K)
-                        let re = tempRe * a.r[coorAK + i] - tempIm * a.i[coorAK + i];
-                        let im = tempRe * a.i[coorAK + i] + tempIm * a.r[coorAK + i];
+                        const re = tempRe * a.r[coorAK + i] - tempIm * a.i[coorAK + i];
+                        const im = tempRe * a.i[coorAK + i] + tempIm * a.r[coorAK + i];
                         //B(I,J) = B(I,J) + TEMP*A(I,K)
                         //console.log(`${j},${k},${i}\t${re},${im}`);
                         b.r[coorBJ + i] += re;

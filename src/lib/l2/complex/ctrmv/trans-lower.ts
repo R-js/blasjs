@@ -15,10 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import type {
-    FortranArrEComplex,
-    MatrixEComplex
-} from '../../../f_func';
+import type { FortranArrEComplex, MatrixEComplex } from '../../../f_func';
 
 export function transLower(
     kx: number,
@@ -27,9 +24,8 @@ export function transLower(
     x: FortranArrEComplex,
     incx: number,
     a: MatrixEComplex,
-    n: number
+    n: number,
 ): void {
-
     let jx = kx - x.base;
     for (let j = 1; j <= n; j++) {
         let tempRe = x.r[jx];

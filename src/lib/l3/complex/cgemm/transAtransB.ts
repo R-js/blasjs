@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Complex, MatrixEComplex, mul_cxr, mul_rxr } from '../../../f_func';
 
-
 export function transAtransB(
     betaIsZero: boolean,
     _betaIsOne: boolean,
@@ -28,8 +27,8 @@ export function transAtransB(
     c: MatrixEComplex,
     n: number,
     m: number,
-    k: number): void {
-
+    k: number,
+): void {
     // DO 370 J = 1, N
     for (let j = 1; j <= n; j++) {
         const coorCJ = c.colOfEx(j);
@@ -45,12 +44,7 @@ export function transAtransB(
 
                 //TEMP = TEMP + A(L, I) * B(J, L)
                 //(a+ib)*(c+id) = ac-bd + i(ad+bc)
-                const { re, im } = mul_rxr(
-                    a.r[coorAI + l],
-                    a.i[coorAI + l],
-                    b.r[coorBL + j],
-                    b.i[coorBL + j]
-                );
+                const { re, im } = mul_rxr(a.r[coorAI + l], a.i[coorAI + l], b.r[coorBL + j], b.i[coorBL + j]);
                 tempRe += re;
                 tempIm += im;
             }
@@ -62,18 +56,10 @@ export function transAtransB(
             END IF
             */
             // C(I,J) = ALPHA*TEMP
-            let { re, im } = mul_cxr(
-                alpha,
-                tempRe,
-                tempIm
-            );
+            let { re, im } = mul_cxr(alpha, tempRe, tempIm);
             if (!betaIsZero) {
                 // C(I,J) = ALPHA*TEMP + beta*C(I,J)
-                const { re: re1, im: im1 } = mul_cxr(
-                    beta,
-                    c.r[coorCJ + i],
-                    c.i[coorCJ + i]
-                );
+                const { re: re1, im: im1 } = mul_cxr(beta, c.r[coorCJ + i], c.i[coorCJ + i]);
                 re += re1;
                 im += im1;
             }
@@ -82,5 +68,3 @@ export function transAtransB(
         }
     }
 }
-
-

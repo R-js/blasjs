@@ -28,31 +28,27 @@ const { abs } = Math;
  * 
  */
 
-export function isamax(
-      n: number,
-      sx: FortranArr,
-      incx: number
-): number {
-      let _isamax = 0;
-      let smax: number;
+export function isamax(n: number, sx: FortranArr, incx: number): number {
+    let _isamax = 0;
+    let smax: number;
 
-      if (n < 1 || incx <= 0) return 0;
-      if (n === 1) return 1;
+    if (n < 1 || incx <= 0) return 0;
+    if (n === 1) return 1;
 
-      _isamax = 1;
+    _isamax = 1;
 
-      const a = sx.r;
-      const b = sx.base;
+    const a = sx.r;
+    const b = sx.base;
 
-      smax = a[1 - b];
-      let ix = 1 + incx; // starts at '2' if incx=1
-      for (let i = 2; i <= n; i++) {
-            const v = a[ix - b];
-            if (abs(v) > smax) {
-                  _isamax = i;
-                  smax = abs(v);
-            }
-            ix = ix + incx;
-      }
-      return _isamax;
+    smax = a[1 - b];
+    let ix = 1 + incx; // starts at '2' if incx=1
+    for (let i = 2; i <= n; i++) {
+        const v = a[ix - b];
+        if (abs(v) > smax) {
+            _isamax = i;
+            smax = abs(v);
+        }
+        ix = ix + incx;
+    }
+    return _isamax;
 }

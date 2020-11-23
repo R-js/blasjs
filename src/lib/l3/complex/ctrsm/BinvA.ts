@@ -15,11 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    Complex,
-    div_rxr,
-    MatrixEComplex
-} from '../../../f_func';
+import { Complex, div_rxr, MatrixEComplex } from '../../../f_func';
 //Form  B := alpha*inv( A )*B.
 
 export function BinvA(
@@ -32,8 +28,8 @@ export function BinvA(
     m: number,
     a: MatrixEComplex,
     b: MatrixEComplex,
-    alpha: Complex): void {
-
+    alpha: Complex,
+): void {
     if (upper) {
         for (let j = 1; j <= n; j++) {
             const coorBJ = b.colOfEx(j);
@@ -67,12 +63,7 @@ export function BinvA(
                 // (1+i0)/(c+id), a=1,b=0
                 // re= c/(cc+dd)
                 // im =-d/(cc+dd)
-                const { re: tempRe, im: tempIm } = div_rxr(
-                    1,
-                    0,
-                    a.r[coorAJ + j],
-                    a.i[coorAJ + j]
-                )
+                const { re: tempRe, im: tempIm } = div_rxr(1, 0, a.r[coorAJ + j], a.i[coorAJ + j]);
                 /*
                                 let _c = a.r[coorAJ + j];
                                 let _d = a.i[coorAJ + j];
@@ -80,14 +71,14 @@ export function BinvA(
                                 let tempRe = _c / n;
                                 let tempIm = _d / n;*/
                 for (let i = 1; i <= m; i++) {
-                    let re = tempRe * b.r[coorBJ + i] - tempIm * b.i[coorBJ + i];
-                    let im = tempRe * b.i[coorBJ + i] + tempIm * b.r[coorBJ + i];
+                    const re = tempRe * b.r[coorBJ + i] - tempIm * b.i[coorBJ + i];
+                    const im = tempRe * b.i[coorBJ + i] + tempIm * b.r[coorBJ + i];
                     b.r[coorBJ + i] = re;
                     b.i[coorBJ + i] = im;
                 }
-            }// nounit
-        }//k
-    }//upper
+            } // nounit
+        } //k
+    } //upper
     else {
         for (let j = n; j >= 1; j--) {
             const coorBJ = b.colOfEx(j);
@@ -127,12 +118,7 @@ export function BinvA(
                 }
             }
             if (nounit) {
-                const { re: tempRe, im: tempIm } = div_rxr(
-                    1,
-                    0,
-                    a.r[coorAJ + j],
-                    a.i[coorAJ + j]
-                );
+                const { re: tempRe, im: tempIm } = div_rxr(1, 0, a.r[coorAJ + j], a.i[coorAJ + j]);
                 // TEMP = ONE/A(J,J)
                 //(a+ib)/(c+id)
                 // re= (ac+bd)/(c*c+d*d)
@@ -146,14 +132,12 @@ export function BinvA(
                 //let tempRe = _c / n;
                 //let tempIm = _d / n;
                 for (let i = 1; i <= m; i++) {
-                    let re = tempRe * b.r[coorBJ + i] - tempIm * b.i[coorBJ + i];
-                    let im = tempRe * b.i[coorBJ + i] + tempIm * b.r[coorBJ + i];
+                    const re = tempRe * b.r[coorBJ + i] - tempIm * b.i[coorBJ + i];
+                    const im = tempRe * b.i[coorBJ + i] + tempIm * b.r[coorBJ + i];
                     b.r[coorBJ + i] = re;
                     b.i[coorBJ + i] = im;
                 }
-            }// nounit
+            } // nounit
         }
     }
 }
-
-

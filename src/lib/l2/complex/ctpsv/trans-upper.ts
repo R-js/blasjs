@@ -15,11 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    div_rxr,
-    FortranArrEComplex,
-    mul_rxr
-} from '../../../f_func';
+import { div_rxr, FortranArrEComplex, mul_rxr } from '../../../f_func';
 
 export function transUpper(
     kx: number,
@@ -28,8 +24,8 @@ export function transUpper(
     x: FortranArrEComplex,
     incx: number,
     ap: FortranArrEComplex,
-    n: number
-) {
+    n: number,
+): void {
     //console.log({ incx });
 
     let kk = 1;
@@ -45,7 +41,7 @@ export function transUpper(
                 ap.r[k - ap.base],
                 noconj ? ap.i[k - ap.base] : -ap.i[k - ap.base],
                 x.r[ix - x.base],
-                x.i[ix - x.base]
+                x.i[ix - x.base],
             );
             tempRe -= re;
             tempIm -= im;
@@ -54,12 +50,7 @@ export function transUpper(
         //
         if (nounit) {
             const apkk = kk + j - 1 - ap.base;
-            const { re, im } = div_rxr(
-                tempRe,
-                tempIm,
-                ap.r[apkk],
-                noconj ? ap.i[apkk] : -ap.i[apkk]
-            );
+            const { re, im } = div_rxr(tempRe, tempIm, ap.r[apkk], noconj ? ap.i[apkk] : -ap.i[apkk]);
             tempRe = re;
             tempIm = im;
         }

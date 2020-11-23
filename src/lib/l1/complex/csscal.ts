@@ -18,23 +18,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { errMissingIm, FortranArr } from '../../f_func';
 
 export function csscal(
-      n: number,
-      sa: number,
-      cx: FortranArr, // dimension(1 + (N - 1) * abs(INCX))
-      incx: number): void {
+    n: number,
+    sa: number,
+    cx: FortranArr, // dimension(1 + (N - 1) * abs(INCX))
+    incx: number,
+): void {
+    if (!cx.i) {
+        throw new Error(errMissingIm('cx'));
+    }
+    const xb = cx.base;
 
-      if (!cx.i) {
-            throw new Error(errMissingIm('cx'));
-      }
-      const xb = cx.base;
-
-      if (n <= 0 || incx <= 0) return;
-      else {
-            let nincx = n * incx;
-            for (let i = 1; i <= nincx; i += incx) {
-                  const k = i - xb;
-                  cx.r[k] = sa !== 0 ? sa * cx.r[k] : 0;
-                  cx.i[k] = sa !== 0 ? sa * cx.i[k] : 0;
-            }
-      }
+    if (n <= 0 || incx <= 0) return;
+    else {
+        const nincx = n * incx;
+        for (let i = 1; i <= nincx; i += incx) {
+            const k = i - xb;
+            cx.r[k] = sa !== 0 ? sa * cx.r[k] : 0;
+            cx.i[k] = sa !== 0 ? sa * cx.i[k] : 0;
+        }
+    }
 }

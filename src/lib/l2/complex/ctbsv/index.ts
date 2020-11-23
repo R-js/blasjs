@@ -22,15 +22,13 @@ import {
     FortranArrEComplex,
     lowerChar,
     Matrix,
-    MatrixEComplex
-
+    MatrixEComplex,
 } from '../../../f_func';
 
 import { normLower } from './norm-lower';
 import { normUpper } from './norm-upper';
 import { transLower } from './trans-lower';
 import { transUpper } from './trans-upper';
-
 
 export function ctbsv(
     uplo: 'u' | 'l',
@@ -41,9 +39,8 @@ export function ctbsv(
     a: Matrix,
     lda: number,
     x: FortranArr,
-    incx: number
+    incx: number,
 ): void {
-
     if (x.i === undefined) {
         throw new Error(errMissingIm('x.i'));
     }
@@ -51,7 +48,6 @@ export function ctbsv(
     if (a.i === undefined) {
         throw new Error(errMissingIm('a.i'));
     }
-
 
     // faster then String.toLowerCase()
     const ul = lowerChar(uplo);
@@ -61,23 +57,17 @@ export function ctbsv(
     let info = 0;
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (!'ntc'.includes(tr)) {
+    } else if (!'ntc'.includes(tr)) {
         info = 2;
-    }
-    else if (!'un'.includes(dg)) {
+    } else if (!'un'.includes(dg)) {
         info = 3;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 4;
-    }
-    else if (k < 0) {
+    } else if (k < 0) {
         info = 5;
-    }
-    else if (lda < (k + 1)) {
+    } else if (lda < k + 1) {
         info = 7;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 9;
     }
     if (info !== 0) {
@@ -90,7 +80,7 @@ export function ctbsv(
     const noconj = tr === 't';
     const nounit = dg === 'n';
 
-    let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
+    const kx = incx < 0 ? 1 - (n - 1) * incx : 1;
     let func: (
         kx: number,
         x: FortranArrEComplex,
@@ -99,30 +89,21 @@ export function ctbsv(
         noconj: boolean,
         nounit: boolean,
         n: number,
-        k: number) => void;
+        k: number,
+    ) => void;
 
     if (tr === 'n') {
         if (ul === 'u') {
             func = normUpper;
-        }
-        else {
+        } else {
             func = normLower;
         }
-    }
-    else {
+    } else {
         if (ul === 'u') {
             func = transUpper;
-        }
-        else {
+        } else {
             func = transLower;
         }
     }
     func(kx, <FortranArrEComplex>x, incx, <MatrixEComplex>a, noconj, nounit, n, k);
 }
-
-
-
-
-
-
-

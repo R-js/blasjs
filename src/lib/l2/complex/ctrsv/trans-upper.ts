@@ -15,12 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    div_rxr,
-    FortranArrEComplex,
-    MatrixEComplex,
-    mul_rxr
-} from '../../../f_func';
+import { div_rxr, FortranArrEComplex, MatrixEComplex, mul_rxr } from '../../../f_func';
 
 export function transUpper(
     kx: number,
@@ -29,8 +24,8 @@ export function transUpper(
     x: FortranArrEComplex,
     incx: number,
     a: MatrixEComplex,
-    n: number
-) {
+    n: number,
+): void {
     let jx = kx;
     for (let j = 1; j <= n; j++) {
         let ix = kx;
@@ -41,9 +36,9 @@ export function transUpper(
         for (let i = 1; i <= j - 1; i++) {
             const { re, im } = mul_rxr(
                 a.r[coords + i],
-                (noconj ? a.i[coords + i] : -a.i[coords + i]),
+                noconj ? a.i[coords + i] : -a.i[coords + i],
                 x.r[ix - x.base],
-                x.i[ix - x.base]
+                x.i[ix - x.base],
             );
             tempRe -= re;
             tempIm -= im;
@@ -51,12 +46,7 @@ export function transUpper(
         }
         // IF (NOUNIT) TEMP = TEMP/CONJG(A(J,J))
         if (nounit) {
-            const { re, im } = div_rxr(
-                tempRe,
-                tempIm,
-                a.r[coords + j],
-                (noconj ? a.i[coords + j] : -a.i[coords + j])
-            );
+            const { re, im } = div_rxr(tempRe, tempIm, a.r[coords + j], noconj ? a.i[coords + j] : -a.i[coords + j]);
             tempRe = re;
             tempIm = im;
         }

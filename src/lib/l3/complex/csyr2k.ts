@@ -31,9 +31,8 @@ export function csyr2k(
     ldb: number,
     beta: Complex,
     c: Matrix,
-    ldc: number): void {
-
-
+    ldc: number,
+): void {
     if (a.i === undefined) {
         throw new Error(errMissingIm('a.i'));
     }
@@ -47,30 +46,23 @@ export function csyr2k(
     const tr = lowerChar(trans);
     const ul = lowerChar(uplo);
 
-
     const nrowA = tr === 'n' ? n : k;
     const upper = ul === 'u';
 
     let info = 0;
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (!'nt'.includes(tr)) {
+    } else if (!'nt'.includes(tr)) {
         info = 2;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 3;
-    }
-    else if (k < 0) {
+    } else if (k < 0) {
         info = 4;
-    }
-    else if (lda < max(1, nrowA)) {
+    } else if (lda < max(1, nrowA)) {
         info = 7;
-    }
-    else if (ldb < max(1, nrowA)) {
+    } else if (ldb < max(1, nrowA)) {
         info = 9;
-    }
-    else if (ldc < max(1, n)) {
+    } else if (ldc < max(1, n)) {
         info = 12;
     }
     if (info !== 0) {
@@ -93,8 +85,8 @@ export function csyr2k(
             const start = upper ? 1 : j;
             const stop = upper ? j : n;
             for (let i = start; i <= stop; i++) {
-                let re = betaIsZero ? 0 : beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
-                let im = betaIsZero ? 0 : beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
+                const re = betaIsZero ? 0 : beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
+                const im = betaIsZero ? 0 : beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
 
                 c.r[coorCJ + i] = re;
                 c.i[coorCJ + i] = im;
@@ -114,8 +106,7 @@ export function csyr2k(
             const stop = upper ? j : n;
             if (betaIsZero) {
                 c.setCol(j, start, stop, 0);
-            }
-            else if (!betaIsOne) {
+            } else if (!betaIsOne) {
                 for (let i = start; i <= stop; i++) {
                     c.r[coorCJ + i] = beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
                     c.i[coorCJ + i] = beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
@@ -128,11 +119,11 @@ export function csyr2k(
                 const bIsZero = b.r[coorBL + j] === 0 && b.i[coorBL + j] === 0;
                 if (!aIsZero || !bIsZero) {
                     // TEMP1 = ALPHA * B(J, L)
-                    let temp1Re = alpha.re * b.r[coorBL + j] - alpha.im * b.i[coorBL + j]
-                    let temp1Im = alpha.re * b.i[coorBL + j] + alpha.im * b.r[coorBL + j];
+                    const temp1Re = alpha.re * b.r[coorBL + j] - alpha.im * b.i[coorBL + j];
+                    const temp1Im = alpha.re * b.i[coorBL + j] + alpha.im * b.r[coorBL + j];
                     // TEMP2 = ALPHA * A(J, L)
-                    let temp2Re = alpha.re * a.r[coorBL + j] - alpha.im * a.i[coorBL + j];
-                    let temp2Im = alpha.re * a.i[coorBL + j] + alpha.im * a.r[coorBL + j];
+                    const temp2Re = alpha.re * a.r[coorBL + j] - alpha.im * a.i[coorBL + j];
+                    const temp2Im = alpha.re * a.i[coorBL + j] + alpha.im * a.r[coorBL + j];
 
                     for (let i = start; i <= stop; i++) {
                         //A(I, L) * TEMP1
@@ -147,8 +138,8 @@ export function csyr2k(
                     }
                 }
             }
-        }//for(j)
-    }//tr === 't'
+        } //for(j)
+    } //tr === 't'
     else {
         //Form  C := alpha*A**T*B + alpha*B**T*A + C.
 
@@ -185,9 +176,7 @@ export function csyr2k(
                 }
                 c.r[coorCJ + i] = re;
                 c.i[coorCJ + i] = im;
-            }//for(i)
-        }//for(j)
-    }//tr==='t'
+            } //for(i)
+        } //for(j)
+    } //tr==='t'
 }
-
-

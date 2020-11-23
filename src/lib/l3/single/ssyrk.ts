@@ -15,7 +15,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 import { errWrongArg, lowerChar, Matrix } from '../../f_func';
 
 const { max } = Math;
@@ -30,32 +29,27 @@ export function ssyrk(
     lda: number,
     beta: number,
     c: Matrix,
-    ldc: number): void {
-
+    ldc: number,
+): void {
     const ul = lowerChar(uplo);
     const tr = lowerChar(trans);
 
-    const nrowA = (tr === 'n') ? n : k;
+    const nrowA = tr === 'n' ? n : k;
 
     //Test the input parameters.
 
     let info = 0;
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (!'ntc'.includes(tr)) {
+    } else if (!'ntc'.includes(tr)) {
         info = 2;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 3;
-    }
-    else if (k < 0) {
+    } else if (k < 0) {
         info = 4;
-    }
-    else if (lda < max(1, nrowA)) {
+    } else if (lda < max(1, nrowA)) {
         info = 7;
-    }
-    else if (ldc < max(1, n)) {
+    } else if (ldc < max(1, n)) {
         info = 10;
     }
 
@@ -94,8 +88,7 @@ export function ssyrk(
             if (beta === 0) {
                 //zap it
                 c.r.fill(0, coorCJ + start, coorCJ + stop + 1);
-            }
-            else if (beta !== 1) {
+            } else if (beta !== 1) {
                 for (let i = start; i <= stop; i++) {
                     c.r[coorCJ + i] *= beta;
                 }
@@ -103,15 +96,14 @@ export function ssyrk(
             for (let l = 1; l <= k; l++) {
                 const coorAL = a.colOfEx(l);
                 if (a.r[coorAL + j] !== 0) {
-                    let temp = alpha * a.r[coorAL + j];
+                    const temp = alpha * a.r[coorAL + j];
                     for (let i = start; i <= stop; i++) {
                         c.r[coorCJ + i] += temp * a.r[coorAL + i];
                     }
                 }
             }
         }
-    }
-    else {
+    } else {
         // Form  C := alpha*A**T*A + beta*C.
         for (let j = 1; j <= n; j++) {
             const start = ul === 'u' ? 1 : j;

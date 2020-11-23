@@ -28,24 +28,21 @@ export function ssyr2(
     y: FortranArr,
     incy: number,
     A: Matrix,
-    lda: number): void {
-
+    lda: number,
+): void {
     const ul = lowerChar(uplo);
 
     let info = 0;
     if (!'ul'.includes(uplo)) {
         info = 1;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 2;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 3;
-    }
-    else if (incy === 0) {
+    } else if (incy === 0) {
         info = 5;
-    }
-    else if (lda < max(1, n)) { //n can be 0?
+    } else if (lda < max(1, n)) {
+        //n can be 0?
         info = 9;
     }
 
@@ -73,8 +70,8 @@ export function ssyr2(
         //Form  A  when A is stored in the upper triangle.
         for (let j = 1; j <= n; j++) {
             if (x.r[jx - x.base] !== 0 || y.r[jy - y.base] !== 0) {
-                let temp1 = alpha * y.r[jy - y.base];
-                let temp2 = alpha * x.r[jx - x.base];
+                const temp1 = alpha * y.r[jy - y.base];
+                const temp2 = alpha * x.r[jx - x.base];
                 let ix = kx;
                 let iy = ky;
                 const coords = A.colOfEx(j);
@@ -86,14 +83,13 @@ export function ssyr2(
             }
             jx += incx;
             jy += incy;
-        }//for
-    }
-    else {
+        } //for
+    } else {
         //Form  A  when A is stored in the lower triangle.
         for (let j = 1; j <= n; j++) {
             if (x.r[jx - x.base] !== 0 || y.r[jy - y.base] !== 0) {
-                let temp1 = alpha * y.r[jy - y.base];
-                let temp2 = alpha * x.r[jx - x.base];
+                const temp1 = alpha * y.r[jy - y.base];
+                const temp2 = alpha * x.r[jx - x.base];
                 let ix = jx;
                 let iy = jy;
                 const coords = A.colOfEx(j);

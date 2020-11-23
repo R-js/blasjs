@@ -27,8 +27,8 @@ export function transAconjB(
     c: MatrixEComplex,
     n: number,
     m: number,
-    k: number): void {
-
+    k: number,
+): void {
     //DO 340 J = 1,N
     for (let j = 1; j <= n; j++) {
         const coorCJ = c.colOfEx(j);
@@ -43,12 +43,7 @@ export function transAconjB(
                 const coorBL = b.colOfEx(l);
                 //  TEMP = TEMP + A(L,I)*CONJG(B(J,L))
                 //(a+ib)*(c-id) = ac+bd + i(-ad+bc)
-                let { re, im } = mul_rxr(
-                    a.r[coorAI + l],
-                    a.i[coorAI + l],
-                    b.r[coorBL + j],
-                    -b.i[coorBL + j],
-                );
+                const { re, im } = mul_rxr(a.r[coorAI + l], a.i[coorAI + l], b.r[coorBL + j], -b.i[coorBL + j]);
                 tempRe += re;
                 tempIm += im;
             }
@@ -63,11 +58,7 @@ export function transAconjB(
             let { re, im } = mul_cxr(alpha, tempRe, tempIm);
             if (!betaIsZero) {
                 // C(I,J) = ALPHA*TEMP + beta*C(I,J)
-                const { re: re1, im: im1 } = mul_cxr(
-                    beta,
-                    c.r[coorCJ + i],
-                    c.i[coorCJ + i]
-                );
+                const { re: re1, im: im1 } = mul_cxr(beta, c.r[coorCJ + i], c.i[coorCJ + i]);
                 re += re1;
                 im += im1;
             }

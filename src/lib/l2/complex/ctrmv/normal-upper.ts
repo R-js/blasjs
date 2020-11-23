@@ -15,10 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import type {
-    FortranArrEComplex,
-    MatrixEComplex
-} from '../../../f_func';
+import type { FortranArrEComplex, MatrixEComplex } from '../../../f_func';
 
 export function normalUpper(
     kx: number,
@@ -27,15 +24,14 @@ export function normalUpper(
     x: FortranArrEComplex,
     incx: number,
     a: MatrixEComplex,
-    n: number
+    n: number,
 ): void {
-
     let jx = kx - x.base;
     for (let j = 1; j <= n; j++) {
         const xIsZero = x.r[jx] === 0 && x.i[jx] === 0;
         if (!xIsZero) {
-            let tempRe = x.r[jx];
-            let tempIm = x.i[jx];
+            const tempRe = x.r[jx];
+            const tempIm = x.i[jx];
             let ix = kx - x.base;
             const coords = a.colOfEx(j);
             for (let i = 1; i <= j - 1; i++) {

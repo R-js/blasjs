@@ -15,22 +15,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 import type { FortranArr } from '../../f_func';
 
-export function sdsdot(
-    n: number,
-    sb: number,
-    sx: FortranArr,
-    incx: number,
-    sy: FortranArr,
-    incy: number): number {
-
+export function sdsdot(n: number, sb: number, sx: FortranArr, incx: number, sy: FortranArr, incy: number): number {
     let sdot = sb;
 
     const bx = sx.base;
     const by = sy.base;
-
 
     if (n <= 0) {
         return sdot;

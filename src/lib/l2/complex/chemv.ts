@@ -15,16 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    Complex,
-    errMissingIm,
-    errWrongArg,
-    FortranArr,
-    isOne,
-    isZero,
-    lowerChar,
-    Matrix
-} from '../../f_func';
+import { Complex, errMissingIm, errWrongArg, FortranArr, isOne, isZero, lowerChar, Matrix } from '../../f_func';
 
 const { max } = Math;
 
@@ -38,8 +29,8 @@ export function chemv(
     incx: number,
     beta: Complex,
     y: FortranArr,
-    incy: number): void {
-
+    incy: number,
+): void {
     const ul = lowerChar(uplo);
 
     if (a.i === undefined) {
@@ -55,24 +46,19 @@ export function chemv(
     let info = 0;
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 2;
-    }
-    else if (lda < max(1, n)) {
+    } else if (lda < max(1, n)) {
         info = 5;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 7;
-    }
-    else if (incy === 0) {
+    } else if (incy === 0) {
         info = 10;
     }
 
     if (info !== 0) {
         throw new Error(errWrongArg('chemv', info));
     }
-
 
     const { re: AlphaRe, im: AlphaIm } = alpha;
     const { re: BetaRe, im: BetaIm } = beta;
@@ -87,10 +73,7 @@ export function chemv(
     const kx = incx > 0 ? 1 : 1 - (n - 1) * incx;
     const ky = incy > 0 ? 1 : 1 - (n - 1) * incy;
 
-
-
     if (!betaIsOne) {
-
         let iy = ky;
         for (let i = 1; i <= n; i++) {
             const re = betaIsZero ? 0 : BetaRe * y.r[iy - y.base] - BetaIm * y.i[iy - y.base];
@@ -98,19 +81,19 @@ export function chemv(
             y.r[iy - y.base] = re;
             y.i[iy - y.base] = im;
             iy += incy;
-        } y.r[iy - y.base]
+        }
+        y.r[iy - y.base];
     }
 
     if (alphaIsZero) return; //done
     if (ul === 'u') {
-
         // Form  y  when A is stored in upper triangle.
 
         let jx = kx;
         let jy = ky;
         for (let j = 1; j <= n; j++) {
-            let temp1Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
-            let temp1Im = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
+            const temp1Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
+            const temp1Im = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
             let temp2Re = 0;
             let temp2Im = 0;
             let ix = kx;
@@ -132,16 +115,15 @@ export function chemv(
             jx += incx;
             jy += incy;
         }
-    }
-    else {
+    } else {
         //Form  y  when A is stored in lower triangle.
         let jx = kx;
         let jy = ky;
         for (let j = 1; j <= n; j++) {
             const coorAJ = a.colOfEx(j);
 
-            let temp1Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
-            let temp1Im = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
+            const temp1Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
+            const temp1Im = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
 
             let temp2Re = 0;
             let temp2Im = 0;
@@ -172,6 +154,3 @@ export function chemv(
         }
     }
 }
-
-
-

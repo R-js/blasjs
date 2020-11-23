@@ -30,9 +30,8 @@ export function strmm(
     a: Matrix,
     lda: number,
     b: Matrix,
-    ldb: number
+    ldb: number,
 ): void {
-
     const si = lowerChar(side); //String.fromCharCode(side.charCodeAt(0) | 0X20);
     const ul = lowerChar(uplo); //String.fromCharCode(uplo.charCodeAt(0) | 0X20);
     const tr = lowerChar(transA); //(String.fromCharCode(transA.charCodeAt(0) | 0X20);
@@ -43,30 +42,22 @@ export function strmm(
     const nounit = di === 'n';
     const upper = ul === 'u';
 
-
     let info = 0;
     if (!'lr'.includes(si)) {
         info = 1;
-    }
-    else if (!'ul'.includes(ul)) {
+    } else if (!'ul'.includes(ul)) {
         info = 2;
-    }
-    else if (!'ntc'.includes(tr)) {
+    } else if (!'ntc'.includes(tr)) {
         info = 3;
-    }
-    else if (!'un'.includes(di)) {
+    } else if (!'un'.includes(di)) {
         info = 4;
-    }
-    else if (m < 0) {
+    } else if (m < 0) {
         info = 5;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 6;
-    }
-    else if (lda < max(1, nrowA)) {
+    } else if (lda < max(1, nrowA)) {
         info = 9;
-    }
-    else if (ldb < max(1, m)) {
+    } else if (ldb < max(1, m)) {
         info = 11;
     }
 
@@ -101,34 +92,32 @@ export function strmm(
                             //let temp = alpha * b.r[coorBJ + k]; JKF
                             let temp = b.r[coorBJ + k];
                             for (let i = 1; i <= k - 1; i++) {
-                                b.r[coorBJ + i] += temp * a.r[coorAK + i]
+                                b.r[coorBJ + i] += temp * a.r[coorAK + i];
                             }
                             if (nounit) temp *= a.r[coorAK + k];
                             b.r[coorBJ + k] = temp;
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 for (let j = 1; j <= n; j++) {
                     const coorBJ = b.colOfEx(j);
                     for (let k = m; k >= 1; k--) {
                         const coorAK = a.colOfEx(k);
                         if (b.r[coorBJ + k] !== 0) {
-                            let temp = alpha * b.r[coorBJ + k];
+                            const temp = alpha * b.r[coorBJ + k];
                             b.r[coorBJ + k] = temp;
                             if (nounit) {
-                                b.r[coorBJ + k] *= a.r[coorAK + k]
+                                b.r[coorBJ + k] *= a.r[coorAK + k];
                             }
                             for (let i = k + 1; i <= m; i++) {
-                                b.r[coorBJ + i] += temp * a.r[coorAK + i]
+                                b.r[coorBJ + i] += temp * a.r[coorAK + i];
                             }
                         }
                     }
                 }
             }
-        }
-        else {
+        } else {
             //  Form  B := alpha*A**T*B.
             if (upper) {
                 for (let j = 1; j <= n; j++) {
@@ -143,8 +132,7 @@ export function strmm(
                         b.r[coorBJ + i] = alpha * temp;
                     }
                 }
-            }
-            else {
+            } else {
                 for (let j = 1; j <= n; j++) {
                     const coorBJ = b.colOfEx(j);
                     for (let i = 1; i <= m; i++) {
@@ -159,8 +147,7 @@ export function strmm(
                 }
             }
         }
-    }
-    else {
+    } else {
         if (tr === 'n') {
             // Form  B := alpha*B*A.
             if (upper) {
@@ -208,8 +195,7 @@ export function strmm(
                     }
                 }
             }
-        }
-        else {
+        } else {
             // Form  B := alpha*B*A**T.
             if (upper) {
                 for (let k = 1; k <= n; k++) {
@@ -218,13 +204,13 @@ export function strmm(
                     for (let j = 1; j <= k - 1; j++) {
                         const coorBJ = b.colOfEx(j);
                         if (a.r[coorAK + j] !== 0) {
-                            let temp = alpha * a.r[coorAK + j];
+                            const temp = alpha * a.r[coorAK + j];
                             for (let i = 1; i <= m; i++) {
                                 b.r[coorBJ + i] += temp * b.r[coorBK + i];
                             }
                         }
                     }
-                    let temp = alpha
+                    let temp = alpha;
                     if (nounit) temp *= a.r[coorAK + k];
                     if (temp !== 1) {
                         for (let i = 1; i <= m; i++) {
@@ -232,15 +218,14 @@ export function strmm(
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 for (let k = n; k >= 1; k--) {
                     const coorAK = a.colOfEx(k);
                     const coorBK = b.colOfEx(k);
                     for (let j = k + 1; j <= n; j++) {
                         const coorBJ = b.colOfEx(j);
                         if (a.r[coorAK + j] !== 0) {
-                            let temp = alpha * a.r[coorAK + j];
+                            const temp = alpha * a.r[coorAK + j];
                             for (let i = 1; i <= m; i++) {
                                 b.r[coorBJ + i] += temp * b.r[coorBK + i];
                             }
@@ -258,5 +243,3 @@ export function strmm(
         }
     }
 }
-
-

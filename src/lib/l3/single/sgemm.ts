@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { errWrongArg, lowerChar, Matrix } from '../../f_func';
 
-
 const { max } = Math;
 
 export function sgemm(
@@ -33,8 +32,8 @@ export function sgemm(
     ldb: number,
     beta: number,
     c: Matrix,
-    ldc: number): void {
-
+    ldc: number,
+): void {
     // faster then String.toLowerCase()
     const trA = lowerChar(transA);
     const trB = lowerChar(transB);
@@ -53,26 +52,19 @@ export function sgemm(
     let info = 0;
     if (!'ntc'.includes(trA)) {
         info = 1;
-    }
-    else if (!'ntc'.includes(trB)) {
+    } else if (!'ntc'.includes(trB)) {
         info = 2;
-    }
-    else if (m < 0) {
+    } else if (m < 0) {
         info = 3;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 4;
-    }
-    else if (k < 0) {
+    } else if (k < 0) {
         info = 5;
-    }
-    else if (lda < max(1, nrowA)) {
+    } else if (lda < max(1, nrowA)) {
         info = 8;
-    }
-    else if (ldb < max(1, nrowB)) {
+    } else if (ldb < max(1, nrowB)) {
         info = 10;
-    }
-    else if (ldc < max(1, m)) {
+    } else if (ldc < max(1, m)) {
         info = 13;
     }
     // ok?
@@ -81,20 +73,14 @@ export function sgemm(
     }
 
     //*     Quick return if possible.
-    if (m === 0 || n === 0 ||
-        (
-            (alpha === 0 || k === 0) && beta === 1
-        )
-    ) return;
-
+    if (m === 0 || n === 0 || ((alpha === 0 || k === 0) && beta === 1)) return;
 
     if (alpha === 0) {
         if (beta === 0) {
             for (let j = 1; j <= n; j++) {
                 c.setCol(j, 1, m, 0);
             }
-        }
-        else {
+        } else {
             // I have to typecast it this way for TS compiler not to nag!!
             for (let j = 1; j <= n; j++) {
                 const coorCJ = c.colOfEx(j);
@@ -115,23 +101,20 @@ export function sgemm(
                 const coorBJ = b.colOfEx(j);
                 if (beta === 0) {
                     c.setCol(j, 1, m, 0);
-                }
-                else if (beta !== 1) {
+                } else if (beta !== 1) {
                     for (let i = 1; i <= m; i++) {
                         c.r[coorCJ + i] *= beta;
                     }
                 }
                 for (let l = 1; l <= k; l++) {
-                    let temp = alpha * b.r[coorBJ + l];
+                    const temp = alpha * b.r[coorBJ + l];
                     const coorAL = a.colOfEx(l);
                     for (let i = 1; i <= m; i++) {
-                        c.r[coorCJ + i] += temp * a.r[coorAL + i]
+                        c.r[coorCJ + i] += temp * a.r[coorAL + i];
                     }
                 }
             }
-
-        }
-        else {
+        } else {
             //transA !== 'n'
             //     Form  C := alpha*A**T*B + beta*C
             for (let j = 1; j <= n; j++) {
@@ -145,15 +128,13 @@ export function sgemm(
                     }
                     if (beta === 0) {
                         c.r[coorCJ + i] = alpha * temp;
-                    }
-                    else {
+                    } else {
                         c.r[coorCJ + i] = alpha * temp + beta * c.r[coorCJ + i];
                     }
                 }
             }
         }
-    }
-    else {
+    } else {
         if (notA) {
             // Form  C := alpha*A*B**T + beta*C
             for (let j = 1; j <= n; j++) {
@@ -166,15 +147,14 @@ export function sgemm(
                     }
                 }
                 for (let l = 1; l <= k; l++) {
-                    let temp = alpha * b.r[(l - b.colBase) * b.nrRows - b.rowBase + j];
+                    const temp = alpha * b.r[(l - b.colBase) * b.nrRows - b.rowBase + j];
                     const coorAL = a.colOfEx(l);
                     for (let i = 1; i <= m; i++) {
                         c.r[coorCJ + i] += temp * a.r[coorAL + i];
                     }
                 }
             }
-        }
-        else {
+        } else {
             //  Form  C := alpha*A**T*B**T + beta*C
             for (let j = 1; j <= n; j++) {
                 for (let i = 1; i <= m; i++) {
@@ -187,8 +167,7 @@ export function sgemm(
                     const coorC = c.colOfEx(j);
                     if (beta === 0) {
                         c.r[coorC + i] = alpha * temp;
-                    }
-                    else {
+                    } else {
                         c.r[coorC + i] = alpha * temp + beta * c.r[coorC + i];
                     }
                 }

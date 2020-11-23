@@ -35,15 +35,15 @@ export const desc = {
     ISAMAX: 'finds the index of the first element having maximum absolute value.',
     IDAMAX: 'finds the index of the first element having maximum absolute value.',
 
-    SCASUM: 'takes the sum of the (|Re(.)| + |Im(.)|)\'s of a complex vector and returns a single precision result.',
-    DZASUM: 'takes the sum of the (|Re(.)| + |Im(.)|)\'s of a complex vector and returns a single precision result.',
+    SCASUM: "takes the sum of the (|Re(.)| + |Im(.)|)'s of a complex vector and returns a single precision result.",
+    DZASUM: "takes the sum of the (|Re(.)| + |Im(.)|)'s of a complex vector and returns a single precision result.",
     SASUM: 'takes the sum of the absolute values.',
     DASUM: 'takes the sum of the absolute values.',
 
     SCNRM2: 'returns the euclidean norm of a vector via the function name, so that SCNRM2 := sqrt( x**H*x )',
-    SNRM2: 'returns the euclidean norm of a vector via the function name, so that SNRM2 := sqrt( x\'*x ).',
+    SNRM2: "returns the euclidean norm of a vector via the function name, so that SNRM2 := sqrt( x'*x ).",
     DZNRM2: 'returns the euclidean norm of a vector via the function name, so that',
-    DNRM2: 'returns the euclidean norm of a vector via the function name, so that DNRM2 := sqrt( x\'*x )',
+    DNRM2: "returns the euclidean norm of a vector via the function name, so that DNRM2 := sqrt( x'*x )",
 
     SROT: 'applies a plane rotation.',
     DROT: 'applies a plane rotation.',
@@ -59,13 +59,13 @@ export const desc = {
     SROTM: 'APPLY THE MODIFIED GIVENS TRANSFORMATION, H, TO THE 2 BY N MATRIX',
 
     DROTMG: 'CONSTRUCT THE MODIFIED GIVENS TRANSFORMATION MATRIX H',
-    SROTMG: 'CONSTRUCT THE MODIFIED GIVENS TRANSFORMATION MATRIX H'
+    SROTMG: 'CONSTRUCT THE MODIFIED GIVENS TRANSFORMATION MATRIX H',
 };
 
 export const x = {
     SCNRM2: 'returns the euclidean norm of a vector via the function name, so that SCNRM2 := sqrt( x**H*x )',
-    DNRM2: 'returns the euclidean norm of a vector via the function name, so that DNRM2 := sqrt( x\' * x ) ',
-    SNRM2: 'returns the euclidean norm of a vector via the function name, so that SNRM2 := sqrt( x\' * x ).',
+    DNRM2: "returns the euclidean norm of a vector via the function name, so that DNRM2 := sqrt( x' * x ) ",
+    SNRM2: "returns the euclidean norm of a vector via the function name, so that SNRM2 := sqrt( x' * x ).",
     DZNRM2: 'returns the euclidean norm of a vector via the function name, so that',
 
     CDOTC: 'forms the dot product of two complex vectors',
@@ -89,10 +89,10 @@ export const x = {
     DROTM: 'APPLY THE MODIFIED GIVENS TRANSFORMATION, H, TO THE 2 BY N MATRIX.',
     SROTM: 'APPLY THE MODIFIED GIVENS TRANSFORMATION, H, TO THE 2 BY N MATRIX',
 
-    SCASUM: 'takes the sum of the (|Re(.)| + |Im(.)|)\'s of a complex vector and returns a single precision result.',
+    SCASUM: "takes the sum of the (|Re(.)| + |Im(.)|)'s of a complex vector and returns a single precision result.",
     DASUM: 'takes the sum of the absolute values.',
     SASUM: 'takes the sum of the absolute values.',
-    DZASUM: 'takes the sum of the (|Re(.)| + |Im(.)|)\'s of a complex vector and returns a single precision result.',
+    DZASUM: "takes the sum of the (|Re(.)| + |Im(.)|)'s of a complex vector and returns a single precision result.",
 
     CSWAP: 'interchanges two vectors.',
     DSWAP: 'interchanges two vectors.',
@@ -126,4 +126,4 @@ export const x = {
     DAXPY: 'constant times a vector plus a vector.',
     SAXPY: 'constant times a vector plus a vector.',
     ZAXPY: 'constant times a vector plus a vector.',
-}
+};

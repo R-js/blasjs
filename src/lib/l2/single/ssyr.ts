@@ -26,22 +26,18 @@ export function ssyr(
     x: FortranArr,
     incx: number,
     a: Matrix,
-    lda: number
+    lda: number,
 ): void {
-
     const ul = lowerChar(uplo);
 
     let info = 0;
     if (!'ul'.includes(uplo)) {
         info = 1;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 2;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 5;
-    }
-    else if (lda < max(1, n)) {
+    } else if (lda < max(1, n)) {
         info = 7;
     }
     if (info !== 0) {
@@ -53,17 +49,16 @@ export function ssyr(
     if (n === 0 || alpha === 0) return;
 
     //Original had .LE.0 but the 0 case is already handled
-    const kx = (incx < 0) ? 1 - (n - 1) * incx : 1;
+    const kx = incx < 0 ? 1 - (n - 1) * incx : 1;
     //let ky = (incy < 0) ? 1 - (n - 1) * incy : 1;
 
     let jx = kx;
 
     if (ul === 'u') {
-        //Form  A  when A is stored in upper triangle. 
+        //Form  A  when A is stored in upper triangle.
         for (let j = 1; j <= n; j++) {
-
             if (x.r[jx - x.base] !== 0) {
-                let temp = alpha * x.r[jx - x.base];
+                const temp = alpha * x.r[jx - x.base];
                 let ix = kx;
                 const coords = a.colOfEx(j);
                 for (let i = 1; i <= j; i++) {
@@ -73,16 +68,15 @@ export function ssyr(
             }
             jx += incx;
         }
-    }
-    else {
+    } else {
         //  Form  A  when A is stored in lower triangle.
         jx = kx;
         for (let j = 1; j <= n; j++) {
             if (x.r[jx - x.base] !== 0) {
-                let temp = alpha * x.r[jx - x.base];
+                const temp = alpha * x.r[jx - x.base];
                 let ix = jx;
                 const coorAJ = a.colOfEx(j);
-                let i = j
+                let i = j;
                 for (; i <= n; i++) {
                     const delta = x.r[ix - x.base] * temp;
                     //   console.log(`i:${i},j:${j}, A_${i}.${j}=${a.r[coorAJ + i]}, x_${i}.x_${j}*alpha=${delta},A_N=${a.r[coorAJ + i] + delta}`);
@@ -96,12 +90,3 @@ export function ssyr(
         }
     }
 }
-
-
-
-
-
-
-
-
-

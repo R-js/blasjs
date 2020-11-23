@@ -14,12 +14,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import type { Complex, MatrixEComplex }  from '../../../f_func';
+import type { Complex, MatrixEComplex } from '../../../f_func';
 import { mul_cxr, mul_rxr } from '../../../f_func';
 
-
 //Form  C := alpha*A**H*B + beta*C.
-
 
 export function conjAB(
     betaIsZero: boolean,
@@ -31,8 +29,8 @@ export function conjAB(
     c: MatrixEComplex,
     n: number,
     m: number,
-    k: number): void {
-
+    k: number,
+): void {
     for (let j = 1; j <= n; j++) {
         const coorBJ = b.colOfEx(j);
         const coorCJ = c.colOfEx(j);
@@ -43,12 +41,7 @@ export function conjAB(
             for (let l = 1; l <= k; l++) {
                 // TEMP = TEMP + CONJG(A(L,I))*B(L,J)
                 //(a-ib)*(c+id) = a*c+bd + i(ad-bc)
-                const { re, im } = mul_rxr(
-                    a.r[coorAI + l],
-                    -a.i[coorAI + l],
-                    b.r[coorBJ + l],
-                    b.i[coorBJ + l]
-                );
+                const { re, im } = mul_rxr(a.r[coorAI + l], -a.i[coorAI + l], b.r[coorBJ + l], b.i[coorBJ + l]);
                 tempRe += re;
                 tempIm += im;
             }
@@ -62,25 +55,16 @@ export function conjAB(
             */
 
             // C(I,J) = ALPHA*TEMP
-            let { re, im } = mul_cxr(
-                alpha,
-                tempRe,
-                tempIm
-            );
+            let { re, im } = mul_cxr(alpha, tempRe, tempIm);
 
             if (!betaIsZero) {
                 // C(I,J) = ALPHA*TEMP + beta*C(I,J)
-                const { re: re1, im: im1 } = mul_cxr(
-                    beta,
-                    c.r[coorCJ + i],
-                    c.i[coorCJ + i]
-                );
+                const { re: re1, im: im1 } = mul_cxr(beta, c.r[coorCJ + i], c.i[coorCJ + i]);
                 re += re1;
                 im += im1;
             }
             c.r[coorCJ + i] = re;
             c.i[coorCJ + i] = im;
-
         }
     }
 }

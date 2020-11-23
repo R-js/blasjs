@@ -28,8 +28,8 @@ export function AtransB(
     c: MatrixEComplex,
     n: number,
     m: number,
-    k: number): void {
-
+    k: number,
+): void {
     //
     // Form  C := alpha*A*B**T + beta*C
     //
@@ -38,8 +38,7 @@ export function AtransB(
         //  IF (BETA.EQ.ZERO) THEN
         if (betaIsZero) {
             c.setCol(j, 1, m, 0);
-        }
-        else if (!betaIsOne) {
+        } else if (!betaIsOne) {
             // DO 210 I = 1,M
             for (let i = 1; i <= m; i++) {
                 // C(I,J) = BETA*C(I,J)
@@ -56,8 +55,8 @@ export function AtransB(
 
             // TEMP = ALPHA*B(J,L)
             //(a+ib)*(c+id) = (ac-bd)+i(ad+bc)
-            let tempRe = alpha.re * b.r[coorBL + j] - alpha.im * b.i[coorBL + j];
-            let tempIm = alpha.re * b.i[coorBL + j] + alpha.im * b.r[coorBL + j];
+            const tempRe = alpha.re * b.r[coorBL + j] - alpha.im * b.i[coorBL + j];
+            const tempIm = alpha.re * b.i[coorBL + j] + alpha.im * b.r[coorBL + j];
             for (let i = 1; i <= m; i++) {
                 // // //   C(I,J) = C(I,J) + TEMP*A(I,L)
                 c.r[coorCJ + i] += tempRe * a.r[coorAL + i] - tempIm * a.i[coorAL + i];

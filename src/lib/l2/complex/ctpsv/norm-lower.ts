@@ -15,11 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    div_rxr,
-    FortranArrEComplex,
-    mul_rxr
-} from '../../../f_func';
+import { div_rxr, FortranArrEComplex, mul_rxr } from '../../../f_func';
 
 export function normLower(
     kx: number,
@@ -28,7 +24,7 @@ export function normLower(
     x: FortranArrEComplex,
     incx: number,
     ap: FortranArrEComplex,
-    n: number
+    n: number,
 ) {
     let kk = 1;
     let jx = kx;
@@ -38,34 +34,23 @@ export function normLower(
             if (nounit) {
                 // (a+ib)/c+id) = (ac+bd)/(c*c +d*d) + i(-ad+bc)/(c*c+d*d)
                 const apkk = kk - ap.base;
-                const { re, im } = div_rxr(
-                    x.r[jx - x.base],
-                    x.i[jx - x.base],
-                    ap.r[apkk],
-                    ap.i[apkk]
-                );
+                const { re, im } = div_rxr(x.r[jx - x.base], x.i[jx - x.base], ap.r[apkk], ap.i[apkk]);
                 //console.log(`jx:${jx},x(jx)=(${x.r[jx - x.base]},${x.i[jx - x.base]})x/p=(${re},${im})`);
                 x.r[jx - x.base] = re;
                 x.i[jx - x.base] = im;
-
             }
-            let tempRe = x.r[jx - x.base];
-            let tempIm = x.i[jx - x.base];
+            const tempRe = x.r[jx - x.base];
+            const tempIm = x.i[jx - x.base];
             let ix = jx;
             for (let k = kk + 1; k <= kk + n - j; k++) {
                 ix += incx;
                 const apk = k - ap.base;
-                const { re, im } = mul_rxr(
-                    tempRe,
-                    tempIm,
-                    ap.r[apk],
-                    ap.i[apk]
-                );
+                const { re, im } = mul_rxr(tempRe, tempIm, ap.r[apk], ap.i[apk]);
                 x.r[ix - x.base] -= re;
                 x.i[ix - x.base] -= im;
             }
         }
         jx += incx;
-        kk += (n - j + 1);
+        kk += n - j + 1;
     }
 }

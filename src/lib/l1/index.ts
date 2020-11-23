@@ -1,4 +1,3 @@
-
 //complex
 import { caxpy } from './complex/caxpy';
 import { ccopy } from './complex/ccopy';
@@ -82,7 +81,5 @@ export const level1 = {
     zdscal: cscal,
     zrotg: csrot,
     zscal: cscal,
-    zswap: cswap
+    zswap: cswap,
 };
-
-

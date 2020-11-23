@@ -29,8 +29,8 @@ export function ssymv(
     incx: number,
     beta: number,
     y: FortranArr,
-    incy: number): void {
-
+    incy: number,
+): void {
     const lu = lowerChar(uplo);
 
     //input check
@@ -39,18 +39,14 @@ export function ssymv(
 
     if (!'ul'.includes(lu)) {
         info = 1;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 2;
-    }
-    else if (lda < max(1, n)) {
+    } else if (lda < max(1, n)) {
         info = 5;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 7;
-    }
-    else if (incy === 0) {
-        info = 9
+    } else if (incy === 0) {
+        info = 9;
     }
     if (info !== 0) {
         throw new Error(errWrongArg('ssymv', info));
@@ -61,15 +57,14 @@ export function ssymv(
 
     // Set up the start points in  X  and  Y.
 
-    let kx = incx > 0 ? 1 : 1 - (n - 1) * incx;
-    let ky = incy > 0 ? 1 : 1 - (n - 1) * incy;
+    const kx = incx > 0 ? 1 : 1 - (n - 1) * incx;
+    const ky = incy > 0 ? 1 : 1 - (n - 1) * incy;
 
     //     Start the operations. In this version the elements of A are
     //     accessed sequentially with one pass through the triangular part
     //     of A.
 
     //     First form  y := beta*y.
-
 
     //     Start the operations. In this version the elements of A are
     //     accessed sequentially with one pass through the triangular part
@@ -77,13 +72,11 @@ export function ssymv(
     //     First form  y := beta*y.
 
     if (beta !== 1) {
-
         let iy = ky;
         for (let i = 1; i <= n; i++) {
             y.r[iy - y.base] = beta === 0 ? 0 : beta * y.r[iy - y.base];
             iy += incy;
         }
-
     }
 
     if (alpha === 0) return;
@@ -93,9 +86,9 @@ export function ssymv(
 
     if (lu === 'u') {
         // Form  y  when A is stored in upper triangle.
-        // First form  y := beta*y.  
+        // First form  y := beta*y.
         for (let j = 1; j <= n; j++) {
-            let temp1 = alpha * x.r[jx - x.base];
+            const temp1 = alpha * x.r[jx - x.base];
             let temp2 = 0;
             let ix = kx;
             let iy = ky;
@@ -110,12 +103,11 @@ export function ssymv(
             jx += incx;
             jy += incy;
         }
-    }
-    else {
+    } else {
         // Form  y,  when A is stored in lower triangle.
         for (let j = 1; j <= n; j++) {
             //
-            let temp1 = alpha * x.r[jx - x.base];
+            const temp1 = alpha * x.r[jx - x.base];
             let temp2 = 0;
             const coords = a.colOfEx(j);
             y.r[jy - y.base] += temp1 * a.r[coords + j];

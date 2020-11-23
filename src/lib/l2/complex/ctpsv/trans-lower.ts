@@ -15,11 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    div_rxr,
-    FortranArrEComplex,
-    mul_rxr
-} from '../../../f_func';
+import { div_rxr, FortranArrEComplex, mul_rxr } from '../../../f_func';
 
 export function transLower(
     kx: number,
@@ -28,8 +24,8 @@ export function transLower(
     x: FortranArrEComplex,
     incx: number,
     ap: FortranArrEComplex,
-    n: number
-) {
+    n: number,
+): void {
     let kk = (n * (n + 1)) / 2;
     kx += (n - 1) * incx;
     let jx = kx;
@@ -40,12 +36,7 @@ export function transLower(
 
         for (let k = kk; k >= kk - (n - (j + 1)); k--) {
             const apk = k - ap.base;
-            const { re, im } = mul_rxr(
-                ap.r[apk],
-                (noconj ? ap.i[apk] : -ap.i[apk]),
-                x.r[ix - x.base],
-                x.i[ix - x.base]
-            );
+            const { re, im } = mul_rxr(ap.r[apk], noconj ? ap.i[apk] : -ap.i[apk], x.r[ix - x.base], x.i[ix - x.base]);
             //console.log(`k:${k},apk=(${ap.r[apk]},${(noconj ? ap.i[apk] : -ap.i[apk])})`);
             tempRe -= re;
             tempIm -= im;
@@ -54,12 +45,7 @@ export function transLower(
         if (nounit) {
             // (a+ib)/c+id) = (ac+bd)/(c*c +d*d) + i(-ad+bc)/(c*c+d*d)
             const apkk = kk - n + j - ap.base;
-            const { re, im } = div_rxr(
-                tempRe,
-                tempIm,
-                ap.r[apkk],
-                (noconj ? ap.i[apkk] : -ap.i[apkk])
-            );
+            const { re, im } = div_rxr(tempRe, tempIm, ap.r[apkk], noconj ? ap.i[apkk] : -ap.i[apkk]);
             tempRe = re;
             tempIm = im;
             //console.log(`${kk - n + j},\t(${re},${im})`)
@@ -67,6 +53,6 @@ export function transLower(
         x.r[jx - x.base] = tempRe;
         x.i[jx - x.base] = tempIm;
         jx -= incx;
-        kk -= (n - j + 1);
+        kk -= n - j + 1;
     }
 }

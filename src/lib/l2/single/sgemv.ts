@@ -30,27 +30,22 @@ export function sgemv(
     incx: number,
     beta: number,
     y: FortranArr,
-    incy: number): void {
-
+    incy: number,
+): void {
     const tr = lowerChar(trans);
 
     let info = 0;
     if (!'ntc'.includes(tr)) {
         info = 1;
-    }
-    else if (m < 0) {
+    } else if (m < 0) {
         info = 2;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 3;
-    }
-    else if (lda < max(1, m)) {
+    } else if (lda < max(1, m)) {
         info = 6;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 8;
-    }
-    else if (incy === 0) {
+    } else if (incy === 0) {
         info = 11;
     }
     if (info !== 0) {
@@ -61,11 +56,11 @@ export function sgemv(
 
     if (m === 0 || n === 0 || (alpha === 0 && beta === 1)) return;
 
-    let lenx = tr === 'n' ? n : m;
-    let leny = tr === 'n' ? m : n;
+    const lenx = tr === 'n' ? n : m;
+    const leny = tr === 'n' ? m : n;
 
-    let kx = incx > 0 ? 1 : 1 - (lenx - 1) * incx;
-    let ky = incy > 0 ? 1 : 1 - (leny - 1) * incy;
+    const kx = incx > 0 ? 1 : 1 - (lenx - 1) * incx;
+    const ky = incy > 0 ? 1 : 1 - (leny - 1) * incy;
 
     /*
       Start the operations. In this version the elements of A are
@@ -78,8 +73,7 @@ export function sgemv(
         //performance
         if (incy === 1 && beta === 0) {
             y.r.fill(0, 1 - y.base, 1 - y.base + leny);
-        }
-        else {
+        } else {
             let iy = ky;
             for (let i = 1; i <= leny; i++) {
                 y.r[iy - y.base] = beta === 0 ? 0 : y.r[iy - y.base] * beta;
@@ -92,7 +86,7 @@ export function sgemv(
         //Form  y := alpha*A*x + y.
         let jx = kx;
         for (let j = 1; j <= n; j++) {
-            let temp = alpha * x.r[jx - x.base];
+            const temp = alpha * x.r[jx - x.base];
             let iy = ky;
             const coorAJ = a.colOfEx(j);
             for (let i = 1; i <= m; i++) {
@@ -101,8 +95,7 @@ export function sgemv(
             }
             jx += incx;
         }
-    }
-    else {
+    } else {
         //Form  y:= alpha * A ** T * x + y.
         let jy = ky;
         for (let j = 1; j <= n; j++) {
@@ -117,6 +110,4 @@ export function sgemv(
             jy += incy;
         }
     }
-
 }
-

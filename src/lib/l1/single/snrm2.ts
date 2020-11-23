@@ -20,14 +20,13 @@ import type { FortranArr } from '../../f_func';
 const { abs, sqrt } = Math;
 
 export function snrm2(n: number, x: FortranArr, incx: number): number {
+    if (n < 1 || incx < 1) return 0;
+    if (n === 1) return abs(x.r[1 - x.base]);
 
-      if (n < 1 || incx < 1) return 0;
-      if (n === 1) return abs(x.r[1 - x.base]);
+    let scale = 0;
+    let ssq = 1;
 
-      let scale = 0;
-      let ssq = 1;
-
-      /*
+    /*
       The following loop is equivalent to this call to the LAPACK
        auxiliary routine:
        CALL SLASSQ( N, X, INCX, SCALE=0, SSQ=1 , )
@@ -54,20 +53,19 @@ export function snrm2(n: number, x: FortranArr, incx: number): number {
 
        */
 
-      for (let ix = 1; ix <= 1 + (n - 1) * incx; ix += incx) {
-            const kix = ix - x.base;
-            if (x.r[kix] !== 0) {
-                  let absxi = abs(x.r[kix]);
-                  const ratio = scale / absxi;
-                  const ratioP2 = ratio * ratio;
-                  if (scale < absxi) {
-                        ssq = 1 + ssq * ratioP2;
-                        scale = absxi;
-                  }
-                  else {
-                        ssq = ssq + 1 / ratioP2;
-                  }
+    for (let ix = 1; ix <= 1 + (n - 1) * incx; ix += incx) {
+        const kix = ix - x.base;
+        if (x.r[kix] !== 0) {
+            const absxi = abs(x.r[kix]);
+            const ratio = scale / absxi;
+            const ratioP2 = ratio * ratio;
+            if (scale < absxi) {
+                ssq = 1 + ssq * ratioP2;
+                scale = absxi;
+            } else {
+                ssq = ssq + 1 / ratioP2;
             }
-      }
-      return scale * sqrt(ssq);
+        }
+    }
+    return scale * sqrt(ssq);
 }
