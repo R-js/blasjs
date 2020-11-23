@@ -1,6 +1,13 @@
 {
     "author": "Jacob K.F. Bogers",
-    "browser": "dist/lib/blasjs.min.js",
+    "main": "build/lib/index.js",
+    "browser": "dist/blasjs.min.js",
+    "types": "build/lib/index.d.ts",
+    "version": "1.0.13",
+    "files": [
+        "dist",
+        "build"
+    ],
     "bugs": {
         "url": "https://github.com/jacobbogers/blasjs/issues"
     },
@@ -17,52 +24,22 @@
     },
     "description": "Javascript Pure Implementation of BLAS Level 1, level 2, level 3 functions",
     "devDependencies": {
-        "@rollup/plugin-typescript": "^6.1.0",
+        "@rollup/plugin-node-resolve": "^10.0.0",
         "@types/chai": "^3.5.2",
-        "@types/clone": "^0.1.30",
-        "@types/debug": "0.0.30",
-        "@types/lodash.clonedeep": "^4.5.3",
-        "@types/lodash.includes": "^4.3.3",
-        "@types/lodash.xor": "^4.5.3",
         "@types/mocha": "^2.2.48",
         "@types/node": "^6.0.96",
-        "awesome-typescript-loader": "^3.4.1",
-        "babel-core": "^6.24.1",
-        "babel-preset-env": "^1.6.1",
-        "babel-preset-stage-0": "^6.24.1",
-        "babel-register": "^6.26.0",
+        "@typescript-eslint/eslint-plugin": "^4.8.1",
+        "@typescript-eslint/parser": "^4.8.1",
         "chai": "^3.5.0",
-        "clean-webpack-plugin": "^0.1.18",
-        "codecov": "^2.3.1",
-        "cross-env": "^5.1.3",
-        "debug": "^3.1.0",
-        "github-markdown-css": "^2.10.0",
-        "istanbul": "^0.4.5",
+        "eslint": "^7.14.0",
         "jest": "^26.6.3",
-        "lodash.clonedeep": "^4.5.0",
-        "lodash.defaults": "^4.2.0",
-        "lodash.defaultsdeep": "^4.6.0",
-        "lodash.includes": "^4.3.0",
-        "lodash.merge": "^4.6.1",
-        "lodash.xor": "^4.5.0",
-        "mocha": "^4.1.0",
-        "mocha-clean": "^1.0.0",
-        "mocha-lcov-reporter": "^1.3.0",
         "nyc": "^11.5.0",
-        "opn": "^5.2.0",
-        "opn-cli": "^3.1.0",
         "rollup": "^2.33.1",
         "rollup-plugin-terser": "^7.0.2",
         "schema-utils": "^0.4.5",
         "source-map-support": "^0.5.3",
-        "sshpk": "^1.14.2",
         "tslib": "^2.0.3",
-        "tslint": "^5.9.1",
-        "tslint-loader": "^3.5.3",
-        "typescript-eslint-language-service": "^4.1.1",
-        "uglifyjs-webpack-plugin": "^1.1.8",
-        "webpack": "^2.7.0",
-        "webpack-node-externals": "^1.6.0"
+        "typescript-eslint-language-service": "^4.1.1"
     },
     "homepage": "https://github.com/jacobbogers/blasjs#readme",
     "keywords": [
@@ -81,22 +58,20 @@
         "matrix inverse",
         "determinant",
         "jacobian",
-        "hermetian",
+        "Hermitian",
         "conjugate",
         "conjugate matrix"
     ],
     "license": "GPL-3.0",
-    "main": "dist/lib/index.js",
     "name": "blasjs",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/jacobbogers/blasjs.git"
     },
     "scripts": {
-        "bnew":"tsc",
+        "bnew": "tsc",
         "build": "webpack --progress --color --display-error-details --config config/webpack/config",
         "build:prod": "webpack --progress --color --display-error-details --config config/webpack/config --env=prod",
-        "codecov": "codecov",
         "lint": "tslint -c tslint.json -p .",
         "lint:fix": "npm run lint -- --fix",
         "lint:report": "npm run lint -- -o .lint-report.txt --force && code .lint-report.txt",
@@ -104,7 +79,5 @@
         "prepublishOnly": "tsc && npm run build:prod",
         "report": "opn coverage/lcov-report/index.html",
         "test": "cross-env-shell NODE_ENV=test TS_NODE_DISABLE_WARNINGS=true nyc mocha"
-    },
-    "types": "./dist/src/lib/index.d.ts",
-    "version": "1.0.13"
+    }
 }

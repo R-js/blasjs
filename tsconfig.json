@@ -19,7 +19,7 @@
             - set declaration to "true"
             ! cannot be specified with "noEmit"
         */
-        "composite": true,
+        "composite": false,
         "declaration": true, // generate decleration files, make sure they go into a declarationDir
         "declarationMap": true, // make map files for .d.ts files
         "downlevelIteration": false, // let babble handle it

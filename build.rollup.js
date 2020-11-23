@@ -1,22 +1,22 @@
 const rollup = require('rollup');
-const typescript = require('@rollup/plugin-typescript');
 const { terser } = require('rollup-plugin-terser');
+const { nodeResolve } = require('@rollup/plugin-node-resolve');
 
 // see below for details on the options
 const inputOptions = {
         input: {
-            blas: 'src/lib/index.ts'
+            blas: 'build/lib/index.js'
         },
-        plugins:[typescript()]
+        plugins:[ nodeResolve()]
 };
 
 const outputOptions = {
     format: 'iife',
-    //file: 'dist/blas.js',
-    dir: 'build',
-    name: 'blas',
+    dir: 'dist',
+    entryFileNames: '[name].js',
     sourcemap: true,
-   // plugins: [ terser()]
+    name: 'blas',
+    plugins: [ terser()]
 };
 
 async function build() {
