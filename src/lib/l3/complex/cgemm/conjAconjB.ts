@@ -20,7 +20,7 @@ import { Complex, MatrixEComplex, mul_cxr, mul_rxr } from '../../../f_func';
 //  Form  C := alpha*A**H*B**H + beta*C.
 export function conjAconjB(
     betaIsZero: boolean,
-    betaIsOne: boolean,
+    _betaIsOne: boolean,
     beta: Complex,
     alpha: Complex,
     a: MatrixEComplex,

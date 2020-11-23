@@ -4,13 +4,16 @@ const { terser } = require('rollup-plugin-terser');
 
 // see below for details on the options
 const inputOptions = {
-        input: 'src/lib/index.ts',
+        input: {
+            blas: 'src/lib/index.ts'
+        },
         plugins:[typescript()]
 };
 
 const outputOptions = {
     format: 'iife',
-    file: 'dist/blas.js',
+    //file: 'dist/blas.js',
+    dir: 'build',
     name: 'blas',
     sourcemap: true,
    // plugins: [ terser()]

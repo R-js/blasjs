@@ -23,7 +23,7 @@ import {
 
 export function normLower(
     kx: number,
-    noconj: boolean,
+    _noconj: boolean,
     nounit: boolean,
     x: FortranArrEComplex,
     incx: number,

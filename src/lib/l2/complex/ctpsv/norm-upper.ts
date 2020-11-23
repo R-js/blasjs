@@ -23,7 +23,7 @@ import {
 
 export function normUpper(
     kx: number,
-    noconj: boolean,
+    _noconj: boolean,
     nounit: boolean,
     x: FortranArrEComplex,
     incx: number,

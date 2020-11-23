@@ -24,7 +24,7 @@ export function normLower(
     x: FortranArrEComplex,
     incx: number,
     a: MatrixEComplex,
-    noconj: boolean,
+    _noconj: boolean,
     nounit: boolean,
     n: number,
     k: number) {

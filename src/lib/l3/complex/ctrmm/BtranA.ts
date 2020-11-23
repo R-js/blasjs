@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Complex, MatrixEComplex } from '../../../f_func';
+import type { Complex, MatrixEComplex } from '../../../f_func';
 
 export function BtranA(
     nounit: boolean,

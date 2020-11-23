@@ -21,7 +21,7 @@ import { Complex, MatrixEComplex, mul_cxr, mul_rxr } from '../../../f_func';
 
 export function transAB(
     betaIsZero: boolean,
-    betaIsOne: boolean,
+    _betaIsOne: boolean,
     beta: Complex,
     alpha: Complex,
     a: MatrixEComplex,

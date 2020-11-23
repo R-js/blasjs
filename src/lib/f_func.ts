@@ -217,7 +217,7 @@ export function errorMsg(errNo: ERROR, ...fmt: string[]): string {
     /*if (fmt.length === 0) {
         return msg;
     }*/
-    return fmt.reduce((p, v, k) => p.replace('%s', v), msg);
+    return fmt.reduce((p, v) => p.replace('%s', v), msg);
 }
 
 //helpers for errorMsg

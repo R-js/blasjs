@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-import { Complex, MatrixEComplex, mul_cxr, mul_rxr } from '../../../f_func';
+import type { Complex, MatrixEComplex }  from '../../../f_func';
+import { mul_cxr, mul_rxr } from '../../../f_func';
 
 
 //Form  C := alpha*A**H*B + beta*C.
@@ -23,7 +23,7 @@ import { Complex, MatrixEComplex, mul_cxr, mul_rxr } from '../../../f_func';
 
 export function conjAB(
     betaIsZero: boolean,
-    betaIsOne: boolean,
+    _betaIsOne: boolean,
     beta: Complex,
     alpha: Complex,
     a: MatrixEComplex,

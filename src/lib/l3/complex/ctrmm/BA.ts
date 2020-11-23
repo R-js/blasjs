@@ -16,13 +16,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-import { Complex, MatrixEComplex } from '../../../f_func';
+import type { Complex, MatrixEComplex } from '../../../f_func';
 
 
 export function BA(
     nounit: boolean,
     upper: boolean,
-    noconj: boolean,
+    _noconj: boolean,
     n: number,
     m: number,
     a: MatrixEComplex,

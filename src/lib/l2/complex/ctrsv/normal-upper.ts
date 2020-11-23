@@ -24,7 +24,7 @@ import {
 
 export function normalUpper(
     kx: number,
-    noconj: boolean,
+    _noconj: boolean,
     nounit: boolean,
     x: FortranArrEComplex,
     incx: number,

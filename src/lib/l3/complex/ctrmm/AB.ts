@@ -15,18 +15,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
+import type {
     Complex,
     MatrixEComplex,
+} from '../../../f_func';
+
+import {
     mul_cxr,
     mul_rxr
 } from '../../../f_func';
 
-
 export function AB(
     nounit: boolean,
     upper: boolean,
-    noconj: boolean,
+    _noconj: boolean,
     n: number,
     m: number,
     a: MatrixEComplex,

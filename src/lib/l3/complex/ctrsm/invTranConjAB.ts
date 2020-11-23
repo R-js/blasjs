@@ -25,8 +25,8 @@ import {
 export function invTranConjAB(
     nounit: boolean,
     upper: boolean,
-    alphaIsOne: boolean,
-    alphaIsZero: boolean,
+    //alphaIsOne: boolean,
+    //alphaIsZero: boolean,
     noconj: boolean,
     n: number,
     m: number,

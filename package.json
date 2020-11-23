@@ -93,6 +93,7 @@
         "url": "git+https://github.com/jacobbogers/blasjs.git"
     },
     "scripts": {
+        "bnew":"tsc",
         "build": "webpack --progress --color --display-error-details --config config/webpack/config",
         "build:prod": "webpack --progress --color --display-error-details --config config/webpack/config --env=prod",
         "codecov": "codecov",

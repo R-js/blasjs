@@ -15,14 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
+import type {
     FortranArrEComplex,
     MatrixEComplex
 } from '../../../f_func';
 
 export function normalUpper(
     kx: number,
-    noconj: boolean,
+    _noconj: boolean,
     nounit: boolean,
     x: FortranArrEComplex,
     incx: number,

@@ -39,14 +39,14 @@
         ],
         "module": "ES2020",
         "noEmit": false,
-        "outDir": "./build", // babel will take it from here and move to /bin
+        "outDir": "build", // babel will take it from here and move to /bin
         //"outFile" , non modules files get concatenated to this file
         //"plugins":[...] for vscode editor, already included in package.json "contributes" field
         "removeComments": false, // babel should handle it
         "rootDir": "./src",
         "sourceMap": true, // not sure if this should be turned on if you use babel
         "target": "ES2020", // no down transpiling , that is for babel
-        // "tsBuildInfoFile": , we dont use composite projects
+        //"tsBuildInfoFile": 'build', we dont use composite projects
         /* STRICT CHECKS
         https://www.typescriptlang.org/tsconfig#Strict_Type_Checking_Options_6173 */
         // strictness
@@ -81,7 +81,7 @@
         // we dont use dynamic module loading or the ES6 module spec
         "moduleResolution": "node",
         "paths": { //  we can use this for the test to pick up the module
-            "blasjs": "src/lib"
+            "blasjs": [ "src/lib" ]
         }, // maybe use later, if you decide to use this, specify baseurl
         // source maps
         "preserveSymlinks": true, // keep it around just in case
@@ -125,7 +125,7 @@
         /* LINTER CHECKS */
         // https://www.typescriptlang.org/tsconfig#Source_Map_Options_6175
         "noImplicitReturns": false, // allow for it
-        "noUncheckedIndexedAccess": true,
+        // DOESNT EXIST? "noUncheckedIndexedAccess": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         /* EXPERIMENTAL */
@@ -139,7 +139,7 @@
         "allowUnreachableCode": false,
         "allowUnusedLabels": false,
         "assumeChangesOnlyAffectDirectDependencies": false, // be on the safe side, you might not see all compiler errors otherwise
-       // "bundledPackageName": "blasjs", // ts-node problem i think, the bundled package name if you want to export types like "blasjs/typedArrayReal",
+        // "bundledPackageName": "blasjs", // ts-node problem i think, the bundled package name if you want to export types like "blasjs/typedArrayReal",
         "noFallthroughCasesInSwitch": false, // fall through is ok
         "declarationDir": "./build/types", // emit types here
         //"disableReferencedProjectLoad": true, handy for "projects" based setup
@@ -152,7 +152,7 @@
         "extendedDiagnostics": true, //always
         "forceConsistentCasingInFileNames": true, // fuck windows, enforce casing!
         // "generateCpuProfile": true, not sure to use this, or how
-        "importsNotUsedAsValues": "error", // if value import is used as a type, error!
+        "importsNotUsedAsValues": "remove", // remove import type when transpiling
         // "jsxFactory": "preact.h" not used
         // "jsxFragmentFactory": "Fragment" // not used
         // "jsxImportSource": "react" // not used
@@ -160,14 +160,14 @@
         print names of generated files to the terminal
         make sure the include/exclude settings are ok 
         */
-        "listEmittedFiles": true, // print names of generated files to the terminal
+        "listEmittedFiles": true, //change back to true print names of generated files to the terminal
         // also list files from node_modules ec (according to documentation,never checked it)
-        "listFiles": true,
+        "listFiles": true, //change back to true
         // list files 
         "maxNodeModuleJsDepth": 0, // no limitation on search dept, ..ever
         "newLine": "LF", // unix
         "noEmitHelpers": true, // dont emit helpers, babble should handle it
-        "noErrorTruncation": true, // the doc dont show the diff between true or false 
+        "noErrorTruncation": false, // the doc dont show the diff between true or false 
         "noImplicitUseStrict": false, // let ts emit "use strict" prologue at top of emitted files
         "noLib": false, // dont ignore "lib" setting, false= enable automatic inclusion of library (d.ts?) files
         "noResolve": false, // add resolved files (import, <reference) to the program
