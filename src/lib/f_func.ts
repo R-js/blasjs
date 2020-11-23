@@ -27,11 +27,11 @@ export function isZero(v: Complex): boolean {
     return v.im === 0 && v.re === 0;
 }
 
-export function isZeroE(re: number, im: number) {
+export function isZeroE(re: number, im: number): boolean {
     return re === 0 && im === 0;
 }
 
-export function isOne(v: Complex) {
+export function isOne(v: Complex): boolean {
     return v.re === 1 && v.im === 0;
 }
 /*
@@ -49,6 +49,7 @@ export function sign(a: number, b?: number): number {
 
 //1
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ArrayElt = { key: string | number; val: any };
 export type Complex = { re: number; im: number };
 export type fpArray = Float32Array | Float64Array;
@@ -461,8 +462,7 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
                 return mimicFMatrix(rc, ic)(this.nrRows, this.nrCols, this.rowBase, this.colBase);
             },
             real() {
-                let reC: fpArray;
-                reC = this.r.slice();
+                const reC = this.r.slice();
                 return mimicFMatrix(reC)(this.nrRows, this.nrCols);
             },
             imaginary() {
@@ -557,7 +557,7 @@ export const map = iter();
 export const each = iter(false);
 
 export function numberPrecision(prec = 6) {
-    let runner: Function;
+    const runner = arrayrify(convert);
     function convert(x?: number | any): number {
         // try to loop over the object
         if (typeof x === 'object' && x !== null) {
@@ -574,7 +574,6 @@ export function numberPrecision(prec = 6) {
         //dont change the object, whatever it is
         return x;
     }
-    runner = arrayrify(convert);
     return runner;
 }
 
