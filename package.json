@@ -72,14 +72,8 @@
         "url": "git+https://github.com/jacobbogers/blasjs.git"
     },
     "scripts": {
-        "bnew": "tsc",
-        "build": "webpack --progress --color --display-error-details --config config/webpack/config",
-        "build:prod": "webpack --progress --color --display-error-details --config config/webpack/config --env=prod",
-        "lint": "eslint 'src/**/*.ts' --fix",
-        "lint:report": "npm run lint -- -o .lint-report.txt --force && code .lint-report.txt",
-        "post-test": "echo posttest",
-        "prepublishOnly": "tsc && npm run build:prod",
-        "report": "opn coverage/lcov-report/index.html",
-        "test": "cross-env-shell NODE_ENV=test TS_NODE_DISABLE_WARNINGS=true nyc mocha"
+        "build": "tsc && node build.rollup.js",
+        "lint": "eslint 'src/**/*.ts'",
+        "lint:fix": "eslint 'src/**/*.ts' --fix"
     }
 }
