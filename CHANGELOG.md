@@ -1,4 +1,4 @@
-## Changes 1.0.14
+## Changes 1.0.14-rc1
 
 - Moved build system to rollup, from webpack
 - Seperate bundles/ directories for node and browser releases
