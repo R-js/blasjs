@@ -3,6 +3,9 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     verbose: true,
+    cacheDirectory: '.jest-cache',
+    testPathIgnorePatterns: ['build', 'commonjs'],
+    testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     globals: {
         'ts-jest': {
             compiler: 'typescript',
