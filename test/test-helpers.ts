@@ -15,33 +15,31 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { assert } from 'chai';
-
 import { Complex } from '../src/lib/f_func';
 
-
-export function isComplex(a): a is Complex {
+// type guard
+export function isComplex(a: any): a is Complex {
     return (
-        (a !== null) &&
-        (typeof a === 'object') &&
-        ('re' in a) &&
-        ('im' in a) &&
-        (typeof a['re'] === 'number' && typeof a['im'] === 'number')
+        a !== null &&
+        typeof a === 'object' &&
+        're' in a &&
+        'im' in a &&
+        typeof a['re'] === 'number' &&
+        typeof a['im'] === 'number'
     );
 }
 
 export function approximatelyWithPrec(prec: number): (act: number | Complex, exp: number) => void {
-
     return (act: number | Complex, exp: number) => approximately(act, exp, prec);
 }
 
-
-export function approximately(act: number | Complex, exp: number | Complex, prec = 1E-9) {
-
+export function approximately(act: number | Complex, exp: number | Complex, preca = 1e-9) {
+    const prec = -Math.log10(preca);
     if (isComplex(act)) {
         if (isComplex(exp)) {
-            assert.approximately(act.re, exp.re, prec, 'real part numbers are NOT close');
-            assert.approximately(act.im, exp.im, prec, 'numbers are NOT close');
+            expect(act.re).toBeCloseTo(exp.re, prec); //, 'real part numbers are NOT close');
+            expect(act.im).toBeCloseTo(exp.im, prec);
+            //assert.approximately(act.im, exp.im, prec, 'numbers are NOT close');
             return;
         }
         throw new Error('cannot compare complex type with non complex type');
@@ -49,18 +47,18 @@ export function approximately(act: number | Complex, exp: number | Complex, prec
 
     switch (true) {
         case isNaN(act):
-            assert.isNaN(exp);
+            expect(exp).toBeNaN();
             break;
         case isFinite(act):
             //console.log(act, exp, prec);
-            assert.approximately(act, <number>exp, prec, 'numbers are NOT close');
+            expect(act).toBeCloseTo(<number>exp, prec);
+            //assert.approximately(act, <number>exp, prec, 'numbers are NOT close');
             break;
         case !isFinite(act):
-            assert.equal(act, exp);
+            expect(act).toBe(exp);
+            //assert.equal(act, exp);
             break;
         default:
             throw new Error(`Icompatible values ${act}, ${exp}`);
     }
 }
-
-
