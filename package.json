@@ -3,7 +3,7 @@
     "author": "Jacob K.F. Bogers",
     "main": "commonjs/lib/index.js",
     "browser": "dist/blasjs.min.js",
-    "types": "build/lib/index.d.ts",
+    "types": "build/types/lib/index.d.ts",
     "module": "build/lib/index.js",
     "version": "1.0.14-rc1",
     "files": [
