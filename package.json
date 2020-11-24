@@ -1,13 +1,15 @@
 {
     "description": "Javascript Pure Implementation of BLAS Level 1, level 2, level 3 functions",
     "author": "Jacob K.F. Bogers",
-    "main": "build/lib/index.js",
+    "main": "commonjs/lib/index.js",
     "browser": "dist/blasjs.min.js",
     "types": "build/lib/index.d.ts",
+    "module": "build/lib/index.js",
     "version": "1.0.14-rc1",
     "files": [
         "dist",
-        "build"
+        "build",
+        "commonjs"
     ],
     "bugs": {
         "url": "https://github.com/jacobbogers/blasjs/issues"
@@ -67,7 +69,7 @@
         "url": "git+https://github.com/jacobbogers/blasjs.git"
     },
     "scripts": {
-        "prebuild": "tsc",
+        "prebuild": "tsc && tsc -p tsconfig-commonjs.json",
         "build": "node build.rollup.js",
         "prepublush": "npm run build",
         "lint": "eslint 'src/**/*.ts'",

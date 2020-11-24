@@ -2,6 +2,8 @@
 logs
 dist/
 build/
+commonjs/
+*.tsbuildinfo
 *.log
 TODO
 npm-debug.log*
