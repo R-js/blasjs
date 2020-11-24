@@ -32,11 +32,11 @@
         "eslint": "^7.14.0",
         "eslint-config-prettier": "^6.15.0",
         "eslint-plugin-prettier": "^3.1.4",
-        "jest": "^26.6.3",
+        "jest": "26.6.3",
         "prettier": "^2.2.0",
         "rollup": "^2.33.1",
         "rollup-plugin-terser": "^7.0.2",
-        "ts-jest": "^26.4.4",
+        "ts-jest": "26.4.4",
         "typescript": "^4.1.2",
         "typescript-eslint-language-service": "^4.1.1"
     },
@@ -68,7 +68,7 @@
         "url": "git+https://github.com/jacobbogers/blasjs.git"
     },
     "scripts": {
-        "prebuild": "tsc && tsc -p tsconfig-commonjs.json",
+        "prebuild": "rm -rf *tsbuildInfo && tsc && tsc -p tsconfig-commonjs.json",
         "build": "node build.rollup.js",
         "prepublush": "npm run build",
         "lint": "eslint 'src/**/*.ts'",
