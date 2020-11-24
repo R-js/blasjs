@@ -1,4 +1,5 @@
 {
+    "description": "Javascript Pure Implementation of BLAS Level 1, level 2, level 3 functions",
     "author": "Jacob K.F. Bogers",
     "main": "build/lib/index.js",
     "browser": "dist/blasjs.min.js",
@@ -18,15 +19,12 @@
             }
         ]
     },
-    "dependencies": {
-        "ts-node": "^9.0.0",
-        "typescript": "^4.1.2"
-    },
-    "description": "Javascript Pure Implementation of BLAS Level 1, level 2, level 3 functions",
+    "dependencies": {},
     "devDependencies": {
+        "ts-node": "^9.0.0",
+        "typescript": "^4.1.2",
+        "@rollup/plugin-commonjs": "^16.0.0",
         "@rollup/plugin-node-resolve": "^10.0.0",
-        "@types/chai": "^3.5.2",
-        "@types/mocha": "^2.2.48",
         "@types/node": "^6.0.96",
         "@typescript-eslint/eslint-plugin": "^4.8.1",
         "@typescript-eslint/parser": "^4.8.1",
@@ -39,16 +37,13 @@
         "prettier": "^2.2.0",
         "rollup": "^2.33.1",
         "rollup-plugin-terser": "^7.0.2",
-        "schema-utils": "^0.4.5",
-        "source-map-support": "^0.5.3",
-        "tslib": "^2.0.3",
         "typescript-eslint-language-service": "^4.1.1"
     },
     "homepage": "https://github.com/jacobbogers/blasjs#readme",
     "keywords": [
-        "blas",
+        "BLAS",
         "linear algebra",
-        "lapack",
+        "LAPACK",
         "octave",
         "linear regression",
         "vector algebra",
@@ -72,7 +67,9 @@
         "url": "git+https://github.com/jacobbogers/blasjs.git"
     },
     "scripts": {
-        "build": "tsc && node build.rollup.js",
+        "prebuild": "tsc",
+        "build": "node build.rollup.js",
+        "prepublush": "npm run build",
         "lint": "eslint 'src/**/*.ts'",
         "lint:fix": "eslint 'src/**/*.ts' --fix"
     }

@@ -4,19 +4,19 @@ const { nodeResolve } = require('@rollup/plugin-node-resolve');
 
 // see below for details on the options
 const inputOptions = {
-        input: {
-            blas: 'build/lib/index.js'
-        },
-        plugins:[ nodeResolve()]
+    input: {
+        blas: 'build/lib/index.js',
+    },
+    plugins: [nodeResolve()],
 };
 
 const outputOptions = {
     format: 'iife',
     dir: 'dist',
-    entryFileNames: '[name].js',
+    entryFileNames: '[name].min.js',
     sourcemap: true,
     name: 'blas',
-    plugins: [ terser()]
+    plugins: [terser()],
 };
 
 async function build() {
