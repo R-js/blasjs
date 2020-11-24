@@ -15,27 +15,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    Complex,
-    div_rxr,
-    MatrixEComplex,
-    mul_cxr,
-    mul_rxr
-} from '../../../f_func';
+import { Complex, div_rxr, MatrixEComplex, mul_cxr, mul_rxr } from '../../../f_func';
 //Form  B := alpha*inv( A )*B.
 
 export function invAB(
     nounit: boolean,
     upper: boolean,
     alphaIsOne: boolean,
-    alphaIsZero: boolean,
-    noconj: boolean,
+    //alphaIsZero: boolean,
+    //noconj: boolean,
     n: number,
     m: number,
     a: MatrixEComplex,
     b: MatrixEComplex,
-    alpha: Complex): void {
-
+    alpha: Complex,
+): void {
     if (upper) {
         for (let j = 1; j <= n; j++) {
             const coorBJ = b.colOfEx(j);
@@ -54,30 +48,20 @@ export function invAB(
                 const isBZero = b.r[coorBJ + k] === 0 && b.i[coorBJ + k] === 0;
                 if (!isBZero) {
                     if (nounit) {
-                        const { re, im } = div_rxr(
-                            b.r[coorBJ + k],
-                            b.i[coorBJ + k],
-                            a.r[coorAK + k],
-                            a.i[coorAK + k]
-                        );
+                        const { re, im } = div_rxr(b.r[coorBJ + k], b.i[coorBJ + k], a.r[coorAK + k], a.i[coorAK + k]);
                         b.r[coorBJ + k] = re;
                         b.i[coorBJ + k] = im;
                         //       console.log(`*${j},${k}\t(${b.r[coorBJ + k]},${b.i[coorBJ + k]})`);
                     }
                     for (let i = 1; i <= k - 1; i++) {
-                        const { re, im } = mul_rxr(
-                            b.r[coorBJ + k],
-                            b.i[coorBJ + k],
-                            a.r[coorAK + i],
-                            a.i[coorAK + i]
-                        );
+                        const { re, im } = mul_rxr(b.r[coorBJ + k], b.i[coorBJ + k], a.r[coorAK + i], a.i[coorAK + i]);
                         b.r[coorBJ + i] -= re;
                         b.i[coorBJ + i] -= im;
-                    }//for(i)
-                }//if b(k,j)!=0
-            }//k
-        }//j
-    }//upper
+                    } //for(i)
+                } //if b(k,j)!=0
+            } //k
+        } //j
+    } //upper
     else {
         for (let j = 1; j <= n; j++) {
             const coorBJ = b.colOfEx(j);
@@ -99,12 +83,7 @@ export function invAB(
                 const coorAK = a.colOfEx(k);
                 if (!bIsZero) {
                     if (nounit) {
-                        const { re, im } = div_rxr(
-                            b.r[coorBJ + k],
-                            b.i[coorBJ + k],
-                            a.r[coorAK + k],
-                            a.i[coorAK + k]
-                        );
+                        const { re, im } = div_rxr(b.r[coorBJ + k], b.i[coorBJ + k], a.r[coorAK + k], a.i[coorAK + k]);
                         b.r[coorBJ + k] = re;
                         b.i[coorBJ + k] = im;
                     }
@@ -120,8 +99,8 @@ export function invAB(
                         b.r[coorBJ + i] -= re;
                         b.i[coorBJ + i] -= im;
                     }
-                }//bNoZero
-            }//k
-        }//j
-    }//upper
+                } //bNoZero
+            } //k
+        } //j
+    } //upper
 }

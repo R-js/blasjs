@@ -15,7 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { errWrongArg, lowerChar, Matrix } from '../../f_func';
+import type { Matrix } from '../../f_func';
+import { errWrongArg, lowerChar } from '../../f_func';
 
 const { max } = Math;
 
@@ -30,8 +31,8 @@ export function strsm(
     a: Matrix,
     lda: number,
     b: Matrix,
-    ldb: number): void {
-
+    ldb: number,
+): void {
     const si = lowerChar(side);
     const ul = lowerChar(uplo);
     const tr = lowerChar(trans);
@@ -42,30 +43,22 @@ export function strsm(
     const nounit = di === 'n';
     const upper = ul === 'u';
 
-
     let info = 0;
     if (!'lr'.includes(si)) {
         info = 1;
-    }
-    else if (!'ul'.includes(ul)) {
+    } else if (!'ul'.includes(ul)) {
         info = 2;
-    }
-    else if (!'ntc'.includes(tr)) {
+    } else if (!'ntc'.includes(tr)) {
         info = 3;
-    }
-    else if (!'un'.includes(di)) {
+    } else if (!'un'.includes(di)) {
         info = 4;
-    }
-    else if (m < 0) {
+    } else if (m < 0) {
         info = 5;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 6;
-    }
-    else if (lda < max(1, nrowA)) {
+    } else if (lda < max(1, nrowA)) {
         info = 9;
-    }
-    else if (ldb < max(1, m)) {
+    } else if (ldb < max(1, m)) {
         info = 11;
     }
 
@@ -107,7 +100,7 @@ export function strsm(
                         }
                     }
                 }
-                60
+                60;
             }
             // not upper
             else {
@@ -132,11 +125,9 @@ export function strsm(
                             }
                         }
                     }
-
                 }
             }
-        }
-        else {
+        } else {
             //Form  B := alpha*inv( A**T )*B.
             if (upper) {
                 for (let j = 1; j <= n; j++) {
@@ -151,8 +142,7 @@ export function strsm(
                         b.r[coorBJ + i] = temp;
                     }
                 }
-            }
-            else {
+            } else {
                 for (let j = 1; j <= n; j++) {
                     const coorBJ = b.colOfEx(j);
                     for (let i = m; i >= 1; i--) {
@@ -190,13 +180,13 @@ export function strsm(
                         }
                     }
                     if (nounit) {
-                        let temp = 1 / a.r[coorAJ + j];
+                        const temp = 1 / a.r[coorAJ + j];
                         for (let i = 1; i <= m; i++) {
                             b.r[coorBJ + i] *= temp;
                         }
                     }
-                }//for
-            }//if upper
+                } //for
+            } //if upper
             else {
                 for (let j = n; j >= 1; j--) {
                     const coorBJ = b.colOfEx(j);
@@ -215,22 +205,21 @@ export function strsm(
                         }
                     }
                     if (nounit) {
-                        let temp = 1 / a.r[coorAJ + j];
+                        const temp = 1 / a.r[coorAJ + j];
                         for (let i = 1; i <= m; i++) {
                             b.r[coorBJ + i] *= temp;
                         }
                     }
-                }//for
-            }//upper
-        }
-        else {
+                } //for
+            } //upper
+        } else {
             // Form  B := alpha*B*inv( A**T ).
             if (upper) {
                 for (let k = n; k >= 1; k--) {
                     const coorAK = a.colOfEx(k);
                     const coorBK = b.colOfEx(k);
                     if (nounit) {
-                        let temp = 1 / a.r[coorAK + k];
+                        const temp = 1 / a.r[coorAK + k];
                         for (let i = 1; i <= m; i++) {
                             b.r[coorBK + i] *= temp;
                         }
@@ -238,7 +227,7 @@ export function strsm(
                     for (let j = 1; j <= k - 1; j++) {
                         const coorBJ = b.colOfEx(j);
                         if (a.r[coorAK + j] !== 0) {
-                            let temp = a.r[coorAK + j];
+                            const temp = a.r[coorAK + j];
                             for (let i = 1; i <= m; i++) {
                                 b.r[coorBJ + i] -= temp * b.r[coorBK + i];
                             }
@@ -250,13 +239,12 @@ export function strsm(
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 for (let k = 1; k <= n; k++) {
                     const coorAK = a.colOfEx(k);
                     const coorBK = b.colOfEx(k);
                     if (nounit) {
-                        let temp = 1 / a.r[coorAK + k];
+                        const temp = 1 / a.r[coorAK + k];
 
                         for (let i = 1; i <= m; i++) {
                             b.r[coorBK + i] *= temp;
@@ -265,7 +253,7 @@ export function strsm(
                     for (let j = k + 1; j <= n; j++) {
                         const coorBJ = b.colOfEx(j);
                         if (a.r[coorAK + j] !== 0) {
-                            let temp = a.r[coorAK + j];
+                            const temp = a.r[coorAK + j];
                             for (let i = 1; i <= m; i++) {
                                 b.r[coorBJ + i] -= temp * b.r[coorBK + i];
                             }

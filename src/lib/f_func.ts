@@ -23,15 +23,15 @@ const { isInteger } = Number;
 
 const { isArray } = Array;
 
-export function isZero(v: Complex) {
+export function isZero(v: Complex): boolean {
     return v.im === 0 && v.re === 0;
 }
 
-export function isZeroE(re: number, im: number) {
+export function isZeroE(re: number, im: number): boolean {
     return re === 0 && im === 0;
 }
 
-export function isOne(v: Complex) {
+export function isOne(v: Complex): boolean {
     return v.re === 1 && v.im === 0;
 }
 /*
@@ -49,50 +49,38 @@ export function sign(a: number, b?: number): number {
 
 //1
 
-type ArrayElt = { key: string | number, val: any };
-export type Complex = { re: number, im: number };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ArrayElt = { key: string | number; val: any };
+export type Complex = { re: number; im: number };
 export type fpArray = Float32Array | Float64Array;
 export type FortranSetterGetter = (index: number) => (re?: number, im?: number) => number | Complex;
 export type FortranArr = {
-    base: number,
-    r: fpArray,
-    i?: fpArray,
-    s: FortranSetterGetter,
+    base: number;
+    r: fpArray;
+    i?: fpArray;
+    s: FortranSetterGetter;
     //assertComplex: (msg: string) => void | never;
     toArr: () => Complex[] | number[];
-
 };
 
 export type FortranArrEComplex = {
-    base: number,
-    r: fpArray,
-    i: fpArray,
-    s: FortranSetterGetter,
+    base: number;
+    r: fpArray;
+    i: fpArray;
+    s: FortranSetterGetter;
     //assertComplex: (msg: string) => void | never;
     toArr: () => Complex[] | number[];
-
 };
 
-export function isComplex(a): a is Complex {
-    return (
-        (a !== null) &&
-        (typeof a === 'object') &&
-        ('re' in a) &&
-        ('im' in a) &&
-        (typeof a['re'] === 'number' && typeof a['im'] === 'number')
-    );
-}
 //2
 export function mimicFArray(r: fpArray, i?: fpArray) {
     //Lets make some curry
-    let func = function n(startIndex: number = 1): FortranArr {
-
+    const func = function n(startIndex = 1): FortranArr {
         return Object.freeze({
             base: startIndex,
             r,
             i,
             s: (index: number) => (re?: number, im?: number): number | Complex => {
-
                 if (index - startIndex >= r.length) {
                     throw new Error('Index out of bounds');
                 }
@@ -116,30 +104,29 @@ export function mimicFArray(r: fpArray, i?: fpArray) {
                     i[index - startIndex] = im || 0;
                 }
 
-
                 r[index - startIndex] = re || 0;
 
                 return { re: oldRe, im: oldIm || 0 };
             },
             toArr: () => {
-                return multiplexer(Array.from(r), i && Array.from(i))((re, im) => i ? { re, im } : re);
-            }
+                return multiplexer(Array.from(r), i && Array.from(i))((re, im) => (i ? { re, im } : re));
+            },
         });
-    }
+    };
     //   TODO: maybe keep reference later, who knows
     //    func['buffer'] = arr;
     return func;
 }
 
-export function complex(re: number = 0, im: number = 0): Complex {
+export function complex(re = 0, im = 0): Complex {
     return { re, im };
 }
 
 export function flatten<T>(...rest: (T | T[])[]): T[] {
-    let rc: T[] = [];
+    const rc: T[] = [];
     for (const itm of rest) {
         if (isArray(itm)) {
-            let rc2: T[] = flatten(...itm) as any;
+            const rc2: T[] = flatten(...itm) as any;
             rc.push(...rc2);
             continue;
         }
@@ -149,39 +136,41 @@ export function flatten<T>(...rest: (T | T[])[]): T[] {
 }
 
 export function muxCmplx(re: number[], im?: number[]): Complex[] {
-    return multiplexer(re, im)((re, im) => ({ re, im }))
+    return multiplexer(re, im)((re, im) => ({ re, im }));
 }
 
-function demuxComplex(...rest: (Complex | number)[]): { reals: number[], imags?: number[] } {
-
+function demuxComplex(...rest: (Complex | number)[]): { reals: number[]; imags?: number[] } {
     const c = flatten(rest);
 
-    const collect: { reals: number[], imags: number[] } = { reals: [], imags: [] };
+    const collect: { reals: number[]; imags?: number[] } = { reals: [], imags: [] };
 
     c.reduce((prev, v) => {
         if (typeof v === 'number') {
             prev.reals.push(v);
             return prev;
         }
-        let re = ('re' in v) ? v.re : undefined;
-        let im = ('im' in v) ? v.im : undefined;
+        const re = 're' in v ? v.re : undefined;
+        const im = 'im' in v ? v.im : undefined;
         if (re !== undefined) {
             prev.reals.push(re);
         }
-        if (im !== undefined) {
+        if (im !== undefined && prev.imags) {
             prev.imags.push(im);
         }
         return prev;
     }, collect);
     //only reals?
-    if (collect.reals.length > 0 && collect.imags.length === 0) {
-        delete collect.imags;
+    if (collect.reals.length > 0) {
+        if (collect.imags && collect.imags.length === 0) {
+            delete collect.imags;
+        }
     }
     return collect;
 }
 
-export function fortranArrComplex32(...rest: (number | number[] | Complex | Complex[])[]): (offset?: number) => FortranArr {
-
+export function fortranArrComplex32(
+    ...rest: (number | number[] | Complex | Complex[])[]
+): (offset?: number) => FortranArr {
     const collect = demuxComplex(rest as any);
     let i: Float32Array | undefined;
     if (collect.imags !== undefined) {
@@ -190,8 +179,9 @@ export function fortranArrComplex32(...rest: (number | number[] | Complex | Comp
     return mimicFArray(new Float32Array(collect.reals), i);
 }
 
-export function fortranArrComplex64(...rest: (number | number[] | Complex | Complex[])[]): (offset?: number) => FortranArr {
-
+export function fortranArrComplex64(
+    ...rest: (number | number[] | Complex | Complex[])[]
+): (offset?: number) => FortranArr {
     const collect = demuxComplex(rest as any);
     let i: Float64Array | undefined;
     if (collect.imags !== undefined) {
@@ -210,21 +200,20 @@ export enum ERROR {
 const errors = new Map<ERROR, string>([
     [ERROR.ERR_MISSING_IMAGINARY, 'Missing imaginary part for %s'],
     [ERROR.ERR_MISSING_REAL, 'Missing real part for %s'],
-    [ERROR.ERR_WRONG_ARGUMENT, 'function:[%s], argument [%s] is has invalid value.']
+    [ERROR.ERR_WRONG_ARGUMENT, 'function:[%s], argument [%s] is has invalid value.'],
 ]);
 
 const ERROR_UKNOWN = 'Unkown Error code used! [%s]';
 
 export function errorMsg(errNo: ERROR, ...fmt: string[]): string {
-
-    let msg = errors.get(errNo) || ERROR_UKNOWN;
+    const msg = errors.get(errNo) || ERROR_UKNOWN;
     /*if (!msg) {
         msg = ERROR_UKNOWN;
     }*/
     /*if (fmt.length === 0) {
         return msg;
     }*/
-    return fmt.reduce((p, v, k) => p.replace('%s', v), msg);
+    return fmt.reduce((p, v) => p.replace('%s', v), msg);
 }
 
 //helpers for errorMsg
@@ -237,7 +226,6 @@ export function errWrongArg(arg: string, value: any): string {
     return errorMsg(ERROR.ERR_WRONG_ARGUMENT, arg, JSON.stringify(value));
 }
 
-
 // Matrix
 // Matrix
 // Matrix
@@ -245,7 +233,7 @@ export function errWrongArg(arg: string, value: any): string {
 
 export type FortranMatrixSetterGetter = (colSize: number) => (nrCols: number) => number | Complex;
 
-export type MatrixType = 'n' | 'b' | 'bu' | 'bl' | 'pl' | 'pu'; //untyped, normal, bandified, bandified-upper, bandified-lower, packed-lower, packed-upper 
+export type MatrixType = 'n' | 'b' | 'bu' | 'bl' | 'pl' | 'pu'; //untyped, normal, bandified, bandified-upper, bandified-lower, packed-lower, packed-upper
 
 export interface Matrix {
     readonly rowBase: number;
@@ -255,10 +243,10 @@ export interface Matrix {
     readonly r: fpArray; //[(ncols+1)*(nrows+1)]
     readonly i?: fpArray; //imaginary part of matrix [(ncols+1)*(nrows+1)]
     //readonly colOf: (number) => number;
-    readonly colOfEx: (number) => number;
+    colOfEx(n: number): number;
     //s: FortranMatrixSetterGetter
     // zap a row with fa valie
-    coord(col): (row) => number;
+    coord(col: number): (a: number) => number;
     setCol(col: number, rowStart: number, rowEnd: number, value: number): void;
     slice_used_for_test(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
     slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix;
@@ -277,13 +265,12 @@ export interface MatrixEComplex extends Matrix {
     readonly i: fpArray;
 }
 
-
 function bandifyMatrix(uplo: 'u' | 'l', k: number, A: Matrix): Matrix {
-    const rowSize = (k + 1);
+    const rowSize = k + 1;
     const colSize = A.nrCols;
     const createArr = A.r instanceof Float64Array ? Float64Array : Float32Array;
 
-    let re = new createArr(rowSize * colSize);
+    const re = new createArr(rowSize * colSize);
     let im: fpArray | undefined;
     if (A.i) {
         im = new createArr(rowSize * colSize);
@@ -305,12 +292,11 @@ function bandifyMatrix(uplo: 'u' | 'l', k: number, A: Matrix): Matrix {
 }
 
 function packedBandi_fied_Matrix(uplo: 'u' | 'l', k: number, A: Matrix): FortranArr {
-
-    const packedSize = -(k + 1) * k / 2 + A.nrCols * (k + 1);
+    const packedSize = (-(k + 1) * k) / 2 + A.nrCols * (k + 1);
     const colSize = A.nrCols;
     const createArr = A.r instanceof Float64Array ? Float64Array : Float32Array;
 
-    let re = new createArr(packedSize);
+    const re = new createArr(packedSize);
     let im: fpArray | undefined;
     if (A.i) {
         im = new createArr(packedSize);
@@ -335,11 +321,8 @@ function packedBandi_fied_Matrix(uplo: 'u' | 'l', k: number, A: Matrix): Fortran
     return mimicFArray(re, im)();
 }
 
-
 export function mimicFMatrix(r: fpArray, i?: fpArray) {
-
-    return function c1(lda: number, nrCols: number, rowBase: number = 1, colBase = 1): Matrix {
-
+    return function c1(lda: number, nrCols: number, rowBase = 1, colBase = 1): Readonly<Matrix> {
         // check rows
         if (lda < 0) {
             throw new Error(errWrongArg('nrRows', 'is Negative'));
@@ -361,7 +344,6 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
             throw new Error(errWrongArg('colBase', 'is a NaN'));
         }
 
-
         return Object.freeze<Matrix>({
             rowBase,
             colBase,
@@ -369,13 +351,13 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
             nrRows: lda,
             r,
             i,
-            coord(col) {
+            coord(col: number) {
                 const tb = (col - colBase) * lda;
-                return row => tb + (row - rowBase)
+                return (row: number) => tb + (row - rowBase);
             },
             //  colOf: (col) => (col - colBase) * nrRows,
             colOfEx: (col) => (col - colBase) * lda - rowBase,
-            setCol(col: number, rowStart: number, rowEnd: number, value: number = 0): void {
+            setCol(col: number, rowStart: number, rowEnd: number, value = 0): void {
                 // dont use colOf (avoid extra function)
                 const coords = (col - this.colBase) * lda - rowBase;
                 this.r.fill(value, coords + rowStart, coords + rowEnd + 1);
@@ -400,16 +382,17 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
                 for (let j = 1; j <= nrCols; j++) {
                     const coor = (j - 1) * this.nrRows - 1;
                     for (let i = 1; i <= lda; i++) {
-                        rc[coor + i] = (this.i === undefined) ? this.r[coor + i] : { re: this.r[coor + i], im: this.i[coor + i] };
+                        rc[coor + i] =
+                            this.i === undefined ? this.r[coor + i] : { re: this.r[coor + i], im: this.i[coor + i] };
                     }
                 }
                 return rc;
             },
             slice(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix {
-                const _nrRows = (rowEnd - rowStart) + 1;
-                const _nrCols = (colEnd - colStart) + 1;
+                const _nrRows = rowEnd - rowStart + 1;
+                const _nrCols = colEnd - colStart + 1;
 
-                let re = new Float64Array(_nrRows * _nrCols);
+                const re = new Float64Array(_nrRows * _nrCols);
                 let im: Float64Array | undefined;
                 //
                 if (this.i) {
@@ -417,12 +400,12 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
                 }
                 //
                 for (let j = colStart; j <= colEnd; j++) {
-                       //  x x | x x
+                    //  x x | x x
                     const targetBase = (j - colStart) * _nrRows;
                     const coorJ = this.colOfEx(j);
                     for (let i = rowStart; i <= rowEnd; i++) {
                         // console.log(j, coorJ + i, base + i, r[coorJ + i]);
-                        re[targetBase + ( i - rowStart )] = r[coorJ + i];
+                        re[targetBase + (i - rowStart)] = r[coorJ + i];
                         if (this.i && im) {
                             im[targetBase + (i - rowStart)] = this.i[coorJ + i];
                         }
@@ -431,10 +414,10 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
                 return mimicFMatrix(re, im)(_nrRows, _nrCols);
             },
             slice_used_for_test(rowStart: number, rowEnd: number, colStart: number, colEnd: number): Matrix {
-                const _nrRows = (rowEnd - rowStart) + 1;
-                const _nrCols = (colEnd - colStart) + 1;
+                const _nrRows = rowEnd - rowStart + 1;
+                const _nrCols = colEnd - colStart + 1;
 
-                let re = new Float64Array(_nrRows * _nrCols);
+                const re = new Float64Array(_nrRows * _nrCols);
                 let im: Float64Array | undefined;
                 //
                 if (this.i) {
@@ -456,7 +439,7 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
             },
             setLower(value = 0) {
                 const rc = this.r.slice();
-                let ic = this.i ? this.i.slice() : undefined;
+                const ic = this.i ? this.i.slice() : undefined;
                 for (let y = 1; y < nrCols; y++) {
                     const coor = this.colOfEx(y);
                     rc.fill(value, coor + y + 1, coor + lda + 1);
@@ -468,7 +451,7 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
             },
             setUpper(value = 0) {
                 const rc = this.r.slice();
-                let ic = this.i ? this.i.slice() : undefined;
+                const ic = this.i ? this.i.slice() : undefined;
                 for (let y = 2; y <= nrCols; y++) {
                     const coor = this.colOfEx(y);
                     rc.fill(value, coor + 1, coor + min(y, lda));
@@ -479,8 +462,7 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
                 return mimicFMatrix(rc, ic)(this.nrRows, this.nrCols, this.rowBase, this.colBase);
             },
             real() {
-                let reC: fpArray;
-                reC = this.r.slice();
+                const reC = this.r.slice();
                 return mimicFMatrix(reC)(this.nrRows, this.nrCols);
             },
             imaginary() {
@@ -488,18 +470,16 @@ export function mimicFMatrix(r: fpArray, i?: fpArray) {
                 if (!this.i) {
                     imC = new Float64Array(this.nrRows * this.nrCols);
                     imC.fill(0);
-                }
-                else {
+                } else {
                     imC = this.i.slice(); //copy
                 }
                 return mimicFMatrix(imC)(this.nrRows, this.nrCols);
-            }
+            },
         });
-    }
+    };
 }
 
 export function real(data?: number | number[] | Complex | Complex[]): number[] | number {
-
     if (typeof data === 'object' && 're' in data) {
         return data.re;
     }
@@ -520,7 +500,6 @@ export function real(data?: number | number[] | Complex | Complex[]): number[] |
 }
 
 export function imaginary(data?: number | number[] | Complex | Complex[]): number[] | number {
-
     if (typeof data === 'object' && 'im' in data) {
         //console.log(data.im);
         return data.im;
@@ -541,9 +520,9 @@ export function imaginary(data?: number | number[] | Complex | Complex[]): numbe
     return data as any;
 }
 
-export function fortranMatrixComplex32(...rest: (number | number[] | Complex | Complex[])[]):
-    (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix {
-
+export function fortranMatrixComplex32(
+    ...rest: (number | number[] | Complex | Complex[])[]
+): (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix {
     const collect = demuxComplex(rest as any);
     let i: Float32Array | undefined;
     if (collect.imags !== undefined) {
@@ -552,9 +531,9 @@ export function fortranMatrixComplex32(...rest: (number | number[] | Complex | C
     return mimicFMatrix(new Float32Array(collect.reals), i);
 }
 
-export function fortranMatrixComplex64(...rest: (number | number[] | Complex | Complex[])[]):
-    (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix {
-
+export function fortranMatrixComplex64(
+    ...rest: (number | number[] | Complex | Complex[])[]
+): (nrRows: number, nrCols: number, rowBase?: number, colBase?: number) => Matrix {
     const collect = demuxComplex(rest as any);
     let i: Float64Array | undefined;
     if (collect.imags !== undefined) {
@@ -565,7 +544,7 @@ export function fortranMatrixComplex64(...rest: (number | number[] | Complex | C
 
 export function lowerChar<T extends string>(c?: T): T {
     if (typeof c !== 'string') {
-        return '' as any;
+        return '' as T;
     }
     const cc = c.charCodeAt(0);
     if ((cc >= 65 && cc <= 90) || (cc >= 97 && cc <= 122)) {
@@ -577,9 +556,8 @@ export function lowerChar<T extends string>(c?: T): T {
 export const map = iter();
 export const each = iter(false);
 
-export function numberPrecision(prec: number = 6) {
-
-    let runner: Function;
+export function numberPrecision(prec = 6) {
+    const runner = arrayrify(convert);
     function convert(x?: number | any): number {
         // try to loop over the object
         if (typeof x === 'object' && x !== null) {
@@ -596,7 +574,6 @@ export function numberPrecision(prec: number = 6) {
         //dont change the object, whatever it is
         return x;
     }
-    runner = arrayrify(convert);
     return runner;
 }
 
@@ -604,20 +581,20 @@ function iter<T>(wantMap = true) {
     return function n(xx: T): { (fn: (x: any, idx?: number | string) => any): any | any[] } {
         const fx: ArrayElt[] = coerceToArray(xx) as any;
         return function k(fn: (x: any, idx?: number | string) => any): any | any[] {
-            return wantMap ? fx.map(o => fn(o.val, o.key)) : fx.forEach(o => fn(o.val, o.key));
+            return wantMap ? fx.map((o) => fn(o.val, o.key)) : fx.forEach((o) => fn(o.val, o.key));
         };
-    }
+    };
 }
 
 export function arrayrify<T, R>(fn: (x: T, ...rest: any[]) => R) {
     return function n(x: T | T[], ...rest: any[]): R | R[] {
         const fp = Array.isArray(x) ? x : [x];
-        const result = fp.map(p => fn(p, ...rest));
-        return result.length === 1 ? result[0] : result.length === 0 ? undefined as any : result;
+        const result = fp.map((p) => fn(p, ...rest));
+        return result.length === 1 ? result[0] : result.length === 0 ? (undefined as any) : result;
     };
 }
 
-export function coerceToArray(o: any): { key: string | number, val: any }[] {
+export function coerceToArray(o: any): { key: string | number; val: any }[] {
     if (o === null || o === undefined) {
         return []; //throw new TypeError('Illegal argument excepton: input needs to NOT be "null" or "undefined".');
     }
@@ -625,7 +602,7 @@ export function coerceToArray(o: any): { key: string | number, val: any }[] {
         return [{ key: 0, val: o }] as any;
     }
     if (isArray(o)) {
-        return o.map((x, idx) => ({ key: idx, val: x }) as any);
+        return o.map((x, idx) => ({ key: idx, val: x } as any));
     }
     if (typeof o === 'string') {
         return o.split('').map((x, idx) => ({ key: idx, val: x } as any));
@@ -635,19 +612,17 @@ export function coerceToArray(o: any): { key: string | number, val: any }[] {
         if (names.length === 0) {
             return []; //throw new Error('Input argument is an Object with no properties');
         }
-        return names.map(name => ({ key: name, val: o[name] })) as any;
+        return names.map((name) => ({ key: name, val: o[name] })) as any;
     }
     throw new Error('unreachable code');
 }
-
 
 export function possibleScalar<T>(x: T[]): T | T[] {
     return x.length === 1 ? x[0] : x;
 }
 
-
 export function multiplexer(...rest: (any | any[])[]) {
-    //analyze  
+    //analyze
     const analyzed: any[] = [];
 
     for (let k = 0; k < rest.length; k++) {
@@ -677,10 +652,9 @@ export function multiplexer(...rest: (any | any[])[]) {
         continue;
         //throw new Error('Sorry, looping over properties not yet supported');
         //}
-
-    }//for
+    } //for
     // find the longest array
-    const _max = max(...analyzed.map(a => a.length));
+    const _max = max(...analyzed.map((a) => a.length));
 
     return function k(fn: (...rest: any[]) => any): any | any[] {
         const rc: any[] = [];
@@ -721,7 +695,7 @@ export function mul_rxc(re1: number, im1: number, c: Complex): Complex {
 export function mul_rxr(re1: number, im1: number, re2: number, im2: number): Complex {
     const re = re1 * re2 - im1 * im2;
     const im = re1 * im2 + im1 * re2;
-    return { re, im }
+    return { re, im };
 }
 
 export function mul_cxr(c: Complex, re1: number, im1: number): Complex {
@@ -739,7 +713,7 @@ export function mul_cxc(c1: Complex, c2: Complex): Complex {
 export function div_rxr(re1: number, im1: number, re2: number, im2: number): Complex {
     // (a+ib)/c+id) = (ac+bd)/(c*c +d*d) + i(-ad+bc)/(c*c+d*d)
     const norm = re2 * re2 + im2 * im2;
-    let re = (re1 * re2 + im1 * im2) / norm;
-    let im = (-re1 * im2 + im1 * re2) / norm;
+    const re = (re1 * re2 + im1 * im2) / norm;
+    const im = (-re1 * im2 + im1 * re2) / norm;
     return { re, im };
 }

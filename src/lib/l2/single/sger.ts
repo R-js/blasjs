@@ -28,15 +28,25 @@ export function sger(
     y: FortranArr,
     incy: number,
     a: Matrix,
-    lda: number): void {
-
+    lda: number,
+): void {
     let err = 0;
     switch (true) {
-        case (m < 0): err = 1; break;
-        case (n < 0): err = 2; break;
-        case (incx === 0): err = 5; break;
-        case (incy === 0): err = 7; break;
-        case (lda < max(1, m)): err = 9; break;
+        case m < 0:
+            err = 1;
+            break;
+        case n < 0:
+            err = 2;
+            break;
+        case incx === 0:
+            err = 5;
+            break;
+        case incy === 0:
+            err = 7;
+            break;
+        case lda < max(1, m):
+            err = 9;
+            break;
         default:
             err = 0;
     }
@@ -48,10 +58,10 @@ export function sger(
     if (m === 0 || n === 0 || alpha === 0) return;
 
     let jy = incy < 0 ? 1 - (n - 1) * incy : 1;
-    let kx = incx < 0 ? 1 - (m - 1) * incx : 1;
+    const kx = incx < 0 ? 1 - (m - 1) * incx : 1;
     for (let j = 1; j <= n; j++) {
         if (y.r[jy - y.base] !== 0) {
-            let temp = alpha * y.r[jy - y.base];
+            const temp = alpha * y.r[jy - y.base];
             let ix = kx;
             const coords = a.colOfEx(j);
             for (let i = 1; i <= m; i++) {

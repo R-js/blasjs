@@ -15,23 +15,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    errMissingIm,
-    errWrongArg,
-    FortranArr,
-    lowerChar,
-    Matrix,
-    mul_rxr
-} from '../../f_func';
+import { errMissingIm, errWrongArg, FortranArr, lowerChar, Matrix, mul_rxr } from '../../f_func';
 /*
-*>
-*> CTBMV  performs one of the matrix-vector operations
-*>
-*>    x := A*x,   or   x := A**T*x,   or   x := A**H*x,
-*>
-*> where x is an n element vector and  A is an n by n unit, or non-unit,
-*> upper or lower triangular band matrix, with ( k + 1 ) diagonals.
-*/
+ *>
+ *> CTBMV  performs one of the matrix-vector operations
+ *>
+ *>    x := A*x,   or   x := A**T*x,   or   x := A**H*x,
+ *>
+ *> where x is an n element vector and  A is an n by n unit, or non-unit,
+ *> upper or lower triangular band matrix, with ( k + 1 ) diagonals.
+ */
 
 const { max, min } = Math;
 
@@ -44,8 +37,8 @@ export function ctbmv(
     a: Matrix,
     lda: number,
     x: FortranArr,
-    incx: number): void {
-
+    incx: number,
+): void {
     if (x.i === undefined) {
         throw new Error(errMissingIm('x.i'));
     }
@@ -62,23 +55,17 @@ export function ctbmv(
     let info = 0;
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (!'ntc'.includes(tr)) {
+    } else if (!'ntc'.includes(tr)) {
         info = 2;
-    }
-    else if (!'un'.includes(dg)) {
+    } else if (!'un'.includes(dg)) {
         info = 3;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 4;
-    }
-    else if (k < 0) {
+    } else if (k < 0) {
         info = 5;
-    }
-    else if (lda < (k + 1)) {
+    } else if (lda < k + 1) {
         info = 7;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 9;
     }
     if (info !== 0) {
@@ -94,17 +81,16 @@ export function ctbmv(
 
     if (tr === 'n') {
         if (ul === 'u') {
-            let kplus1 = k + 1;
+            const kplus1 = k + 1;
             let jx = kx;
             for (let j = 1; j <= n; j++) {
-                const xIsZero = x.r[jx - x.base] === 0
-                    && x.i[jx - x.base] === 0;
+                const xIsZero = x.r[jx - x.base] === 0 && x.i[jx - x.base] === 0;
                 if (!xIsZero) {
                     //  TEMP = X(JX)
-                    let tempRe = x.r[jx - x.base];
-                    let tempIm = x.i[jx - x.base];
+                    const tempRe = x.r[jx - x.base];
+                    const tempIm = x.i[jx - x.base];
                     let ix = kx;
-                    let L = kplus1 - j;
+                    const L = kplus1 - j;
                     const coorAJ = a.colOfEx(j);
                     for (let i = max(1, j - k); i <= j - 1; i++) {
                         const { re, im } = mul_rxr(tempRe, tempIm, a.r[coorAJ + L + i], a.i[coorAJ + L + i]);
@@ -113,14 +99,18 @@ export function ctbmv(
                         ix += incx;
                     }
                     if (nounit) {
-                        const { re, im } = mul_rxr(x.r[jx - x.base], x.i[jx - x.base], a.r[coorAJ + kplus1], a.i[coorAJ + kplus1]); // * a.r[coorAJ + kplus1] - x.i[jx - x.base] * a.i[coorAJ + kplus1];
+                        const { re, im } = mul_rxr(
+                            x.r[jx - x.base],
+                            x.i[jx - x.base],
+                            a.r[coorAJ + kplus1],
+                            a.i[coorAJ + kplus1],
+                        ); // * a.r[coorAJ + kplus1] - x.i[jx - x.base] * a.i[coorAJ + kplus1];
                         x.r[jx - x.base] = re;
                         x.i[jx - x.base] = im;
                     }
                 }
                 jx += incx;
                 if (j > k) kx += incx;
-
             } //for
         }
         // ul !== ['u']
@@ -131,10 +121,10 @@ export function ctbmv(
                 const coorAJ = a.colOfEx(j);
                 const xIsZero = x.r[jx - x.base] === 0 && x.i[jx - x.base] === 0;
                 if (!xIsZero) {
-                    let tempRe = x.r[jx - x.base];
-                    let tempIm = x.i[jx - x.base];
+                    const tempRe = x.r[jx - x.base];
+                    const tempIm = x.i[jx - x.base];
                     let ix = kx;
-                    let L = 1 - j;
+                    const L = 1 - j;
                     for (let i = min(n, j + k); i >= j + 1; i--) {
                         // X(IX) = X(IX) + TEMP*A(L+I,J)
                         const { re, im } = mul_rxr(tempRe, tempIm, a.r[coorAJ + L + i], a.i[coorAJ + L + i]);
@@ -143,7 +133,12 @@ export function ctbmv(
                         ix -= incx;
                     }
                     if (nounit) {
-                        const { re, im } = mul_rxr(x.r[jx - x.base], x.i[jx - x.base], a.r[coorAJ + 1], a.i[coorAJ + 1]);
+                        const { re, im } = mul_rxr(
+                            x.r[jx - x.base],
+                            x.i[jx - x.base],
+                            a.r[coorAJ + 1],
+                            a.i[coorAJ + 1],
+                        );
                         x.r[jx - x.base] = re; //x.r[jx - x.base] * a.r[coorAJ + 1] - x.i[jx - x.base] * a.i[coorAJ + 1];
                         x.i[jx - x.base] = im; //x.r[jx - x.base] * a.i[coorAJ + 1] + x.i[jx - x.base] * a.r[coorAJ + 1];
                     }
@@ -153,9 +148,9 @@ export function ctbmv(
             }
         }
     } else {
-        // trans != 'n'    
+        // trans != 'n'
         if (ul === 'u') {
-            let kplus1 = k + 1;
+            const kplus1 = k + 1;
             kx += (n - 1) * incx;
             let jx = kx;
             for (let j = n; j >= 1; j--) {
@@ -164,7 +159,7 @@ export function ctbmv(
 
                 kx -= incx;
                 let ix = kx;
-                let L = kplus1 - j;
+                const L = kplus1 - j;
                 const coorAJ = a.colOfEx(j);
                 const extrI = max(1, j - k); // evaluate once!
                 const sign: 1 | -1 = noconj ? 1 : -1;
@@ -176,7 +171,12 @@ export function ctbmv(
                 }
                 for (let i = j - 1; i >= extrI; i--) {
                     //A(L+I,J)*X(IX)
-                    const { re, im } = mul_rxr(a.r[coorAJ + L + i], sign * a.i[coorAJ + L + i], x.r[ix - x.base], x.i[ix - x.base]);
+                    const { re, im } = mul_rxr(
+                        a.r[coorAJ + L + i],
+                        sign * a.i[coorAJ + L + i],
+                        x.r[ix - x.base],
+                        x.i[ix - x.base],
+                    );
                     tempRe += re;
                     tempIm += im;
                     ix -= incx;
@@ -185,8 +185,7 @@ export function ctbmv(
                 x.i[jx - x.base] = tempIm;
                 jx -= incx;
             }
-        }
-        else {
+        } else {
             //upl=lower
             let jx = kx;
             for (let j = 1; j <= n; j++) {
@@ -205,7 +204,12 @@ export function ctbmv(
                     tempIm = im;
                 }
                 for (let i = j + 1; i <= extrI; i++) {
-                    const { re, im } = mul_rxr(a.r[coords + L + i], sign * a.i[coords + L + i], x.r[ix - x.base], x.i[ix - x.base]);
+                    const { re, im } = mul_rxr(
+                        a.r[coords + L + i],
+                        sign * a.i[coords + L + i],
+                        x.r[ix - x.base],
+                        x.i[ix - x.base],
+                    );
                     tempRe += re;
                     tempIm += im;
                     ix += incx;

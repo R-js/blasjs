@@ -66,7 +66,7 @@ export const level3 = {
     zsyr2k: csyr2k,
     zsyrk: csyrk,
     ztrmm: ctrmm,
-    ztrsm: ctrsm
+    ztrsm: ctrsm,
 };
 
 //import './doc';

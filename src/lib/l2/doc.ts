@@ -1,12 +1,14 @@
 export const desc: { [index: string]: string } = {
     //
     CTBSV: 'solves one of the systems of equations A*x = b,   or   A**T*x = b,   or   A**H*x = b',
-    CGBMV: 'performs one of the matrix-vector operations,  y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,  y := alpha*A**H*x + beta*y',
+    CGBMV:
+        'performs one of the matrix-vector operations,  y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,  y := alpha*A**H*x + beta*y',
     CTPMV: 'performs one of the matrix-vector operations, x := A*x,   or   x := A**T*x,   or   x := A**H*x,',
     CTPSV: 'solves one of the systems of equations A*x = b,   or   A**T*x = b,   or   A**H*x = b,',
     CTRMV: 'performs one of the matrix-vector operations x := A*x,   or   x := A**T*x,   or   x := A**H*x,',
     CTRSV: 'solves one of the systems of equations A*x = b,   or   A**T*x = b,   or   A**H*x = b,',
-    CGEMV: 'performs one of the matrix-vector operations, y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y, or y := alpha*A**H*x + beta*y',
+    CGEMV:
+        'performs one of the matrix-vector operations, y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y, or y := alpha*A**H*x + beta*y',
     CGERC: 'performs the rank 1 operation  A := alpha*x*y**H + A',
     CGERU: 'performs the rank 1 operation  A := alpha*x*y**T + A',
     CHBMV: 'performs the matrix-vector  operation y := alpha*A*x + beta*y',
@@ -18,8 +20,10 @@ export const desc: { [index: string]: string } = {
     CTBMV: 'performs one of the matrix-vector operations x := A*x,   or   x := A**T*x,   or   x := A**H*x',
     CHPMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
     //
-    ZGBMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y, or y := alpha*A**H*x + beta*y',
-    ZGEMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y, or y := alpha*A**H*x + beta*y',
+    ZGBMV:
+        'performs one of the matrix-vector operations y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y, or y := alpha*A**H*x + beta*y',
+    ZGEMV:
+        'performs one of the matrix-vector operations y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y, or y := alpha*A**H*x + beta*y',
     ZGERC: 'performs the rank 1 operation A := alpha*x*y**H + A',
     ZGERU: 'performs the rank 1 operation A := alpha*x*y**T + A',
     ZHBMV: 'performs the matrix-vector  operation y := alpha*A*x + beta*y',
@@ -68,101 +72,89 @@ export const desc: { [index: string]: string } = {
     STPMV: 'performs one of the matrix-vector operations x := A*x,   or   x := A**T*x',
     STPSV: 'solves one of the systems of equations A*x = b,   or   A**T*x = b',
     STRMV: 'performs one of the matrix-vector operations x := A*x,   or   x := A**T*x',
-    STRSV: 'solves one of the systems of equations A*x = b,   or   A**T*x = b'
+    STRSV: 'solves one of the systems of equations A*x = b,   or   A**T*x = b',
 };
 //65
 
-
-(function i() {
-
-    const props = Object.getOwnPropertyNames(desc);
-    const reverted = props.map(name => ({ o: name, n: name.split('').reverse().join('') }));
-    const reverseSorted = reverted.sort((o1, o2) => o1.n > o2.n ? 1 : o1.n < o2.n ? -1 : 0);
-    console.log('===level2=====');
-    console.log('{ ');
-    reverseSorted.forEach(o => console.log(`${o.o}: '${desc[o.o].replace(/\s+/g, ' ')}',`));
-    console.log(' } ');
-})();
-
 //const x = {
-    //
-    //CHER2: 'performs the hermitian rank 2 operation A := alpha*x*y**H + conjg( alpha )*y*x**H + A',
-    //ZHER2: 'performs the hermitian rank 2 operation A := alpha*x*y**H + conjg( alpha )*y*x**H + A',
-    //CHPR2: 'performs the hermitian rank 2 operation A := alpha*x*y**H + conjg( alpha )*y*x**H + A',
-    //ZHPR2: 'performs the hermitian rank 2 operation A := alpha*x*y**H + conjg( alpha )*y*x**H + A',
-    //    
-    //DSPR2: 'performs the symmetric rank 2 operation A := alpha*x*y**T + alpha*y*x**T + A',
-    //SSPR2: 'performs the symmetric rank 2 operation A := alpha*x*y**T + alpha*y*x**T + A',
-    //DSYR2: 'performs the symmetric rank 2 operation A := alpha*x*y**T + alpha*y*x**T + A',
-    //SSYR2: 'performs the symmetric rank 2 operation A := alpha*x*y**T + alpha*y*x**T + A',
-    //
-    //CGERC: 'performs the rank 1 operation A := alpha*x*y**H + A',
-    //ZGERC: 'performs the rank 1 operation A := alpha*x*y**H + A',
-    //DGER: 'performs the rank 1 operation A := alpha*x*y**T + A',
-    //SGER: 'performs the rank 1 operation A := alpha*x*y**T + A',
-    //CGERU: 'performs the rank 1 operation A := alpha*x*y**T + A',
-    //ZGERU: 'performs the rank 1 operation A := alpha*x*y**T + A',
-    //
-    //CHER: 'performs the hermitian rank 1 operation A := alpha*x*x**H + A',
-    //ZHER: 'performs the hermitian rank 1 operation A := alpha*x*x**H + A',
-    //CHPR: 'performs the hermitian rank 1 operation A := alpha*x*x**H + A',
-    //ZHPR: 'performs the hermitian rank 1 operation A := alpha*x*x**H + A',
-    //
-    //DSPR: 'performs the symmetric rank 1 operation A := alpha*x*x**T + A',
-    //SSPR: 'performs the symmetric rank 1 operation A := alpha*x*x**T + A',
-    //DSYR: 'performs the symmetric rank 1 operation A := alpha*x*x**T + A',
-    //SSYR: 'performs the symmetric rank 1 operation A := alpha*x*x**T + A',
-    //
-    //
-    //CGBMV: 'performs one of the matrix-vector operations, y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y, y := alpha*A**H*x + beta*y',
-    //DGBMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y',
-    //SGBMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y',
-    //ZGBMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y, or y := alpha*A**H*x + beta*y',
-    //CHBMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
-    //ZHBMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
-    //DSBMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
-    //SSBMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
-    //
-    //CTBMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x, or x := A**H*x',
-    //DTBMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x',
-    //STBMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x',
-    //ZTBMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x, or x := A**H*x',
-    //
-    //CGEMV: 'performs one of the matrix-vector operations, y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y, or y := alpha*A**H*x + beta*y',
-    //DGEMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y',
-    //SGEMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y',
-    //ZGEMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y, or y := alpha*A**H*x + beta*y',
-    //CHEMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
-    //ZHEMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
+//
+//CHER2: 'performs the hermitian rank 2 operation A := alpha*x*y**H + conjg( alpha )*y*x**H + A',
+//ZHER2: 'performs the hermitian rank 2 operation A := alpha*x*y**H + conjg( alpha )*y*x**H + A',
+//CHPR2: 'performs the hermitian rank 2 operation A := alpha*x*y**H + conjg( alpha )*y*x**H + A',
+//ZHPR2: 'performs the hermitian rank 2 operation A := alpha*x*y**H + conjg( alpha )*y*x**H + A',
+//
+//DSPR2: 'performs the symmetric rank 2 operation A := alpha*x*y**T + alpha*y*x**T + A',
+//SSPR2: 'performs the symmetric rank 2 operation A := alpha*x*y**T + alpha*y*x**T + A',
+//DSYR2: 'performs the symmetric rank 2 operation A := alpha*x*y**T + alpha*y*x**T + A',
+//SSYR2: 'performs the symmetric rank 2 operation A := alpha*x*y**T + alpha*y*x**T + A',
+//
+//CGERC: 'performs the rank 1 operation A := alpha*x*y**H + A',
+//ZGERC: 'performs the rank 1 operation A := alpha*x*y**H + A',
+//DGER: 'performs the rank 1 operation A := alpha*x*y**T + A',
+//SGER: 'performs the rank 1 operation A := alpha*x*y**T + A',
+//CGERU: 'performs the rank 1 operation A := alpha*x*y**T + A',
+//ZGERU: 'performs the rank 1 operation A := alpha*x*y**T + A',
+//
+//CHER: 'performs the hermitian rank 1 operation A := alpha*x*x**H + A',
+//ZHER: 'performs the hermitian rank 1 operation A := alpha*x*x**H + A',
+//CHPR: 'performs the hermitian rank 1 operation A := alpha*x*x**H + A',
+//ZHPR: 'performs the hermitian rank 1 operation A := alpha*x*x**H + A',
+//
+//DSPR: 'performs the symmetric rank 1 operation A := alpha*x*x**T + A',
+//SSPR: 'performs the symmetric rank 1 operation A := alpha*x*x**T + A',
+//DSYR: 'performs the symmetric rank 1 operation A := alpha*x*x**T + A',
+//SSYR: 'performs the symmetric rank 1 operation A := alpha*x*x**T + A',
+//
+//
+//CGBMV: 'performs one of the matrix-vector operations, y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y, y := alpha*A**H*x + beta*y',
+//DGBMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y',
+//SGBMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y',
+//ZGBMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y, or y := alpha*A**H*x + beta*y',
+//CHBMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
+//ZHBMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
+//DSBMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
+//SSBMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
+//
+//CTBMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x, or x := A**H*x',
+//DTBMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x',
+//STBMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x',
+//ZTBMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x, or x := A**H*x',
+//
+//CGEMV: 'performs one of the matrix-vector operations, y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y, or y := alpha*A**H*x + beta*y',
+//DGEMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y',
+//SGEMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y',
+//ZGEMV: 'performs one of the matrix-vector operations y := alpha*A*x + beta*y, or y := alpha*A**T*x + beta*y, or y := alpha*A**H*x + beta*y',
+//CHEMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
+//ZHEMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
 
-    //CHPMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
-    //ZHPMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
-    //DSPMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
-    //SSPMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
-    //
-    //CTPMV: 'performs one of the matrix-vector operations, x := A*x, or x := A**T*x, or x := A**H*x,',
-    //DTPMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x',
-    //STPMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x',
-    //ZTPMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x, or x := A**H*x',
-    //CTRMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x, or x := A**H*x,',
-    //DTRMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x',
-    //STRMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x',
-    //ZTRMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x, or x := A**H*x',
-    //
-    //DSYMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
-    //SSYMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
-    //
-    //CTBSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b',
-    //DTBSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
-    //STBSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
-    //ZTBSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b',
-    //CTPSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b,',
-    //DTPSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
-    //STPSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
-    //ZTPSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b',
-    //CTRSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b,',
-    //DTRSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
-    //STRSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
-    //ZTRSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b'
+//CHPMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
+//ZHPMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
+//DSPMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
+//SSPMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
+//
+//CTPMV: 'performs one of the matrix-vector operations, x := A*x, or x := A**T*x, or x := A**H*x,',
+//DTPMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x',
+//STPMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x',
+//ZTPMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x, or x := A**H*x',
+//CTRMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x, or x := A**H*x,',
+//DTRMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x',
+//STRMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x',
+//ZTRMV: 'performs one of the matrix-vector operations x := A*x, or x := A**T*x, or x := A**H*x',
+//
+//DSYMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
+//SSYMV: 'performs the matrix-vector operation y := alpha*A*x + beta*y',
+//
+//CTBSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b',
+//DTBSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
+//STBSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
+//ZTBSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b',
+//CTPSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b,',
+//DTPSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
+//STPSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
+//ZTPSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b',
+//CTRSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b,',
+//DTRSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
+//STRSV: 'solves one of the systems of equations A*x = b, or A**T*x = b',
+//ZTRSV: 'solves one of the systems of equations A*x = b, or A**T*x = b, or A**H*x = b'
 
 //};

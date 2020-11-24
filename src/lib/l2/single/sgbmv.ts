@@ -32,7 +32,7 @@ export function sgbmv(
     incx: number,
     beta: number,
     y: FortranArr,
-    incy: number
+    incy: number,
 ): void {
     // lowerCase it all in a fast way
 
@@ -42,16 +42,24 @@ export function sgbmv(
 
     if (!'ntc'.includes(tr)) {
         info = 1;
+    } else if (m < 0) {
+        info = 2;
+    } else if (n < 0) {
+        info = 3;
+    } else if (kl < 0) {
+        info = 4;
+    } else if (ku < 0) {
+        info = 5;
+    } else if (lda < kl + ku + 1) {
+        info = 8;
+    } else if (incx === 0) {
+        info = 10;
+    } else if (incy === 0) {
+        info = 13;
     }
-    else if (m < 0) { info = 2; }
-    else if (n < 0) { info = 3; }
-    else if (kl < 0) { info = 4; }
-    else if (ku < 0) { info = 5; }
-    else if (lda < (kl + ku + 1)) { info = 8; }
-    else if (incx === 0) { info = 10; }
-    else if (incy === 0) { info = 13; }
 
-    if (info !== 0) {// error
+    if (info !== 0) {
+        // error
         throw new Error(errWrongArg('sgbmv', info));
     }
 
@@ -75,7 +83,6 @@ export function sgbmv(
         }
     }
 
-
     if (alpha === 0) return;
 
     const kup1 = ku + 1;
@@ -85,9 +92,9 @@ export function sgbmv(
         let jx = kx;
 
         for (let j = 1; j <= n; j++) {
-            let temp = alpha * x.r[jx - x.base];
+            const temp = alpha * x.r[jx - x.base];
             let iy = ky;
-            let k = kup1 - j;
+            const k = kup1 - j;
             const coorAJ = a.colOfEx(j);
             for (let i = max(1, j - ku); i <= min(m, j + kl); i++) {
                 y.r[iy - y.base] += temp * a.r[coorAJ + k + i];
@@ -96,8 +103,7 @@ export function sgbmv(
             jx += incx;
             if (j > ku) ky += incy;
         }
-    }
-    else {
+    } else {
         // Form  y := alpha*A**T*x + y.
         // A**T = transpose(A), aka $$ A^{t} $$
         let jy = ky;
@@ -105,7 +111,7 @@ export function sgbmv(
         for (let j = 1; j <= n; j++) {
             let temp = 0;
             let ix = kx;
-            let k = kup1 - j;
+            const k = kup1 - j;
             const coorAJ = a.colOfEx(j);
             for (let i = max(1, j - ku); i <= min(m, j + kl); i++) {
                 temp += a.r[coorAJ + k + i] * x.r[ix - x.base];
@@ -117,5 +123,3 @@ export function sgbmv(
         }
     }
 }
-
-

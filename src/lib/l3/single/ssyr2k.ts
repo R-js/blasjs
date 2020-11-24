@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { errWrongArg, lowerChar, Matrix } from '../../f_func';
 
-
 const { max } = Math;
 
 export function ssyr2k(
@@ -31,33 +30,27 @@ export function ssyr2k(
     ldb: number,
     beta: number,
     c: Matrix,
-    ldc: number): void {
-
+    ldc: number,
+): void {
     const ul = lowerChar(uplo);
     const tr = lowerChar(trans);
 
-    const nrowA = (tr === 'n') ? n : k;
+    const nrowA = tr === 'n' ? n : k;
 
     let info = 0;
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (!'ntc'.includes(tr)) {
+    } else if (!'ntc'.includes(tr)) {
         info = 2;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 3;
-    }
-    else if (k < 0) {
+    } else if (k < 0) {
         info = 4;
-    }
-    else if (lda < max(1, nrowA)) {
+    } else if (lda < max(1, nrowA)) {
         info = 7;
-    }
-    else if (ldb < max(1, nrowA)) {
+    } else if (ldb < max(1, nrowA)) {
         info = 9;
-    }
-    else if (ldc < max(1, n)) {
+    } else if (ldc < max(1, n)) {
         info = 12;
     }
 
@@ -73,12 +66,11 @@ export function ssyr2k(
 
     if (alpha === 0) {
         for (let j = 1; j <= n; j++) {
-            const start = (ul === 'u') ? 1 : j;
-            const stop = (ul === 'u') ? j : n;
+            const start = ul === 'u' ? 1 : j;
+            const stop = ul === 'u' ? j : n;
             if (beta === 0) {
                 c.setCol(j, start, stop, 0);
-            }
-            else {
+            } else {
                 const coor = c.colOfEx(j);
                 for (let i = start; i <= stop; i++) {
                     c.r[coor + i] *= beta;
@@ -96,22 +88,17 @@ export function ssyr2k(
                 const coorCJ = c.colOfEx(j);
                 if (beta === 0) {
                     c.setCol(j, 1, j, 0);
-                }
-                else if (beta !== 1) {
+                } else if (beta !== 1) {
                     for (let i = 1; i <= j; i++) {
                         c.r[coorCJ + i] *= beta;
                     }
                 }
                 for (let l = 1; l <= k; l++) {
-                    const coorAL = a.colOfEx(l)
+                    const coorAL = a.colOfEx(l);
                     const coorBL = b.colOfEx(l);
-                    if (
-                        (a.r[coorAL + j] !== 0)
-                        ||
-                        (b.r[coorBL + j] !== 0)
-                    ) {
-                        let temp1 = alpha * b.r[coorBL + j];
-                        let temp2 = alpha * a.r[coorAL + j];
+                    if (a.r[coorAL + j] !== 0 || b.r[coorBL + j] !== 0) {
+                        const temp1 = alpha * b.r[coorBL + j];
+                        const temp2 = alpha * a.r[coorAL + j];
                         for (let i = 1; i <= j; i++) {
                             c.r[coorCJ + i] += a.r[coorAL + i] * temp1 + b.r[coorBL + i] * temp2;
                         }
@@ -126,8 +113,7 @@ export function ssyr2k(
 
                 if (beta === 0) {
                     c.setCol(j, j, n, 0);
-                }
-                else if (beta !== 1) {
+                } else if (beta !== 1) {
                     for (let i = j; i <= n; i++) {
                         c.r[coorCJ + i] *= beta;
                     }
@@ -145,8 +131,7 @@ export function ssyr2k(
                 }
             }
         }
-    }
-    else {
+    } else {
         //Form  C := alpha*A**T*B + alpha*B**T*A + C.
         if (ul === 'u') {
             for (let j = 1; j <= n; j++) {
@@ -168,8 +153,7 @@ export function ssyr2k(
                     }
                 }
             }
-        }
-        else {
+        } else {
             for (let j = 1; j <= n; j++) {
                 const coorBJ = b.colOfEx(j);
                 const coorAJ = a.colOfEx(j);
@@ -183,11 +167,9 @@ export function ssyr2k(
                         temp1 += a.r[coorAI + L] * b.r[coorBJ + L];
                         temp2 += b.r[coorBI + L] * a.r[coorAJ + L];
                     }
-                    c.r[coorCJ + i] = alpha * (temp1 + temp2) +
-                        (beta !== 0 ? beta * c.r[coorCJ + i] : 0);
+                    c.r[coorCJ + i] = alpha * (temp1 + temp2) + (beta !== 0 ? beta * c.r[coorCJ + i] : 0);
                 }
             }
         }
     }
 }
-

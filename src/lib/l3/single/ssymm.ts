@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { errWrongArg, lowerChar, Matrix } from '../../f_func';
 
-
 const { max } = Math;
 
 export function ssymm(
@@ -32,9 +31,8 @@ export function ssymm(
     ldb: number,
     beta: number,
     c: Matrix,
-    ldc: number): void {
-
-
+    ldc: number,
+): void {
     const si = lowerChar(side);
     const ul = lowerChar(uplo);
 
@@ -45,23 +43,17 @@ export function ssymm(
     let info = 0;
     if (si !== 'l' && si !== 'r') {
         info = 1;
-    }
-    else if (ul !== 'u' && ul !== 'l') {
+    } else if (ul !== 'u' && ul !== 'l') {
         info = 2;
-    }
-    else if (m < 0) {
+    } else if (m < 0) {
         info = 3;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 4;
-    }
-    else if (lda < max(1, nrowA)) {
+    } else if (lda < max(1, nrowA)) {
         info = 7;
-    }
-    else if (ldb < max(1, m)) {
+    } else if (ldb < max(1, m)) {
         info = 9;
-    }
-    else if (ldc < max(1, m)) {
+    } else if (ldc < max(1, m)) {
         info = 12;
     }
     if (info !== 0) {
@@ -70,9 +62,7 @@ export function ssymm(
 
     //*     Quick return if possible.
 
-    if (m === 0 || n === 0 ||
-        (alpha === 0 && beta === 1)
-    ) return;
+    if (m === 0 || n === 0 || (alpha === 0 && beta === 1)) return;
 
     //when alpha is zero
     if (alpha === 0) {
@@ -80,8 +70,7 @@ export function ssymm(
             for (let j = 1; j <= n; j++) {
                 c.setCol(j, 1, m, 0);
             }
-        }
-        else {
+        } else {
             for (let j = 1; j <= n; j++) {
                 const coords = c.colOfEx(j);
                 for (let i = 1; i <= m; i++) {
@@ -101,7 +90,7 @@ export function ssymm(
                 const coorCJ = c.colOfEx(j);
                 for (let i = 1; i <= m; i++) {
                     const coorAI = a.colOfEx(i);
-                    let temp1 = alpha * b.r[coorBJ + i];
+                    const temp1 = alpha * b.r[coorBJ + i];
                     let temp2 = 0;
                     for (let k = 1; k <= i - 1; k++) {
                         c.r[coorCJ + k] += temp1 * a.r[coorAI + k];
@@ -114,8 +103,7 @@ export function ssymm(
                     c.r[coorCJ + i] = re;
                 }
             }
-        }
-        else {
+        } else {
             for (let j = 1; j <= n; j++) {
                 const coorBJ = b.colOfEx(j);
                 const coorCJ = b.colOfEx(j);
@@ -135,8 +123,7 @@ export function ssymm(
                 }
             }
         }
-    }
-    else {
+    } else {
         //  Form  C := alpha*B*A + beta*C.
         for (let j = 1; j <= n; j++) {
             const coorAJ = a.colOfEx(j);
@@ -148,8 +135,7 @@ export function ssymm(
                 for (let i = 1; i <= m; i++) {
                     c.r[coorCJ + i] = temp1 * b.r[coorBJ + i];
                 }
-            }
-            else {
+            } else {
                 for (let i = 1; i <= m; i++) {
                     c.r[coorCJ + i] = beta * c.r[coorCJ + i] + temp1 * b.r[coorBJ + i];
                 }
@@ -157,7 +143,7 @@ export function ssymm(
             for (let k = 1; k <= j - 1; k++) {
                 const coorAK = a.colOfEx(k);
                 const coorBK = b.colOfEx(k);
-                let temp1 = alpha * (ul === 'u' ? a.r[coorAJ + k] : a.r[coorAK + j]);
+                const temp1 = alpha * (ul === 'u' ? a.r[coorAJ + k] : a.r[coorAK + j]);
                 for (let i = 1; i <= m; i++) {
                     c.r[coorCJ + i] += temp1 * b.r[coorBK + i];
                 }
@@ -166,7 +152,7 @@ export function ssymm(
                 const coorAK = a.colOfEx(k);
                 const coorBK = b.colOfEx(k);
 
-                let temp1 = alpha * (ul === 'u' ? a.r[coorAK + j] : a.r[coorAJ + k]);
+                const temp1 = alpha * (ul === 'u' ? a.r[coorAK + j] : a.r[coorAJ + k]);
                 for (let i = 1; i <= m; i++) {
                     c.r[coorCJ + i] += temp1 * b.r[coorBK + i];
                 }

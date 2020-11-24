@@ -1,12 +1,17 @@
 # Logs
 logs
 dist/
+build/
+commonjs/
+*.tsbuildinfo
 *.log
 TODO
 npm-debug.log*
 scratch-pad
 *.pem
 .*
+src/**/*.d.ts
+src/**/*.js
 notes.md
 !/.gitignore
 !/.npmignore
@@ -54,3 +59,4 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+tsconfig.tsbuildinfo

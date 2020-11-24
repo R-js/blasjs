@@ -15,17 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-import {
-    Complex,
-    errMissingIm,
-    errWrongArg,
-    FortranArr,
-    isOne,
-    isZero,
-    lowerChar,
-    Matrix
-} from '../../f_func';
+import { Complex, errMissingIm, errWrongArg, FortranArr, isOne, isZero, lowerChar, Matrix } from '../../f_func';
 
 const { max, min } = Math;
 
@@ -40,10 +30,8 @@ export function chbmv(
     incx: number,
     beta: Complex,
     y: FortranArr,
-    incy: number
+    incy: number,
 ): void {
-
-
     if (a.i === undefined) {
         throw new Error(errMissingIm('a.i'));
     }
@@ -61,20 +49,15 @@ export function chbmv(
 
     if (!'ul'.includes(uplo)) {
         info = 1;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 2;
-    }
-    else if (k < 0) {
+    } else if (k < 0) {
         info = 3;
-    }
-    else if (lda < (k + 1)) {
+    } else if (lda < k + 1) {
         info = 6;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 8;
-    }
-    else if (incy === 0) {
+    } else if (incy === 0) {
         info = 11;
     }
 
@@ -103,7 +86,6 @@ export function chbmv(
             y.i[iy - y.base] = im;
             iy += incy;
         }
-
     }
     if (alphaIsZero) return;
 
@@ -112,10 +94,10 @@ export function chbmv(
 
     if (ul === 'u') {
         // Form  y  when upper triangle of A is stored.
-        let kplus1 = k + 1;
+        const kplus1 = k + 1;
         for (let j = 1; j <= n; j++) {
-            let temp1Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
-            let temp1Im = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
+            const temp1Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
+            const temp1Im = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
 
             let temp2Re = 0;
             let temp2Im = 0;
@@ -123,9 +105,9 @@ export function chbmv(
             let ix = kx;
             let iy = ky;
 
-            let L = kplus1 - j;
+            const L = kplus1 - j;
             //
-            let coords = a.colOfEx(j);
+            const coords = a.colOfEx(j);
             //
             for (let i = max(1, j - k); i <= j - 1; i++) {
                 y.r[iy - y.base] += temp1Re * a.r[coords + L + i] - temp1Im * a.i[coords + L + i];
@@ -147,12 +129,11 @@ export function chbmv(
                 ky += incy;
             }
         }
-    }
-    else {
+    } else {
         //Form  y  when lower triangle of A is stored.
         for (let j = 1; j <= n; j++) {
-            let temp1Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
-            let temp1Im = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
+            const temp1Re = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
+            const temp1Im = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
 
             let temp2Re = 0;
             let temp2Im = 0;
@@ -161,7 +142,7 @@ export function chbmv(
             y.r[jy - y.base] += temp1Re * a.r[coords + 1];
             y.i[jy - y.base] += temp1Im * a.r[coords + 1];
 
-            let L = 1 - j;
+            const L = 1 - j;
             let ix = jx;
             let iy = jy;
 

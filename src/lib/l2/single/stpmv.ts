@@ -24,28 +24,23 @@ export function stpmv(
     n: number,
     ap: FortranArr,
     x: FortranArr,
-    incx: number
+    incx: number,
 ): void {
-
     const ul = lowerChar(uplo);
     const tr = lowerChar(trans);
     const dg = lowerChar(diag);
 
-    let info = 0
+    let info = 0;
 
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (!'ntc'.includes(tr)) {
+    } else if (!'ntc'.includes(tr)) {
         info = 2;
-    }
-    else if (!'un'.includes(dg)) {
+    } else if (!'un'.includes(dg)) {
         info = 3;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 4;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 7;
     }
 
@@ -70,7 +65,7 @@ export function stpmv(
             let jx = kx;
             for (let j = 1; j <= n; j++) {
                 if (x.r[jx - x.base] !== 0) {
-                    let temp = x.r[jx - x.base];
+                    const temp = x.r[jx - x.base];
                     let ix = kx;
                     for (let k = kk; k <= kk + j - 2; k++) {
                         x.r[ix - x.base] += temp * ap.r[k - ap.base];
@@ -81,9 +76,8 @@ export function stpmv(
                 jx += incx;
                 kk += j;
             }
-        }
-        else {
-            let kk = n * (n + 1) / 2
+        } else {
+            let kk = (n * (n + 1)) / 2;
             kx += (n - 1) * incx;
             let jx = kx;
             for (let j = n; j >= 1; j--) {
@@ -97,11 +91,10 @@ export function stpmv(
                     if (nounit) x.r[jx - x.base] *= ap.r[kk - n + j - ap.base];
                 }
                 jx -= incx;
-                kk -= (n - j + 1);
+                kk -= n - j + 1;
             }
         }
-    }
-    else {
+    } else {
         // Form  x := A**T*x.
         if (ul === 'u') {
             let kk = (n * (n + 1)) / 2;
@@ -134,7 +127,7 @@ export function stpmv(
                 }
                 x.r[jx - x.base] = temp;
                 jx += incx;
-                kk += (n - j + 1);
+                kk += n - j + 1;
             }
         }
     }

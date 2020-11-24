@@ -29,8 +29,8 @@ export function csyrk(
     lda: number,
     beta: Complex,
     c: Matrix,
-    ldc: number): void {
-
+    ldc: number,
+): void {
     if (a.i === undefined) {
         throw new Error(errMissingIm('a.i'));
     }
@@ -50,24 +50,19 @@ export function csyrk(
     let info = 0;
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (!'tn'.includes(tr)) {
+    } else if (!'tn'.includes(tr)) {
         info = 2;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 3;
-    }
-    else if (k < 0) {
+    } else if (k < 0) {
         info = 4;
-    }
-    else if (lda < max(1, nrowA)) {
+    } else if (lda < max(1, nrowA)) {
         info = 7;
-    }
-    else if (ldc < max(1, n)) {
+    } else if (ldc < max(1, n)) {
         info = 10;
     }
     if (info !== 0) {
-        throw new Error(errWrongArg('csyrk', info))
+        throw new Error(errWrongArg('csyrk', info));
     }
 
     //  Quick return if possible.
@@ -81,8 +76,7 @@ export function csyrk(
             const stop = upper ? j : n;
             if (betaIsZero) {
                 c.setCol(j, start, stop, 0);
-            }
-            else {
+            } else {
                 const coorCJ = c.colOfEx(j);
                 for (let i = start; i <= stop; i++) {
                     const re = beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
@@ -104,8 +98,7 @@ export function csyrk(
             const stop = upper ? j : n;
             if (betaIsZero) {
                 c.setCol(j, start, stop, 0);
-            }
-            else if (!betaIsOne) {
+            } else if (!betaIsOne) {
                 for (let i = start; i <= stop; i++) {
                     const re = beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
                     const im = beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
@@ -117,8 +110,8 @@ export function csyrk(
                 const coorAL = a.colOfEx(l);
                 const aIsZero = a.r[coorAL + j] === 0 && a.i[coorAL + j] === 0;
                 if (!aIsZero) {
-                    let tempRe = alpha.re * a.r[coorAL + j] - alpha.im * a.i[coorAL + j];
-                    let tempIm = alpha.re * a.i[coorAL + j] + alpha.im * a.r[coorAL + j];
+                    const tempRe = alpha.re * a.r[coorAL + j] - alpha.im * a.i[coorAL + j];
+                    const tempIm = alpha.re * a.i[coorAL + j] + alpha.im * a.r[coorAL + j];
                     for (let i = start; i <= stop; i++) {
                         c.r[coorCJ + i] += tempRe * a.r[coorAL + i] - tempIm * a.i[coorAL + i];
                         c.i[coorCJ + i] += tempRe * a.i[coorAL + i] + tempIm * a.r[coorAL + i];
@@ -126,8 +119,7 @@ export function csyrk(
                 }
             }
         }
-    }
-    else {
+    } else {
         //  Form  C := alpha*A**T*A + beta*C.
         for (let j = 1; j <= n; j++) {
             const coorAJ = a.colOfEx(j);
@@ -155,4 +147,3 @@ export function csyrk(
         }
     }
 }
-

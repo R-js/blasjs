@@ -15,14 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    Complex,
-    errMissingIm,
-    errWrongArg,
-    lowerChar,
-    Matrix,
-    MatrixEComplex
-} from '../../../f_func';
+import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix, MatrixEComplex } from '../../../f_func';
 
 import { BinvA } from './BinvA';
 import { BinvTranConjA } from './BinvTranConjA';
@@ -30,18 +23,18 @@ import { invAB } from './invAB';
 import { invTranConjAB } from './invTranConjAB';
 
 /*
-*>
-*> CTRSM  solves one of the matrix equations
-*>
-*>    op( A )*X = alpha*B,   or   X*op( A ) = alpha*B,
-*>
-*> where alpha is a scalar, X and B are m by n matrices, A is a unit, or
-*> non-unit,  upper or lower triangular matrix  and  op( A )  is one  of
-*>
-*>    op( A ) = A   or   op( A ) = A**T   or   op( A ) = A**H.
-*>
-*> The matrix X is overwritten on B.
-*/
+ *>
+ *> CTRSM  solves one of the matrix equations
+ *>
+ *>    op( A )*X = alpha*B,   or   X*op( A ) = alpha*B,
+ *>
+ *> where alpha is a scalar, X and B are m by n matrices, A is a unit, or
+ *> non-unit,  upper or lower triangular matrix  and  op( A )  is one  of
+ *>
+ *>    op( A ) = A   or   op( A ) = A**T   or   op( A ) = A**H.
+ *>
+ *> The matrix X is overwritten on B.
+ */
 
 const { max } = Math;
 
@@ -56,9 +49,8 @@ export function ctrsm(
     a: Matrix,
     lda: number,
     b: Matrix,
-    ldb: number): void {
-
-
+    ldb: number,
+): void {
     if (a.i === undefined) {
         throw new Error(errMissingIm('a.i'));
     }
@@ -77,33 +69,26 @@ export function ctrsm(
     const nounit = diag === 'n';
     const upper = ul === 'u';
 
-    const alphaIsZero = (alpha.re === 0 && alpha.im === 0);
-    const alphaIsOne = (alpha.re === 1 && alpha.im === 0);
+    const alphaIsZero = alpha.re === 0 && alpha.im === 0;
+    const alphaIsOne = alpha.re === 1 && alpha.im === 0;
 
     let info = 0;
 
     if (!'lr'.includes(si)) {
         info = 1;
-    }
-    else if (!'ul'.includes(ul)) {
+    } else if (!'ul'.includes(ul)) {
         info = 2;
-    }
-    else if (!'ntc'.includes(trA)) {
+    } else if (!'ntc'.includes(trA)) {
         info = 3;
-    }
-    else if (!'un'.includes(di)) {
+    } else if (!'un'.includes(di)) {
         info = 4;
-    }
-    else if (m < 0) {
+    } else if (m < 0) {
         info = 5;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 6;
-    }
-    else if (lda < max(1, nrowA)) {
+    } else if (lda < max(1, nrowA)) {
         info = 9;
-    }
-    else if (ldb < max(1, m)) {
+    } else if (ldb < max(1, m)) {
         info = 11;
     }
     if (info !== 0) {
@@ -130,13 +115,13 @@ export function ctrsm(
             nounit,
             upper,
             alphaIsOne,
-            alphaIsZero,
-            noconj,
+            //alphaIsZero,
+            //noconj,
             n,
             m,
             <MatrixEComplex>a,
             <MatrixEComplex>b,
-            alpha
+            alpha,
         );
     }
 
@@ -146,32 +131,21 @@ export function ctrsm(
         return invTranConjAB(
             nounit,
             upper,
-            alphaIsOne,
-            alphaIsZero,
+            //alphaIsOne,
+            //alphaIsZero,
             noconj,
             n,
             m,
             <MatrixEComplex>a,
             <MatrixEComplex>b,
-            alpha
+            alpha,
         );
     }
 
     if (si === 'r' && trA === 'n') {
         //   Form  B := alpha*B*inv( A ).
         //BinvA
-        return BinvA(
-            nounit,
-            upper,
-            alphaIsOne,
-            alphaIsZero,
-            noconj,
-            n,
-            m,
-            <MatrixEComplex>a,
-            <MatrixEComplex>b,
-            alpha
-        );
+        return BinvA(nounit, upper, alphaIsOne, alphaIsZero, noconj, n, m, <MatrixEComplex>a, <MatrixEComplex>b, alpha);
     }
 
     /* if (si === 'r' && trA !== 'n') {*/
@@ -188,10 +162,9 @@ export function ctrsm(
         m,
         <MatrixEComplex>a,
         <MatrixEComplex>b,
-        alpha
+        alpha,
     );
     //}
 
     //throw new Error('unreachable code');
-
 }

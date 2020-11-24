@@ -16,13 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-    Complex,
-    complex,
     fortranArrComplex64,
     fortranMatrixComplex32,
     fortranMatrixComplex64,
     Matrix,
-    muxCmplx
+    muxCmplx,
 } from '../src/lib/f_func';
 
 const { max, min } = Math;
@@ -100,7 +98,7 @@ const data = {
         0.2484126488725964,
         0.06528818167162072,
         0.01915639166027384,
-        0.2573383771555333
+        0.2573383771555333,
     ],
     im36: [
         0.9921603654457979,
@@ -186,7 +184,7 @@ const data = {
         -0.9120683669483379,
         -1.4375862408299789,
         -0.7970895250719646,
-        1.2540831064499711
+        1.2540831064499711,
     ],
     inorm10: [
         0.7721421858045301,
@@ -198,8 +196,8 @@ const data = {
         1.2560188173061,
         0.6466743904953449,
         1.299312302563431,
-        -0.873262111744435
-    ]
+        -0.873262111744435,
+    ],
 };
 
 export function vector(n = 6) {
@@ -239,7 +237,6 @@ export function bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 4, ku = 4): Mat
 }
 
 export function matrix_mxn(lda: number, n: number, m: number = lda, float = 64) {
-
     if (lda < m) {
         throw new Error(`lda<m, ${lda}<${m}`);
     }
@@ -262,7 +259,6 @@ export function matrix_mxn(lda: number, n: number, m: number = lda, float = 64) 
 }
 
 export function diagonal_nxn(n: number): Matrix {
-
     const re = new Array(n * n);
     const im = new Array(n * n);
 

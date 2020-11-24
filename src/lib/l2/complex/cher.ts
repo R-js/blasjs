@@ -22,12 +22,12 @@ const { max } = Math;
 export function cher(
     uplo: 'u' | 'l',
     n: number,
-    alpha: number, //this is the ONLY level 2, complex function that has a REAL/DOUBLE PREC alpha  
+    alpha: number, //this is the ONLY level 2, complex function that has a REAL/DOUBLE PREC alpha
     x: FortranArr,
     incx: number,
     a: Matrix,
-    lda: number): void {
-
+    lda: number,
+): void {
     if (x.i === undefined) {
         throw new Error(errMissingIm('x.i'));
     }
@@ -40,24 +40,19 @@ export function cher(
     let info = 0;
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 2;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 3;
-    }
-    else if (lda < max(1, n)) {
+    } else if (lda < max(1, n)) {
         info = 7;
     }
     if (info !== 0) {
         throw new Error(errWrongArg('cher', info));
     }
 
-
-
     if (n === 0 || alpha === 0) return;
-    let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
+    const kx = incx < 0 ? 1 - (n - 1) * incx : 1;
 
     if (ul === 'u') {
         //*        Form  A  when A is stored in upper triangle.
@@ -69,9 +64,8 @@ export function cher(
             //console.log(`j=(${j})`);
             const xIsZero = x.r[jx - x.base] === 0 && x.i[jx - x.base] === 0;
             if (!xIsZero) {
-
-                let tempRe = alpha * x.r[jx - x.base];
-                let tempIm = alpha * -x.i[jx - x.base];
+                const tempRe = alpha * x.r[jx - x.base];
+                const tempIm = alpha * -x.i[jx - x.base];
 
                 let ix = kx;
 
@@ -88,23 +82,21 @@ export function cher(
                     ix += incx;
                 }
                 a.i[coords + j] = 0;
-                a.r[coords + j] += (x.r[jx - x.base] * tempRe - x.i[jx - x.base] * tempIm);
-            }
-            else {
+                a.r[coords + j] += x.r[jx - x.base] * tempRe - x.i[jx - x.base] * tempIm;
+            } else {
                 a.i[coords + j] = 0;
             }
             jx += incx;
         }
-    }
-    else {
+    } else {
         //    * Form  A  when A is stored in lower triangle.
-        let jx = kx
+        let jx = kx;
         for (let j = 1; j <= n; j++) {
             const coords = a.colOfEx(j);
             if (!(x.r[jx - x.base] === 0 && x.i[jx - x.base] === 0)) {
                 //   TEMP = ALPHA*CONJG(X(JX))
-                let tempRe = alpha * x.r[jx - x.base];
-                let tempIm = -alpha * x.i[jx - x.base];
+                const tempRe = alpha * x.r[jx - x.base];
+                const tempIm = -alpha * x.i[jx - x.base];
 
                 //A(J,J) = REAL(A(J,J)) + REAL(TEMP*X(JX))
                 a.i[coords + j] = 0;
@@ -117,10 +109,8 @@ export function cher(
                     ix += incx;
                     a.r[coords + i] += x.r[ix - x.base] * tempRe - x.i[ix - x.base] * tempIm;
                     a.i[coords + i] += x.r[ix - x.base] * tempIm + x.i[ix - x.base] * tempRe;
-
                 }
-            }
-            else {
+            } else {
                 a.i[coords + j] = 0;
             }
             jx += incx;

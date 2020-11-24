@@ -15,37 +15,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    Complex,
-    errMissingIm,
-    errWrongArg,
-    FortranArr,
-    isOne,
-    isZero,
-    lowerChar,
-    Matrix
-} from '../../f_func';
-
+import { Complex, errMissingIm, errWrongArg, FortranArr, isOne, isZero, lowerChar, Matrix } from '../../f_func';
 
 const { max } = Math;
 
 /*
-*>
-*> CGEMV performs one of the matrix-vector operations
-*>
-*>    y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,   or
-*>
-*>    y := alpha*A**H*x + beta*y,
-*>
-*> where alpha and beta are scalars, x and y are vectors and A is an
-*> m by n matrix.
-*/
+ *>
+ *> CGEMV performs one of the matrix-vector operations
+ *>
+ *>    y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,   or
+ *>
+ *>    y := alpha*A**H*x + beta*y,
+ *>
+ *> where alpha and beta are scalars, x and y are vectors and A is an
+ *> m by n matrix.
+ */
 
 /*
-*>    TRANS = 'N' or 'n'   y := alpha*A*x + beta*y.
-*>    TRANS = 'T' or 't'   y := alpha*A**T*x + beta*y.
-*>    TRANS = 'C' or 'c'   y := alpha*A**H*x + beta*y.
-*/
+ *>    TRANS = 'N' or 'n'   y := alpha*A*x + beta*y.
+ *>    TRANS = 'T' or 't'   y := alpha*A**T*x + beta*y.
+ *>    TRANS = 'C' or 'c'   y := alpha*A**H*x + beta*y.
+ */
 
 // SUBROUTINE CGEMV(TRANS,M,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 export function cgemv(
@@ -59,8 +49,8 @@ export function cgemv(
     incx: number,
     beta: Complex,
     y: FortranArr,
-    incy: number): void {
-
+    incy: number,
+): void {
     //checks
 
     if (y.i === undefined) {
@@ -76,7 +66,6 @@ export function cgemv(
     // dont use String.toUpperCase()[0] because slow
     const tr = lowerChar(trans);
 
-
     const betaIsZero = isZero(beta);
     const betaIsOne = isOne(beta);
 
@@ -86,25 +75,19 @@ export function cgemv(
     const { re: AlphaRe, im: AlphaIm } = alpha;
     const { re: BetaRe, im: BetaIm } = beta;
 
-
     let info = 0;
 
     if (!(tr === 'n' || tr === 't' || tr === 'c')) {
         info = 1;
-    }
-    else if (m < 0) {
+    } else if (m < 0) {
         info = 2;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 3;
-    }
-    else if (lda < max(1, m)) {
+    } else if (lda < max(1, m)) {
         info = 6;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 8;
-    }
-    else if (incy === 0) {
+    } else if (incy === 0) {
         info = 11;
     }
 
@@ -123,9 +106,8 @@ export function cgemv(
     const lenx = tr === 'n' ? n : m;
     const leny = tr === 'n' ? m : n;
 
-    let kx = incx > 0 ? 1 : 1 - (lenx - 1) * incx;
-    let ky = incy > 0 ? 1 : 1 - (leny - 1) * incy;
-
+    const kx = incx > 0 ? 1 : 1 - (lenx - 1) * incx;
+    const ky = incy > 0 ? 1 : 1 - (leny - 1) * incy;
 
     /*     Start the operations. In this version the elements of A are
      *     accessed sequentially with one pass through A.
@@ -135,8 +117,8 @@ export function cgemv(
     if (!betaIsOne) {
         let iy = ky;
         for (let i = 1; i <= leny; i++) {
-            const re = betaIsZero ? 0 : (BetaRe * y.r[iy - y.base] - BetaIm * y.i[iy - y.base]);
-            const im = betaIsZero ? 0 : (BetaRe * y.i[iy - y.base] + BetaIm * y.r[iy - y.base]);
+            const re = betaIsZero ? 0 : BetaRe * y.r[iy - y.base] - BetaIm * y.i[iy - y.base];
+            const im = betaIsZero ? 0 : BetaRe * y.i[iy - y.base] + BetaIm * y.r[iy - y.base];
             y.r[iy - y.base] = re;
             y.i[iy - y.base] = im;
             iy += incy;
@@ -146,8 +128,8 @@ export function cgemv(
     if (tr === 'n') {
         let jx = kx;
         for (let j = 1; j <= n; j++) {
-            let tempRe = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
-            let tempIm = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
+            const tempRe = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
+            const tempIm = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
             let iy = ky;
             const coords = a.colOfEx(j);
             for (let i = 1; i <= m; i++) {
@@ -157,8 +139,7 @@ export function cgemv(
             }
             jx += incx;
         }
-    }
-    else {
+    } else {
         // Form  y := alpha*A**T*x + y  or  y := alpha*A**H*x + y.
         let jy = ky;
 

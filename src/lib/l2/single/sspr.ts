@@ -17,26 +17,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { errWrongArg, FortranArr, lowerChar } from '../../f_func';
 
-export function sspr(
-    uplo: 'u' | 'l',
-    n: number,
-    alpha: number,
-    x: FortranArr,
-    incx: number,
-    ap: FortranArr): void {
-
+export function sspr(uplo: 'u' | 'l', n: number, alpha: number, x: FortranArr, incx: number, ap: FortranArr): void {
     // test parameters
 
     let info = 0;
-    let ul = lowerChar(uplo);
+    const ul = lowerChar(uplo);
 
     if (!'ul'.includes(uplo)) {
         info = 1;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 2;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 5;
     }
     if (info !== 0) {
@@ -46,7 +37,7 @@ export function sspr(
     if (n === 0 || alpha === 0) return;
 
     // corrected the comparison was incx <= 0
-    const kx = (incx < 0) ? 1 - (n - 1) * incx : 1;
+    const kx = incx < 0 ? 1 - (n - 1) * incx : 1;
 
     let kk = 1;
     let jx = kx;
@@ -55,7 +46,7 @@ export function sspr(
         //  Form  A  when upper triangle is stored in AP.
         for (let j = 1; j <= n; j++) {
             if (x.r[jx - x.base] !== 0) {
-                let temp = alpha * x.r[jx - x.base];
+                const temp = alpha * x.r[jx - x.base];
                 let ix = kx;
                 for (let k = kk; k <= kk + j - 1; k++) {
                     ap.r[k - ap.base] += x.r[ix - x.base] * temp;
@@ -65,13 +56,11 @@ export function sspr(
             jx += incx;
             kk += j;
         }
-
-    }
-    else {
+    } else {
         //  Form  A  when lower triangle is stored in AP.
         for (let j = 1; j <= n; j++) {
             if (x.r[jx - x.base] !== 0) {
-                let temp = alpha * x.r[jx - x.base];
+                const temp = alpha * x.r[jx - x.base];
                 let ix = jx;
                 for (let k = kk; k <= kk + n - j; k++) {
                     ap.r[k - ap.base] += x.r[ix - x.base] * temp;
@@ -79,9 +68,7 @@ export function sspr(
                 }
             }
             jx += incx;
-            kk += (n - j + 1);
+            kk += n - j + 1;
         }
     }
 }
-
-
