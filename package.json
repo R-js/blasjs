@@ -73,6 +73,6 @@
         "prepublush": "npm run build",
         "lint": "eslint 'src/**/*.ts'",
         "lint:fix": "eslint 'src/**/*.ts' --fix",
-        "test": "jest"
+        "test": "jest level1"
     }
 }
