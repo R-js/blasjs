@@ -4,7 +4,7 @@
     "main": "build/lib/index.js",
     "browser": "dist/blasjs.min.js",
     "types": "build/lib/index.d.ts",
-    "version": "1.0.13",
+    "version": "1.0.14-rc1",
     "files": [
         "dist",
         "build"
