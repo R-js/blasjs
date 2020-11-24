@@ -28,8 +28,8 @@ export function stbmv(
     A: Matrix,
     lda: number,
     x: FortranArr,
-    incx: number): void {
-
+    incx: number,
+): void {
     const ul = lowerChar(uplo);
     const tr = lowerChar(trans);
     const dg = lowerChar(diag);
@@ -38,23 +38,17 @@ export function stbmv(
 
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (!'ntc'.includes(tr)) {
+    } else if (!'ntc'.includes(tr)) {
         info = 2;
-    }
-    else if (!'un'.includes(dg)) {
+    } else if (!'un'.includes(dg)) {
         info = 3;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 4;
-    }
-    else if (k < 0) {
+    } else if (k < 0) {
         info = 5;
-    }
-    else if (lda < (k + 1)) {
+    } else if (lda < k + 1) {
         info = 7;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 9;
     }
 
@@ -66,7 +60,6 @@ export function stbmv(
 
     const nounit = diag === 'n';
 
-
     let kx = incx > 0 ? 1 : 1 - (n - 1) * incx;
 
     if (tr === 'n') {
@@ -76,10 +69,10 @@ export function stbmv(
             let jx = kx;
             for (let j = 1; j <= n; j++) {
                 if (x.r[jx - x.base] !== 0) {
-                    let temp = x.r[jx - x.base];
+                    const temp = x.r[jx - x.base];
                     let ix = kx;
-                    let L = kplus1 - j;
-                    let coords = A.colOfEx(j);
+                    const L = kplus1 - j;
+                    const coords = A.colOfEx(j);
                     for (let i = max(1, j - k); i <= j - 1; i++) {
                         x.r[ix - x.base] += temp * A.r[coords + L + i];
                         ix += incx;
@@ -89,13 +82,13 @@ export function stbmv(
                 jx += incx;
                 if (j > k) kx += incx;
             }
-        }
-        else { //lower-matrix
+        } else {
+            //lower-matrix
             kx += (n - 1) * incx;
             let jx = kx;
             for (let j = n; j >= 1; j--) {
                 if (x.r[jx - x.base] !== 0) {
-                    let temp = x.r[jx - x.base];
+                    const temp = x.r[jx - x.base];
                     let ix = kx;
                     const l = 1 - j;
                     const coorAJ = A.colOfEx(j);
@@ -104,13 +97,12 @@ export function stbmv(
                         ix -= incx;
                     }
                     if (nounit) x.r[jx - x.base] *= A.r[coorAJ + 1];
-
                 }
                 jx -= incx;
-                if ((n - j) >= k) kx -= incx;
+                if (n - j >= k) kx -= incx;
             }
         }
-    }//N
+    } //N
     else {
         // Form  x := A**T*x.
         if (uplo === 'u') {
@@ -122,17 +114,15 @@ export function stbmv(
                 let temp = x.r[jx - x.base];
                 kx -= incx;
                 let ix = kx;
-                let l = kplus1 - j;
-                if (nounit) temp *= A.r[kplus1 + coorAJ]
+                const l = kplus1 - j;
+                if (nounit) temp *= A.r[kplus1 + coorAJ];
                 for (let i = j - 1; i >= max(1, j - k); i--) {
                     temp += A.r[l + i + coorAJ] * x.r[ix - x.base];
                     ix -= incx;
                 }
                 x.r[jx - x.base] = temp;
                 jx -= incx;
-
             }
-
         }
         //lower matrix
         else {

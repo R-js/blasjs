@@ -15,14 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    Complex,
-    errMissingIm,
-    errWrongArg,
-    lowerChar,
-    Matrix
-} from '../../f_func';
-
+import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix } from '../../f_func';
 
 const { max } = Math;
 
@@ -38,8 +31,8 @@ export function cher2k(
     ldb: number,
     beta: number,
     c: Matrix,
-    ldc: number): void {
-
+    ldc: number,
+): void {
     if (a.i === undefined) {
         throw new Error(errMissingIm('a.i'));
     }
@@ -62,23 +55,17 @@ export function cher2k(
 
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (!'nc'.includes(tr)) {
+    } else if (!'nc'.includes(tr)) {
         info = 2;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 3;
-    }
-    else if (k < 0) {
+    } else if (k < 0) {
         info = 4;
-    }
-    else if (lda < max(1, nrowA)) {
+    } else if (lda < max(1, nrowA)) {
         info = 7;
-    }
-    else if (ldb < max(1, nrowA)) {
+    } else if (ldb < max(1, nrowA)) {
         info = 9;
-    }
-    else if (ldc < max(1, n)) {
+    } else if (ldc < max(1, n)) {
         info = 12;
     }
     if (info !== 0) {
@@ -131,16 +118,14 @@ export function cher2k(
                 const coorCJ = c.colOfEx(j);
                 if (beta === 0) {
                     c.setCol(j, 1, j, 0);
-                }
-                else if (beta !== 1) {
+                } else if (beta !== 1) {
                     for (let i = 1; i <= j - 1; i++) {
                         c.r[coorCJ + i] *= beta;
                         c.i[coorCJ + i] *= beta;
                     }
                     c.r[coorCJ + j] *= beta;
                     c.i[coorCJ + j] = 0;
-                }
-                else {
+                } else {
                     c.i[coorCJ + j] = 0;
                 }
                 for (let l = 1; l <= k; l++) {
@@ -154,10 +139,10 @@ export function cher2k(
                         //TEMP1 = ALPHA * CONJG(B(J, L))
                         //(a+ib)*(c-id) = (ac+bd)+i(-ad+bc)
                         //
-                        let temp1Re = alpha.re * b.r[coorBL + j] + alpha.im * b.i[coorBL + j];
-                        let temp1Im = -alpha.re * b.i[coorBL + j] + alpha.im * b.r[coorBL + j];
+                        const temp1Re = alpha.re * b.r[coorBL + j] + alpha.im * b.i[coorBL + j];
+                        const temp1Im = -alpha.re * b.i[coorBL + j] + alpha.im * b.r[coorBL + j];
 
-                        let temp2Re = alpha.re * a.r[coorAL + j] - alpha.im * a.i[coorAL + j];
+                        const temp2Re = alpha.re * a.r[coorAL + j] - alpha.im * a.i[coorAL + j];
                         let temp2Im = alpha.re * a.i[coorAL + j] + alpha.im * a.r[coorAL + j];
 
                         temp2Im = -temp2Im;
@@ -181,16 +166,14 @@ export function cher2k(
                 const coorCJ = c.colOfEx(j);
                 if (beta === 0) {
                     c.setCol(j, j, n, 0);
-                }
-                else if (beta !== 1) {
+                } else if (beta !== 1) {
                     for (let i = j + 1; i <= n; i++) {
                         c.r[coorCJ + i] *= beta;
                         c.i[coorCJ + i] *= beta;
                     }
                     c.r[coorCJ + j] *= beta;
                     c.i[coorCJ + j] = 0;
-                }
-                else {
+                } else {
                     c.i[coorCJ + j] = 0;
                 }
                 //
@@ -202,11 +185,11 @@ export function cher2k(
                     if (!aIsZero || !bIsZero) {
                         //TEMP1 = ALPHA * CONJG(B(J, L))
                         //(a+ib)*(c-id) = (ac+bd)+i(-ad+bc)
-                        let temp1Re = alpha.re * b.r[coorBL + j] + alpha.im * b.i[coorBL + j];
-                        let temp1Im = -alpha.re * b.i[coorBL + j] + alpha.im * b.r[coorBL + j];
+                        const temp1Re = alpha.re * b.r[coorBL + j] + alpha.im * b.i[coorBL + j];
+                        const temp1Im = -alpha.re * b.i[coorBL + j] + alpha.im * b.r[coorBL + j];
                         // TEMP2 = DCONJG(ALPHA*A(J,L))
-                        let temp2Re = alpha.re * a.r[coorAL + j] - alpha.im * a.i[coorAL + j];
-                        let temp2Im = -(alpha.re * a.i[coorAL + j] + alpha.im * a.r[coorAL + j]);
+                        const temp2Re = alpha.re * a.r[coorAL + j] - alpha.im * a.i[coorAL + j];
+                        const temp2Im = -(alpha.re * a.i[coorAL + j] + alpha.im * a.r[coorAL + j]);
                         //console.log(`${l}, (${temp1Re},${temp1Im}),(${temp2Re},${temp2Im})`);
                         for (let i = j + 1; i <= n; i++) {
                             //DO 160 I = J + 1, N, note we use starting i=j (because of cleanup after)
@@ -226,10 +209,10 @@ export function cher2k(
                         c.r[coorCJ + j] += re1 + re2;
                         c.i[coorCJ + j] = 0;
                     }
-                }//for (k)
-            }//for (j)
-        }// end upper
-    }//tr === 'c', conjugate
+                } //for (k)
+            } //for (j)
+        } // end upper
+    } //tr === 'c', conjugate
     else {
         // Form  C := alpha*A**H*B + conjg( alpha )*B**H*A + C.
         for (let j = 1; j <= n; j++) {
@@ -262,11 +245,11 @@ export function cher2k(
                 //console.log(`(${j},${i}),\t(${temp1Re},${temp1Im})\t(${temp2Re},${temp2Im})`);
                 // done more efficiently then in fortran
                 // (ALPHA*TEMP1+CONJG(ALPHA)*TEMP2)
-                const re1 = (alpha.re * temp1Re - alpha.im * temp1Im);
-                const im1 = (i === j) ? 0 : (alpha.re * temp1Im + alpha.im * temp1Re);
+                const re1 = alpha.re * temp1Re - alpha.im * temp1Im;
+                const im1 = i === j ? 0 : alpha.re * temp1Im + alpha.im * temp1Re;
 
-                const re2 = (alpha.re * temp2Re + alpha.im * temp2Im);
-                const im2 = (i === j) ? 0 : (alpha.re * temp2Im - alpha.im * temp2Re);
+                const re2 = alpha.re * temp2Re + alpha.im * temp2Im;
+                const im2 = i === j ? 0 : alpha.re * temp2Im - alpha.im * temp2Re;
 
                 const re = re1 + re2;
                 const im = im1 + im2;
@@ -274,17 +257,15 @@ export function cher2k(
                 if (beta === 0) {
                     c.r[coorCJ + i] = re;
                     c.i[coorCJ + i] = im;
-                }
-                else {
+                } else {
                     c.r[coorCJ + i] = beta * c.r[coorCJ + i] + re;
                     if (i === j) {
                         c.i[coorCJ + i] = 0;
-                    }
-                    else {
+                    } else {
                         c.i[coorCJ + i] = beta * c.i[coorCJ + i] + im;
                     }
                 }
             }
         }
-    }//tr === 'c'
+    } //tr === 'c'
 }

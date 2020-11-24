@@ -40,8 +40,8 @@ export function ctrmv(
     a: Matrix,
     lda: number,
     x: FortranArr,
-    incx: number): void {
-
+    incx: number,
+): void {
     if (x.i === undefined) {
         throw new Error(errMissingIm('x.i'));
     }
@@ -49,7 +49,6 @@ export function ctrmv(
     if (a.i === undefined) {
         throw new Error(errMissingIm('a.i'));
     }
-
 
     // faster then String.toLowerCase()
     const ul = lowerChar(uplo);
@@ -59,20 +58,15 @@ export function ctrmv(
     let info = 0;
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (!'ntc'.includes(tr)) {
+    } else if (!'ntc'.includes(tr)) {
         info = 2;
-    }
-    else if (!'un'.includes(dg)) {
+    } else if (!'un'.includes(dg)) {
         info = 3;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 4;
-    }
-    else if (lda < max(1, n)) {
+    } else if (lda < max(1, n)) {
         info = 6;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 8;
     }
     if (info !== 0) {
@@ -85,7 +79,7 @@ export function ctrmv(
     const noconj = tr === 't';
     const nounit = dg === 'n';
 
-    let kx = incx < 0 ? 1 - (n - 1) * incx : 1;
+    const kx = incx < 0 ? 1 - (n - 1) * incx : 1;
 
     let proc: (
         kx: number,
@@ -94,33 +88,22 @@ export function ctrmv(
         x: FortranArrEComplex,
         incx: number,
         a: MatrixEComplex,
-        n: number) => void;
-
+        n: number,
+    ) => void;
 
     if (trans === 'n') {
         if (uplo === 'u') {
             proc = normalUpper;
-        }
-        else {
+        } else {
             proc = normalLower;
         }
-    }
-    else {
+    } else {
         if (uplo === 'u') {
             proc = transUpper;
-        }
-        else {
+        } else {
             proc = transLower;
         }
-    };
+    }
 
-    return proc(
-        kx,
-        noconj,
-        nounit,
-        <FortranArrEComplex>x,
-        incx,
-        <MatrixEComplex>a,
-        n);
-
+    return proc(kx, noconj, nounit, <FortranArrEComplex>x, incx, <MatrixEComplex>a, n);
 }

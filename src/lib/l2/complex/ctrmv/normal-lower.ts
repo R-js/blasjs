@@ -1,4 +1,3 @@
-
 /* This is a conversion from BLAS to Typescript/Javascript
 Copyright (C) 2018  Jacob K.F. Bogers  info@mail.jacob-bogers.com
 
@@ -16,28 +15,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    FortranArrEComplex,
-    MatrixEComplex
-} from '../../../f_func';
+import type { FortranArrEComplex, MatrixEComplex } from '../../../f_func';
 
 export function normalLower(
     kx: number,
-    noconj: boolean,
+    _noconj: boolean,
     nounit: boolean,
     x: FortranArrEComplex,
     incx: number,
     a: MatrixEComplex,
-    n: number
+    n: number,
 ): void {
-
     kx += (n - 1) * incx;
     let jx = kx - x.base;
     for (let j = n; j >= 1; j--) {
         const xIsZero = x.r[jx] === 0 && x.i[jx] === 0;
         if (!xIsZero) {
-            let tempRe = x.r[jx];
-            let tempIm = x.i[jx];
+            const tempRe = x.r[jx];
+            const tempIm = x.i[jx];
             let ix = kx - x.base;
             const coords = a.colOfEx(j);
             for (let i = n; i >= j + 1; i--) {

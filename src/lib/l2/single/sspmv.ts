@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { errWrongArg, FortranArr, lowerChar } from '../../f_func';
 
-
 export function sspmv(
     uplo: 'u' | 'l',
     n: number,
@@ -27,22 +26,19 @@ export function sspmv(
     incx: number,
     beta: number,
     y: FortranArr,
-    incy: number): void {
-
+    incy: number,
+): void {
     const ul = lowerChar(uplo);
 
     let info = 0;
 
     if (!'ul'.includes(uplo)) {
         info = 1;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 2;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 6;
-    }
-    else if (incy === 0) {
+    } else if (incy === 0) {
         info = 9;
     }
 
@@ -52,8 +48,8 @@ export function sspmv(
 
     if (n === 0 || (alpha === 0 && beta === 1)) return;
 
-    let kx = incx > 0 ? 1 : 1 - (n - 1) * incx;
-    let ky = incy > 0 ? 1 : 1 - (n - 1) * incy;
+    const kx = incx > 0 ? 1 : 1 - (n - 1) * incx;
+    const ky = incy > 0 ? 1 : 1 - (n - 1) * incy;
 
     //    First form  y := beta*y.
 
@@ -75,7 +71,7 @@ export function sspmv(
         let jx = kx;
         let jy = ky;
         for (let j = 1; j <= n; j++) {
-            let temp1 = alpha * x.r[jx - x.base];
+            const temp1 = alpha * x.r[jx - x.base];
             let temp2 = 0;
             let ix = kx;
             let iy = ky;
@@ -84,23 +80,20 @@ export function sspmv(
                 temp2 += ap.r[k - ap.base] * x.r[ix - x.base];
                 ix += incx;
                 iy += incy;
-
             }
             y.r[jy - y.base] += temp1 * ap.r[kk + j - 1 - ap.base] + alpha * temp2;
             jx += incx;
             jy += incy;
             kk += j;
         }
-
-    }
-    else {
+    } else {
         // Form  y  when AP contains the lower triangle.
 
         let jx = kx;
         let jy = ky;
 
         for (let j = 1; j <= n; j++) {
-            let temp1 = alpha * x.r[jx - x.base];
+            const temp1 = alpha * x.r[jx - x.base];
             let temp2 = 0;
             y.r[jy - y.base] += temp1 * ap.r[kk - ap.base];
             let ix = jx;
@@ -111,13 +104,11 @@ export function sspmv(
                 iy += incy;
                 y.r[iy - y.base] += temp1 * ap.r[k - ap.base];
                 temp2 += ap.r[k - ap.base] * x.r[ix - x.base];
-
             }
             y.r[jy - y.base] += alpha * temp2;
             jx += incx;
             jy += incy;
-            kk += (n - j + 1);
+            kk += n - j + 1;
         }
     }
 }
-

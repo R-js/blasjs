@@ -26,10 +26,8 @@ export function transLower(
     noconj: boolean,
     nounit: boolean,
     n: number,
-    k: number): void {
-
-
-
+    k: number,
+): void {
     kx += (n - 1) * incx;
     let jx = kx;
 
@@ -37,7 +35,7 @@ export function transLower(
         let tempRe = x.r[jx - x.base];
         let tempIm = x.i[jx - x.base];
         let ix = kx;
-        let L = 1 - j;
+        const L = 1 - j;
 
         //
         const extrI = min(n, j + k);
@@ -49,26 +47,21 @@ export function transLower(
                 a.r[coorAJ + L + i],
                 sign * a.i[coorAJ + L + i],
                 x.r[ix - x.base],
-                x.i[ix - x.base]
+                x.i[ix - x.base],
             );
             tempRe -= re;
             tempIm -= im;
             ix -= incx;
         }
         if (nounit) {
-            const { re, im } = div_rxr(
-                tempRe,
-                tempIm,
-                a.r[coorAJ + 1],
-                sign * a.i[coorAJ + 1]
-            );
+            const { re, im } = div_rxr(tempRe, tempIm, a.r[coorAJ + 1], sign * a.i[coorAJ + 1]);
             tempRe = re;
             tempIm = im;
         }
         x.r[jx - x.base] = tempRe;
         x.i[jx - x.base] = tempIm;
         jx -= incx;
-        if ((n - j) >= k) {
+        if (n - j >= k) {
             kx -= incx;
         }
     }

@@ -15,16 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-import {
-    Complex,
-    errMissingIm,
-    errWrongArg,
-    lowerChar,
-    Matrix,
-    MatrixEComplex,
-    mul_cxr
-} from '../../../f_func';
+import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix, MatrixEComplex, mul_cxr } from '../../../f_func';
 
 import { AB } from './AB';
 import { AconjB } from './AconjB';
@@ -35,7 +26,6 @@ import { conjAtransB } from './conjAtransB';
 import { transAB } from './transAB';
 import { transAconjB } from './transAconjB';
 import { transAtransB } from './transAtransB';
-
 
 const { max } = Math;
 
@@ -52,9 +42,8 @@ export function cgemm(
     ldb: number,
     beta: Complex,
     c: Matrix,
-    ldc: number
+    ldc: number,
 ): void {
-
     const trA = lowerChar(transA);
     const trB = lowerChar(transB);
 
@@ -76,31 +65,22 @@ export function cgemm(
 
     //* Test the input parameters.
 
-
-
     let info = 0;
     if (!'ntc'.includes(trA)) {
         info = 1;
-    }
-    else if (!'ntc'.includes(trB)) {
+    } else if (!'ntc'.includes(trB)) {
         info = 2;
-    }
-    else if (m < 0) {
+    } else if (m < 0) {
         info = 3;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 4;
-    }
-    else if (k < 0) {
+    } else if (k < 0) {
         info = 5;
-    }
-    else if (lda < max(1, nrowA)) {
+    } else if (lda < max(1, nrowA)) {
         info = 8;
-    }
-    else if (ldb < max(1, nrowB)) {
+    } else if (ldb < max(1, nrowB)) {
         info = 10;
-    }
-    else if (ldc < max(1, m)) {
+    } else if (ldc < max(1, m)) {
         info = 13;
     }
     if (info !== 0) {
@@ -113,22 +93,20 @@ export function cgemm(
 
     // Quick return if possible.
 
-    if (m === 0 || n === 0 || (
-        (alphaIsZero || k === 0)
-        && betaIsOne)) {
+    if (m === 0 || n === 0 || ((alphaIsZero || k === 0) && betaIsOne)) {
         return;
     }
 
     // And when  alpha.eq.zero.
     if (alphaIsZero) {
         //console.log('alpha is zero')
-        if (betaIsZero) {//fast shortcut
+        if (betaIsZero) {
+            //fast shortcut
 
             for (let j = 1; j <= n; j++) {
                 c.setCol(j, 1, m, 0);
             }
-        }
-        else {
+        } else {
             for (let j = 1; j <= n; j++) {
                 const coorCJ = c.colOfEx(j);
                 for (let i = 1; i <= m; i++) {
@@ -151,7 +129,8 @@ export function cgemm(
         c: MatrixEComplex,
         n: number,
         m: number,
-        k: number) => void;
+        k: number,
+    ) => void;
 
     //    Start the operations.
     if (trA === 'n' && trB === 'n') {
@@ -165,37 +144,26 @@ export function cgemm(
         //Form  C := alpha*A*B**T + beta*C
         proc = AtransB;
     } else if (trA === 'c' && trB === 'n') {
-        // Form  C := alpha*A**H*B + beta*C.   
+        // Form  C := alpha*A**H*B + beta*C.
         proc = conjAB;
     } else if (trA === 'c' && trB === 'c') {
-        //  Form  C := alpha*A**H*B**H + beta*C. 
+        //  Form  C := alpha*A**H*B**H + beta*C.
         proc = conjAconjB;
     } else if (trA === 'c' && trB === 't') {
-        //  Form  C := alpha*A**H*B**T + beta*C 
+        //  Form  C := alpha*A**H*B**T + beta*C
         proc = conjAtransB;
     } else if (trA === 't' && trB === 'n') {
-        //Form  C := alpha*A**T*B + beta*C  
+        //Form  C := alpha*A**T*B + beta*C
         proc = transAB;
     } else if (trA === 't' && trB === 'c') {
         //Form  C := alpha*A**T*B**H + beta*C
         proc = transAconjB;
-    } else /*if (trA === 't' && trB === 't')*/ {
+    } /*if (trA === 't' && trB === 't')*/ else {
         //  //  Form  C := alpha*A**T*B**T + beta*C
         proc = transAtransB;
     }
     // throw new Error('unreachable code');
 
     //console.log('name', proc.name);
-    return proc(
-        betaIsZero,
-        betaIsOne,
-        beta,
-        alpha,
-        <MatrixEComplex>a,
-        <MatrixEComplex>b,
-        <MatrixEComplex>c,
-        n,
-        m,
-        k);
+    return proc(betaIsZero, betaIsOne, beta, alpha, <MatrixEComplex>a, <MatrixEComplex>b, <MatrixEComplex>c, n, m, k);
 }
-

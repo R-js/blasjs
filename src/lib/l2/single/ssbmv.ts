@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
 
-
 const { max, min } = Math;
 
 export function ssbmv(
@@ -31,9 +30,8 @@ export function ssbmv(
     incx: number,
     beta: number,
     y: FortranArr,
-    incy: number
+    incy: number,
 ): void {
-
     // test input params
 
     const ul = lowerChar(uplo);
@@ -41,20 +39,15 @@ export function ssbmv(
     let info = 0;
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 2;
-    }
-    else if (k < 0) {
+    } else if (k < 0) {
         info = 3;
-    }
-    else if (lda < (k + 1)) {
+    } else if (lda < k + 1) {
         info = 6;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 8;
-    }
-    else if (incy === 0) {
+    } else if (incy === 0) {
         info = 11;
     }
 
@@ -79,18 +72,17 @@ export function ssbmv(
 
     if (alpha === 0) return;
     if (ul === 'u') {
-
-        let kplus1 = k + 1;
+        const kplus1 = k + 1;
         let jx = kx;
         let jy = ky;
 
         for (let j = 1; j <= n; j++) {
-            let temp1 = alpha * x.r[jx - x.base];
+            const temp1 = alpha * x.r[jx - x.base];
             let temp2 = 0;
             let ix = kx;
             let iy = ky;
-            let l = kplus1 - j;
-            let coorAJ = a.colOfEx(j);
+            const l = kplus1 - j;
+            const coorAJ = a.colOfEx(j);
             for (let i = max(1, j - k); i <= j - 1; i++) {
                 y.r[iy - y.base] += temp1 * a.r[coorAJ + l + i];
                 temp2 += a.r[coorAJ + l + i] * x.r[ix - x.base];
@@ -113,10 +105,10 @@ export function ssbmv(
         let jy = ky;
         for (let j = 1; j <= n; j++) {
             const coorAJ = a.colOfEx(j);
-            let temp1 = alpha * x.r[jx - x.base];
+            const temp1 = alpha * x.r[jx - x.base];
             let temp2 = 0;
             y.r[jy - y.base] += temp1 * a.r[1 + coorAJ];
-            let l = 1 - j;
+            const l = 1 - j;
             let ix = jx;
             let iy = jy;
             for (let i = j + 1; i <= min(n, j + k); i++) {
@@ -130,4 +122,4 @@ export function ssbmv(
             jy += incy;
         }
     }
-} 
+}

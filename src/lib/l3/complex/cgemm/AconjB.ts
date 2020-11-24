@@ -15,9 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Complex, MatrixEComplex } from '../../../f_func';
-
-
+import type { Complex, MatrixEComplex } from '../../../f_func';
 
 export function AconjB(
     betaIsZero: boolean,
@@ -29,10 +27,8 @@ export function AconjB(
     c: MatrixEComplex,
     n: number,
     m: number,
-    k: number): void {
-
-
-
+    k: number,
+): void {
     //  DO 120 J = 1,N
     for (let j = 1; j <= n; j++) {
         const coorCJ = c.colOfEx(j);
@@ -59,8 +55,8 @@ export function AconjB(
             const coorAL = a.colOfEx(l);
             // TEMP = ALPHA*CONJG(B(J,L))
             //(a+ib)*(c-id) = (ac+bd)+i(-ad+bc)
-            let tempRe = alpha.re * b.r[coorBL + j] + alpha.im * b.i[coorBL + j];
-            let tempIm = -alpha.re * b.i[coorBL + j] + alpha.im * b.r[coorBL + j];
+            const tempRe = alpha.re * b.r[coorBL + j] + alpha.im * b.i[coorBL + j];
+            const tempIm = -alpha.re * b.i[coorBL + j] + alpha.im * b.r[coorBL + j];
 
             //DO 180 I = 1,M
             for (let i = 1; i <= m; i++) {

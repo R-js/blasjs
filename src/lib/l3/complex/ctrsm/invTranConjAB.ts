@@ -15,37 +15,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    Complex,
-    div_rxr,
-    MatrixEComplex,
-    mul_cxr
-} from '../../../f_func';
+import { Complex, div_rxr, MatrixEComplex, mul_cxr } from '../../../f_func';
 
 export function invTranConjAB(
     nounit: boolean,
     upper: boolean,
-    alphaIsOne: boolean,
-    alphaIsZero: boolean,
+    //alphaIsOne: boolean,
+    //alphaIsZero: boolean,
     noconj: boolean,
     n: number,
     m: number,
     a: MatrixEComplex,
     b: MatrixEComplex,
-    alpha: Complex
+    alpha: Complex,
 ): void {
-
-
     if (upper) {
         for (let j = 1; j <= n; j++) {
             const coorBJ = b.colOfEx(j);
             for (let i = 1; i <= m; i++) {
                 const coorAI = a.colOfEx(i);
-                const { re, im } = mul_cxr(
-                    alpha,
-                    b.r[coorBJ + i],
-                    b.i[coorBJ + i]
-                )
+                const { re, im } = mul_cxr(alpha, b.r[coorBJ + i], b.i[coorBJ + i]);
                 let tempRe = re; //alpha.re * b.r[coorBJ + i] - alpha.im * b.i[coorBJ + i];
                 let tempIm = im; //alpha.re * b.i[coorBJ + i] + alpha.im * b.r[coorBJ + i];
                 for (let k = 1; k <= i - 1; k++) {
@@ -65,12 +54,7 @@ export function invTranConjAB(
                     // re= (ac+bd)/(c*c+d*d)
                     // im =(bc-ad)/(c*c+d*d)
                     // TEMP/A(I,I) | TEMP/CONJG(A(I,I))
-                    const { re, im } = div_rxr(
-                        tempRe,
-                        tempIm,
-                        a.r[coorAI + i],
-                        a.i[coorAI + i]
-                    )
+                    const { re, im } = div_rxr(tempRe, tempIm, a.r[coorAI + i], a.i[coorAI + i]);
                     /*const _c = a.r[coorAI + i];
                     const _d = noconj ? a.i[coorAI + i] : -a.i[coorAI + i];
 
@@ -83,9 +67,9 @@ export function invTranConjAB(
                 }
                 b.r[coorBJ + i] = tempRe;
                 b.i[coorBJ + i] = tempIm;
-            }//i
-        }//j
-    }//upper
+            } //i
+        } //j
+    } //upper
     else {
         for (let j = 1; j <= n; j++) {
             const coorBJ = b.colOfEx(j);
@@ -123,7 +107,7 @@ export function invTranConjAB(
                 }
                 b.r[coorBJ + i] = tempRe;
                 b.i[coorBJ + i] = tempIm;
-            }//i
-        }//j
+            } //i
+        } //j
     }
 }

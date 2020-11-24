@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Complex, MatrixEComplex } from '../../../f_func';
+import type { Complex, MatrixEComplex } from '../../../f_func';
 
 export function BtranA(
     nounit: boolean,
@@ -25,9 +25,8 @@ export function BtranA(
     m: number,
     a: MatrixEComplex,
     b: MatrixEComplex,
-    alpha: Complex): void {
-
-
+    alpha: Complex,
+): void {
     if (upper) {
         for (let k = 1; k <= n; k++) {
             const coorAK = a.colOfEx(k);
@@ -37,45 +36,45 @@ export function BtranA(
                 const aIsZero = a.r[coorAK + j] === 0 && a.i[coorAK + j] === 0;
                 if (!aIsZero) {
                     //console.log(`${k},${j}`);
-                    let ajkRe = a.r[coorAK + j];
-                    let ajkIm = noconj ? a.i[coorAK + j] : -a.i[coorAK + j];
+                    const ajkRe = a.r[coorAK + j];
+                    const ajkIm = noconj ? a.i[coorAK + j] : -a.i[coorAK + j];
                     //TEMP = ALPHA*A(J,K)
                     //TEMP = ALPHA*CONJG(A(J,K))
-                    let tempRe = alpha.re * ajkRe - alpha.im * ajkIm;
-                    let tempIm = alpha.re * ajkIm + alpha.im * ajkRe;
+                    const tempRe = alpha.re * ajkRe - alpha.im * ajkIm;
+                    const tempIm = alpha.re * ajkIm + alpha.im * ajkRe;
                     //console.log(`${k},${j},\t(${tempRe},${tempIm})`);
                     for (let i = 1; i <= m; i++) {
                         // B(I,J) = B(I,J) + TEMP*B(I,K)
-                        let re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
-                        let im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
+                        const re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
+                        const im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
                         b.r[coorBJ + i] += re;
                         b.i[coorBJ + i] += im;
                         // console.log(`${k},${j},${i}\t${re},${im}`);
                     }
                 }
-            }//j
+            } //j
             let tempRe = alpha.re;
             let tempIm = alpha.im;
             if (nounit) {
-                let akkRe = a.r[coorAK + k];
-                let akkIm = noconj ? a.i[coorAK + k] : -a.i[coorAK + k];
+                const akkRe = a.r[coorAK + k];
+                const akkIm = noconj ? a.i[coorAK + k] : -a.i[coorAK + k];
 
-                let re = tempRe * akkRe - tempIm * akkIm;
-                let im = tempRe * akkIm + tempIm * akkRe;
+                const re = tempRe * akkRe - tempIm * akkIm;
+                const im = tempRe * akkIm + tempIm * akkRe;
 
                 tempRe = re;
                 tempIm = im;
             }
             if (!(tempRe === 1 && tempIm === 0)) {
                 for (let i = 1; i <= m; i++) {
-                    let re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
-                    let im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
+                    const re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
+                    const im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
                     b.r[coorBK + i] = re;
                     b.i[coorBK + i] = im;
                 }
             }
-        }//k
-    }//upper
+        } //k
+    } //upper
     else {
         for (let k = n; k >= 1; k--) {
             const coorAK = a.colOfEx(k);
@@ -91,19 +90,19 @@ export function BtranA(
                     const tempIm = alpha.re * ajkIm + alpha.im * ajkRe;
                     for (let i = 1; i <= m; i++) {
                         //B(I,J) = B(I,J) + TEMP*B(I,K)
-                        let re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
-                        let im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
+                        const re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
+                        const im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
                         b.r[coorBJ + i] += re;
                         b.i[coorBJ + i] += im;
                     }
                 }
-            }//for(j)
+            } //for(j)
             let tempRe = alpha.re;
             let tempIm = alpha.im;
 
             if (nounit) {
                 const akkRe = a.r[coorAK + k];
-                const akkIm = noconj ? a.i[coorAK + k] : - a.i[coorAK + k];
+                const akkIm = noconj ? a.i[coorAK + k] : -a.i[coorAK + k];
 
                 const re = tempRe * akkRe - tempIm * akkIm;
                 const im = tempRe * akkIm + tempIm * akkRe;
@@ -120,7 +119,6 @@ export function BtranA(
                     b.i[coorBK + i] = im;
                 }
             }
-
-        }//k
-    }//upper
+        } //k
+    } //upper
 }

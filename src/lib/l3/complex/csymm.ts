@@ -14,15 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import {
-    Complex,
-    errMissingIm,
-    errWrongArg,
-    lowerChar,
-    Matrix,
-    mul_cxr,
-    mul_rxr
-} from '../../f_func';
+import { Complex, errMissingIm, errWrongArg, lowerChar, Matrix, mul_cxr, mul_rxr } from '../../f_func';
 
 const { max } = Math;
 
@@ -38,8 +30,8 @@ export function csymm(
     ldb: number,
     beta: Complex,
     c: Matrix,
-    ldc: number): void {
-
+    ldc: number,
+): void {
     if (a.i === undefined) {
         throw new Error(errMissingIm('a.i'));
     }
@@ -64,23 +56,17 @@ export function csymm(
 
     if (!'lr'.includes(si)) {
         info = 1;
-    }
-    else if (!'ul'.includes(ul)) {
+    } else if (!'ul'.includes(ul)) {
         info = 2;
-    }
-    else if (m < 0) {
+    } else if (m < 0) {
         info = 3;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 4;
-    }
-    else if (lda < max(1, nrowA)) {
+    } else if (lda < max(1, nrowA)) {
         info = 7;
-    }
-    else if (ldb < max(1, m)) {
+    } else if (ldb < max(1, m)) {
         info = 9;
-    }
-    else if (ldc < max(1, m)) {
+    } else if (ldc < max(1, m)) {
         info = 12;
     }
     if (info !== 0) {
@@ -102,13 +88,12 @@ export function csymm(
             for (let j = 1; j <= n; j++) {
                 c.setCol(j, 1, m, 0);
             }
-        }
-        else {
+        } else {
             for (let j = 1; j <= n; j++) {
                 const coorCJ = c.colOfEx(j);
                 for (let i = 1; i <= m; i++) {
-                    let re = beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
-                    let im = beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
+                    const re = beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
+                    const im = beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
                     c.r[coorCJ + i] = re;
                     c.i[coorCJ + i] = im;
                 }
@@ -129,8 +114,8 @@ export function csymm(
                 for (let i = 1; i <= m; i++) {
                     const coorAI = a.colOfEx(i);
                     //TEMP1 = ALPHA*B(I,J)
-                    let temp1Re = alpha.re * b.r[coorBJ + i] - alpha.im * b.i[coorBJ + i];
-                    let temp1Im = alpha.re * b.i[coorBJ + i] + alpha.im * b.r[coorBJ + i];
+                    const temp1Re = alpha.re * b.r[coorBJ + i] - alpha.im * b.i[coorBJ + i];
+                    const temp1Im = alpha.re * b.i[coorBJ + i] + alpha.im * b.r[coorBJ + i];
 
                     let temp2Re = 0;
                     let temp2Im = 0;
@@ -144,10 +129,16 @@ export function csymm(
                         temp2Im += b.r[coorBJ + k] * a.i[coorAI + k] + b.i[coorBJ + k] * a.r[coorAI + k];
                     }
                     //C(I,J) = TEMP1*A(I,I) + ALPHA*TEMP2
-                    let re = (temp1Re * a.r[coorAI + i] - temp1Im * a.i[coorAI + i]) + (alpha.re * temp2Re - alpha.im * temp2Im);
-                    let im = (temp1Re * a.i[coorAI + i] + temp1Im * a.r[coorAI + i]) + (alpha.re * temp2Im + alpha.im * temp2Re);
+                    let re =
+                        temp1Re * a.r[coorAI + i] -
+                        temp1Im * a.i[coorAI + i] +
+                        (alpha.re * temp2Re - alpha.im * temp2Im);
+                    let im =
+                        temp1Re * a.i[coorAI + i] +
+                        temp1Im * a.r[coorAI + i] +
+                        (alpha.re * temp2Im + alpha.im * temp2Re);
                     if (!betaIsZero) {
-                        // BETA*C(I,J) 
+                        // BETA*C(I,J)
                         re += beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
                         im += beta.re * c.i[coorCJ + i] + beta.im * c.r[coorCJ + i];
                     }
@@ -166,23 +157,14 @@ export function csymm(
                     //TEMP1 = ALPHA * B(I, J)
                     //let temp1Re = alpha.re * b.r[coorBJ + i] - alpha.im * b.i[coorBJ + i];
                     //let temp1Im = alpha.re * b.i[coorBJ + i] + alpha.im * b.r[coorBJ + i];
-                    const { re, im } = mul_cxr(
-                        alpha,
-                        b.r[coorBJ + i],
-                        b.i[coorBJ + i]
-                    );
-                    let temp1Re = re;
-                    let temp1Im = im;
+                    const { re, im } = mul_cxr(alpha, b.r[coorBJ + i], b.i[coorBJ + i]);
+                    const temp1Re = re;
+                    const temp1Im = im;
                     let temp2Re = 0;
                     let temp2Im = 0;
                     for (let k = i + 1; k <= m; k++) {
                         // C(K,J) = C(K,J) + TEMP1*A(K,I)
-                        const { re, im } = mul_rxr(
-                            temp1Re,
-                            temp1Im,
-                            a.r[coorAI + k],
-                            a.i[coorAI + k]
-                        );
+                        const { re, im } = mul_rxr(temp1Re, temp1Im, a.r[coorAI + k], a.i[coorAI + k]);
 
                         c.r[coorCJ + k] += re; //temp1Re * a.r[coorAI + k] - temp1Im * a.i[coorAI + k];
                         c.i[coorCJ + k] += im; //temp1Re * a.i[coorAI + k] + temp1Im * a.r[coorAI + k];
@@ -191,34 +173,21 @@ export function csymm(
                             b.r[coorBJ + k],
                             b.i[coorBJ + k],
                             a.r[coorAI + k],
-                            a.i[coorAI + k]
+                            a.i[coorAI + k],
                         );
                         temp2Re += re1; //b.r[coorBJ + k] * a.r[coorAI + k] - b.i[coorBJ + k] * a.i[coorAI + k];
                         temp2Im += im1; //b.r[coorBJ + k] * a.i[coorAI + k] + b.i[coorBJ + k] * a.r[coorAI + k];
                     }
                     //TEMP1*A(I,I) + ALPHA*TEMP2
-                    const { re: re2, im: im2 } = mul_rxr(
-                        temp1Re,
-                        temp1Im,
-                        a.r[coorAI + i],
-                        a.i[coorAI + i]
-                    );
-                    const { re: re3, im: im3 } = mul_cxr(
-                        alpha,
-                        temp2Re,
-                        temp2Im
-                    );
+                    const { re: re2, im: im2 } = mul_rxr(temp1Re, temp1Im, a.r[coorAI + i], a.i[coorAI + i]);
+                    const { re: re3, im: im3 } = mul_cxr(alpha, temp2Re, temp2Im);
                     let re0 = re2 + re3;
                     let im0 = im2 + im3;
                     //let re = (temp1Re * a.r[coorAI + i] - temp1Im * a.i[coorAI + i]) + (alpha.re * temp2Re - alpha.im * temp2Im);
                     //let im = (temp1Re * a.i[coorAI + i] + temp1Im * a.r[coorAI + i]) + (alpha.re * temp2Im + alpha.im * temp2Re);
-                    //BETA * C(I, J) 
+                    //BETA * C(I, J)
                     if (!betaIsZero) {
-                        const { re, im } = mul_cxr(
-                            beta,
-                            c.r[coorCJ + i],
-                            c.i[coorCJ + i]
-                        );
+                        const { re, im } = mul_cxr(beta, c.r[coorCJ + i], c.i[coorCJ + i]);
                         re0 += re;
                         im0 += im;
                         //  re += beta.re * c.r[coorCJ + i] - beta.im * c.i[coorCJ + i];
@@ -226,9 +195,9 @@ export function csymm(
                     }
                     c.r[coorCJ + i] = re0;
                     c.i[coorCJ + i] = im0;
-                }//for(i)
-            }//for(j)
-        }//upper
+                } //for(i)
+            } //for(j)
+        } //upper
     }
     //si==='r'
     else {
@@ -257,8 +226,8 @@ export function csymm(
                 const coorAK = a.colOfEx(k);
                 const coorBK = b.colOfEx(k);
                 //A(K,J) : A(J,K)
-                let aRe = upper ? a.r[coorAJ + k] : a.r[coorAK + j];
-                let aIm = upper ? a.i[coorAJ + k] : a.i[coorAK + j];
+                const aRe = upper ? a.r[coorAJ + k] : a.r[coorAK + j];
+                const aIm = upper ? a.i[coorAJ + k] : a.i[coorAK + j];
 
                 temp1Re = alpha.re * aRe - alpha.im * aIm;
                 temp1Im = alpha.re * aIm + alpha.im * aRe;
@@ -273,8 +242,8 @@ export function csymm(
                 const coorAK = a.colOfEx(k);
                 const coorBK = b.colOfEx(k);
                 //A(K,J) : A(J,K)
-                let aRe = upper ? a.r[coorAK + j] : a.r[coorAJ + k];
-                let aIm = upper ? a.i[coorAK + j] : a.i[coorAJ + k];
+                const aRe = upper ? a.r[coorAK + j] : a.r[coorAJ + k];
+                const aIm = upper ? a.i[coorAK + j] : a.i[coorAJ + k];
 
                 temp1Re = alpha.re * aRe - alpha.im * aIm;
                 temp1Im = alpha.re * aIm + alpha.im * aRe;
@@ -285,7 +254,6 @@ export function csymm(
                     c.i[coorCJ + i] += temp1Re * b.i[coorBK + i] + temp1Im * b.r[coorBK + i];
                 }
             }
-
-        }//for(j)
-    }//si==='r'
+        } //for(j)
+    } //si==='r'
 }

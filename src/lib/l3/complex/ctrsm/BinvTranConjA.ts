@@ -15,20 +15,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Complex, div_rxr, MatrixEComplex } from '../../../f_func';
+import type { Complex, MatrixEComplex } from '../../../f_func';
+import { div_rxr } from '../../../f_func';
 
 export function BinvTranConjA(
     nounit: boolean,
     upper: boolean,
     alphaIsOne: boolean,
-    alphaIsZero: boolean,
+    _alphaIsZero: boolean,
     noconj: boolean,
     n: number,
     m: number,
     a: MatrixEComplex,
     b: MatrixEComplex,
-    alpha: Complex): void {
-
+    alpha: Complex,
+): void {
     if (upper) {
         for (let k = n; k >= 1; k--) {
             const coorAK = a.colOfEx(k);
@@ -38,7 +39,7 @@ export function BinvTranConjA(
                     1,
                     0,
                     a.r[coorAK + k],
-                    noconj ? a.i[coorAK + k] : -a.i[coorAK + k]
+                    noconj ? a.i[coorAK + k] : -a.i[coorAK + k],
                 );
                 for (let i = 1; i <= m; i++) {
                     const re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
@@ -63,10 +64,9 @@ export function BinvTranConjA(
                         b.r[coorBJ + i] -= re;
                         b.i[coorBJ + i] -= im;
                         // console.log(`k:${i},j:${j}\t(${coorBJ + i},${im})`);
-
-                    }//for
-                }//if
-            }//for
+                    } //for
+                } //if
+            } //for
             if (!alphaIsOne) {
                 for (let i = 1; i <= m; i++) {
                     const re = alpha.re * b.r[coorBK + i] - alpha.im * b.i[coorBK + i];
@@ -75,8 +75,8 @@ export function BinvTranConjA(
                     b.i[coorBK + i] = im;
                 }
             }
-        }//k
-    }//upper
+        } //k
+    } //upper
     else {
         for (let k = 1; k <= n; k++) {
             const coorAK = a.colOfEx(k);
@@ -90,11 +90,11 @@ export function BinvTranConjA(
 
                 // re= c/(cc+dd)
                 // im =-d/(cc+dd)
-                let tempRe = akkRe / n;
-                let tempIm = -akkIm / n;
+                const tempRe = akkRe / n;
+                const tempIm = -akkIm / n;
                 for (let i = 1; i <= m; i++) {
-                    let re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
-                    let im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
+                    const re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
+                    const im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
                     b.r[coorBK + i] = re;
                     b.i[coorBK + i] = im;
                 }
@@ -103,8 +103,8 @@ export function BinvTranConjA(
                 const coorBJ = b.colOfEx(j);
                 const isAZero = a.r[coorAK + j] === 0 && a.i[coorAK + j] === 0;
                 if (!isAZero) {
-                    let tempRe = a.r[coorAK + j];
-                    let tempIm = noconj ? a.i[coorAK + j] : -a.i[coorAK + j];
+                    const tempRe = a.r[coorAK + j];
+                    const tempIm = noconj ? a.i[coorAK + j] : -a.i[coorAK + j];
                     for (let i = 1; i <= m; i++) {
                         const re = tempRe * b.r[coorBK + i] - tempIm * b.i[coorBK + i];
                         const im = tempRe * b.i[coorBK + i] + tempIm * b.r[coorBK + i];
@@ -112,7 +112,7 @@ export function BinvTranConjA(
                         b.i[coorBJ + i] -= im;
                     }
                 }
-            }//j
+            } //j
             if (!alphaIsOne) {
                 for (let i = 1; i <= m; i++) {
                     const re = alpha.re * b.r[coorBK + i] - alpha.im * b.i[coorBK + i];
@@ -121,6 +121,6 @@ export function BinvTranConjA(
                     b.i[coorBK + i] = im;
                 }
             }
-        }//k
+        } //k
     }
 }

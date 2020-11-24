@@ -19,24 +19,18 @@ import { level1 } from './l1';
 import { level2 } from './l2';
 import { level3 } from './l3';
 
-
-
 import {
     arrayrify,
-    Complex,
     complex,
     each,
-    FortranArr,
     fortranArrComplex32,
     fortranArrComplex64,
     fortranMatrixComplex32,
     fortranMatrixComplex64,
-    fpArray,
     map,
-    Matrix,
     multiplexer,
     muxCmplx,
-    numberPrecision
+    numberPrecision,
 } from './f_func';
 
 const util = Object.freeze({
@@ -50,14 +44,9 @@ const util = Object.freeze({
     map,
     multiplexer,
     muxCmplx,
-    numberPrecision
+    numberPrecision,
 });
 
 const helper = util;
 
-export { Matrix, Complex, fpArray, FortranArr, util, helper, level1, level2, level3 };
-
-export default { level1, level2, level3, helper, util };
-
-
-
+export { util, helper, level1, level2, level3 };

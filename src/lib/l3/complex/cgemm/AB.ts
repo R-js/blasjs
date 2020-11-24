@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Complex, MatrixEComplex } from '../../../f_func';
+import type { Complex, MatrixEComplex } from '../../../f_func';
 
 export function AB(
     betaIsZero: boolean,
@@ -27,8 +27,8 @@ export function AB(
     c: MatrixEComplex,
     n: number,
     m: number,
-    k: number): void {
-
+    k: number,
+): void {
     // DO 90 J = 1,N
     for (let j = 1; j <= n; j++) {
         const coorCJ = c.colOfEx(j);
@@ -50,8 +50,8 @@ export function AB(
         //DO 80 L = 1,K
         for (let l = 1; l <= k; l++) {
             const coorAL = a.colOfEx(l);
-            let tempRe = alpha.re * b.r[coorBJ + l] - alpha.im * b.i[coorBJ + l];
-            let tempIm = alpha.re * b.i[coorBJ + l] + alpha.im * b.r[coorBJ + l];
+            const tempRe = alpha.re * b.r[coorBJ + l] - alpha.im * b.i[coorBJ + l];
+            const tempIm = alpha.re * b.i[coorBJ + l] + alpha.im * b.r[coorBJ + l];
 
             for (let i = 1; i <= m; i++) {
                 const re3 = tempRe * a.r[coorAL + i] - tempIm * a.i[coorAL + i];

@@ -15,10 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    FortranArrEComplex,
-    MatrixEComplex
-} from '../../../f_func';
+import type { FortranArrEComplex, MatrixEComplex } from '../../../f_func';
 
 export function transUpper(
     kx: number,
@@ -27,9 +24,8 @@ export function transUpper(
     x: FortranArrEComplex,
     incx: number,
     a: MatrixEComplex,
-    n: number
+    n: number,
 ): void {
-
     let jx = kx + (n - 1) * incx - x.base;
     for (let j = n; j >= 1; j--) {
         let tempRe = x.r[jx];
@@ -49,7 +45,6 @@ export function transUpper(
                 tempIm += a.r[coords + i] * x.i[ix] + a.i[coords + i] * x.r[ix];
             }
         } else {
-
             if (nounit) {
                 //(a+ib)*(c-id) = (ac+bd)+i(-ad+bc)
                 const tr = tempRe * a.r[coords + j] + tempIm * a.i[coords + j];

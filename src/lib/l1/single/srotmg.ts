@@ -15,23 +15,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-
 const { abs, abs: ABS } = Math;
-import { FortranArr } from '../../f_func';
+import type { FortranArr } from '../../f_func';
 
 export function srotmg(p: {
-    sd1: number,
-    sd2: number,
-    sx1: number,
-    sy1: number, //in
-    sparam: FortranArr
+    sd1: number;
+    sd2: number;
+    sx1: number;
+    sy1: number; //in
+    sparam: FortranArr;
 }): void {
-
     let SD1 = p.sd1;
     let SD2 = p.sd2;
     let SX1 = p.sx1;
-    let SY1 = p.sy1;
+    const SY1 = p.sy1;
 
     //locals
     const GAM = 2 << 11; // 4096
@@ -69,8 +66,7 @@ export function srotmg(p: {
         SD1 = ZERO;
         SD2 = ZERO;
         SX1 = ZERO;
-    }
-    else {
+    } else {
         // CASE - SD1 - NONNEGATIVE
         SP2 = SD2 * SY1;
         if (SP2 === ZERO) {
@@ -114,13 +110,12 @@ export function srotmg(p: {
             */
 
             if (SU > ZERO) {
-                SFLAG = ZERO
+                SFLAG = ZERO;
                 SD1 = SD1 / SU;
                 SD2 = SD2 / SU;
                 SX1 = SX1 * SU;
             }
-        }
-        else {
+        } else {
             if (SQ2 < ZERO) {
                 // GO ZERO - H - D - AND - SX1..
                 SFLAG = -ONE;
@@ -132,8 +127,7 @@ export function srotmg(p: {
                 SD1 = ZERO;
                 SD2 = ZERO;
                 SX1 = ZERO;
-            }
-            else {
+            } else {
                 SFLAG = ONE;
                 SH11 = SP1 / SP2;
                 SH22 = SX1 / SY1;
@@ -145,15 +139,14 @@ export function srotmg(p: {
             }
         }
 
-        // PROCESURE..SCALE - CHECK
+        // PROCEDURE..SCALE - CHECK
         if (SD1 !== ZERO) {
-            while ((SD1 <= RGAMSQ) || (SD1 >= GAMSQ)) {
+            while (SD1 <= RGAMSQ || SD1 >= GAMSQ) {
                 if (SFLAG === ZERO) {
                     SH11 = ONE;
                     SH22 = ONE;
                     SFLAG = -ONE;
-                }
-                else {
+                } else {
                     SH21 = -ONE;
                     SH12 = ONE;
                     SFLAG = -ONE;
@@ -162,70 +155,59 @@ export function srotmg(p: {
                 if (SD1 <= RGAMSQ) {
                     SD1 = SD1 * GAM2;
                     SX1 = SX1 / GAM;
-                    SH11 = SH11 / GAM;
-                    SH12 = SH12 / GAM;
-                }
-                else {
+                    SH11 = <number>SH11 / GAM;
+                    SH12 = <number>SH12 / GAM;
+                } else {
                     SD1 = SD1 / GAM2;
                     SX1 = SX1 * GAM;
-                    SH11 = SH11 * GAM;
-                    SH12 = SH12 * GAM;
+                    SH11 = <number>SH11 * GAM;
+                    SH12 = <number>SH12 * GAM;
                 }
-            }//while
-
-        }//if
+            } //while
+        } //if
 
         if (SD2 !== ZERO) {
-            while ((ABS(SD2) <= RGAMSQ) || (ABS(SD2) >= GAMSQ)) {
+            while (ABS(SD2) <= RGAMSQ || ABS(SD2) >= GAMSQ) {
                 if (SFLAG === ZERO) {
                     SH11 = ONE;
                     SH22 = ONE;
                     SFLAG = -ONE;
-                }
-                else {
+                } else {
                     SH21 = -ONE;
                     SH12 = ONE;
                     SFLAG = -ONE;
                 }
                 if (ABS(SD2) <= RGAMSQ) {
                     SD2 = SD2 * GAM2;
-                    SH21 = SH21 / GAM;
-                    SH22 = SH22 / GAM;
-                }
-                else {
+                    SH21 = <number>SH21 / GAM;
+                    SH22 = <number>SH22 / GAM;
+                } else {
                     SD2 = SD2 / GAM2;
-                    SH21 = SH21 * GAM;
-                    SH22 = SH22 * GAM;
+                    SH21 = <number>SH21 * GAM;
+                    SH22 = <number>SH22 * GAM;
                 }
-            }//while
-        }//if
-    }//if
+            } //while
+        } //if
+    } //if
     // shortcut
     const parr = p.sparam.r;
 
-    if (SFLAG < ZERO) {
-        parr[2 - pb] = SH11;
-        parr[3 - pb] = SH21;
-        parr[4 - pb] = SH12;
-        parr[5 - pb] = SH22;
+    if (<number>SFLAG < ZERO) {
+        parr[2 - pb] = <number>SH11;
+        parr[3 - pb] = <number>SH21;
+        parr[4 - pb] = <number>SH12;
+        parr[5 - pb] = <number>SH22;
+    } else if (SFLAG === ZERO) {
+        parr[3 - pb] = <number>SH21;
+        parr[4 - pb] = <number>SH12;
+    } else {
+        parr[2 - pb] = <number>SH11;
+        parr[5 - pb] = <number>SH22;
     }
-    else if (SFLAG === ZERO) {
-        parr[3 - pb] = SH21;
-        parr[4 - pb] = SH12;
-    }
-    else {
-        parr[2 - pb] = SH11;
-        parr[5 - pb] = SH22;
-    }
-    parr[1 - pb] = SFLAG;
-    //wrap it up, => pushback
+    parr[1 - pb] = <number>SFLAG;
+    //wrap it up, => push back
     p.sd1 = SD1;
     p.sd2 = SD2;
     p.sx1 = SX1;
     p.sy1 = SY1;
-
 }
-
-
-
-

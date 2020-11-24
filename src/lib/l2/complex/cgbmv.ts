@@ -15,29 +15,28 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 import { Complex, errMissingIm, errWrongArg, FortranArr, lowerChar, Matrix } from '../../f_func';
 
 // helpers
 
 const { min, max } = Math;
 /*
-*>
-*> CGBMV  performs one of the matrix-vector operations
-*>
-*>    y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,   or
-*>
-*>    y := alpha*A**H*x + beta*y,
-*>
-*> where alpha and beta are scalars, x and y are vectors and A is an
-*> m by n band matrix, with kl sub-diagonals and ku super-diagonals.
-*/
+ *>
+ *> CGBMV  performs one of the matrix-vector operations
+ *>
+ *>    y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,   or
+ *>
+ *>    y := alpha*A**H*x + beta*y,
+ *>
+ *> where alpha and beta are scalars, x and y are vectors and A is an
+ *> m by n band matrix, with kl sub-diagonals and ku super-diagonals.
+ */
 
 /*
-*>    TRANS = 'N' or 'n'   y := alpha*A*x + beta*y.
-*>    TRANS = 'T' or 't'   y := alpha*A**T*x + beta*y.
-*>    TRANS = 'C' or 'c'   y := alpha*A**H*x + beta*y.
-*/
+ *>    TRANS = 'N' or 'n'   y := alpha*A*x + beta*y.
+ *>    TRANS = 'T' or 't'   y := alpha*A**T*x + beta*y.
+ *>    TRANS = 'C' or 'c'   y := alpha*A**H*x + beta*y.
+ */
 // SUBROUTINE CGEMV(TRANS,M,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 export function cgbmv(
     trans: 'n' | 't' | 'c',
@@ -52,9 +51,8 @@ export function cgbmv(
     incx: number,
     beta: Complex,
     y: FortranArr,
-    incy: number
+    incy: number,
 ): void {
-
     //checks
 
     if (y.i === undefined) {
@@ -79,31 +77,23 @@ export function cgbmv(
     const { re: AlphaRe, im: AlphaIm } = alpha;
     const { re: BetaRe, im: BetaIm } = beta;
 
-
     let info = 0;
 
     if (!'ntc'.includes(tr)) {
         info = 1;
-    }
-    else if (m < 0) {
+    } else if (m < 0) {
         info = 2;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 3;
-    }
-    else if (kl < 0) {
+    } else if (kl < 0) {
         info = 4;
-    }
-    else if (ku < 0) {
+    } else if (ku < 0) {
         info = 5;
-    }
-    else if (lda < (kl + ku + 1)) {
+    } else if (lda < kl + ku + 1) {
         info = 8;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 10;
-    }
-    else if (incy === 0) {
+    } else if (incy === 0) {
         info = 13;
     }
     if (info !== 0) {
@@ -124,13 +114,10 @@ export function cgbmv(
     let kx = incx > 0 ? 1 : 1 - (lenx - 1) * incx;
     let ky = incy > 0 ? 1 : 1 - (leny - 1) * incy;
 
-
-
     //   Start the operations. In this version the elements of A are
     //   accessed sequentially with one pass through the band part of A.
 
     //   First form  y := beta*y.
-
 
     if (!betaIsOne) {
         let iy = ky;
@@ -142,21 +129,20 @@ export function cgbmv(
             y.i[iy - y.base] = im;
             iy += incy;
         }
-
     }
     if (alphaIsZero) return;
     const kup1 = ku + 1;
-    if (trans === 'n') { // not [t]ranspose or [c]onjugate
+    if (trans === 'n') {
+        // not [t]ranspose or [c]onjugate
         //Form  y := alpha*A*x + y.
         let jx = kx;
         for (let j = 1; j <= n; j++) {
-
             //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
-            let tempRe = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
-            let tempIm = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
+            const tempRe = AlphaRe * x.r[jx - x.base] - AlphaIm * x.i[jx - x.base];
+            const tempIm = AlphaRe * x.i[jx - x.base] + AlphaIm * x.r[jx - x.base];
             //console.log({ tempRe, tempIm });
             let iy = ky;
-            let k = kup1 - j;
+            const k = kup1 - j;
             const coorAJ = a.colOfEx(j);
             for (let i = max(1, j - ku); i <= min(m, j + kl); i++) {
                 //(a + bi)(c+di)= (a*c-b*d)+i(a*d+b*c)
@@ -171,17 +157,18 @@ export function cgbmv(
                 iy += incy;
             }
             jx += incx;
-            if (j > ku) { ky += incy; }
+            if (j > ku) {
+                ky += incy;
+            }
         }
-    }
-    else {
+    } else {
         // Form  y := alpha*A**T*x + y  or  y := alpha*A**H*x + y.
         let jy = ky;
         for (let j = 1; j <= n; j++) {
             let tempRe = 0;
             let tempIm = 0;
             let ix = kx;
-            let k = kup1 - j;
+            const k = kup1 - j;
             const coords = a.colOfEx(j);
             const istart = max(1, j - ku);
             const iend = min(m, j + kl);

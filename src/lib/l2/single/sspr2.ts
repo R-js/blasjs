@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { errWrongArg, FortranArr, lowerChar } from '../../f_func';
 
-
 export function sspr2(
     uplo: 'u' | 'l',
     n: number,
@@ -26,9 +25,9 @@ export function sspr2(
     incx: number,
     y: FortranArr,
     incy: number,
-    ap: FortranArr): void {
-
-    // validate input parameters    
+    ap: FortranArr,
+): void {
+    // validate input parameters
 
     let info = 0;
     const ul = lowerChar(uplo);
@@ -36,14 +35,11 @@ export function sspr2(
 
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 2;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 5;
-    }
-    else if (incy === 0) {
+    } else if (incy === 0) {
         info = 7;
     }
 
@@ -55,8 +51,8 @@ export function sspr2(
 
     if (n === 0 || alpha === 0) return;
 
-    let kx = (incx > 0) ? 1 : 1 - (n - 1) * incx;
-    let ky = (incy > 0) ? 1 : 1 - (n - 1) * incy;
+    const kx = incx > 0 ? 1 : 1 - (n - 1) * incx;
+    const ky = incy > 0 ? 1 : 1 - (n - 1) * incy;
 
     let jx = kx;
     let jy = ky;
@@ -69,9 +65,9 @@ export function sspr2(
         //Form  A  when upper triangle is stored in AP.
         for (let j = 1; j <= n; j++) {
             if (x.r[jx - x.base] !== 0 || y.r[jy - y.base] !== 0) {
-                let temp1 = alpha * y.r[jy - y.base];
+                const temp1 = alpha * y.r[jy - y.base];
                 //console.log({ temp1 });
-                let temp2 = alpha * x.r[jx - x.base];
+                const temp2 = alpha * x.r[jx - x.base];
                 //console.log({ temp2 });
                 let ix = kx;
                 let iy = ky;
@@ -85,8 +81,7 @@ export function sspr2(
             jy += incy;
             kk += j;
         }
-    }
-    else {
+    } else {
         // Form  A  when lower triangle is stored in AP.
 
         for (let j = 1; j <= n; j++) {
@@ -95,8 +90,8 @@ export function sspr2(
             //console.log(`xyIsZero=${xAndyIsZero}`);
             if (!xAndyIsZero) {
                 //console.log('startw6', alpha, y.r);
-                let temp1 = alpha * y.r[jy - y.base];
-                let temp2 = alpha * x.r[jx - x.base];
+                const temp1 = alpha * y.r[jy - y.base];
+                const temp2 = alpha * x.r[jx - x.base];
                 //console.log({ temp1 });
                 let ix = jx;
                 let iy = jy;

@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { errWrongArg, FortranArr, lowerChar } from '../../f_func';
 
-
 export function stpsv(
     uplo: 'u' | 'l',
     trans: 't' | 'n' | 'c',
@@ -25,28 +24,23 @@ export function stpsv(
     n: number,
     ap: FortranArr,
     x: FortranArr,
-    incx: number
+    incx: number,
 ): void {
-
     const ul = lowerChar(uplo);
     const tr = lowerChar(trans);
     const dg = lowerChar(diag);
 
-    let info = 0
+    let info = 0;
 
     if (!'ul'.includes(ul)) {
         info = 1;
-    }
-    else if (!'ntc'.includes(tr)) {
+    } else if (!'ntc'.includes(tr)) {
         info = 2;
-    }
-    else if (!'un'.includes(dg)) {
+    } else if (!'un'.includes(dg)) {
         info = 3;
-    }
-    else if (n < 0) {
+    } else if (n < 0) {
         info = 4;
-    }
-    else if (incx === 0) {
+    } else if (incx === 0) {
         info = 7;
     }
 
@@ -86,8 +80,7 @@ export function stpsv(
                 jx -= incx;
                 kk -= j;
             }
-        }
-        else {
+        } else {
             let kk = 1;
             let jx = kx;
             for (let j = 1; j <= n; j++) {
@@ -101,11 +94,10 @@ export function stpsv(
                     }
                 }
                 jx += incx;
-                kk += (n - j + 1);
+                kk += n - j + 1;
             }
         }
-    }
-    else {
+    } else {
         //  Form  x := inv( A**T )*x.
         if (ul === 'u') {
             let kk = 1;
@@ -122,9 +114,8 @@ export function stpsv(
                 jx += incx;
                 kk += j;
             }
-        }
-        else {
-            let kk = n * (n + 1) / 2;
+        } else {
+            let kk = (n * (n + 1)) / 2;
             kx += (n - 1) * incx;
             let jx = kx;
             for (let j = n; j >= 1; j--) {
@@ -137,8 +128,8 @@ export function stpsv(
                 if (nounit) temp /= ap.r[kk - n + j - ap.base];
                 x.r[jx - x.base] = temp;
                 jx -= incx;
-                kk -= (n - j + 1);
-            }//for
-        }//if
-    }//if
-}//proc
+                kk -= n - j + 1;
+            } //for
+        } //if
+    } //if
+} //proc
