@@ -2,13 +2,13 @@
     "description": "Javascript Pure Implementation of BLAS Level 1, level 2, level 3 functions",
     "author": "Jacob K.F. Bogers",
     "main": "commonjs/lib/index.js",
-    "browser": "dist/blasjs.min.js",
-    "types": "build/types/lib/index.d.ts",
-    "module": "build/lib/index.js",
+    "browser": "browser/blasjs.min.js",
+    "types": "es6/types/lib/index.d.ts",
+    "module": "es6/lib/index.js",
     "version": "1.0.14-rc1",
     "files": [
-        "dist",
-        "build",
+        "browser",
+        "es6",
         "commonjs"
     ],
     "bugs": {
@@ -73,6 +73,7 @@
         "prepublush": "npm run build",
         "lint": "eslint 'src/**/*.ts'",
         "lint:fix": "eslint 'src/**/*.ts' --fix",
-        "test": "jest level1"
+        "test": "npm run build && jest level1",
+        "prepublish": "npm run test"
     }
 }

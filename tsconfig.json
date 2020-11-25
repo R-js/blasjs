@@ -39,7 +39,7 @@
         ],
         "module": "ES2020",
         "noEmit": false,
-        "outDir": "build", // babel will take it from here and move to /bin
+        "outDir": "es6", // babel will take it from here and move to /bin
         //"outFile" , non modules files get concatenated to this file
         //"plugins":[...] for vscode editor, already included in package.json "contributes" field
         "removeComments": false, // babel should handle it
