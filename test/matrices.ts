@@ -15,14 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    fortranArrComplex64,
-    fortranMatrixComplex32,
-    fortranMatrixComplex64,
-    Matrix,
-    muxCmplx,
-    FortranArr,
-} from '../src/lib/f_func';
+import { Matrix, FortranArr } from '../src/lib/f_func';
+
+import { fortranArrComplex64, fortranMatrixComplex32, fortranMatrixComplex64, muxCmplx } from './test-helpers';
 
 const { max, min } = Math;
 

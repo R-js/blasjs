@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { complex } from '../../../../src/lib/f_func';
+import { complex } from '../../../test-helpers';
 
 import { matrix_mxn } from '../../../matrices';
 

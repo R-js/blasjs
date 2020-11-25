@@ -32,6 +32,7 @@ import { ssyr2k } from './single/ssyr2k';
 import { ssyrk } from './single/ssyrk';
 import { strmm } from './single/strmm';
 import { strsm } from './single/strsm';
+
 export const level3 = {
     //single
     sgemm,

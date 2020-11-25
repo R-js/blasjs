@@ -16,12 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as blas from '../../../../src/lib';
-import { real } from '../../../../src/lib/f_func';
-import { approximatelyWithPrec } from '../../../test-helpers';
 import { fixture } from './fixtures';
-
+import { approximatelyWithPrec, real, each, multiplexer, fortranMatrixComplex64 } from '../../../test-helpers';
 const {
-    util: { each, multiplexer, fortranMatrixComplex64 },
     level3: { strmm },
 } = blas;
 

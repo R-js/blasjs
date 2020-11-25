@@ -15,12 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import * as blas from '../../../src/lib';
-import { approximatelyWithPrec } from '../../test-helpers';
 import { fixture } from './fixtures';
+import * as blas from '../../../src/lib';
+import {
+    approximatelyWithPrec,
+    each,
+    multiplexer,
+    fortranArrComplex64,
+    fortranMatrixComplex64,
+} from '../../test-helpers';
 
 const {
-    util: { each, multiplexer, fortranArrComplex64, fortranMatrixComplex64 },
     level2: {
         cgbmv,
         cgemv,
