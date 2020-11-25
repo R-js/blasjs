@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 module.exports = {
+    collectCoverage: true,
     preset: 'ts-jest',
     testEnvironment: 'node',
     verbose: true,
