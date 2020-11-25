@@ -16,11 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as blas from '../../../src/lib';
-import { approximately } from '../../test-helpers';
+import { approximately, each, multiplexer, fortranArrComplex64, muxCmplx } from '../../test-helpers';
 import { fixture } from './fixtures';
 
 const {
-    util: { each, multiplexer, fortranArrComplex64, muxCmplx },
     level1: { isamax, sasum, scnrm2, scopy, sdot, sdsdot, snrm2, srot, srotg, srotm, srotmg, sscal, sswap, saxpy },
 } = blas;
 

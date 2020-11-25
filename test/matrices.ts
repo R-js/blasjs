@@ -15,13 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    fortranArrComplex64,
-    fortranMatrixComplex32,
-    fortranMatrixComplex64,
-    Matrix,
-    muxCmplx,
-} from '../src/lib/f_func';
+import { Matrix, FortranArr } from '../src/lib/f_func';
+
+import { fortranArrComplex64, fortranMatrixComplex32, fortranMatrixComplex64, muxCmplx } from './test-helpers';
 
 const { max, min } = Math;
 
@@ -200,7 +196,7 @@ const data = {
     ],
 };
 
-export function vector(n = 6) {
+export function vector(n = 6): Required<FortranArr> {
     const nre = new Array(n).fill(0);
     const nim = new Array(n).fill(0);
     let cursor = 0;
@@ -209,7 +205,7 @@ export function vector(n = 6) {
         nim[cursor] = data.inorm10[cursor];
         cursor++;
     }
-    return fortranArrComplex64(muxCmplx(nre, nim))();
+    return fortranArrComplex64(muxCmplx(nre, nim))() as Required<FortranArr>;
 }
 
 export function bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 4, ku = 4): Matrix {
@@ -236,7 +232,7 @@ export function bandmatrix_nxm_ku_kl(n = 6, m = 6, lda = m, kl = 4, ku = 4): Mat
     return fortranMatrixComplex64(muxCmplx(nre, nim))(lda, n);
 }
 
-export function matrix_mxn(lda: number, n: number, m: number = lda, float = 64) {
+export function matrix_mxn(lda: number, n: number, m: number = lda, float = 64): Required<Matrix> {
     if (lda < m) {
         throw new Error(`lda<m, ${lda}<${m}`);
     }
@@ -255,7 +251,7 @@ export function matrix_mxn(lda: number, n: number, m: number = lda, float = 64) 
     //
     const func = float === 64 ? fortranMatrixComplex64 : fortranMatrixComplex32;
     //
-    return func(muxCmplx(nre, nim))(lda, n);
+    return func(muxCmplx(nre, nim))(lda, n) as Required<Matrix>;
 }
 
 export function diagonal_nxn(n: number): Matrix {

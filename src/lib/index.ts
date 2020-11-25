@@ -15,38 +15,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { level1 } from './l1';
-import { level2 } from './l2';
-import { level3 } from './l3';
-
-import {
-    arrayrify,
-    complex,
-    each,
-    fortranArrComplex32,
-    fortranArrComplex64,
-    fortranMatrixComplex32,
-    fortranMatrixComplex64,
-    map,
-    multiplexer,
-    muxCmplx,
-    numberPrecision,
-} from './f_func';
-
-const util = Object.freeze({
-    arrayrify,
-    complex,
-    each,
-    fortranArrComplex32,
-    fortranArrComplex64,
-    fortranMatrixComplex32,
-    fortranMatrixComplex64,
-    map,
-    multiplexer,
-    muxCmplx,
-    numberPrecision,
-});
-
-const helper = util;
-
-export { util, helper, level1, level2, level3 };
+export { level1 } from './l1';
+export { level2 } from './l2';
+export { level3 } from './l3';
