@@ -15,40 +15,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    complex,
-    //fortranArrComplex32 as arr32,
-    // fortranArrComplex64 as arr64,
-    fortranMatrixComplex64,
-    mul_cxc
-} from '../../src/lib/f_func';
+import { complex } from '../../src/lib/f_func';
 
+import { matrix_mxn, vector } from '../matrices';
 
-
-import {
-    diagonal_nxn,
-    matrix_mxn,
-    vector
-} from '../matrices';
-
-const pI = Infinity;
-const nI = -Infinity;
-const { PI, sin, cos, abs, sqrt } = Math;
-
-const cospi = x => cos(PI * x);
-const sinpi = x => sin(PI * x);
-
+const PI = Math.PI;
 
 export const fixture = {
     mul_cxc: {
         case0: {
             desc: 'multiply to complex types,c=mul_cxc(a,b), a=0.25-0.9i, b=0.1+0.5i',
             input: {
-                a: complex(0.25, -.9),
-                b: complex(0.1, 0.5)
+                a: complex(0.25, -0.9),
+                b: complex(0.1, 0.5),
             },
             expect: {
-                c: complex(0.47499998845160007, 3.5000001043081319E-002)
+                c: complex(0.47499998845160007, 3.5000001043081319e-2),
             },
         },
     },
@@ -57,11 +39,11 @@ export const fixture = {
             desc: 'multiply to complex fragments with complextype, c=mul_rxc(ra,ia, b), ra=0.25, ia=-0.9i, b=0.1+0.5i',
             input: {
                 ra: 0.25,
-                ia: -.9,
-                b: complex(0.1, 0.5)
+                ia: -0.9,
+                b: complex(0.1, 0.5),
             },
             expect: {
-                c: complex(0.47499998845160007, 3.5000001043081319E-002)
+                c: complex(0.47499998845160007, 3.5000001043081319e-2),
             },
         },
     },
@@ -71,7 +53,7 @@ export const fixture = {
             input: {
                 i1: null,
                 i2: undefined,
-                i3: 'just a string'
+                i3: 'just a string',
             },
             expect: {
                 c: [
@@ -87,8 +69,8 @@ export const fixture = {
                     'null-undefined-r',
                     'null-undefined-i',
                     'null-undefined-n',
-                    'null-undefined-g'
-                ]
+                    'null-undefined-g',
+                ],
             },
         },
     },
@@ -96,9 +78,9 @@ export const fixture = {
         case0: {
             desc: 'error check, passing a function as argument',
             input: {
-                i1: () => { }, //dud
-                i2: undefined
-            }
+                i1: () => undefined, //dud
+                i2: undefined,
+            },
         },
     },
     coerceToArray: {
@@ -108,8 +90,8 @@ export const fixture = {
                 i: 9,
             },
             expect: {
-                o: [{ key: 0, val: 9 }]
-            }
+                o: [{ key: 0, val: 9 }],
+            },
         },
         case1: {
             desc: 'i=[1,2,3,9]',
@@ -121,14 +103,14 @@ export const fixture = {
                     { key: 0, val: 1 },
                     { key: 1, val: 2 },
                     { key: 2, val: 3 },
-                    { key: 3, val: 9 }
-                ]
-            }
+                    { key: 3, val: 9 },
+                ],
+            },
         },
         case2: {
             desc: 'i="hello"',
             input: {
-                i: 'hello'
+                i: 'hello',
             },
             expect: {
                 o: [
@@ -136,9 +118,9 @@ export const fixture = {
                     { key: 1, val: 'e' },
                     { key: 2, val: 'l' },
                     { key: 3, val: 'l' },
-                    { key: 4, val: 'o' }
-                ]
-            }
+                    { key: 4, val: 'o' },
+                ],
+            },
         },
         case3: {
             desc: 'i=null',
@@ -146,8 +128,8 @@ export const fixture = {
                 i: null, //dud
             },
             expect: {
-                o: []
-            }
+                o: [],
+            },
         },
         case4: {
             desc: 'i={}',
@@ -155,8 +137,8 @@ export const fixture = {
                 i: {}, //dud
             },
             expect: {
-                o: []
-            }
+                o: [],
+            },
         },
         case5: {
             desc: 'i={ name:jack }',
@@ -164,17 +146,16 @@ export const fixture = {
                 i: { name: 'jack' }, //dud
             },
             expect: {
-                o: [{ key: 'name', val: 'jack' }]
-            }
+                o: [{ key: 'name', val: 'jack' }],
+            },
         },
-
     },
     coerceToArrayErr: {
         case0: {
             desc: 'o=Function',
             input: {
                 o: Function, //dud
-            }
+            },
         },
     },
     arrayrify: {
@@ -182,35 +163,31 @@ export const fixture = {
             desc: 'test arrayrify helper',
             input: {
                 fn: Math.sin,
-                data: [PI / 6, PI / 3, PI / 2]
+                data: [PI / 6, PI / 3, PI / 2],
             },
             expect: {
-                o: [
-                    Math.sin(PI / 6),
-                    Math.sin(PI / 3),
-                    Math.sin(PI / 2)
-                ]
-            }
+                o: [Math.sin(PI / 6), Math.sin(PI / 3), Math.sin(PI / 2)],
+            },
         },
         case1: {
             desc: 'test arrayrify helper, scalar input',
             input: {
                 fn: Math.sin,
-                data: PI / 6
+                data: PI / 6,
             },
             expect: {
-                o: Math.sin(PI / 6)
-            }
+                o: Math.sin(PI / 6),
+            },
         },
         case2: {
             desc: 'test arrayrify empty array input',
             input: {
                 fn: Math.sin,
-                data: []
+                data: [],
             },
             expect: {
-                o: undefined
-            }
+                o: undefined,
+            },
         },
     },
     map: {
@@ -218,54 +195,54 @@ export const fixture = {
             desc: 'test map helper',
             input: {
                 fn: (v, idx) => `${v}:${idx}`,
-                data: 'hello'
+                data: 'hello',
             },
             expect: {
-                o: ['h:0', 'e:1', 'l:2', 'l:3', 'o:4']
-            }
-        }
+                o: ['h:0', 'e:1', 'l:2', 'l:3', 'o:4'],
+            },
+        },
     },
     numberPrecision: {
         case0: {
             desc: 'prec=4',
             input: {
                 prec: 4,
-                data: [0.1234567890, 1.987676E+100, 0.2323423E-18, 2.343837462342E+28, NaN]
+                data: [0.123456789, 1.987676e100, 0.2323423e-18, 2.343837462342e28, NaN],
             },
             expect: {
-                o: [0.1235, 1.988e+100, 2.323e-19, 2.344e+28, NaN]
-            }
+                o: [0.1235, 1.988e100, 2.323e-19, 2.344e28, NaN],
+            },
         },
         case1: {
             desc: 'test default prec=6',
             input: {
                 prec: undefined,
-                data: [0.1234567890, 1.987676E+100, 0.2323423E-18, 2.343837462342E+28, NaN]
+                data: [0.123456789, 1.987676e100, 0.2323423e-18, 2.343837462342e28, NaN],
             },
             expect: {
-                o: [0.123457, 1.98768e+100, 2.32342e-19, 2.34384e+28, NaN]
-            }
+                o: [0.123457, 1.98768e100, 2.32342e-19, 2.34384e28, NaN],
+            },
         },
         case2: {
             desc: 'test numberPrecision on JS object {}',
             input: {
                 prec: undefined,
-                data: { a: 0.1234567890, b: 1.987676E+100, c: Math.sin }
+                data: { a: 0.123456789, b: 1.987676e100, c: Math.sin },
             },
             expect: {
-                o: { a: 0.123457, b: 1.98768e+100, c: Math.sin }
-            }
+                o: { a: 0.123457, b: 1.98768e100, c: Math.sin },
+            },
         },
         case3: {
             desc: 'test numberPrecision on a Function',
             input: {
                 prec: undefined,
-                data: Math.sin
+                data: Math.sin,
             },
             expect: {
-                o: Math.sin
-            }
-        }
+                o: Math.sin,
+            },
+        },
     },
     lowerChar: {
         case0: {
@@ -274,8 +251,8 @@ export const fixture = {
                 i: 'aBcDeFç&@$*µù%><²³à}',
             },
             expect: {
-                o: 'abcdefç&@$*µù%><²³à}'
-            }
+                o: 'abcdefç&@$*µù%><²³à}',
+            },
         },
         case1: {
             desc: 'test lowerChar helper',
@@ -283,9 +260,9 @@ export const fixture = {
                 i: undefined,
             },
             expect: {
-                o: ''
-            }
-        }
+                o: '',
+            },
+        },
     },
     fortranArrComplex32: {
         case0: {
@@ -296,7 +273,7 @@ export const fixture = {
             expect: {
                 type: 'Float32Array',
                 o: [{ re: 1, im: 0.5 }],
-            }
+            },
         },
         case1: {
             desc: 'real number input',
@@ -305,7 +282,7 @@ export const fixture = {
             },
             expect: {
                 type: 'Float32Array',
-                o: [1, 2, 3]
+                o: [1, 2, 3],
             },
         },
         case2: {
@@ -315,7 +292,7 @@ export const fixture = {
             },
             expect: {
                 type: 'Float32Array',
-                o: [4]
+                o: [4],
             },
         },
         case3: {
@@ -325,30 +302,27 @@ export const fixture = {
             },
             expect: {
                 type: 'Float32Array',
-                o: [{ re: undefined, im: 4 }]
+                o: [{ re: undefined, im: 4 }],
             },
         },
         'case0/s()': {
             desc: 'get  array element',
             input: {
-                data: [
-                    complex(1, 0.5),
-                    complex(2, 3),
-                ],
-                index: 2
+                data: [complex(1, 0.5), complex(2, 3)],
+                index: 2,
             },
             expect: {
-                o: complex(2, 3)
+                o: complex(2, 3),
             },
         },
         'case1/s()': {
             desc: 'get (real) array element',
             input: {
                 data: [1, 2],
-                index: 2
+                index: 2,
             },
             expect: {
-                o: 2
+                o: 2,
             },
         },
         'case2/s()': {
@@ -356,10 +330,10 @@ export const fixture = {
             input: {
                 data: [1, 2],
                 index: 2,
-                re: 99
+                re: 99,
             },
             expect: {
-                o: { re: 2, im: 0 }
+                o: { re: 2, im: 0 },
             },
         },
     },
@@ -370,20 +344,19 @@ export const fixture = {
                 data: [1, 2],
                 index: 2,
                 re: 4,
-                im: 2
-            }
+                im: 2,
+            },
         },
         'case1/s()': {
             desc: 'index out of bounds, error',
             input: {
                 data: [1, 2],
-                index: 4
+                index: 4,
             },
             expect: {
-                o: 0
+                o: 0,
             },
         },
-
     },
     complex: {
         case0: {
@@ -393,80 +366,56 @@ export const fixture = {
             },
             expect: {
                 o: [{ re: 0, im: 0 }],
-            }
+            },
         },
     },
     fortranMatrixComplex32: {
         case0: {
             desc: 'create 2x2 complex matrix',
             input: {
-                data: [
-                    complex(1, 0.5),
-                    complex(0.5, 0.5),
-                    complex(0.8, 0.2),
-                    complex(0.3, -0.4)
-                ],
+                data: [complex(1, 0.5), complex(0.5, 0.5), complex(0.8, 0.2), complex(0.3, -0.4)],
                 dim1: 2,
-                dim2: 2
+                dim2: 2,
             },
             expect: {
                 type: 'Float32Array',
-                m32: [
-                    complex(1, 0.5),
-                    complex(0.5, 0.5),
-                    complex(0.8, 0.2),
-                    complex(0.3, -0.4)
-                ],
-            }
+                m32: [complex(1, 0.5), complex(0.5, 0.5), complex(0.8, 0.2), complex(0.3, -0.4)],
+            },
         },
         case1: {
             desc: 'create 2x2 real matrix',
             input: {
                 data: [1, 0.5, 0.8, 0.3],
                 dim1: 2,
-                dim2: 2
+                dim2: 2,
             },
             expect: {
                 type: 'Float32Array',
-                m32: [1, 0.5, 0.8, 0.3]
-            }
+                m32: [1, 0.5, 0.8, 0.3],
+            },
         },
     },
     imaginary: {
         case0: {
             desc: 'filter imaginary part of complex scalar, array',
             input: {
-                data: [
-                    complex(1, 0.5),
-                    complex(0.5, 0.5),
-                    complex(0.8, 0.2),
-                    complex(0.3, -0.4),
-                    Math.sin,
-                    0
-                ],
+                data: [complex(1, 0.5), complex(0.5, 0.5), complex(0.8, 0.2), complex(0.3, -0.4), Math.sin, 0],
             },
             expect: {
-                o: [0.5, 0.5, 0.2, -0.4, Math.sin, 0]
-            }
-        }
+                o: [0.5, 0.5, 0.2, -0.4, Math.sin, 0],
+            },
+        },
     },
     real: {
         case0: {
             desc: 'filter real part of complex scalar, array',
             input: {
-                data: [
-                    complex(1, 0.5),
-                    complex(0.5, 0.5),
-                    complex(0.8, 0.2),
-                    complex(0.3, -0.4),
-                    Math.sin,
-                    5
-                ],
+                data: [complex(1, 0.5), complex(0.5, 0.5), complex(0.8, 0.2), complex(0.3, -0.4), Math.sin, 5],
             },
             expect: {
-                o: [1, 0.5, 0.8, 0.3, Math.sin, 5]
-            }
-        }
+                o: [1, 0.5, 0.8, 0.3, Math.sin, 5],
+            },
+        },
     },
     mimicMatrix: {
         case0: {
@@ -477,8 +426,8 @@ export const fixture = {
                 nrRow: 3,
             },
             expect: {
-                o: Array.from(vector(9).i)
-            }
+                o: Array.from(vector(9).i || 0),
+            },
         },
         case1: {
             desc: '(trivial) return non-existant imaginary of a source matrix!',
@@ -488,8 +437,8 @@ export const fixture = {
                 nrRow: 3,
             },
             expect: {
-                o: new Array(9).fill(0)
-            }
+                o: new Array(9).fill(0),
+            },
         },
         setLower0: {
             desc: 'setLower without Imaginary part',
@@ -508,9 +457,9 @@ export const fixture = {
                     0,
                     -0.9120683669483379,
                     -1.4375862408299789,
-                    -0.7970895250719646
-                ]
-            }
+                    -0.7970895250719646,
+                ],
+            },
         },
         setUpper0: {
             desc: 'setUpper without Imaginary part',
@@ -520,22 +469,23 @@ export const fixture = {
                 nrRow: 3,
             },
             expect: {
-                o: [-0.6490100777088978,
-                -0.11916876241803812,
+                o: [
+                    -0.6490100777088978,
+                    -0.11916876241803812,
                     0.6641356998941105,
                     0,
                     0.14377148075806995,
-                -0.11775359816595128,
+                    -0.11775359816595128,
                     0,
                     0,
-                - 0.7970895250719646
-                ]
-            }
+                    -0.7970895250719646,
+                ],
+            },
         },
         upperBand0: {
             desc: 'upperBand (default argument)',
             input: {
-                data: matrix_mxn(3, 3)
+                data: matrix_mxn(3, 3),
             },
             expect: {
                 o: {
@@ -560,14 +510,14 @@ export const fixture = {
                         -0.4527839725531578,
                         -0.8320432961178319,
                         -1.166570547084707,
-                    ]
-                }
-            }
+                    ],
+                },
+            },
         },
         lowerBand0: {
             desc: 'lowerBand (default argument)',
             input: {
-                data: matrix_mxn(3, 3, 3, 32).real()
+                data: matrix_mxn(3, 3, 3, 32).real(),
             },
             expect: {
                 o: [
@@ -581,12 +531,12 @@ export const fixture = {
                     0,
                     0,
                 ],
-            }
+            },
         },
         packedUpperBand0: {
             desc: 'packedLowerBand (default argument)',
             input: {
-                data: matrix_mxn(3, 3, 3, 32).real()
+                data: matrix_mxn(3, 3, 3, 32).real(),
             },
             expect: {
                 o: [
@@ -597,12 +547,12 @@ export const fixture = {
                     -0.2947204467905602,
                     -0.005767172747536955,
                 ],
-            }
+            },
         },
         packedUpperBand1: {
             desc: 'packedLowerBand (default argument), 32 bits',
             input: {
-                data: matrix_mxn(3, 3, 3, 32).real()
+                data: matrix_mxn(3, 3, 3, 32).real(),
             },
             expect: {
                 o: [
@@ -616,8 +566,8 @@ export const fixture = {
                     0,
                     0,
                 ],
-            }
-        }
+            },
+        },
     },
     mimicMatrixErr: {
         case0: {
@@ -626,7 +576,7 @@ export const fixture = {
                 lda: -3,
                 nrCols: 3,
                 rowBase: 1,
-                colBase: 1
+                colBase: 1,
             },
         },
         case1: {
@@ -635,7 +585,7 @@ export const fixture = {
                 lda: 0.2,
                 nrCols: -3,
                 rowBase: 1,
-                colBase: 1
+                colBase: 1,
             },
         },
         case2: {
@@ -644,7 +594,7 @@ export const fixture = {
                 lda: 3,
                 nrCols: 3,
                 rowBase: 1.2,
-                colBase: 1
+                colBase: 1,
             },
         },
         case3: {
@@ -653,7 +603,7 @@ export const fixture = {
                 lda: 3,
                 nrCols: 3,
                 rowBase: 1.2,
-                colBase: 1
+                colBase: 1,
             },
         },
         case4: {
@@ -662,7 +612,7 @@ export const fixture = {
                 lda: 3,
                 nrCols: -3,
                 rowBase: 1,
-                colBase: 1
+                colBase: 1,
             },
         },
         case5: {
@@ -671,7 +621,7 @@ export const fixture = {
                 lda: 3,
                 nrCols: 3.2,
                 rowBase: 1,
-                colBase: 1
+                colBase: 1,
             },
         },
         case6: {
@@ -680,15 +630,14 @@ export const fixture = {
                 lda: 3,
                 nrCols: 3,
                 rowBase: 1,
-                colBase: 1.3
+                colBase: 1.3,
             },
         },
     },
     someFunctionErr: {
         case0: {
             desc: '',
-            input: {
-            }
+            input: {},
         },
     },
-}
+};

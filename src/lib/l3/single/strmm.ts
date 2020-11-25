@@ -89,8 +89,7 @@ export function strmm(
                     for (let k = 1; k <= m; k++) {
                         const coorAK = a.colOfEx(k);
                         if (b.r[coorBJ + k] !== 0) {
-                            //let temp = alpha * b.r[coorBJ + k]; JKF
-                            let temp = b.r[coorBJ + k];
+                            let temp = alpha * b.r[coorBJ + k];
                             for (let i = 1; i <= k - 1; i++) {
                                 b.r[coorBJ + i] += temp * a.r[coorAK + i];
                             }
