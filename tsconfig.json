@@ -141,7 +141,7 @@
         "assumeChangesOnlyAffectDirectDependencies": false, // be on the safe side, you might not see all compiler errors otherwise
         // "bundledPackageName": "blasjs", // ts-node problem i think, the bundled package name if you want to export types like "blasjs/typedArrayReal",
         "noFallthroughCasesInSwitch": false, // fall through is ok
-        "declarationDir": "./build/types", // emit types here
+        "declarationDir": "./es6/types", // emit types here
         //"disableReferencedProjectLoad": true, handy for "projects" based setup
         "disableSizeLimit": true,
         "disableSolutionSearching": false, // i want my IDE to find decl's

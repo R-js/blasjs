@@ -73,7 +73,7 @@
         "prepublush": "npm run build",
         "lint": "eslint 'src/**/*.ts'",
         "lint:fix": "eslint 'src/**/*.ts' --fix",
-        "test": "npm run build && jest level1 level2",
+        "test": "npm run build && jest level1 level2 level3 utils",
         "prepublish": "npm run test"
     }
 }
