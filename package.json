@@ -5,7 +5,7 @@
     "browser": "browser/blasjs.min.js",
     "types": "es6/types/lib/index.d.ts",
     "module": "es6/lib/index.js",
-    "version": "1.0.14-rc1",
+    "version": "1.0.14",
     "files": [
         "browser",
         "es6",
