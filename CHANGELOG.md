@@ -1,3 +1,6 @@
+## Changes 1.0.15
+
+- Build hook did not work before publish
 ## Changes 1.0.14
 
 - Moved build system to rollup, from webpack
