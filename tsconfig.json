@@ -174,7 +174,7 @@
         "noLib": false, // dont ignore "lib" setting, false= enable automatic inclusion of library (d.ts?) files
         "noResolve": false, // add resolved files (import, <reference) to the program
         "noStrictGenericChecks": false, // do not disable this check
-        "preserveConstEnums": false, // do not preserve the enum at runtime
+        "preserveConstEnums": true, // do not preserve the enum at runtime
         //"reactNamespace": "React", not used here
         "resolveJsonModule": true, // infer type of json data when imported
         "skipDefaultLibCheck": false, // always type check default libs
