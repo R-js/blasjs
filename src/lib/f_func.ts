@@ -31,7 +31,7 @@ export function isOne(v: Complex): boolean {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-export type Complex = { re: number; im: number };
+
 export type fpArray = Float32Array | Float64Array;
 export type FortranSetterGetter = (index: number) => (re?: number, im?: number) => number | Complex;
 export type FortranArr = {
@@ -91,13 +91,13 @@ export type FortranMatrixSetterGetter = (colSize: number) => (nrCols: number) =>
 
 export type MatrixType = 'n' | 'b' | 'bu' | 'bl' | 'pl' | 'pu'; //untyped, normal, bandified, bandified-upper, bandified-lower, packed-lower, packed-upper
 
-export interface Matrix {
-    readonly rowBase: number;
-    readonly colBase: number;
-    readonly nrCols: number; // inclusive note!!
-    readonly nrRows: number;
-    readonly r: fpArray; //[(ncols+1)*(nrows+1)]
-    readonly i?: fpArray; //imaginary part of matrix [(ncols+1)*(nrows+1)]
+export interface Matrix<T extends ArrayBuffer> {
+    //readonly rowBase: number;
+    //readonly colBase: number;
+    readonly nrCols: number
+    readonly nrRows: number
+    readonly isComplex: boolean
+    readonly data: T
     //readonly colOf: (number) => number;
     colOfEx(n: number): number;
     //s: FortranMatrixSetterGetter

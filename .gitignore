@@ -1,8 +1,6 @@
 # Logs
+dist
 logs
-es6/
-browser/
-commonjs/
 *.tsbuildinfo
 *.log
 TODO
