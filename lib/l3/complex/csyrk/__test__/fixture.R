@@ -58,7 +58,14 @@
 #
 # capture real numbers (non imaginary) in text
 #
-# "-0.34234".match(/^-?(?:0|1)\.[0-9]+$/)
+#> "-0.34234".match(/^(?<real>-?(?:0|1)\.[0-9]+)$/)
+#[
+#  '-0.34234',
+#  '-0.34234',
+#  index: 0,
+#  input: '-0.34234',
+#  groups: [Object: null prototype] { real: '-0.34234' }
+#]
 
  conjugate= function(a) { 
     x = dim(a)[1];
