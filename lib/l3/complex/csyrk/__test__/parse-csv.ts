@@ -27,15 +27,45 @@ function* generateLines(csv: string) {
             (yield { text, line }) as void;
         }
     }
-    if (lineStart < csv.length){
+    if (lineStart < csv.length) {
         // one last return
         const text = csv.slice(lineStart, i);
-        yield { text, line};
+        yield { text, line };
     }
 }
 
-function* generateFields(oneLine: {text: string, line: number}, seperator: string| RegExp ){
-    let col = 1;
+function isSeparator(text: string, separator: string | RegExp): boolean {
+    return (typeof separator === 'string') ? text[0] === separator : text[0].match(separator) !== null;
+}
+
+function absorbSeparator(text: string, i: number, separator: string | RegExp) {
+    while (isSeparator(text[i], separator) && i < text.length) {
+        i++;
+    }
+    return i; // absorbed till EOL
+}
+
+function absorbField(text: string, i: number, separator: string | RegExp) {
+    while (false === isSeparator(text[i], separator) && i < text.length) {
+        i++;
+    }
+    return i;
+}
+
+function* generateFields(oneLine: { text: string, line: number }, separator: string | RegExp) {
+    let i = 0;
+    const { text, line } = oneLine;
+    while (i < text.length) {
+        i = absorbSeparator(text, i, separator);
+        let j = absorbField(text, i, separator);
+        if (j > i){
+            (yield { field: text.slice(i,j), line, i}) as void;
+            i = j;
+        }
+    }
+}
+
+export default function parse(text: string, hasColumnNames = true, hasRowNames = true){
 
 
 }

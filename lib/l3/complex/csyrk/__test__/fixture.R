@@ -59,3 +59,11 @@
 # capture real numbers (non imaginary) in text
 #
 # "-0.34234".match(/^-?(?:0|1)\.[0-9]+$/)
+
+ conjugate= function(a) { 
+    x = dim(a)[1];
+    y=dim(a)[2];
+    Imag = Im(a);
+    Real=Re(a);
+    t(matrix(complex(real=Real, imaginary = -Imag), ncol=y, nrow=x));
+}
