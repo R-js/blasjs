@@ -67,7 +67,7 @@
 #  groups: [Object: null prototype] { real: '-0.34234' }
 #]
 
- conjugate= function(a) { 
+conjugate= function(a) { 
     x = dim(a)[1];
     y=dim(a)[2];
     Imag = Im(a);
