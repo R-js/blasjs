@@ -23,15 +23,6 @@ module.exports = {
     testPathIgnorePatterns: ['/esm/', '/commonjs/', '/types/'],
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex,
-    /*globals: {
-        'ts-jest': {
-            compiler: 'typescript',
-            tsconfig: 'tsconfig.json',
-            diagnostics: {
-                ignoreCodes: [151001],
-            },
-        },
-    },*/
     transform: {
 
         "\\.test\\.ts$" :["ts-jest", {
@@ -43,13 +34,8 @@ module.exports = {
         }]
     },
     moduleNameMapper: {
-        /* '^@dist/(.*)$': '<rootDir>/src/lib/distributions/$1',
-        '^@common/(.*)$': [
-            '<rootDir>/src/packages/common/$1',
-            '<rootDir>/src/lib/common/$1',
-            '<rootDir>/src/packages/__test__/$1',
-        ],
-        '^@special/(.*)$': '<rootDir>/src/lib/special/$1',
+        '^@utils/(.*)$': '<rootDir>/lib/utils/$1',
+        /*'^@special/(.*)$': '<rootDir>/src/lib/special/$1',
         '^@trig/(.*)$': '<rootDir>/src/lib/trigonometry/$1',
         '^@rng/(.*)$': '<rootDir>/src/lib/rng/$1',
         '^@lib/(.*)$': '<rootDir>/src/lib/$1',

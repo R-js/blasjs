@@ -1,6 +1,6 @@
 {
   "include": ["lib/**/*.ts", "lib/packages/**/*.ts", "lib/index.ts"],
-  "exclude":["src"],
+  "exclude": ["src"],
   "files": ["lib/index.ts"],
   "typeAcquisition": {
     "enable": true,
@@ -24,7 +24,9 @@
     "baseUrl": "./lib",
     "module": "ESNext",
     "moduleResolution": "node",
-    "paths": {},
+    "paths": {
+      "@utils/*": ["lib/utils/*"]
+    },
     "resolveJsonModule": true,
     "types": ["node", "jest"],
     "typeRoots": ["lib/__test__/jest-ext.d.ts", "node_modules/@types"],
