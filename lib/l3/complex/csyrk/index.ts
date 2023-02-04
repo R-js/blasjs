@@ -195,10 +195,10 @@ export default function csyrk<T extends Float32Array | Float64Array>(
                 c.fill(0, start, stop);
             } else {
                 for (let i = start; i < stop; i += 2) {
-                    const re = beta[0] * c[colBase + i] - beta[1] * c[colBase + 1 + i];
-                    const im = beta[0] * c[colBase + i] + beta[1] * c[colBase + 1 + i];
-                    c[colBase + i] = re;
-                    c[colBase + i + 1] = im;
+                    const re = beta[0] * c[i] - beta[1] * c[i + 1];
+                    const im = beta[0] * c[i] + beta[1] * c[i + 1];
+                    c[i] = re;
+                    c[i + 1] = im;
                 }
             }
         }
@@ -227,7 +227,16 @@ export default function csyrk<T extends Float32Array | Float64Array>(
             }
             // at this point you want to do  C += alpha*A*A**T
             // A has "k" columns and "n" rows
-            for (let l = 0, colBaseA = 0; l < k; l++, colBaseA += KK) {
+            for (let i = start, rowC = (i % NN) / 2; i < stop; i += 2, rowC++) {
+                // because of transpose symmetry we only loop over [1..k]
+                let matrixAStart = i % NN; // we dont devide by 2 because A is also complex, both i and NN take are vars in the space of the complex matrix C
+                // the column in C is the column in A transpose with is the row in A
+                let matrixATStart = j << 1;
+                for (let l = 0; l < k; l++, matrixAStart += KK, matrixATStart += KK) {
+                    console.log(`row=${rowC}, colC=${j}, matrixAStart=${matrixAStart} , matrixATStart=${matrixATStart}`);
+                }
+            }
+            /*for (let l = 0, colBaseA = 0; l < k; l++, colBaseA += KK) {
                 const startRowMatrixA = upper ? colBaseA : colBaseA + (j << 1);
                 const stopRowMatrixA = upper ? colBaseA + ((j + 1) << 1) : colBaseA + KK;
                 // because of symmetry nature we can do this
@@ -240,7 +249,7 @@ export default function csyrk<T extends Float32Array | Float64Array>(
                         c[ci + 1] += tempRe * a[i] + tempIm * a[i + 1];
                     }
                 }
-            }
+            }*/
         }
     } else {
         //  Form  C := alpha*A**T*A + beta*C.

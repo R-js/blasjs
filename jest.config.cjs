@@ -24,7 +24,6 @@ module.exports = {
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex,
     transform: {
-
         "\\.test\\.ts$" :["ts-jest", {
             compiler: 'typescript',
             tsconfig: 'tsconfig.json',

@@ -1,58 +1,58 @@
-import { createReadStream } from 'fs';
-import { createInterface } from 'readline';
+import { createReadStream } from 'node:fs';
+import * as readline from 'node:readline/promises';
+import { generateFields } from './parse-matrix-from-csv';
 
-const matchNaN = /^(-|\+)?NaN$/i;
-const matchInf = /^(-|\+)?Inf$/i;
+export async function loadData(fullPath: string, separator: string | RegExp, hasColumnNames = true, hasRowNames = true, optionallyQuoted = true, fp64 = true) {
 
-export function loadData(fullPath: string, sep = /,/, ...columns: number[]): Promise<Float64Array[]> {
-    let resolve: (value: Float64Array[] | PromiseLike<Float64Array[]>) => void
+    let line = 0;
+    let firstDataLineParsed = false;
 
-    const reader = createInterface({
+    const reader = readline.createInterface({
         input: createReadStream(fullPath, { encoding: 'utf8' }),
     });
-    const lines: string[] = [];
-    reader.on('line', (input: string) => {
-        if (input[0] === '#') {
-            return;
+
+    const collectedFields: number[] = [];
+
+    for await (const text of reader) {
+        line++;
+        if (!text) {
+            continue; // just skip
         }
-        if ('\r\n\t'.includes(input)) {
-            return false;
+        const fields = Array.from(generateFields({ text, line }, separator, optionallyQuoted));
+        // if the fields are only comments skip
+        if (fields.every(f => f.type === 'comment')){
+            continue;
         }
-        if (!input) {
-            return false;
+        if (firstDataLineParsed === false && hasColumnNames) { // we expect the first non-comment line to have names
+            firstDataLineParsed = true;
+            continue; // skip, disregard for now
         }
-        lines.push(input);
-    });
-    reader.on('close', () => {
-        const result = Array.from({ length: columns.length }).map(() => new Float64Array(lines.length));
-        // create xy array of Float64Array
-        lines.forEach((v, i) => {
-            const cols = v.split(sep).filter((f) => f);
-            for (let j = 0; j < columns.length; j++) {
-                if (columns[j] >= cols.length) {
-                    continue;
-                }
-                const tps = result[j];
-                const _vs = cols[columns[j]];
-                if (matchNaN.test(_vs)) {
-                    tps[i] = NaN;
-                    continue;
-                }
-                const rc = matchInf.exec(_vs);
-                if (rc) {
-                    if (rc[1] === '-') {
-                        tps[i] = -Infinity;
-                    } else {
-                        tps[i] = Infinity;
-                    }
-                    continue;
-                }
-                tps[i] = parseFloat(_vs);
+        for (let i = 0; i < fields.length; i++) {
+            if (hasRowNames && i === 0) {
+                continue;
             }
-        });
-        resolve(result);
-    });
-    return new Promise<Float64Array[]>((_resolve) => {
-        resolve = _resolve;
-    });
+            if (fields[i].type === 'comment') {
+                continue; // skip comments in the data
+            }
+            // are these complex values?
+            if (fields[i].text) {
+                const ℂ: null | { groups?: Record<string, string> } = fields[i].text?.match(/^(?<real>-?(?:[0-9])(?:\.[0-9]+)?)(?<imag>(?:\+|\-)(?:[0-9])(?:\.[0-9]+)?)i$/);
+                if (ℂ?.groups) {
+                    const real = parseFloat(ℂ.groups['real']);
+                    const imag = parseFloat(ℂ.groups['imag']);
+                    collectedFields.push(real, imag);
+                    continue;
+                }
+                const ℝ: null | { groups?: Record<string, string> } = fields[i].text?.match(/^(?<real>-?(?:[0-9])(?:\.[0-9]+)?)$/);
+                if (ℝ?.groups){
+                    const real = parseFloat(ℝ.groups['real']);
+                    collectedFields.push(real);
+                }
+            }
+        }
+    }
+    return fp64 ? new Float64Array(collectedFields) : new Float32Array(collectedFields);
 }
+   
+    
+

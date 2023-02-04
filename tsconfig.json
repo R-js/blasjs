@@ -25,11 +25,12 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "paths": {
-      "@utils/*": ["lib/utils/*"]
+      "@utils/*": ["utils/*"],
+      "@test-helpers/*":["packages/__test__/*"]
     },
     "resolveJsonModule": true,
     "types": ["node", "jest"],
-    "typeRoots": ["lib/__test__/jest-ext.d.ts", "node_modules/@types"],
+    "typeRoots": ["lib/packages/__test__/jest-ext.d.ts", "node_modules/@types"],
 
     "declaration": false,
     "outDir": "dist/tsc",
