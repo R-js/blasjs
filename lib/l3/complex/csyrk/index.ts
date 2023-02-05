@@ -246,7 +246,7 @@ export default function csyrk<T extends Float32Array | Float64Array>(
             const start = upper ? colBaseC : colBaseC + (j << 1); // complex numbers take 2 positions so "n" is half a column height
             const stop = upper ? colBaseC + ((j + 1) << 1) : colBaseC + NN; // exclusive end position , note again, complex numbers take 2 positions
 
-            for (let i = start, rowBaseA_T = (i % NN) * KK; i < stop; i += 2, rowBaseA_T += KK) {
+            for (let i = start, rowBaseA_T = (start % NN) * k; i < stop; i += 2, rowBaseA_T += KK) {
                 // row in C = i % NN;
                 // this is the column in AT because row-major
                 // so (i % NN) * KK, 
