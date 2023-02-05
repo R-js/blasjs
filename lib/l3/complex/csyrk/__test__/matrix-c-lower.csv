@@ -1,6 +1,6 @@
 #> set.seed(7894)
-#> c = matrix(complex(real=rnorm(16), imaginary = rnorm(16)), nrow=4, ncol=4)
-#> c[upper.tri(c)] = 0
+#> co = matrix(complex(real=rnorm(16), imaginary = rnorm(16)), nrow=4, ncol=4)
+#> co[upper.tri(c)] = 0
 #> write.csv(t(c))
 "","V1","V2","V3","V4"
 "1",-1.45145215609151+1.03939080237341i,0.983678127728321-0.517765692074136i,0.884696272423-1.58093181043986i,0.630927916930367-0.727000882040112i

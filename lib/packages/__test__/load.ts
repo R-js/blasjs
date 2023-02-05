@@ -36,14 +36,14 @@ export async function loadData(fullPath: string, separator: string | RegExp, has
             }
             // are these complex values?
             if (fields[i].text) {
-                const ℂ: null | { groups?: Record<string, string> } = fields[i].text?.match(/^(?<real>-?(?:[0-9])(?:\.[0-9]+)?)(?<imag>(?:\+|\-)(?:[0-9])(?:\.[0-9]+)?)i$/);
+                const ℂ: null | { groups?: Record<string, string> } = fields[i].text?.match(/^(?<real>-?(?:[0-9]+)(?:\.[0-9]+)?)(?<imag>(?:\+|\-)(?:[0-9]+)(?:\.[0-9]+)?)i$/);
                 if (ℂ?.groups) {
                     const real = parseFloat(ℂ.groups['real']);
                     const imag = parseFloat(ℂ.groups['imag']);
                     collectedFields.push(real, imag);
                     continue;
                 }
-                const ℝ: null | { groups?: Record<string, string> } = fields[i].text?.match(/^(?<real>-?(?:[0-9])(?:\.[0-9]+)?)$/);
+                const ℝ: null | { groups?: Record<string, string> } = fields[i].text?.match(/^(?<real>-?(?:[0-9]+)(?:\.[0-9]+)?)$/);
                 if (ℝ?.groups){
                     const real = parseFloat(ℝ.groups['real']);
                     collectedFields.push(real);

@@ -61,21 +61,41 @@ describe('level 3 csyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C'
         });
     });
     describe('fidelity', () => {
-        it('|alpha| > 1 and beta = 0 (fill for upper triangular c)', async () => {
+        it('|alpha| > 1 and beta = 0 (for upper triangular c)', async () => {
             const a = await loadData(resolve(__dirname, 'matrix-a.csv'), ',', true, true, true, false);
             const c = await loadData(resolve(__dirname, 'matrix-c-upper.csv'), ',', true, true, true, false);
-            // const c2 = await loadData(resolve(__dirname, 'matrix-c2-upper-alpha.csv'), ',', true, true, true, false);
+            const c2 = await loadData(resolve(__dirname, 'matrix-c2-upper-alpha.csv'), ',', true, true, true, false);
             const beta = new Float32Array(2);
             const alpha = new Float32Array([1.2, 0.8]);
             csyrk(true, false, 4, 2, alpha, a, beta, c);
+            expect(c).toEqualFloatingPointBinary(c2, 15);
         });
-        it('|alpha| > 1 and beta = 0 (fill for lower triangular c)', async () => {
+        it('|alpha| > 1 and beta = 0 (for lower triangular c)', async () => {
             const a = await loadData(resolve(__dirname, 'matrix-a.csv'), ',', true, true, true, false);
             const c = await loadData(resolve(__dirname, 'matrix-c-lower.csv'), ',', true, true, true, false);
-
+            const c2 = await loadData(resolve(__dirname, 'matrix-c2-lower-alpha.csv'), ',', true, true, true, false);
             const beta = new Float32Array(2);
             const alpha = new Float32Array([1.2, 0.8]);
             csyrk(false, false, 4, 2, alpha, a, beta, c);
+            expect(c).toEqualFloatingPointBinary(c2, 15);
+        });
+        it('|alpha| > 1 and beta = 0.6+0.4i (for upper triangular c)', async () => {
+            const a = await loadData(resolve(__dirname, 'matrix-a.csv'), ',', true, true, true, false);
+            const c = await loadData(resolve(__dirname, 'matrix-c-upper.csv'), ',', true, true, true, false);
+            const c2 = await loadData(resolve(__dirname, 'matrix-c2-upper-alpha-beta.csv'), ',', true, true, true, false);
+            const beta = new Float32Array([0.6, 0.4]);
+            const alpha = new Float32Array([1.2, 0.8]);
+            csyrk(true, false, 4, 2, alpha, a, beta, c);
+            expect(c).toEqualFloatingPointBinary(c2, 15);
+        });
+        it('|alpha| > 1 and beta = 0 (for upper triangular c), a is stored row-major', async () => {
+            const a = await loadData(resolve(__dirname, 'matrix-a-row-major.csv'), ',', true, true, true, false);
+            const c = await loadData(resolve(__dirname, 'matrix-c-upper.csv'), ',', true, true, true, false);
+            const c2 = await loadData(resolve(__dirname, 'matrix-c2-upper-alpha.csv'), ',', true, true, true, false);
+            const beta = new Float32Array(2);
+            const alpha = new Float32Array([1.2, 0.8]);
+            csyrk(true, true, 4, 2, alpha, a, beta, c);
+            expect(c).toEqualFloatingPointBinary(c2, 15);
         });
     });
 });

@@ -162,9 +162,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // multithreaded does not exist in javascript and this avoids creating a new FloatArray 
 
-const tempComplex = new Float64Array([0, 0]);
-
-
 export default function csyrk<T extends Float32Array | Float64Array>(
     upper: boolean,
     transPose: boolean,
@@ -218,38 +215,29 @@ export default function csyrk<T extends Float32Array | Float64Array>(
             }
             // aka C := alpha*A*A**T + beta*C, 
             else if (!betaIsOne) {
-                for (let i = start; i < stop; i++) {
+                for (let i = start; i < stop; i += 2) {
                     const re = beta[0] * c[i] - beta[1] * c[i + 1];
-                    const im = beta[0] * c[i] + beta[1] * c[i + 1];
+                    const im = beta[0] * c[i + 1] + beta[1] * c[i];
                     c[i] = re;
                     c[i + 1] = im;
                 }
             }
             // at this point you want to do  C += alpha*A*A**T
             // A has "k" columns and "n" rows
-            for (let i = start, rowC = (i % NN) / 2; i < stop; i += 2, rowC++) {
+            for (let i = start; i < stop; i += 2) {
                 // because of transpose symmetry we only loop over [1..k]
                 let matrixAStart = i % NN; // we dont devide by 2 because A is also complex, both i and NN take are vars in the space of the complex matrix C
                 // the column in C is the column in A transpose with is the row in A
                 let matrixATStart = j << 1;
-                for (let l = 0; l < k; l++, matrixAStart += KK, matrixATStart += KK) {
-                    console.log(`row=${rowC}, colC=${j}, matrixAStart=${matrixAStart} , matrixATStart=${matrixATStart}`);
+                let tempRe = 0;
+                let tempIm = 0;
+                for (let l = 0; l < k; l++, matrixAStart += NN, matrixATStart += NN) {
+                    tempRe += a[matrixAStart] * a[matrixATStart] - a[matrixAStart + 1] * a[matrixATStart + 1];
+                    tempIm += a[matrixAStart] * a[matrixATStart + 1] + a[matrixAStart + 1] * a[matrixATStart]
                 }
+                c[i] += alpha[0] * tempRe - alpha[1] * tempIm;
+                c[i + 1] += alpha[0] * tempIm + alpha[1] * tempRe;
             }
-            /*for (let l = 0, colBaseA = 0; l < k; l++, colBaseA += KK) {
-                const startRowMatrixA = upper ? colBaseA : colBaseA + (j << 1);
-                const stopRowMatrixA = upper ? colBaseA + ((j + 1) << 1) : colBaseA + KK;
-                // because of symmetry nature we can do this
-                const aIsZero = a[colBaseA + (j << 1)] === 0 && a[colBaseA + (j << 1) + 1] === 0;
-                if (!aIsZero) {
-                    const tempRe = alpha[0] * a[colBaseA + (j << 1)] - alpha[1] * a[colBaseA + (j << 1) + 1];
-                    const tempIm = alpha[0] * a[colBaseA + (j << 1) + 1] + alpha[1] * a[colBaseA + (j << 1)];
-                    for (let i = startRowMatrixA, ci = start; i < stopRowMatrixA; i += 2, ci += 2) {
-                        c[ci] += tempRe * a[i] - tempIm * a[i + 1];
-                        c[ci + 1] += tempRe * a[i] + tempIm * a[i + 1];
-                    }
-                }
-            }*/
         }
     } else {
         //  Form  C := alpha*A**T*A + beta*C.
@@ -258,16 +246,22 @@ export default function csyrk<T extends Float32Array | Float64Array>(
             const start = upper ? colBaseC : colBaseC + (j << 1); // complex numbers take 2 positions so "n" is half a column height
             const stop = upper ? colBaseC + ((j + 1) << 1) : colBaseC + NN; // exclusive end position , note again, complex numbers take 2 positions
 
-            for (let i = start, rowBaseA_T = start % colBaseC; i < stop; i += 2, rowBaseA_T += KK) {
-                tempComplex[0] = 0;
-                tempComplex[1] = 0;
-                for (let l = 0; l < k; l++) {
-                    tempComplex[0] += a[colBaseA_T + l] * a[rowBaseA_T] - a[colBaseA_T + l + 1] * a[rowBaseA_T + 1];
-                    tempComplex[1] += a[colBaseA_T + l] * a[rowBaseA_T + 1] + a[colBaseA_T + l + 1] * a[rowBaseA_T];
+            for (let i = start, rowBaseA_T = (i % NN) * KK; i < stop; i += 2, rowBaseA_T += KK) {
+                // row in C = i % NN;
+                // this is the column in AT because row-major
+                // so (i % NN) * KK, 
+                //
+                // col in C = j
+                // this is also the column in A_T (stored row major)
+                let tempRe = 0;
+                let tempIm = 0;
+                for (let l = 0; l < KK; l += 2) {
+                    tempRe += a[colBaseA_T + l] * a[rowBaseA_T + l] - a[colBaseA_T + l + 1] * a[rowBaseA_T + l + 1];
+                    tempIm += a[colBaseA_T + l] * a[rowBaseA_T + l + 1] + a[colBaseA_T + l + 1] * a[rowBaseA_T + l];
                 }
                 //multiply with alpha
-                let re = alpha[0] * tempComplex[0] - alpha[1] * tempComplex[1];
-                let im = alpha[0] * tempComplex[1] - alpha[1] * tempComplex[0];
+                let re = alpha[0] * tempRe - alpha[1] * tempIm;
+                let im = alpha[0] * tempIm + alpha[1] * tempRe;
                 if (!betaIsZero) {
                     re += beta[0] * c[i] - beta[1] * c[i + 1];
                     im += beta[0] * c[i + 1] + beta[1] * c[i];
