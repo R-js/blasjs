@@ -171,6 +171,7 @@ export default function csyrk<T extends Float32Array | Float64Array>(
     a: T,
     beta: T,
     c: T,
+    isPacked = false
 ): void {
     const alphaIsZero = alpha[0] === 0 && alpha[1] === 0;
     const betaIsOne = beta[0] === 1 && beta[1] === 0;
@@ -182,20 +183,28 @@ export default function csyrk<T extends Float32Array | Float64Array>(
     if (n === 0 || ((alphaIsZero || k === 0) && betaIsOne)) return;
 
     //  And when  alpha.eq.zero.
-
+    let packCursor = 0;
     if (alphaIsZero) {
         // column major matrix layout
         for (let j = 0, colBase = 0; j < n; j++, colBase += NN) { // j = column index
             const start = upper ? colBase : colBase + (j << 1); // complex numbers take 2 positions so "n" is half a column height
             const stop = upper ? colBase + ((j + 1) << 1) : colBase + NN; // exclusive end position , note again, complex numbers take 2 positions
             if (betaIsZero) {
-                c.fill(0, start, stop);
+                if (isPacked){
+                    const len = stop - start;
+                    c.fill(0, packCursor, packCursor + len);
+                    packCursor += len;
+                 }
+                 else {
+                    c.fill(0, start, stop);
+                 }
             } else {
-                for (let i = start; i < stop; i += 2) {
-                    const re = beta[0] * c[i] - beta[1] * c[i + 1];
-                    const im = beta[0] * c[i] + beta[1] * c[i + 1];
-                    c[i] = re;
-                    c[i + 1] = im;
+                for (let i = start; i < stop; i += 2, packCursor += 2) {
+                    const idx = isPacked ? packCursor : i;
+                    const re = beta[0] * c[idx] - beta[1] * c[idx + 1];
+                    const im = beta[0] * c[idx] + beta[1] * c[idx + 1];
+                    c[idx] = re;
+                    c[idx + 1] = im;
                 }
             }
         }
@@ -207,24 +216,34 @@ export default function csyrk<T extends Float32Array | Float64Array>(
         // Form  C := alpha*A*A**T + beta*C.
         // j is the jth column of matrix C
         for (let j = 0, colBaseC = 0; j < n; j++, colBaseC += NN) {
+            const packStart = packCursor;
             const start = upper ? colBaseC : colBaseC + (j << 1); // complex numbers take 2 positions so "n" is half a column height
             const stop = upper ? colBaseC + ((j + 1) << 1) : colBaseC + NN; // exclusive end position , note again, complex numbers take 2 positions
             if (betaIsZero) {
                 // clear out matrix C to do later C := alpha*A*A**T 
-                c.fill(0, start, stop);
+                if (isPacked){
+                    const len = stop - start;
+                    c.fill(0, packCursor, packCursor + len);
+                 }
+                 else {
+                    c.fill(0, start, stop);
+                 }
             }
             // aka C := alpha*A*A**T + beta*C, 
             else if (!betaIsOne) {
-                for (let i = start; i < stop; i += 2) {
-                    const re = beta[0] * c[i] - beta[1] * c[i + 1];
-                    const im = beta[0] * c[i + 1] + beta[1] * c[i];
-                    c[i] = re;
-                    c[i + 1] = im;
+                for (let i = start; i < stop; i += 2, packCursor += 2) {
+                    const idx = isPacked ? packCursor : i;
+                    const re = beta[0] * c[idx] - beta[1] * c[idx + 1];
+                    const im = beta[0] * c[idx + 1] + beta[1] * c[idx];
+                    c[idx] = re;
+                    c[idx + 1] = im;
                 }
+              
             }
             // at this point you want to do  C += alpha*A*A**T
             // A has "k" columns and "n" rows
-            for (let i = start; i < stop; i += 2) {
+            packCursor = packStart; // rewind
+            for (let i = start; i < stop; i += 2, packCursor += 2) {
                 // because of transpose symmetry we only loop over [1..k]
                 let matrixAStart = i % NN; // we dont devide by 2 because A is also complex, both i and NN take are vars in the space of the complex matrix C
                 // the column in C is the column in A transpose with is the row in A
@@ -235,8 +254,9 @@ export default function csyrk<T extends Float32Array | Float64Array>(
                     tempRe += a[matrixAStart] * a[matrixATStart] - a[matrixAStart + 1] * a[matrixATStart + 1];
                     tempIm += a[matrixAStart] * a[matrixATStart + 1] + a[matrixAStart + 1] * a[matrixATStart]
                 }
-                c[i] += alpha[0] * tempRe - alpha[1] * tempIm;
-                c[i + 1] += alpha[0] * tempIm + alpha[1] * tempRe;
+                const idx = isPacked ? packCursor : i;
+                c[idx] += alpha[0] * tempRe - alpha[1] * tempIm;
+                c[idx + 1] += alpha[0] * tempIm + alpha[1] * tempRe;
             }
         }
     } else {
@@ -245,8 +265,7 @@ export default function csyrk<T extends Float32Array | Float64Array>(
         for (let j = 0, colBaseC = 0, colBaseA_T = 0; j < n; j++, colBaseC += NN, colBaseA_T += KK) {
             const start = upper ? colBaseC : colBaseC + (j << 1); // complex numbers take 2 positions so "n" is half a column height
             const stop = upper ? colBaseC + ((j + 1) << 1) : colBaseC + NN; // exclusive end position , note again, complex numbers take 2 positions
-
-            for (let i = start, rowBaseA_T = (start % NN) * k; i < stop; i += 2, rowBaseA_T += KK) {
+            for (let i = start, rowBaseA_T = (start % NN) * k; i < stop; i += 2, rowBaseA_T += KK, packCursor+=2) {
                 // row in C = i % NN;
                 // this is the column in AT because row-major
                 // so (i % NN) * KK, 
@@ -262,12 +281,13 @@ export default function csyrk<T extends Float32Array | Float64Array>(
                 //multiply with alpha
                 let re = alpha[0] * tempRe - alpha[1] * tempIm;
                 let im = alpha[0] * tempIm + alpha[1] * tempRe;
+                const idx = isPacked ? packCursor : i;
                 if (!betaIsZero) {
-                    re += beta[0] * c[i] - beta[1] * c[i + 1];
-                    im += beta[0] * c[i + 1] + beta[1] * c[i];
+                    re += beta[0] * c[idx] - beta[1] * c[idx + 1];
+                    im += beta[0] * c[idx + 1] + beta[1] * c[idx];
                 }
-                c[i] = re;
-                c[i + 1] = im
+                c[idx] = re;
+                c[idx + 1] = im
             }
         }
     }
