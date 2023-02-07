@@ -195,7 +195,7 @@ export default function csyrk(
     //  Quick return if possible.
     if (n === 0 || ((alphaIsZero || k === 0) && betaIsOne)) return;
 
-    const [c, a] = mapWasmMemoryToMatrices(highP, storage, (isPacked ? n * (n + 1) : n * n * 2, n * k * 2));
+    const [c, a] = mapWasmMemoryToMatrices(highP, storage, (isPacked ? n * (n + 1) : n * n * 2), n * k * 2);
 
     //  And when  alpha.eq.zero.
     let packCursor = 0;
