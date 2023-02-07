@@ -161,26 +161,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // multithreaded does not exist in javascript and this avoids creating a new FloatArray 
+import { mapWasmMemoryToMatrices } from "@utils/web-assembly-memory";
 
-export default function csyrk<T extends Float32Array | Float64Array>(
+export default function csyrk(
     upper: boolean,
     transPose: boolean,
     n: number,
     k: number,
-    alpha: T,
-    a: T,
-    beta: T,
-    c: T,
-    isPacked = false
+    // js does not know about complex
+    alphaRe: number,
+    alphaIm: number,
+    //a: T,
+    betaRe: number,
+    betaIm: number,
+    //c: T,
+    storage: WebAssembly.Memory,
+    isPacked: boolean,
+    highP: boolean
 ): void {
-    const alphaIsZero = alpha[0] === 0 && alpha[1] === 0;
-    const betaIsOne = beta[0] === 1 && beta[1] === 0;
-    const betaIsZero = beta[0] === 0 && beta[1] === 0;
+
+    // C is an nxn matrix with complex float,
+
+
+    const alphaIsZero = alphaRe === 0 && alphaIm === 0;
+    const betaIsOne = betaRe === 1 && betaIm === 0;
+    const betaIsZero = betaRe === 0 && betaIm === 0;
     const NN = n * 2;
     const KK = k * 2;
 
+  
+
+
     //  Quick return if possible.
     if (n === 0 || ((alphaIsZero || k === 0) && betaIsOne)) return;
+
+    const [c, a] = mapWasmMemoryToMatrices(highP, storage, (isPacked ? n * (n + 1) : n * n * 2, n * k * 2));
 
     //  And when  alpha.eq.zero.
     let packCursor = 0;
@@ -190,19 +205,19 @@ export default function csyrk<T extends Float32Array | Float64Array>(
             const start = upper ? colBase : colBase + (j << 1); // complex numbers take 2 positions so "n" is half a column height
             const stop = upper ? colBase + ((j + 1) << 1) : colBase + NN; // exclusive end position , note again, complex numbers take 2 positions
             if (betaIsZero) {
-                if (isPacked){
+                if (isPacked) {
                     const len = stop - start;
                     c.fill(0, packCursor, packCursor + len);
                     packCursor += len;
-                 }
-                 else {
+                }
+                else {
                     c.fill(0, start, stop);
-                 }
+                }
             } else {
                 for (let i = start; i < stop; i += 2, packCursor += 2) {
                     const idx = isPacked ? packCursor : i;
-                    const re = beta[0] * c[idx] - beta[1] * c[idx + 1];
-                    const im = beta[0] * c[idx] + beta[1] * c[idx + 1];
+                    const re = betaRe * c[idx] - betaIm * c[idx + 1];
+                    const im = betaRe * c[idx] + betaIm * c[idx + 1];
                     c[idx] = re;
                     c[idx + 1] = im;
                 }
@@ -221,24 +236,24 @@ export default function csyrk<T extends Float32Array | Float64Array>(
             const stop = upper ? colBaseC + ((j + 1) << 1) : colBaseC + NN; // exclusive end position , note again, complex numbers take 2 positions
             if (betaIsZero) {
                 // clear out matrix C to do later C := alpha*A*A**T 
-                if (isPacked){
+                if (isPacked) {
                     const len = stop - start;
                     c.fill(0, packCursor, packCursor + len);
-                 }
-                 else {
+                }
+                else {
                     c.fill(0, start, stop);
-                 }
+                }
             }
             // aka C := alpha*A*A**T + beta*C, 
             else if (!betaIsOne) {
                 for (let i = start; i < stop; i += 2, packCursor += 2) {
                     const idx = isPacked ? packCursor : i;
-                    const re = beta[0] * c[idx] - beta[1] * c[idx + 1];
-                    const im = beta[0] * c[idx + 1] + beta[1] * c[idx];
+                    const re = betaRe * c[idx] - betaIm * c[idx + 1];
+                    const im = betaRe * c[idx + 1] + betaIm * c[idx];
                     c[idx] = re;
                     c[idx + 1] = im;
                 }
-              
+
             }
             // at this point you want to do  C += alpha*A*A**T
             // A has "k" columns and "n" rows
@@ -255,8 +270,8 @@ export default function csyrk<T extends Float32Array | Float64Array>(
                     tempIm += a[matrixAStart] * a[matrixATStart + 1] + a[matrixAStart + 1] * a[matrixATStart]
                 }
                 const idx = isPacked ? packCursor : i;
-                c[idx] += alpha[0] * tempRe - alpha[1] * tempIm;
-                c[idx + 1] += alpha[0] * tempIm + alpha[1] * tempRe;
+                c[idx] += alphaRe * tempRe - alphaIm * tempIm;
+                c[idx + 1] += alphaRe * tempIm + alphaIm * tempRe;
             }
         }
     } else {
@@ -265,7 +280,7 @@ export default function csyrk<T extends Float32Array | Float64Array>(
         for (let j = 0, colBaseC = 0, colBaseA_T = 0; j < n; j++, colBaseC += NN, colBaseA_T += KK) {
             const start = upper ? colBaseC : colBaseC + (j << 1); // complex numbers take 2 positions so "n" is half a column height
             const stop = upper ? colBaseC + ((j + 1) << 1) : colBaseC + NN; // exclusive end position , note again, complex numbers take 2 positions
-            for (let i = start, rowBaseA_T = (start % NN) * k; i < stop; i += 2, rowBaseA_T += KK, packCursor+=2) {
+            for (let i = start, rowBaseA_T = (start % NN) * k; i < stop; i += 2, rowBaseA_T += KK, packCursor += 2) {
                 // row in C = i % NN;
                 // this is the column in AT because row-major
                 // so (i % NN) * KK, 
@@ -279,12 +294,12 @@ export default function csyrk<T extends Float32Array | Float64Array>(
                     tempIm += a[colBaseA_T + l] * a[rowBaseA_T + l + 1] + a[colBaseA_T + l + 1] * a[rowBaseA_T + l];
                 }
                 //multiply with alpha
-                let re = alpha[0] * tempRe - alpha[1] * tempIm;
-                let im = alpha[0] * tempIm + alpha[1] * tempRe;
+                let re = alphaRe * tempRe - alphaIm * tempIm;
+                let im = alphaRe * tempIm + alphaIm * tempRe;
                 const idx = isPacked ? packCursor : i;
                 if (!betaIsZero) {
-                    re += beta[0] * c[idx] - beta[1] * c[idx + 1];
-                    im += beta[0] * c[idx + 1] + beta[1] * c[idx];
+                    re += betaRe * c[idx] - betaIm * c[idx + 1];
+                    im += betaRe * c[idx + 1] + betaIm * c[idx];
                 }
                 c[idx] = re;
                 c[idx + 1] = im
