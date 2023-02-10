@@ -1,5 +1,6 @@
 const testRegex = [
-    'lib/l3/complex/csyrk/__test__/test.ts'
+    'lib/l3/complex/csyrk/__test__/test.ts',
+    'lib/l3/complex/csyrk/__test__/wasm-test.ts'
 ];
 
 const collectCoverageFrom = [
