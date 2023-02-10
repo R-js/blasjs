@@ -5,6 +5,7 @@ const testRegex = [
 
 const collectCoverageFrom = [
     'lib/l3/**/*.ts',
+    'lib/index.ts'
 ];
 
 module.exports = {

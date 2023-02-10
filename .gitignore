@@ -1,5 +1,4 @@
-# Logs
-dist
+dist/
 logs
 *.tsbuildinfo
 *.log
