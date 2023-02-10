@@ -8,7 +8,7 @@ import { loadData } from '@test-helpers/load';
 import { csyrk } from '..';
 
 
-xdescribe('level 3 csyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C', function () {
+describe('level 3 csyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C', function () {
     describe("quick exit", () => {
         it('n = 0 | alpha = 0+i0 && beta = 1+0i| k = 0 && beta = 1', async () => {
             // n = 0 ,alpha != 0, beta != 0, k != 0
