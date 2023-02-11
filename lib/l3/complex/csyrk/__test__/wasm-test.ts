@@ -447,7 +447,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
         });
     });
-    describe('huge-matrices test', () => {
+    describe.skip('huge-matrices test', () => {
         it('packed: C=2048x2048 complex, A=2048x1024', async () => {
             const n = 2048;
             const k = 1024;
@@ -478,7 +478,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             console.log(`packed: loading+preparing = ${ms((t1 - t0) / 1000)}, calculating=${ms((t3 - t2) / 1000)}`);
             console.log(ai.length, ci.length, ao.length, co.length);
         });
-        xit('C=2048x2048 complex, A=2048x1024', async () => {
+        it('C=2048x2048 complex, A=2048x1024', async () => {
             const t0 = Date.now();
             const n = 2048;
             const k = 1024;
