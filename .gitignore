@@ -11,6 +11,7 @@ src/**/*.d.ts
 src/**/*.js
 notes.md
 !/.gitignore
+!/.gitattributes
 !/.npmignore
 !/.nycrc
 !/.travis.yml
