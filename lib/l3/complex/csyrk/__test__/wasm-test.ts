@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { readFile } from 'node:fs/promises';
+import { webcrypto } from 'node:crypto';
 
 import generateMatrix from './fixture-generation';
 import { copyMatricesToWasmMemory, mapWasmMemoryToMatrices } from '@utils/web-assembly-memory';
@@ -447,24 +447,29 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
         });
     });
-    describe.skip('huge-matrices test', () => {
+    describe('huge-matrices test', () => {
         it('packed: C=2048x2048 complex, A=2048x1024', async () => {
             const n = 2048;
             const k = 1024;
+            const ai = new Float64Array(n * k * 2);
+            const ci = new Float64Array(n * n * 2);
             const t0 = performance.now();
-            //const ai = generateMatrix(fp64, 123456, n, k, true, false);
-            //await writeFile( resolve(__dirname, 'matrix-a-2048x1024.bin'), new Uint8Array(ai.buffer));
-            const aiRaw = await readFile( resolve(__dirname, 'matrix-a-2048x1024.bin'));
-            const ai = new Float64Array(aiRaw);
-            //const ci = generateMatrix(fp64, 74231, n, n, true, false);
-            //await writeFile( resolve(__dirname, 'matrix-c-2048x2024.bin'), new Uint8Array(ci.buffer));
-            const ciRaw = await readFile( resolve(__dirname, 'matrix-c-2048x2048.bin'));
-            const ci = new Float64Array(ciRaw);
+            const block64K = new Int32Array(65536 / 4);
+            const nrBlocksA = Math.trunc(n * k * 2 / 65536);
+            const nrBlocksC = Math.trunc(n * n * 2 / 65536);
+            for (let i = 0; i < nrBlocksA; i++) {
+                webcrypto.getRandomValues(block64K);
+                ai.set(block64K, i * 65536);
+            }
+            for (let i = 0; i < nrBlocksC; i++) {
+                webcrypto.getRandomValues(block64K);
+                ci.set(block64K, i * 65536);
+            }
             const ciPacked = lowerPack(ci, n, true);
 
             const result = copyMatricesToWasmMemory(fp64, storage, ciPacked, ai);
             const [co, ao] = mapWasmMemoryToMatrices(fp64, result.storage, ciPacked.length, ai.length);
-            
+
             const t1 = performance.now();
             const betaRe = 0.6;
             const betaIm = 0.4;
@@ -476,27 +481,37 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
 
             const t3 = performance.now();
             console.log(`packed: loading+preparing = ${ms((t1 - t0) / 1000)}, calculating=${ms((t3 - t2) / 1000)}`);
-            console.log(ai.length, ci.length, ao.length, co.length);
+            console.log(ao.length, co.length);
         });
         it('C=2048x2048 complex, A=2048x1024', async () => {
-            const t0 = Date.now();
             const n = 2048;
             const k = 1024;
-            const ai = await loadData(resolve(__dirname, 'matrix-a-2048x1024.csv'), ',', true, true, true, fp64);
-            const ci = await loadData(resolve(__dirname, 'matrix-c-2048x2048-lower.csv'), ',', true, true, true, fp64);
-           
-            return;
+            const ai = new Float64Array(n * k * 2);
+            const ci = new Float64Array(n * n * 2);
+            const t0 = performance.now();
+            const block64K = new Int32Array(65536 / 4);
+            const nrBlocksA = Math.trunc(n * k * 2 / 65536);
+            const nrBlocksC = Math.trunc(n * n * 2 / 65536);
+            for (let i = 0; i < nrBlocksA; i++) {
+                webcrypto.getRandomValues(block64K);
+                ai.set(block64K, i * 65536);
+            }
+            for (let i = 0; i < nrBlocksC; i++) {
+                webcrypto.getRandomValues(block64K);
+                ci.set(block64K, i * 65536);
+            }
+
             const result = copyMatricesToWasmMemory(fp64, storage, ci, ai);
             const [co, ao] = mapWasmMemoryToMatrices(fp64, result.storage, ci.length, ai.length);
-            const t1 = Date.now();
+            const t1 = performance.now();
             const betaRe = 0.6;
             const betaIm = 0.4;
             const alphaRe = 1.2;
             const alphaIm = 0.8;
-            const t2 = Date.now();
+            const t2 = performance.now();
             zsyrk(false, false, n, k, alphaRe, alphaIm, betaRe, betaIm, false);
-            const t3 = Date.now();
-            console.log(`unpacked: loading+preparing = ${ms(t1 - t0)}, calculating=${ms(t3 - t2)}`);
+            const t3 = performance.now();
+            console.log(`unpacked: loading+preparing = ${ms((t1 - t0) / 1000)}, calculating=${ms((t3 - t2) / 1000)}`);
             console.log(ao.length, co.length);
         });
     });
