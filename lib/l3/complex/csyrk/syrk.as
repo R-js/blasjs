@@ -1,4 +1,4 @@
-export function zsyrk(
+export function syrkfp64(
   upper: bool,
   transPose: bool,
   n: u32,
@@ -19,8 +19,11 @@ export function zsyrk(
 
   // f64 buffer
   const BYTES_PER_ELEMENT: u32 = 8;
+  const STEP_SIZE = BYTES_PER_ELEMENT*2;
+  const STEP_SIZE_COLUMN = n * STEP_SIZE;
+  const STEP_SIZE_COLUMN_K = k * STEP_SIZE;
 
-  const ABase: u32 = BYTES_PER_ELEMENT * (isPacked ? n * (n + 1) : n * n * 2);
+  const ABase: u32 = BYTES_PER_ELEMENT * (isPacked ? n * (n + 1) : n *n * 2);
   // let logIdx: u32 = ABase + BYTES_PER_ELEMENT * (n * k * 2);
 
   let packCursor: u32 = 0;
@@ -39,7 +42,7 @@ export function zsyrk(
           memory.fill(start, 0, len);
         }
       } else {
-        for (let i: u32 = start; i < stop; i += 2 * BYTES_PER_ELEMENT, packCursor += 2 * BYTES_PER_ELEMENT) {
+        for (let i: u32 = start; i < stop; i += STEP_SIZE, packCursor += STEP_SIZE) {
           const idx: u32 = isPacked ? packCursor : i;
           const cRe: f64 = load<f64>(idx);
           const cIm: f64 = load<f64>(idx + BYTES_PER_ELEMENT);
@@ -63,7 +66,7 @@ export function zsyrk(
 
       // at this point you want to do  C += alpha*A*A**T
       // A has "k" columns and "n" rows
-      for (let i: u32 = start; i < stop; i += 2 * BYTES_PER_ELEMENT, packCursor += 2 * BYTES_PER_ELEMENT) {
+      for (let i: u32 = start; i < stop; i += STEP_SIZE, packCursor += STEP_SIZE) {
         // column-major
         // because of transpose symmetry we only loop over [1..k]
 
@@ -75,7 +78,7 @@ export function zsyrk(
         let tempRe: f64 = 0;
         let tempIm: f64 = 0;
 
-        for (let l: u32 = 0; l < k; l++, matrixAStart += NN * BYTES_PER_ELEMENT, matrixATStart += NN * BYTES_PER_ELEMENT) {
+        for (let l: u32 = 0; l < k; l++, matrixAStart += STEP_SIZE_COLUMN, matrixATStart += STEP_SIZE_COLUMN) {
           const aIdx: u32 = ABase + matrixAStart;
           const aTidx: u32 = ABase + matrixATStart;
 
@@ -113,13 +116,13 @@ export function zsyrk(
     //  Form  C := alpha*A**T*A + beta*C.
     // use Matrix C (nxn as a guide), let it move in sync with (n) columns of A**T
 
-    for (let j: u32 = 0, colBase: u32 = 0, colBaseA_T: u32 = 0; j < n; j++, colBase += NN, colBaseA_T += KK * BYTES_PER_ELEMENT) {
+    for (let j: u32 = 0, colBase: u32 = 0, colBaseA_T: u32 = 0; j < n; j++, colBase += NN, colBaseA_T += STEP_SIZE_COLUMN_K) {
       const start: u32 = BYTES_PER_ELEMENT * (upper ? colBase : colBase + (j << 1)); // complex numbers take 2 positions so "n" is half a column height
       const stop: u32 = BYTES_PER_ELEMENT * (upper ? colBase + ((j + 1) << 1) : colBase + NN); // exclusive end position , note again, complex numbers take 2 positions
       for (
-        let i: u32 = start, rowBaseA_T: u32 = start % (NN * BYTES_PER_ELEMENT) * k;
+        let i: u32 = start, rowBaseA_T: u32 = start % (STEP_SIZE_COLUMN) * k;
         i < stop;
-        i += 2 * BYTES_PER_ELEMENT, rowBaseA_T += KK * BYTES_PER_ELEMENT, packCursor += 2 * BYTES_PER_ELEMENT) {
+        i += STEP_SIZE, rowBaseA_T += STEP_SIZE_COLUMN_K, packCursor += STEP_SIZE) {
 
         let tempRe: f64 = 0;
         let tempIm: f64 = 0;
@@ -160,7 +163,7 @@ export function zsyrk(
   return;
 }
 
-export function csyrk(
+export function syrkfp32(
   upper: bool,
   transPose: bool,
   n: u32,

@@ -11,8 +11,8 @@ import {
     transposeStorage
 } from '@utils/matrix-triangular';
 import { loadData } from '@test-helpers/load';
-import { initWasmCSYRK64 } from '..';
-import type { CSYRKfn } from '..';
+import { initWasmSYRK } from '..';
+import type { SYRKfn } from '..';
 import ms from 'ms';
 
 
@@ -23,13 +23,15 @@ const globalAT = transposeStorage(globalA, 4, 2, true);
 const globalC = generateMatrix(true, 7894, 4, 4, true);
 
 
-describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C', function () {
+describe('level 3 (64fp) syrkfp64 C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C', function () {
     let storage: WebAssembly.Memory;
-    let zsyrk: CSYRKfn;
+    let syrkfp64: SYRKfn;
+    let syrkfp32: SYRKfn;
     beforeAll(() => {
-        const { storage: _1, zsyrk: _2 } = initWasmCSYRK64();
+        const { storage: _1, syrkfp64: _2, syrkfp32:_3 } = initWasmSYRK();
         storage = _1;
-        zsyrk = _2;
+        syrkfp64= _2;
+        syrkfp32 = _3;
     });
     beforeEach(() => {
         const arr = new Uint8Array(storage.buffer);
@@ -47,7 +49,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             let [betaRe, betaIm] = [1, 1];
             let [alphaRe, alphaIm] = [1, 1];
 
-            zsyrk(true, false, 0, 2, alphaRe, alphaIm, betaRe, betaIm, false);
+            syrkfp64(true, false, 0, 2, alphaRe, alphaIm, betaRe, betaIm, false);
             expect(ci).toEqualFloatingPointBinary(co);
             expect(ai).toEqualFloatingPointBinary(ao);
             // alpha = 0 && beta = 1
@@ -63,7 +65,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             betaRe = 1;
             betaIm = 0;
 
-            zsyrk(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
+            syrkfp64(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
 
             expect(ci2).toEqualFloatingPointBinary(co2);
             expect(ai2).toEqualFloatingPointBinary(ao2);
@@ -79,7 +81,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             betaRe = 1;
             betaIm = 0;
 
-            zsyrk(true, false, 4, 0, alphaRe, alphaIm, betaRe, betaIm, false);
+            syrkfp64(true, false, 4, 0, alphaRe, alphaIm, betaRe, betaIm, false);
 
             expect(ci3).toEqualFloatingPointBinary(co3);
             expect(ai3).toEqualFloatingPointBinary(ao3);
@@ -96,7 +98,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const betaRe = 1;
             const betaIm = 1;
 
-            zsyrk(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
+            syrkfp64(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
 
             expect(cCheck).toEqualFloatingPointBinary(co, 41); // matrix C changed
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -113,7 +115,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const betaRe = 1;
             const betaIm = 1;
 
-            zsyrk(false, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
+            syrkfp64(false, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
 
             expect(co).toEqualFloatingPointBinary(cCheck, 42);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -130,7 +132,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const betaRe = 0.0;
             const betaIm = 0.0;
 
-            zsyrk(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
+            syrkfp64(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
             expect(co).toEqualFloatingPointBinary(0);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
         });
@@ -152,7 +154,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const betaRe = 0;
             const betaIm = 0;
             //logging;
-            zsyrk(
+            syrkfp64(
                 true, // upper
                 false, // transpose
                 4, // n 
@@ -180,7 +182,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const betaRe = 0;
             const betaIm = 0;
 
-            zsyrk(false, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
+            syrkfp64(false, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
 
             expect(co).toEqualFloatingPointBinary(cCheck, 37);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -198,7 +200,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const betaRe = 0.6;
             const betaIm = 0.4;
 
-            zsyrk(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
+            syrkfp64(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
 
             expect(co).toEqualFloatingPointBinary(cCheck, 29);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -219,7 +221,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             //const logging = new Uint32Array(result.storage.buffer, result.byteLength);
             //logging.fill(1);
 
-            zsyrk(true, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
+            syrkfp64(true, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
             expect(co).toEqualFloatingPointBinary(cCheck, 37);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
         });
@@ -239,7 +241,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             //const logging = new Uint32Array(result.storage.buffer, result.byteLength);
             //logging.fill(1);
 
-            zsyrk(false, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
+            syrkfp64(false, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
 
 
             expect(co).toEqualFloatingPointBinary(cCheck, 37);
@@ -258,7 +260,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const betaRe = 0.6;
             const betaIm = 0.4;
 
-            zsyrk(false, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
+            syrkfp64(false, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, false);
 
             expect(co).toEqualFloatingPointBinary(cCheck, 41);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -280,7 +282,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const betaRe = 1;
             const betaIm = 1;
 
-            zsyrk(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, true);
+            syrkfp64(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, true);
 
             expect(co).toEqualFloatingPointBinary(cCheckPacked, 41);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -300,7 +302,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const betaRe = 1;
             const betaIm = 1;
 
-            zsyrk(false, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, true);
+            syrkfp64(false, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, true);
 
             expect(co).toEqualFloatingPointBinary(cCheckPacked, 42);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -318,7 +320,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const betaRe = 0;
             const betaIm = 0;
 
-            zsyrk(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, true);
+            syrkfp64(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, true);
 
             expect(co).toEqualFloatingPointBinary(0);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -340,7 +342,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const betaRe = 0.0;
             const betaIm = 0.0;
 
-            zsyrk(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, packed);
+            syrkfp64(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, packed);
 
             expect(co).toEqualFloatingPointBinary(cCheckPacked, 37);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -361,7 +363,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const alphaRe = 1.2;
             const alphaIm = 0.8;
 
-            zsyrk(false, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, packed);
+            syrkfp64(false, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, packed);
 
             expect(co).toEqualFloatingPointBinary(cCheckPacked, 37);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -381,7 +383,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const alphaRe = 1.2;
             const alphaIm = 0.8;
 
-            zsyrk(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, packed);
+            syrkfp64(true, false, 4, 2, alphaRe, alphaIm, betaRe, betaIm, packed);
 
             expect(co).toEqualFloatingPointBinary(cCheckPacked, 29);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -401,7 +403,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const alphaRe = 1.2;
             const alphaIm = 0.8;
 
-            zsyrk(true, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, packed);
+            syrkfp64(true, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, packed);
 
             expect(co).toEqualFloatingPointBinary(cCheckPacked, 37);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -421,7 +423,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const alphaRe = 1.2;
             const alphaIm = 0.8;
 
-            zsyrk(false, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, packed);
+            syrkfp64(false, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, packed);
 
             expect(co).toEqualFloatingPointBinary(cCheckPacked, 37);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -441,7 +443,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const alphaRe = 1.2;
             const alphaIm = 0.8;
 
-            zsyrk(false, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, packed);
+            syrkfp64(false, true, 4, 2, alphaRe, alphaIm, betaRe, betaIm, packed);
 
             expect(co).toEqualFloatingPointBinary(cCheckPacked, 41);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
@@ -451,8 +453,8 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
         it('packed: C=2048x2048 complex, A=2048x1024', async () => {
             const n = 2048;
             const k = 1024;
-            const ai = new Float64Array(n * k * 2);
-            const ci = new Float64Array(n * n * 2);
+            const ai = new Float32Array(n * k * 2);
+            const ci = new Float32Array(n * n * 2);
             const t0 = performance.now();
             const block64K = new Int32Array(65536 / 4);
             const nrBlocksA = Math.trunc(n * k * 2 / 65536);
@@ -467,8 +469,8 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             }
             const ciPacked = lowerPack(ci, n, true);
 
-            const result = copyMatricesToWasmMemory(fp64, storage, ciPacked, ai);
-            const [co, ao] = mapWasmMemoryToMatrices(fp64, result.storage, ciPacked.length, ai.length);
+            const result = copyMatricesToWasmMemory(false, storage, ciPacked, ai);
+            const [co, ao] = mapWasmMemoryToMatrices(false, result.storage, ciPacked.length, ai.length);
 
             const t1 = performance.now();
             const betaRe = 0.6;
@@ -477,7 +479,7 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
             const alphaIm = 0.8;
 
             const t2 = performance.now();
-            zsyrk(false, false, n, k, alphaRe, alphaIm, betaRe, betaIm, true);
+            syrkfp32(false, false, n, k, alphaRe, alphaIm, betaRe, betaIm, true);
 
             const t3 = performance.now();
             console.log(`packed: loading+preparing = ${ms((t1 - t0) / 1000)}, calculating=${ms((t3 - t2) / 1000)}`);
@@ -486,8 +488,8 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
         it('C=2048x2048 complex, A=2048x1024', async () => {
             const n = 2048;
             const k = 1024;
-            const ai = new Float64Array(n * k * 2);
-            const ci = new Float64Array(n * n * 2);
+            const ai = new Float32Array(n * k * 2);
+            const ci = new Float32Array(n * n * 2);
             const t0 = performance.now();
             const block64K = new Int32Array(65536 / 4);
             const nrBlocksA = Math.trunc(n * k * 2 / 65536);
@@ -501,15 +503,15 @@ describe('level 3 (64fp) zsyrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A +
                 ci.set(block64K, i * 65536);
             }
 
-            const result = copyMatricesToWasmMemory(fp64, storage, ci, ai);
-            const [co, ao] = mapWasmMemoryToMatrices(fp64, result.storage, ci.length, ai.length);
+            const result = copyMatricesToWasmMemory(false, storage, ci, ai);
+            const [co, ao] = mapWasmMemoryToMatrices(false, result.storage, ci.length, ai.length);
             const t1 = performance.now();
             const betaRe = 0.6;
             const betaIm = 0.4;
             const alphaRe = 1.2;
             const alphaIm = 0.8;
             const t2 = performance.now();
-            zsyrk(false, false, n, k, alphaRe, alphaIm, betaRe, betaIm, false);
+            syrkfp32(false, false, n, k, alphaRe, alphaIm, betaRe, betaIm, false);
             const t3 = performance.now();
             console.log(`unpacked: loading+preparing = ${ms((t1 - t0) / 1000)}, calculating=${ms((t3 - t2) / 1000)}`);
             console.log(ao.length, co.length);
