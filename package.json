@@ -77,6 +77,7 @@
         "escodegen": "2.0.0",
         "eslint": "8.29.0",
         "jest": "29.3.1",
+        "jest-matcher-utils": "^29.5.0",
         "lib-r-math.js": "2.0.0-rc14",
         "ms": "3.0.0-canary.1",
         "rollup": "3.6.0",
