@@ -18,7 +18,7 @@ const globalC = generateMatrix(false, 7894, 4, 4, true);
 
 describe('level 3 syrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C', function () {
     describe("quick exit", () => {
-        it('n = 0 | alpha = 0+i0 && beta = 1+0i| k = 0 && beta = 1', async () => {
+        it('n = 0 | alpha = 0+i0 && beta = 1+0i| k = 0 && beta = 1', () => {
             // n = 0 ,alpha != 0, beta != 0, k != 0
             const ci = new Float32Array(0);
             const ai = new Float32Array(0);
@@ -102,7 +102,7 @@ describe('level 3 syrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C',
             expect(co).toEqualFloatingPointBinary(cCheck, 18);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
         });
-        it('alpha = 0 and beta = 0', async () => {
+        it('alpha = 0 and beta = 0', () => {
             const ai = globalA.slice();
             const ci = upper(globalC.slice(), 4, true);
 
@@ -274,7 +274,7 @@ describe('level 3 syrk C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·A + β·C',
             expect(co).toEqualFloatingPointBinary(cCheckPacked, 15);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
         });
-        it('alpha = 0 and beta = 0', async () => {
+        it('alpha = 0 and beta = 0', () => {
             const ai = globalA.slice();
             const ci = upper(globalC.slice(), 4, true);
             const ciPacked = lowerPack(ci, 4, true);

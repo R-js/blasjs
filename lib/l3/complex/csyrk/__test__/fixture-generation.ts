@@ -1,6 +1,6 @@
 import { rnormOne, rnorm, setSeed } from 'lib-r-math.js';
 
-export default function generateMatrix(fp64: boolean, seed: number, n: number, k: number, complex: boolean, compPat = true) {
+export default function generateMatrix(fp64: boolean, seed: number, n: number, k: number, complex: boolean, compPat = true): Float32Array | Float64Array {
     setSeed(seed);
     const step = complex ? 2 : 1
     if (compPat) {

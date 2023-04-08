@@ -28,9 +28,9 @@ describe('level 3 (64fp) syrkfp64 C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·
     let syrkfp64: SYRKfn;
     let syrkfp32: SYRKfn;
     beforeAll(() => {
-        const { storage: _1, syrkfp64: _2, syrkfp32:_3 } = initWasmSYRK();
+        const { storage: _1, syrkfp64: _2, syrkfp32: _3 } = initWasmSYRK();
         storage = _1;
-        syrkfp64= _2;
+        syrkfp64 = _2;
         syrkfp32 = _3;
     });
     beforeEach(() => {
@@ -38,7 +38,7 @@ describe('level 3 (64fp) syrkfp64 C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·
         arr.fill(0);
     });
     describe("quick exit", () => {
-        it('n = 0 | alpha = 0+i0 && beta = 1+0i| k = 0 && beta = 1', async () => {
+        it('n = 0 | alpha = 0+i0 && beta = 1+0i| k = 0 && beta = 1', () => {
             // n = 0 ,alpha != 0, beta != 0, k != 0
             const ci = new Float64Array(0);
             const ai = new Float64Array(0);
@@ -120,7 +120,7 @@ describe('level 3 (64fp) syrkfp64 C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·
             expect(co).toEqualFloatingPointBinary(cCheck, 42);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
         });
-        it('alpha = 0 and beta = 0', async () => {
+        it('alpha = 0 and beta = 0', () => {
             const ai = globalA.slice();
             const ci = upper(globalC.slice(), 4, true);
 
@@ -307,7 +307,7 @@ describe('level 3 (64fp) syrkfp64 C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·
             expect(co).toEqualFloatingPointBinary(cCheckPacked, 42);
             expect(ao).toEqualFloatingPointBinary(ai); // matrix A did not change
         });
-        it('alpha = 0 and beta = 0', async () => {
+        it('alpha = 0 and beta = 0', () => {
             const ai = globalA.slice();
             const ci = upper(globalC.slice(), 4, true);
             const ciPacked = lowerPack(ci, 4, true);
@@ -450,7 +450,7 @@ describe('level 3 (64fp) syrkfp64 C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·
         });
     });
     describe('huge-matrices test', () => {
-        it('packed: C=2048x2048 complex, A=2048x1024', async () => {
+        it('packed: C=2048x2048 complex, A=2048x1024', () => {
             const n = 2048;
             const k = 1024;
             const ai = new Float32Array(n * k * 2);
@@ -482,10 +482,9 @@ describe('level 3 (64fp) syrkfp64 C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·
             syrkfp32(false, false, n, k, alphaRe, alphaIm, betaRe, betaIm, true);
 
             const t3 = performance.now();
-            console.log(`packed: loading+preparing = ${ms((t1 - t0) / 1000)}, calculating=${ms((t3 - t2) / 1000)}`);
-            console.log(ao.length, co.length);
+            console.log(`packed: loading+preparing = ${ms((t1 - t0) / 1000)}, calculating=${ms((t3 - t2) / 1000)}, length(a)=${ao.length}, length(c)=${co.length}`);
         });
-        it('C=2048x2048 complex, A=2048x1024', async () => {
+        it('C=2048x2048 complex, A=2048x1024', () => {
             const n = 2048;
             const k = 1024;
             const ai = new Float32Array(n * k * 2);
@@ -513,8 +512,7 @@ describe('level 3 (64fp) syrkfp64 C ⟵ α·A·Aᵀ + β·C, or C ⟵ α·Aᵀ·
             const t2 = performance.now();
             syrkfp32(false, false, n, k, alphaRe, alphaIm, betaRe, betaIm, false);
             const t3 = performance.now();
-            console.log(`unpacked: loading+preparing = ${ms((t1 - t0) / 1000)}, calculating=${ms((t3 - t2) / 1000)}`);
-            console.log(ao.length, co.length);
+            console.log(`unpacked: loading+preparing = ${ms((t1 - t0) / 1000)}, calculating=${ms((t3 - t2) / 1000)}, length(a)=${ao.length}, length(c)=${co.length}`);
         });
     });
 });

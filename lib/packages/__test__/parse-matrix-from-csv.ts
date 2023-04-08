@@ -92,7 +92,13 @@ function absorbWhiteSpace(text: string, i: number) {
 
 export type FieldType = 'field' | 'quoted-field' | 'comment' | 'column-name';
 
-export function* generateFields(oneLine: { text: string, line: number }, separator: string | RegExp, optionallyQuoted = true) {
+export function* generateFields(oneLine: { text: string, line: number }, separator: string | RegExp, optionallyQuoted = true): Generator<{
+    text: string;
+    line: number;
+    s: number;
+    e: number;
+    type: FieldType;
+}, void, void> {
     let i = 0;
     const { text, line } = oneLine;
     let j = i;
@@ -100,12 +106,12 @@ export function* generateFields(oneLine: { text: string, line: number }, separat
         i = absorbWhiteSpace(text, i); // absorb white space outside of fields
         j = absorbComment(text, i);
         if (j > i) {
-            (yield { text: text.slice(i, j).trim(), line, s: i, e: j, type: 'comment' as FieldType }) as void;
+            (yield { text: text.slice(i, j).trim(), line, s: i, e: j, type: 'comment' as FieldType });
             i = j;
         }
         j = absorbField(text, i, separator, optionallyQuoted);
         if (j > i) {
-            (yield { text: text.slice(i, j).trim(), line, s: i, e: j, type: isQuoted(text, i) ? 'quoted-field' : 'field' as FieldType }) as void;
+            (yield { text: text.slice(i, j).trim(), line, s: i, e: j, type: isQuoted(text, i) ? 'quoted-field' : 'field' as FieldType });
             i = j;
         }
         i = absorbSeparator(text, i, separator);

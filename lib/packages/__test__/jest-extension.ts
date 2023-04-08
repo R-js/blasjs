@@ -1,7 +1,3 @@
-
-export { };
-
-import type { MatcherHintOptions } from 'jest-matcher-utils';
 import { isTypedArray } from 'util/types';
 
 type NumberTypes = 'Float32Array' | 'Float64Array' | 'number' | 'number[]';
@@ -240,7 +236,7 @@ expect.extend({
         //...[received, expected, mantissa = Infinity, cycle = true, hf = true]: [received: unknown, expected: unknown, mantissa: number, cycle: boolean, hf: boolean]) {
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         received: unknown, expected: unknown, mantissa: number = Infinity, cycle: boolean = true, hf: boolean = true) {
-        const options: MatcherHintOptions = {
+        const options = {
             isNot: this.isNot as boolean,
             promise: this.promise as string,
             comment: '',
