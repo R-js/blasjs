@@ -1,6 +1,7 @@
 const testRegex = [
     'lib/l3/complex/csyrk/__test__/test.ts',
-    'lib/l3/complex/csyrk/__test__/wasm-test.ts'
+    'lib/l3/complex/csyrk/__test__/wasm-test.ts',
+    'lib/utils/__test__/matrix-triangular.test.ts'
 ];
 
 const collectCoverageFrom = [
@@ -26,7 +27,7 @@ module.exports = {
     //testMatch: ['**/__tests__/**/*.[t]s?(x)', '**/?(*.)+(spec|test).[t]s?(x)'],
     testRegex,
     transform: {
-        "\\.test\\.ts$" :["ts-jest", {
+        "\\.test\\.ts$": ["ts-jest", {
             compiler: 'typescript',
             tsconfig: 'tsconfig.json',
             diagnostics: {
