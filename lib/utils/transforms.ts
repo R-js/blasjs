@@ -1,4 +1,4 @@
-import isqrt from './isqrt';
+import { isqrt, isqrtUpper } from './isqrt';
 
 /*
   0 4 7 9  
@@ -34,7 +34,7 @@ export function transformLowerPackedIdxToColumnRow(idx: number, N: number): { co
     const bb = b * b;
     const ac4 = idx << 3;
     const D = bb - ac4;
-    const col = (b - Math.sqrt(D)) >> 1;
+    const col = (b - isqrtUpper(D)) >> 1;
     /**
         * 0 1 .2 .3 .4
         * ----------
@@ -49,13 +49,16 @@ export function transformLowerPackedIdxToColumnRow(idx: number, N: number): { co
     return { col, row };
 }
 
-
+export function getCol(N: number, r: number): number {
+    const b = 2 * N + 1;
+    const D = b * b - 8 * r;
+    console.log({ b, D, srD: Math.sqrt(D) });
+    return (b - Math.ceil(Math.sqrt(D))) >> 1;
+}
 
 export function back(N: number, r: number): number {
     const b = ((N << 1) + 1);
-    const bf = (2 * N + 1);
-    const bb = bf * bf;
-    //const bb = ((N * N) << 2) + (N << 2) + 1
+    const bb = b * b;
     const ac4 = r << 3;
     const D = bb - ac4;
     //console.log(`isqrt:${isqrt(D)}, sqrt:${Math.sqrt(D)}, b-isqrt:${b - isqrt(D)}, b-sqrt:${b - Math.sqrt(D)}`);

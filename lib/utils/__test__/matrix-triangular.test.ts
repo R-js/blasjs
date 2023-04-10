@@ -1,12 +1,9 @@
 import { transformUpperPackedIdxToColumnRow, transformLowerPackedIdxToColumnRow } from '../transforms';
-import { back } from '../transforms';
-back;
-transformLowerPackedIdxToColumnRow;
 
 describe('coordinate transform testing', function () {
     describe('upper packed', () => {
 
-        it('n=91*92/2 => col=91 row = 0w = 0', () => {
+        it.only('n=91*92/2 => col=91 row = 0w = 0', () => {
             /**0 1 2 3 4  etc
              * 0 1 3 6 10
              * . 2 4 7 11
